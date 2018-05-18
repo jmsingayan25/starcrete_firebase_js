@@ -222,6 +222,147 @@
                 <!-- notificatoin dropdown end-->
             </div>
         </header>  
+        <!--sidebar start-->
+        <aside>
+            <div id="sidebar"  class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu">                
+                    <li class="active">
+                        <a class="" href="index.php">
+                            <i class="icon_house"></i>
+                            <span>History</span>
+                        </a>
+                    </li> 
+                    <li>
+                        <a class="" href="clients.php">
+                            <i class="fa fa-address-book"></i>
+                            <span>Clients</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Bravo</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order.php?office=bravo">Purchase Order</a></li>                          
+                            <li><a class="" href="delivery_order.php?office=bravo">Delivery Page</a></li>
+                        </ul>
+                    </li>  
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Delta</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order.php?office=delta">Purchase Order</a></li>                          
+                            <li><a class="" href="delivery_order.php?office=delta">Delivery Page</a></li>
+                        </ul>
+                    </li>  
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-file"></i>
+                            <span>Forms</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order_form.php">Add New P.O.</a></li>
+                            <!-- <li><a class="" href="purchase_aggregates_order_form.php">P.O. Aggregates Form</a></li>                           -->
+                        </ul>
+                    </li>
+                </ul>
+                <!-- sidebar menu end-->
+            </div>
+        </aside>
+        <!--sidebar end-->
+
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">            
+                <!--overview start-->
+                <div class="row">
+                    <div class="col-md-8">
+                        <!-- <h3 class="page-header"><i class="fa fa-home"></i> History</h3> -->
+                        <ol class="breadcrumb">
+                            <li><i class="fa fa-home"></i>History</li>                          
+                        </ol>
+                    </div>
+                    <div class="col-md-4">
+                        <!-- <h3 class="page-header"><i class="fa fa-home"></i> History</h3> -->
+                        <ol class="breadcrumb">
+                            <li>As of <strong></strong></li>                          
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <section class="panel">
+                            <form action="index.php" method="get" class="form-inline">
+                                <header class="panel-heading">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="search">Plant:</label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="plant" value="bravo" checked><strong>Bravo</strong>
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="plant" value="delta"><strong>Delta</strong>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="margin-bottom: 5px;">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="start_date">From:</label>
+                                                <div class="tooltips" data-original-title="Start date of transaction" data-placement="top">
+                                                    <input type="date" name="start_date" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="end_date">To:</label>
+                                                <div class="tooltips" data-original-title="End date of transaction" data-placement="top">
+                                                    <input type="date" name="end_date" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>  
+                                        <div class="input-group col-md-5" style="margin: 38px 0px 0px 0px;">
+                                            <div class="tooltips" data-original-title="Search Transaction or Description" data-placement="top">
+                                                <input type="text" name="search" class="form-control" placeholder="Search...">
+                                            </div>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-info" type="submit" name="search_table">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        <div class="input-group col-md-2" style="white-space: nowrap; margin: 38px 0px 0px 60px;">
+                                            <label for="view" class="col-md-8 control-label">Number of rows:</label>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <select id="view" name="view" class="form-control">
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                        <option value="75">75</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </header>
+                            </form>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </section>
     </section>    
 </body>
 </html>
