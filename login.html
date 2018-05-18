@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+    <link rel="shortcut icon" href="img/favicon.png">
+
+	<title>Login Page | Starcrete Manufactoring Corporation</title>
+
+	<!-- Firebase App is always required and must be first -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+
+	<!-- Add additional services you want to use -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+
+	<!-- Firebase App Config -->
+	<script src="js_config/firebase_config.js"></script>
+
+	<!-- Bootstrap CSS -->    
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <!-- bootstrap theme -->
+    <link href="css/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="css/elegant-icons-style.css" rel="stylesheet" />
+    <link href="css/font-awesome.css" rel="stylesheet" />
+    <!-- Custom styles -->
+    <link href="css/style.css" rel="stylesheet">
+    <link href="css/style-responsive.css" rel="stylesheet" />
+
+	
+
+	<!-- Load the jQuery library, which we'll use to manipulate HTML elements with Javascript. -->
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    
+    <!-- Load Bootstrap stylesheet, which will is CSS that makes everything prettier and also responsive (aka will work on all devices of all sizes). -->
+
+<script>
+
+	$(document).ready(function(){
+		document.getElementById('login-submit').addEventListener('click', signIn, false);
+	});
+
+	function createUser(){
+
+		if(firebase.auth().currentUser){
+
+			firebase.auth().signOut();
+
+		}else{
+
+			var email = document.getElementById('loginEmail').value;
+			var password = document.getElementById('loginPassword').value;
+
+			// alert(email+" "+password);
+			firebase.auth().createUserWithEmailAndPassword(email, password).then(function(){
+
+				firebase.auth().onAuthStateChanged(function(user){
+
+					if (user != null) {
+
+						var uid = user.uid;
+						var uemail = user.email;
+						var db = firebase.database().ref();
+
+						db.child("users/"+uid).set({
+							firstname: "Carmela",
+							lastname: "Carmela",
+							email: uemail,
+							position: "secretary",
+							office: "Bravo"
+						});
+					}
+				});
+			}).catch(function(error) {
+				// Handle Errors here.
+				var errorCode = error.code;
+				var errorMessage = error.message;
+				// [START_EXCLUDE]
+				if (errorCode === 'auth/wrong-password') {
+					alert('Wrong password.');
+				} else {
+					alert(errorMessage);
+				}
+				console.log(error);
+			});
+		}
+	}
+
+	function signoutUser(){
+
+		firebase.auth().signOut().then(function() {
+		  window.location.href = 'login.php';
+		}).catch(function(error) {
+		  	var errorCode = error.code;
+			var errorMessage = error.message;
+
+			alert(errorMessage);
+		});
+	}
+
+	function initState(){
+
+		firebase.auth().onAuthStateChanged(function(user) {
+			if (user != null) {
+
+				var uid = user.uid;
+
+				firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+
+					if(snapshot.val().office == "Head Office"){
+
+						console.log("UID: " + uid);
+						console.log("First Name: " + snapshot.val().firstname);
+						console.log("Last Name: " + snapshot.val().lastname);
+						console.log("Email: " + snapshot.val().email);
+						console.log("Position: " + snapshot.val().position);
+						console.log("Office: " + snapshot.val().office);
+
+						window.location.href = "headoffice/index.html";
+					}else if(snapshot.val().office == "Bravo" || snapshot.val().office == "Delta"){
+						console.log("UID: " + uid);
+						console.log("First Name: " + snapshot.val().firstname);
+						console.log("Last Name: " + snapshot.val().lastname);
+						console.log("Email: " + snapshot.val().email);
+						console.log("Position: " + snapshot.val().position);
+						console.log("Office: " + snapshot.val().office);
+						
+						window.location.href = "plant/index.html";
+					}
+					
+				},(error) => {
+					console.log(error);
+				});
+			}
+		});
+	}
+
+	function signIn(){
+
+		var email = document.getElementById('loginEmail').value;
+		var password = document.getElementById('loginPassword').value;
+
+		firebase.auth().signInWithEmailAndPassword(email, password).then(function(){
+			// window.location.href = 'admin/index.html';
+
+			firebase.auth().onAuthStateChanged(function(user) {
+			if (user != null) {
+				// User is signed in.
+				// user.providerData.forEach(function (profile) {
+				// 	console.log("Sign-in provider: " + profile.providerId);
+				// 	console.log("  Provider-specific UID: " + profile.uid);
+				// 	console.log("  Name: " + profile.displayName);
+				// 	console.log("  Email: " + profile.email);
+				// 	console.log("  Photo URL: " + profile.photoURL);
+				// });
+
+				// var displayName = user.displayName || "";
+				// var email = user.email;
+				// var emailVerified = user.emailVerified;
+				// var photoURL = user.photoURL;
+				// var isAnonymous = user.isAnonymous;
+				var uid = user.uid;
+				// var providerData = user.providerData;
+				
+				// document.getElementById('userInfo').innerHTML = JSON.stringify(user); 
+				// document.getElementById('userInfo').innerHTML = 'WELCOME ' + displayName + ' ' + email;
+
+				firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+
+					if(snapshot.val().office == "Head Office"){
+
+						console.log("UID: " + uid);
+						console.log("First Name: " + snapshot.val().firstname);
+						console.log("Last Name: " + snapshot.val().lastname);
+						console.log("Email: " + snapshot.val().email);
+						console.log("Position: " + snapshot.val().position);
+						console.log("Office: " + snapshot.val().office);
+
+						window.location.href = "headoffice/index.html";
+					}else{
+						console.log("UID: " + uid);
+						console.log("First Name: " + snapshot.val().firstname);
+						console.log("Last Name: " + snapshot.val().lastname);
+						console.log("Email: " + snapshot.val().email);
+						console.log("Position: " + snapshot.val().position);
+						console.log("Office: " + snapshot.val().office);
+						
+						window.location.href = "plant/index.html";
+					}
+					
+				},(error) => {
+					console.log(error);
+				});
+			// ...
+			} else {
+				window.location.href = '../login.html';
+			}
+		});
+		}).catch(function(error) {
+			// Handle Errors here.
+			var errorCode = error.code;
+			var errorMessage = error.message;
+			// ...
+		});
+
+		// alert("success");
+	}
+
+	
+
+	window.onload = function() {
+		initState();
+    };
+
+</script>
+</head>
+<body class="login-img3-body">
+    <div class="container">
+        <div class="login-form">        
+            <div class="login-wrap">
+                <p class="login-img"><i class="icon_lock_alt"></i></p>
+                    <div class="alert alert-danger" id="error_msg" style="display: none;">
+                        <span class="glyphicon glyphicon-remove"></span> Your Username or Password is invalid.
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="icon_profile"></i></span>
+                        <input type="email" name="loginEmail" id="loginEmail" class="form-control" placeholder="Email" required autofocus>
+                    </div>
+                    <div class="input-group">
+                        <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+                        <input type="password" name="loginPassword" id="loginPassword" class="form-control" placeholder="Password" required>
+                    </div>
+                    <div class="input-group">
+                        <div class="col-lg-12">
+                            <div class="checkbox">
+                            <label>
+                                <input type="checkbox" name="remember" id="remember"> Remember me
+                            </label>
+                            </div>
+                        </div>
+                    </div>
+                <input class="btn btn-primary btn-lg btn-block" name="login-submit" id="login-submit" type="submit" value="Login">
+            </div>
+        </div>
+        <div class="text-right">
+            <div class="credits">
+                <!-- 
+                All the links in the footer should remain intact. 
+                You can delete the links only if you purchased the pro version.
+                Licensing information: https://bootstrapmade.com/license/
+                Purchase the pro version form: https://bootstrapmade.com/buy/?theme=NiceAdmin
+                -->
+                <a href="https://bootstrapmade.com/free-business-bootstrap-themes-website-templates/">Business Bootstrap Themes</a> by <a href="https://bootstrapmade.com/">BootstrapMade</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Home</title>
+
+	<!-- Firebase App is always required and must be first -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+
+	<!-- Add additional services you want to use -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+
+	<!-- Load the jQuery library, which we'll use to manipulate HTML elements with Javascript. -->
+    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    
+
+    <!-- Load Bootstrap stylesheet, which will is CSS that makes everything prettier and also responsive (aka will work on all devices of all sizes). -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.0.2/firebase.js"></script> -->
+    <script src="../js_config/firebase_config.js"></script>
+<script>
+	
+	function initState(){
+
+		firebase.auth().onAuthStateChanged(function(user) {
+			if (user != null) {
+				// User is signed in.
+				// user.providerData.forEach(function (profile) {
+				// 	console.log("Sign-in provider: " + profile.providerId);
+				// 	console.log("  Provider-specific UID: " + profile.uid);
+				// 	console.log("  Name: " + profile.displayName);
+				// 	console.log("  Email: " + profile.email);
+				// 	console.log("  Photo URL: " + profile.photoURL);
+				// });
+
+				// var displayName = user.displayName || "";
+				// var email = user.email;
+				// var emailVerified = user.emailVerified;
+				// var photoURL = user.photoURL;
+				// var isAnonymous = user.isAnonymous;
+				var uid = user.uid;
+				// var providerData = user.providerData;
+				
+				// document.getElementById('userInfo').innerHTML = JSON.stringify(user); 
+				// document.getElementById('userInfo').innerHTML = 'WELCOME ' + displayName + ' ' + email;
+
+				firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+					console.log("UID: " + uid);
+					console.log("First Name: " + snapshot.val().firstname);
+					console.log("Last Name: " + snapshot.val().lastname);
+					console.log("Email: " + snapshot.val().email);
+					console.log("Position: " + snapshot.val().position);
+					console.log("Office: " + snapshot.val().office);
+				},(error) => {
+					console.log(error);
+				});
+			// ...
+			} else {
+				window.location.href = '../login.html';
+			}
+		});
+	}
+
+	function updateUserDetail(){
+
+		var uname = document.getElementById('updateDisplayName').value;
+
+		firebase.auth().onAuthStateChanged(function(user){
+
+			user.updateProfile({
+				displayName: uname
+			}).then(function(){
+				var displayName = user.displayName;
+				console.log('Display Name:' + displayName);
+				window.refresh
+			}, function(error){
+				console.log('Update error');
+			});
+		});
+	}
+
+	function userSignOut(){
+
+		firebase.auth().signOut().then(function() {
+			console.log('Signed Out');
+			window.location.href = '../login.html';
+		}, function(error) {
+			console.error('Sign Out Error', error);
+		});
+	}
+
+</script>
+</head>
+<body onload="initState();">
+	<div class="row">
+		<div class="col-md-12">
+			<!-- <p><h1>HELLO</h1></p> -->
+			<div id="userInfo"></div>	
+			<div class="form-group">
+				<input type="submit" name="signOutBtn" id="signOutBtn" value="Sign Out" onclick="userSignOut();">
+			</div>
+
+			<div class="form-group">
+				<input type="text" name="updateDisplayName" id="updateDisplayName">
+			</div>
+			<div class="form-group">
+				<input type="submit" name="updateUserDetailBtn" id="updateUserDetailBtn" value="Update" onclick="updateUserDetail();">
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
