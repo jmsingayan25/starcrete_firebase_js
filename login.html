@@ -45,9 +45,9 @@
 
 <script>
 
-	$(document).ready(function(){
-		document.getElementById('login-submit').addEventListener('click', signIn, false);
-	});
+	// $(document).ready(function(){
+	// 	document.getElementById('login-submit').addEventListener('click', signIn, false);
+	// });
 
 	function createUser(){
 
@@ -147,6 +147,8 @@
 
 	function signIn(){
 
+		event.preventDefault();
+		
 		var email = document.getElementById('loginEmail').value;
 		var password = document.getElementById('loginPassword').value;
 
@@ -228,7 +230,7 @@
 </head>
 <body class="login-img3-body">
     <div class="container">
-        <div class="login-form">        
+        <form class="login-form" onsubmit="return signIn();">        
             <div class="login-wrap">
                 <p class="login-img"><i class="icon_lock_alt"></i></p>
                     <div class="alert alert-danger" id="error_msg" style="display: none;">
@@ -253,7 +255,7 @@
                     </div>
                 <input class="btn btn-primary btn-lg btn-block" name="login-submit" id="login-submit" type="submit" value="Login">
             </div>
-        </div>
+        </form>
         <div class="text-right">
             <div class="credits">
                 <!-- 
