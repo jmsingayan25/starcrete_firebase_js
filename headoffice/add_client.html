@@ -154,6 +154,18 @@
 			console.log("Client Contact Name: " + client_contact_name[i].toUpperCase());
 			console.log("Client Contact No: " + client_contact_no[i]);
 		}
+
+		var clientData = {
+			client_name: client_name.toUpperCase(),
+			client_address: client_address.toUpperCase()
+		};
+
+		var postData = firebase.database().ref().child("client");
+		var newPostRef = postData.push();
+		newPostRef.set(clientData);
+
+		var postId = newPostRef.key;
+
 	}
 
 </script>

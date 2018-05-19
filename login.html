@@ -69,9 +69,8 @@
 
 						var uid = user.uid;
 						var uemail = user.email;
-						var db = firebase.database().ref();
 
-						db.child("users/"+uid).set({
+						firebase.database().ref().child("users/"+uid).set({
 							firstname: "Carmela",
 							lastname: "Carmela",
 							email: uemail,
@@ -148,7 +147,7 @@
 	function signIn(){
 
 		event.preventDefault();
-		
+
 		var email = document.getElementById('loginEmail').value;
 		var password = document.getElementById('loginPassword').value;
 
