@@ -187,29 +187,39 @@
 
     function tableData(){
 
-        var myTbody = "<tr>";
-        firebase.database().ref('users').on('value', function(snapshot) {
-            snapshot.forEach(function(childSnapshot) {
-                // var item = childSnapshot.val();
-                var firstName = childSnapshot.val().firstname;   //Example of value
-                var lastName = childSnapshot.val().lastname;   //Example of value
-                var emailAdd = childSnapshot.val().email;   //Example of value
+        var myTbody = "";
+        firebase.database().ref('users').orderByChild('firstname').on('value', function(snapshot) {
+            if(snapshot != null){
 
-                // console.log("First Name: " + firstName);
-                // console.log("Last Name: " + lastName);
-                // console.log("Email: " + emailAdd);
+                snapshot.forEach(function(childSnapshot) {
 
-                // myTbody += "<td>" + firstName + "</td>";
-                // myTbody += "<td>" + lastName + "</td>";
-                // myTbody += "<td>" + emailAdd + "</td>";
+                    var firstName = childSnapshot.val().firstname;   //Example of value
+                    var lastName = childSnapshot.val().lastname;   //Example of value
+                    var emailAdd = childSnapshot.val().email;   //Example of value
 
-                console.log(JSON.stringify(childSnapshot));
-            });
+                    // console.log("First Name: " + firstName);
+                    // console.log("Last Name: " + lastName);
+                    // console.log("Email: " + emailAdd);
+
+                    myTbody += "<tr><td>" + firstName + "</td>";
+                    myTbody += "<td>" + lastName + "</td>";
+                    myTbody += "<td>" + emailAdd + "</td></tr>";
+
+                    console.log(JSON.stringify(childSnapshot));
+                    document.getElementById("userList").innerHTML = myTbody;
+
+                });
+            }else{
+
+                myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                document.getElementById("userList").innerHTML = myTbody;
+
+            }
+            
+
         });
 
-        myTbody += "</tr>";
-
-        document.getElementById("userList").innerHTML = myTbody;
     }
 
 </script>
