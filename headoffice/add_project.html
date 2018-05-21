@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+    <link rel="shortcut icon" href="img/favicon.png">
+
+    <title>New Project</title>
+
+    <!-- Firebase App is always required and must be first -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+
+	<!-- Add additional services you want to use -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+	<script src="../js_config/firebase_config.js"></script>
+
+	<!-- Bootstrap CSS -->    
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="../css/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="../css/elegant-icons-style.css" rel="stylesheet" />
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
+    <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="../css/fullcalendar.css">
+    <link href="../css/widgets.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/style-responsive.css" rel="stylesheet" />
+    <link href="../css/xcharts.min.css" rel=" stylesheet">	
+    <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+
+    <!-- javascripts -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery-ui-1.10.4.min.js"></script>
+    <script src="../js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+    <!-- bootstrap -->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- nice scroll -->
+    <script src="../js/jquery.scrollTo.min.js"></script>
+    <script src="../js/jquery.nicescroll.js" type="text/javascript"></script>
+    <!-- charts scripts -->
+    <script src="../assets/jquery-knob/js/jquery.knob.js"></script>
+    <script src="../js/jquery.sparkline.js" type="text/javascript"></script>
+    <script src="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+    <script src="../js/owl.carousel.js" ></script>
+    <!-- jQuery full calendar -->
+    <script src="../js/fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
+    <script src="../assets/fullcalendar/fullcalendar/fullcalendar.js"></script>
+    <!--script for this page only-->
+    <script src="../js/calendar-custom.js"></script>
+    <script src="../js/jquery.rateit.min.js"></script>
+    <!-- custom select -->
+    <script src="../js/jquery.customSelect.min.js" ></script>
+    <script src="../assets/chart-master/Chart.js"></script>
+
+    <!--custome script for all page-->
+    <script src="../js/scripts.js"></script>
+    <!-- custom script for this page-->
+    <script src="../js/sparkline-chart.js"></script>
+    <script src="../js/easy-pie-chart.js"></script>
+    <script src="../js/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="../js/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="../js/xcharts.min.js"></script>
+    <script src="../js/jquery.autosize.min.js"></script>
+    <script src="../js/jquery.placeholder.min.js"></script>
+    <script src="../js/gdp-data.js"></script>  
+    <script src="../js/morris.min.js"></script>
+    <script src="../js/sparklines.js"></script>    
+    <script src="../js/charts.js"></script>
+    <script src="../js/jquery.slimscroll.min.js"></script>
+    <!-- =======================================================
+    Theme Name: NiceAdmin
+    Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+    Author: BootstrapMade
+    Author URL: https://bootstrapmade.com
+    ======================================================= -->
+<script>
+
+	$(document).ready(function(){
+
+		firebase.auth().onAuthStateChanged(function(user) {
+            if (user != null) {
+
+                var uid = user.uid;
+        
+                firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+                    document.getElementById('username').innerHTML = snapshot.val().firstname; 
+                },(error) => {
+                    console.log(error);
+                });
+            } else {
+                window.location.href = '../login.html';
+            }
+        });
+
+		ClientKeyId = localStorage.getItem("passClientKey");
+        firebase.database().ref("client/"+ClientKeyId).on("value", function(childSnapshot){
+
+			document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='client_sites.html'</a>"+childSnapshot.val().client_name;
+			document.getElementById('block_client_name').innerHTML = childSnapshot.val().client_name;
+			document.getElementById('block_client_address').innerHTML = childSnapshot.val().client_address;
+
+		});
+
+		document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+	});
+
+	function userSignOut(){
+
+        firebase.auth().signOut().then(function() {
+            window.location.href = '../login.html';
+        }, function(error) {
+            console.error('Sign Out Error', error);
+        });
+    }
+
+	function add_row(){
+		$rowno=$("#item_table tr").length;
+		$rowno=$rowno+1;
+		$("#item_table tr:last").after("<tr id='row"+$rowno+"' style='text-align: center;'><td class='col-md-4'><div class='form-group'><input type='type' name='contact_name[]' id='contact_name[]' class='form-control' style='text-transform: uppercase;' autocomplete='off' required></div></td><td class='col-md-4'><div class='form-group'><input type='type' name='contact_no[]' id='contact_name[]' class='form-control' autocomplete='off' required></div></td><td class='col-md-4'><div class='form-group'><input type='button' value='Remove' class='btn btn-danger btn-md' onclick=delete_row('row"+$rowno+"') style='font-weight: bold;'></div></td></tr>");
+	}
+
+	function delete_row(rowno){
+		$('#'+rowno).remove();
+	}
+
+	function insertProject(){
+
+		event.preventDefault();
+
+		var project_name = document.getElementById('project_name').value;
+		var project_address = document.getElementById('project_address').value;
+		var project_contact_name = $("input[name='contact_name[]']").map(function(){return $(this).val();}).get();
+		var project_contact_no = $("input[name='contact_no[]']").map(function(){return $(this).val();}).get();
+
+		firebase.database().ref("client").limitToLast(1).on("child_added", function(childSnapshot){
+
+			console.log(childSnapshot.key, childSnapshot.val());
+
+			for(var i = 0; i < project_contact_name.length; i++){
+				console.log("Client Contact Name: " + project_contact_name[i].toUpperCase());
+				console.log("Client Contact No: " + project_contact_no[i]);
+			}
+
+			var projectData = {
+				project_name: project_name.toUpperCase(),
+				project_address: project_address.toUpperCase()
+			}
+
+			var postData = firebase.database().ref('project/'+childSnapshot.key);
+			var newPostData = postData.push();
+			newPostData.set(projectData);
+
+			var postId = newPostData.key;
+			var postContact = firebase.database().ref("contact/"+postId);
+			var count = 0;
+
+			for(var i = 0; i < project_contact_name.length; i++){
+
+				var postContactData = {
+					project_contact_name: project_contact_name[i].toUpperCase(),
+					project_contact_no: project_contact_no[i]
+				}
+				postContact.push(postContactData);
+				count++;
+			}
+
+			if(count == client_contact_name.length){
+				if(confirm('New project added successfully. Add another project?')){
+					window.location.href='add_project.html';
+				}else{
+					window.location.href='project.html';
+				}
+				// alert("Success");
+			}else{
+				alert("Failed");
+			}
+		});
+	}
+</script>
+<style>
+/*.page_links a{
+	color: inherit;
+}*/
+</style>
+</head>
+<body>
+	<section id="container" class="">
+	    <header class="header dark-bg">
+	        <div class="toggle-nav">
+	        <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
+	        </div>
+
+	            <!--logo start-->
+
+	            <!--logo end-->
+			<a href='index.php' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+	 
+			<div class="top-nav notification-row">                
+	            <!-- notificatoin dropdown start-->
+	            <ul class="nav pull-right top-menu">
+	                <!-- user login dropdown start-->
+	                <li class="dropdown">
+	                    <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+	                    <!--  <span class="profile-ava">
+	                    <img alt="" src="img/avatar1_small.jpg">
+	                    </span> -->
+	                        <span class="username" id="username"></span>
+	                        <b class="caret"></b>
+	                    </a>
+	                    <ul class="dropdown-menu extended logout">
+                            <div class="log-arrow-up"></div>
+                            <li>
+                                <a href="" id="logoutBtn"><i class="icon_key_alt"></i> Log Out</a>
+                            </li>
+                        </ul>
+	                </li>
+	                <!-- user login dropdown end -->
+	            </ul>
+	            <!-- notificatoin dropdown end-->
+	        </div>
+	    </header>      
+
+	    <aside>
+	        <div id="sidebar"  class="nav-collapse ">
+	            <!-- sidebar menu start-->
+	            <ul class="sidebar-menu">                
+	                <li>
+	                    <a class="" href="index.html">
+	                        <i class="icon_house"></i>
+	                        <span>History</span>
+	                    </a>
+	                </li>
+	                <li>
+	                    <a class="" href="client.html">
+	                        <i class="fa fa-address-book"></i>
+	                        <span>Clients</span>
+	                    </a>
+	                </li>
+	                <!-- <li class="sub-menu">
+	                    <a href="javascript:;" class="">
+	                        <i class="fa fa-building"></i>
+	                        <span>Bravo</span>
+	                        <span class="menu-arrow arrow_carrot-down"></span>
+	                    </a>
+	                    <ul class="sub">
+	                        <li><a class="" href="purchase_order.php?office=bravo">Purchase Order</a></li>                          
+	                        <li><a class="" href="delivery_order.php?office=bravo">Delivery Page</a></li>
+	                    </ul>
+	                </li>  
+	                <li class="sub-menu">
+	                    <a href="javascript:;" class="">
+	                        <i class="fa fa-building"></i>
+	                        <span>Delta</span>
+	                        <span class="menu-arrow arrow_carrot-down"></span>
+	                    </a>
+	                    <ul class="sub">
+	                        <li><a class="" href="purchase_order.php?office=bravo">Purchase Order</a></li>                          
+	                         <li><a class="" href="delivery_order.php?office=bravo">Delivery Page</a></li>
+	                    </ul>
+	                </li>    -->
+	                <li class="sub-menu">
+	                    <a href="javascript:;" class="">
+	                        <i class="fa fa-file"></i>
+	                        <span>Forms</span>
+	                        <span class="menu-arrow arrow_carrot-down"></span>
+	                    </a>
+	                    <ul class="sub">
+	                        <li><a class="" href="purchase_order_form.html">Add New P.O.</a></li>
+	                    </ul>
+	                </li>      
+	            </ul>
+	            <!-- sidebar menu end-->
+	        </div>
+	    </aside>
+	    <!--sidebar end-->
+
+	    <!--main content start-->
+	    <section id="main-content">
+	        <section class="wrapper">            
+	            <!--overview start-->
+	            <div class="row">
+	                <div class="col-md-12">
+	                    <!-- <h3 class="page-header"><i class="fa fa-laptop"></i> New Client</h3> -->
+	                    <ol class="breadcrumb">
+	                        <li><i class="fa fa-address-book"></i><a href="client.html">Clients</a></li>
+	                        <li id="div_client_name"></li>
+	                        <li><i class="icon_document"></i>New Project</li>						  	
+	                    </ol>
+	                </div>
+	            </div>
+
+	            <!-- Basic Forms & Horizontal Forms-->
+	            <form class="form-horizontal" onsubmit="return insertProject();">
+	            	<div class="row">
+						<div class="col-md-6">
+	            			<div class="row">
+								<div class="col-md-12">
+									<section class="panel">
+										<header class="panel-heading">
+										Client Info
+										</header>
+										<div class="panel-body">
+											<div class="form-group">
+												<label for="client_name" class="col-md-4 control-label">Client Name: </label>
+												<div class="col-md-8">
+													<!-- <label class="control-label"><?php echo $client_name; ?></label> -->
+													<p class="help-block" id="block_client_name"></p>
+												</div>
+											</div>
+											<div class="form-group">
+												<label for="client_address" class="col-md-4 control-label">Client Address: </label>
+												<div class="col-md-8">
+													<!-- <label class="control-label"><?php echo $client_address; ?></label> -->
+													<p class="help-block" id="block_client_address"></p>
+												</div>
+											</div>
+										</div>
+									</section>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<section class="panel">
+										<header class="panel-heading">
+										Project Info
+										</header>
+										<div class="panel-body">
+											<div class="form-group">
+												<label for="project_name" class="col-md-4 control-label">Project Name<span class="required" style="color: red;">*</span></label>
+												<div class="col-md-8">
+													<!-- <input type="text" name="project_name" class="form-control" required> -->
+													<textarea name="project_name" id="project_name" class="form-control" style="resize: none; text-transform: uppercase;" required></textarea>
+												</div>
+											</div>
+											<div class="form-group">
+												<label for="project_address" class="col-md-4 control-label">Project Address<span class="required" style="color: red;">*</span> </label>
+												<div class="col-md-8">
+													<!-- <input type="textarea" name="project_address" class="form-control" required> -->
+													<textarea name="project_address" id="project_address" class="form-control" rows="5" style="resize: none; text-transform: uppercase;" required></textarea>
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-md-offset-8 col-md-4">
+													<input type="submit" name="submit" id="submit" value="Save" class="btn btn-primary" style="font-weight: bold;">
+													<a href="projects.php" class="btn btn-default"><strong>Cancel</strong></a>
+													<!-- <input type="reset" name="reset" id="reset" value="Reset" class="btn btn-default" style="font-weight: bold;"> -->
+												</div>
+											</div>
+										</div>
+									</section>
+								</div>
+							</div>
+						</div>
+						<div class="col-md-6">
+	            			<div class="row">
+								<div class="col-md-12">
+									<section class="panel">
+										<header class="panel-heading">
+										Project Contacts
+										</header>
+										<div class="panel-body">
+											<div class="row">
+												<table id="item_table" align="center">
+													<tr>
+														<td class="col-md-4">
+															<label for="contact_name">Name<span class="required" style="color: red;">*</span></label>
+														</td>
+														<td class="col-md-4">
+															<label for="contact_no">Number<span class="required" style="color: red;">*</span></label>
+														</td>
+														<td class="col-md-4">
+															<label for="button"></label>
+														</td>
+													</tr>
+													<tr id="row1" style="text-align: center;">
+														<td class="col-md-3">
+															<div class="form-group">
+																<input type="type" name="contact_name[]" id="contact_name[]" class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+															</div>
+														</td>
+														<td class="col-md-5">
+															<div class="form-group" >
+																<input type="type" name="contact_no[]" id="contact_name[]" class="form-control" autocomplete="off" required>
+															</div>
+														</td>
+														<td class="col-md-4">
+															<div class="form-group">
+																<input type="button" onclick="add_row();" class='btn btn-primary btn-md' autocomplete="off" value="Add" style="font-weight: bold;">
+															</div>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+										<footer class="panel-footer">
+											<p class="help-block"><span class="required" style="color: red;">*</span> - required</p>
+											<p class="help-block">Note: Put a comma between contact numbers. <strong>N/A</strong> for not available.</p>
+										</footer>
+									</section>
+								</div>
+							</div>
+	            		</div>
+	            		<!-- End of column for contact no -->
+					</div>
+				</form>
+	        </section>
+	    </section>
+	</section>
+</body>
+</html>

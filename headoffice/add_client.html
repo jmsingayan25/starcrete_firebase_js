@@ -10,7 +10,7 @@
 
     <title>New Client - Clients</title>
 
-     <!-- Firebase App is always required and must be first -->
+    <!-- Firebase App is always required and must be first -->
 	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
 
 	<!-- Add additional services you want to use -->
@@ -96,13 +96,6 @@
                 var uid = user.uid;
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-                    // console.log("UID: " + uid);
-                    // console.log("First Name: " + snapshot.val().firstname);
-                    // console.log("Last Name: " + snapshot.val().lastname);
-                    // console.log("Email: " + snapshot.val().email);
-                    // console.log("Position: " + snapshot.val().position);
-                    // console.log("Office: " + snapshot.val().office);
-
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
@@ -118,10 +111,9 @@
 	function userSignOut(){
 
         firebase.auth().signOut().then(function() {
-            // console.log('Signed Out');
             window.location.href = '../login.html';
         }, function(error) {
-            // console.error('Sign Out Error', error);
+            console.error('Sign Out Error', error);
         });
     }
 
@@ -135,7 +127,7 @@
 		$('#'+rowno).remove();
 	}
 
-	function createClient(){
+	function insertClient(){
 
 		event.preventDefault();
 
@@ -167,17 +159,20 @@
 		for(var i = 0; i < client_contact_name.length; i++){
 
 			var postContactData = {
-				client_contact_name: client_contact_name[i],
+				client_contact_name: client_contact_name[i].toUpperCase(),
 				client_contact_no: client_contact_no[i]
 			}
 			postContact.push(postContactData);
 			count++;
 		}
 		if(count == client_contact_name.length){
-			// if(confirm("'New client added successfully. Proceed to Add Project?")){
-			// 	window.location.href='add.site.html';
-			// }
-			alert("Success");
+			if(confirm("'New client added successfully. Proceed to Add Project?")){
+				window.location.href='add_project.html';
+				firebase.database().ref("client").limitToLast(1).on("child_added", function(childSnapshot){
+					localStorage.setItem("passClientKey", childSnapshot.key);
+				});
+			}
+			// alert("Success");
 		}else{
 			alert("Failed");
 		}
@@ -295,7 +290,7 @@
 	            </div>
 
 	            <!-- Basic Forms & Horizontal Forms-->
-	            <form class="form-horizontal" onsubmit="return createClient();">
+	            <form class="form-horizontal" onsubmit="return insertClient();">
 	            	<div class="row">
 						<div class="col-md-6">
 							<section class="panel">

@@ -192,12 +192,14 @@
 
                     var clientName = childSnapshot.val().client_name;
                     var clientAddress = childSnapshot.val().client_address;
+                    var key = childSnapshot.key;
 
                     myTbody += "<tr><td>" + clientName + "</td>";
                     myTbody += "<td>" + clientAddress + "</td>";
-                    myTbody += "<td>" + "JM" + "</td>";
-                    myTbody += "<td>" + "" + "</td></tr>";
+                    myTbody += "<td>" + key + "</td>";
+                    myTbody += "<td><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><form action='client_add_contact.html'><button class='btn btn-sm btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></form></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><form action='client_update_info.html'><button class='btn btn-sm btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></form></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><form action='project.html'><button class='btn btn-sm btn-block' data-key='" + key + "' style='background-color: #388e3c; color: white;'><span class='fa fa-info-circle'></span> <strong>Projects</strong></button></form></div></div></td></tr>";
 
+                    
                     // console.log(JSON.stringify(childSnapshot));
                     document.getElementById("clientList").innerHTML = myTbody;
                 })
@@ -207,7 +209,7 @@
 
                 document.getElementById("clientList").innerHTML = myTbody;
             }
-        })
+        });
     }
 
 </script>
