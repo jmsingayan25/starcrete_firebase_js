@@ -90,7 +90,12 @@
 	
 	$(document).ready(function(){
 
-		document.getElementById('key').innerHTML = localStorage.getItem("passClientKey");
+		// document.getElementById('key').innerHTML = localStorage.getItem("passClientKey");
+		var query = window.location.search.substring(1);
+		alert(query);
+		// $.get("project.html",function(key){
+		// 	alert("Key:" + key);
+		// });
 	});
 </script>
 </head>
