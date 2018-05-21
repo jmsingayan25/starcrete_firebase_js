@@ -89,17 +89,306 @@
 <script>
 	
 	$(document).ready(function(){
+        $('.filterable .btn-filter').click(function(){
+            var $panel = $(this).parents('.filterable'),
+            $filters = $panel.find('.filters input'),
+            $tbody = $panel.find('.table tbody');
+            if ($filters.prop('disabled') == true) {
+                $filters.prop('disabled', false);
+                $filters.first().focus();
+            } else {
+                $filters.val('').prop('disabled', true);
+                $tbody.find('.no-result').remove();
+                $tbody.find('tr').show();
+            }
+        });
 
-		// document.getElementById('key').innerHTML = localStorage.getItem("passClientKey");
-		var query = window.location.search.substring(1);
-		alert(query);
-		// $.get("project.html",function(key){
-		// 	alert("Key:" + key);
-		// });
-	});
+        $('.filterable .filters input').keyup(function(e){
+            /* Ignore tab key */
+            var code = e.keyCode || e.which;
+            if (code == '9') return;
+            /* Useful DOM data and selectors */
+            var $input = $(this),
+            inputContent = $input.val().toLowerCase(),
+            $panel = $input.parents('.filterable'),
+            column = $panel.find('.filters th').index($input.parents('th')),
+            $table = $panel.find('.table'),
+            $rows = $table.find('tbody tr');
+            /* Dirtiest filter function ever ;) */
+            var $filteredRows = $rows.filter(function(){
+                var value = $(this).find('td').eq(column).text().toLowerCase();
+                return value.indexOf(inputContent) === -1;
+            });
+            /* Clean previous no-result if exist */
+            $table.find('tbody .no-result').remove();
+            /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
+            $rows.show();
+            $filteredRows.hide();
+            /* Prepend no-result row if all rows are filtered */
+            if ($filteredRows.length === $rows.length) {
+                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="4" style="height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
+            }
+        });
+
+        firebase.auth().onAuthStateChanged(function(user) {
+			if (user != null) {
+
+				var uid = user.uid;
+		
+				firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+					console.log("UID: " + uid);
+					console.log("First Name: " + snapshot.val().firstname);
+					console.log("Last Name: " + snapshot.val().lastname);
+					console.log("Email: " + snapshot.val().email);
+					console.log("Position: " + snapshot.val().position);
+					console.log("Office: " + snapshot.val().office);
+
+					document.getElementById('username').innerHTML = snapshot.val().firstname; 
+				},(error) => {
+					console.log(error);
+				});
+			} else {
+				window.location.href = '../login.html';
+			}
+		});
+
+		
+    });
+
+	function getUrlParameter(name) {
+	    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+	    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+	    var results = regex.exec(location.search);
+	    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+	}
+
+	function tableData(){
+
+        var clientKeyId = getUrlParameter('key');
+        var myTbody = "";
+
+        firebase.database().ref('project/'+clientKeyId).orderByChild('project_name').on('value', function(snapshot){
+            if(snapshot != null){
+
+                snapshot.forEach(function(childSnapshot){
+
+                    var projectName = childSnapshot.val().project_name;
+                    var projectAddress = childSnapshot.val().project_address;
+                    var key = childSnapshot.key;
+
+                    myTbody += "<tr><td>" + projectName + "</td>";
+                    myTbody += "<td>" + projectAddress + "</td>";
+                    myTbody += "<td>" + key + "</td>";
+                    myTbody += "<td></td></tr>";
+
+                    
+                    // console.log(JSON.stringify(childSnapshot));
+                    document.getElementById("projectList").innerHTML = myTbody;
+                })
+            }else{
+
+                myTbody = "<tr><td colspan='4' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                document.getElementById("projectList").innerHTML = myTbody;
+            }
+        });
+    }
+
 </script>
+<style>
+.table_page{
+    /*margin: auto;*/
+    margin-top: -40px;
+    /*width: 100%;*/
+    text-align: center;
+}
+
+.table_row_count{
+    margin-top: -15px;
+}
+
+.filterable .panel-heading .pull-right {
+    margin-top: -20px;
+}
+.filterable .filters input[disabled] {
+    background-color: transparent;
+    text-align: center;
+    border: none;
+    cursor: auto;
+    box-shadow: none;
+    padding: 0;
+    height: auto;
+}
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+    color: gray;
+    text-align: left;
+    font-weight: bold;
+}
+.filterable .filters input[disabled]::-moz-placeholder {
+     color: gray;
+     text-align: left;
+     font-weight: bold;
+}
+.filterable .filters input[disabled]:-ms-input-placeholder {
+     color: gray;
+     text-align: left;
+     font-weight: bold;
+}
+</style>
 </head>
-<body>
-	<p id="key"></p>
+<body onload="tableData();">
+	<!-- container section start -->
+    <section id="container" class="">
+        <header class="header dark-bg">
+            <div class="toggle-nav">
+            <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
+            </div>
+
+            <!--logo start-->
+
+            <!--logo end-->
+            <a href='index.php' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+            <div class="top-nav notification-row">                
+                <!-- notificatoin dropdown start-->
+                <ul class="nav pull-right top-menu">
+                    <!-- user login dropdown start-->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <!--  <span class="profile-ava">
+                        <img alt="" src="img/avatar1_small.jpg">
+                        </span> -->
+                            <span class="username" id="username"></span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <div class="log-arrow-up"></div>
+                            <li>
+                                <a href="" id="logoutBtn"><i class="icon_key_alt"></i> Log Out</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->
+                </ul>
+                <!-- notificatoin dropdown end-->
+            </div>
+        </header>      
+   		<!--header end-->
+
+   		<!--sidebar start-->
+	    <aside>
+	        <div id="sidebar"  class="nav-collapse ">
+	            <!-- sidebar menu start-->
+	            <ul class="sidebar-menu">                
+	                <li class="">
+	                    <a class="" href="index.html">
+	                        <i class="icon_house"></i>
+	                        <span>History</span>
+	                    </a>
+	                </li>
+	                <li class="active">
+	                    <a class="" href="client.html">
+	                        <i class="fa fa-address-book"></i>
+	                        <span>Clients</span>
+	                    </a>
+	                </li>
+	                <!-- <li class="sub-menu">
+	                    <a href="javascript:;" class="">
+	                        <i class="fa fa-building"></i>
+	                        <span>Bravo</span>
+	                        <span class="menu-arrow arrow_carrot-down"></span>
+	                    </a>
+	                    <ul class="sub">
+	                        <li><a class="" href="purchase_order.php?office=bravo">Purchase Order</a></li>                          
+	                        <li><a class="" href="delivery_order.php?office=bravo">Delivery Page</a></li>
+	                    </ul>
+	                </li>  
+	                <li class="sub-menu">
+	                    <a href="javascript:;" class="">
+	                        <i class="fa fa-building"></i>
+	                        <span>Delta</span>
+	                        <span class="menu-arrow arrow_carrot-down"></span>
+	                    </a>
+	                    <ul class="sub">
+	                        <li><a class="" href="purchase_order.php?office=delta">Purchase Order</a></li>                          
+	                        <li><a class="" href="delivery_order.php?office=delta">Delivery Page</a></li>
+	                    </ul>
+	                </li>  --> 
+	                <li class="sub-menu">
+	                    <a href="javascript:;" class="">
+	                        <i class="fa fa-file"></i>
+	                        <span>Forms</span>
+	                        <span class="menu-arrow arrow_carrot-down"></span>
+	                    </a>
+	                    <ul class="sub">
+	                        <li><a class="" href="purchase_order_form.html">Add New P.O.</a></li>
+	                    </ul>
+	                </li>     
+	            </ul>
+	            <!-- sidebar menu end-->
+	        </div>
+	    </aside>
+	    <!--sidebar end-->
+
+	    <!--main content start-->
+	    <section id="main-content">
+	        <section class="wrapper">            
+	            <!--overview start-->
+	            <div class="row">
+	                <div class="col-md-12">
+	                    <ol class="breadcrumb">
+	                        <li><i class="fa fa-address-book"></i><a href="client.html">Clients</a></li>
+	                        <li><i class="fa fa-building"></i><a href="project.html">Project</a></li>    
+	                        <li><i class="fa fa-address-card"></i>Projects</li>                         
+	                    </ol>
+	                </div>
+	            </div>
+	            <div class="row">
+                <div class="col-md-12">
+                    <section class="panel">
+                         <header class="panel-heading">
+                            <div class="row">
+                                <form action="project.html">
+                                    <div class="input-group col-md-8" style="margin: 5px 0px 5px 0px;">
+                                        <div class="tooltips" data-original-title="Search Project Name or Address" data-placement="top">
+                                            <input type="text" name="search" class="form-control" placeholder="Search...">
+                                        </div>
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-info" type="submit" name="search_site">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </form>
+                                <div class="pull-right" style="margin-top: 5px; margin-right: 5px;">
+                                     <form action="add_project.html" method="post">
+                                            <button type="submit" class="btn btn-info" style="font-weight: bold;"><span class="fa fa-plus"></span> Add Project</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </header>
+                        <div class="table-responsive filterable">
+                            <table class="table table-striped table-bordered" id="myTable">
+                                <thead>
+                                    <tr class="filterable">
+                                        <th colspan="4">
+                                            <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
+                                        </th>
+                                    </tr>
+                                    <tr class="filters">
+                                        <th class="col-md-3"><input type="text" class="form-control" placeholder="Project Name" disabled></th>
+                                        <th class="col-md-4"><input type="text" class="form-control" placeholder="Address" disabled></th>
+                                        <th class="col-md-4"><input type="text" class="form-control" placeholder="Contact" disabled></th>
+                                        <th class="col-md-1">Option</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="projectList">
+                                </tbody>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+	        </section>
+	    </section>
+	</section>
 </body>
 </html>
