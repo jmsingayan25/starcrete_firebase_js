@@ -143,10 +143,7 @@
 		var client_contact_no = $("input[name='contact_no[]']").map(function(){return $(this).val();}).get();
 		var client_name = document.getElementById('client_name').value;
 		var client_address = document.getElementById('client_address').value;
-		// var client_contact_name = document.getElementById('contact_name').value;
-		// var client_contact_no = document.getElementById('contact_no').value;
 
-		// alert(client_name + " " + client_address);
 		console.log("Client Name: " + client_name.toUpperCase());
 		console.log("Client Address: " + client_address.toUpperCase());
 
@@ -165,33 +162,24 @@
 		newPostRef.set(clientData);
 
 		var postId = newPostRef.key;
-
-		var postContact = firebase.database().ref("client/"+postId+"/contacts");
-		// var postContactData = {
-		// 	client_contact_name: "JOHN MICHAEL",
-		// 	client_contact_no: "09856523214"
-		// }
-
-		// if(postContact.push(postContactData)){
-		// 	alert("Success");
-		// }else{
-		// 	alert("Failed");
-		// }
-
+		var postContact = firebase.database().ref("contact/"+postId);
+		var count = 0;
 		for(var i = 0; i < client_contact_name.length; i++){
-			// console.log("Client Contact Name: " + client_contact_name[i].toUpperCase());
-			// console.log("Client Contact No: " + client_contact_no[i]);
 
 			var postContactData = {
 				client_contact_name: client_contact_name[i],
 				client_contact_no: client_contact_no[i]
 			}
-
-			if(postContact.push(postContactData)){
-				alert("Success");
-			}else{
-				alert("Failed");
-			}
+			postContact.push(postContactData);
+			count++;
+		}
+		if(count == client_contact_name.length){
+			// if(confirm("'New client added successfully. Proceed to Add Project?")){
+			// 	window.location.href='add.site.html';
+			// }
+			alert("Success");
+		}else{
+			alert("Failed");
 		}
 	}
 
@@ -300,7 +288,7 @@
 	                <div class="col-lg-12">
 	                    <!-- <h3 class="page-header">New Client</h3> -->
 	                    <ol class="breadcrumb">
-	                        <li><i class="fa fa-address-book"></i><a href="clients.php">Clients</a></li>						  	
+	                        <li><i class="fa fa-address-book"></i><a href="client.html">Clients</a></li>						  	
 	                        <li><i class="icon_document"></i>New Client</li>						  	
 	                    </ol>
 	                </div>
