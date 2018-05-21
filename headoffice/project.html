@@ -152,8 +152,18 @@
 			}
 		});
 
-		
+		document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
+
+	function userSignOut(){
+
+        firebase.auth().signOut().then(function() {
+            // console.log('Signed Out');
+            window.location.href = '../login.html';
+        }, function(error) {
+            // console.error('Sign Out Error', error);
+        });
+    }
 
 	function getUrlParameter(name) {
 	    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
@@ -168,29 +178,22 @@
         var myTbody = "";
 
         firebase.database().ref('project/'+clientKeyId).orderByChild('project_name').on('value', function(snapshot){
-            if(snapshot != null){
 
-                snapshot.forEach(function(childSnapshot){
+            snapshot.forEach(function(childSnapshot){
 
-                    var projectName = childSnapshot.val().project_name;
-                    var projectAddress = childSnapshot.val().project_address;
-                    var key = childSnapshot.key;
+                var projectName = childSnapshot.val().project_name;
+                var projectAddress = childSnapshot.val().project_address;
+                var key = childSnapshot.key;
 
-                    myTbody += "<tr><td>" + projectName + "</td>";
-                    myTbody += "<td>" + projectAddress + "</td>";
-                    myTbody += "<td>" + key + "</td>";
-                    myTbody += "<td></td></tr>";
+                myTbody += "<tr><td>" + projectName + "</td>";
+                myTbody += "<td>" + projectAddress + "</td>";
+                myTbody += "<td>" + key + "</td>";
+                myTbody += "<td></td></tr>";
 
-                    
-                    // console.log(JSON.stringify(childSnapshot));
-                    document.getElementById("projectList").innerHTML = myTbody;
-                })
-            }else{
-
-                myTbody = "<tr><td colspan='4' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-
+                
+                // console.log(JSON.stringify(childSnapshot));
                 document.getElementById("projectList").innerHTML = myTbody;
-            }
+            });
         });
     }
 
