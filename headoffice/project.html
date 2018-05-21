@@ -88,6 +88,8 @@
 
 <script>
 	
+	var clientKeyId = getUrlParameter('key');
+
 	$(document).ready(function(){
         $('.filterable .btn-filter').click(function(){
             var $panel = $(this).parents('.filterable'),
@@ -136,12 +138,13 @@
 				var uid = user.uid;
 		
 				firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-					console.log("UID: " + uid);
-					console.log("First Name: " + snapshot.val().firstname);
-					console.log("Last Name: " + snapshot.val().lastname);
-					console.log("Email: " + snapshot.val().email);
-					console.log("Position: " + snapshot.val().position);
-					console.log("Office: " + snapshot.val().office);
+					// console.log("UID: " + uid);
+					// console.log("First Name: " + snapshot.val().firstname);
+					// console.log("Last Name: " + snapshot.val().lastname);
+					// console.log("Email: " + snapshot.val().email);
+					// console.log("Position: " + snapshot.val().position);
+					// console.log("Office: " + snapshot.val().office);
+					console.log(snapshot.val());
 
 					document.getElementById('username').innerHTML = snapshot.val().firstname; 
 				},(error) => {
@@ -152,6 +155,12 @@
 			}
 		});
 
+        firebase.database().ref("client/"+clientKeyId).on("value", function(childSnapshot){
+
+			document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='project.html?key=" + clientKeyId + "'</a>"+childSnapshot.val().client_name;
+			// document.getElementById('block_client_name').innerHTML = childSnapshot.val().client_name;
+			// document.getElementById('block_client_address').innerHTML = childSnapshot.val().client_address;
+		});
 		document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
@@ -174,7 +183,6 @@
 
 	function tableData(){
 
-        var clientKeyId = getUrlParameter('key');
         var myTbody = "";
 
         firebase.database().ref('project/'+clientKeyId).orderByChild('project_name').on('value', function(snapshot){
@@ -188,7 +196,7 @@
                 myTbody += "<tr><td>" + projectName + "</td>";
                 myTbody += "<td>" + projectAddress + "</td>";
                 myTbody += "<td>" + key + "</td>";
-                myTbody += "<td></td></tr>";
+                myTbody += "<td><div class='row' style='margin-bottom: 2px;'> <div class='col-md-12'> <a href='add_project_contact.html'><button class='btn btn-sm btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='project_update_info.html'><button class='btn btn-sm btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'> <a href='client_sites_list_po.php'> <button class='btn btn-sm btn-block' style='background-color: #388e3c; color: white;'><span class='fa fa-info-circle'></span> <strong>List of P.O.</strong></button> </a></div></div></td></tr>";
 
                 
                 // console.log(JSON.stringify(childSnapshot));
@@ -340,7 +348,8 @@
 	                <div class="col-md-12">
 	                    <ol class="breadcrumb">
 	                        <li><i class="fa fa-address-book"></i><a href="client.html">Clients</a></li>
-	                        <li><i class="fa fa-building"></i><a href="project.html">Project</a></li>    
+	                        <li id="div_client_name"></li>    
+	                        <!-- <li><i class="fa fa-building"></i><a href="project.html">Project</a></li>     -->
 	                        <li><i class="fa fa-address-card"></i>Projects</li>                         
 	                    </ol>
 	                </div>
