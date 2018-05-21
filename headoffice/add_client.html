@@ -143,7 +143,10 @@
 		var client_contact_no = $("input[name='contact_no[]']").map(function(){return $(this).val();}).get();
 		var client_name = document.getElementById('client_name').value;
 		var client_address = document.getElementById('client_address').value;
+		// var client_contact_name = document.getElementById('contact_name').value;
+		// var client_contact_no = document.getElementById('contact_no').value;
 
+		// alert(client_name + " " + client_address);
 		console.log("Client Name: " + client_name.toUpperCase());
 		console.log("Client Address: " + client_address.toUpperCase());
 
@@ -162,23 +165,33 @@
 		newPostRef.set(clientData);
 
 		var postId = newPostRef.key;
-		var postContact = firebase.database().ref("client/"+postId+"/contacts");
 
-		var count = 0;
+		var postContact = firebase.database().ref("client/"+postId+"/contacts");
+		// var postContactData = {
+		// 	client_contact_name: "JOHN MICHAEL",
+		// 	client_contact_no: "09856523214"
+		// }
+
+		// if(postContact.push(postContactData)){
+		// 	alert("Success");
+		// }else{
+		// 	alert("Failed");
+		// }
+
 		for(var i = 0; i < client_contact_name.length; i++){
+			// console.log("Client Contact Name: " + client_contact_name[i].toUpperCase());
+			// console.log("Client Contact No: " + client_contact_no[i]);
 
 			var postContactData = {
 				client_contact_name: client_contact_name[i],
 				client_contact_no: client_contact_no[i]
 			}
-			count++;
-		}
-		if(count == client_contact_name.length){
-			if(confirm("'New client added successfully. Proceed to Add Project?")){
-				window.location.href='add.site.html';
+
+			if(postContact.push(postContactData)){
+				alert("Success");
+			}else{
+				alert("Failed");
 			}
-		}else{
-			alert("Failed");
 		}
 	}
 
