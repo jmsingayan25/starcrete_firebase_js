@@ -8,7 +8,7 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="img/favicon.png">
 
-    <title>New Client - Clients</title>
+    <title>New Contact Person</title>
 
     <!-- Firebase App is always required and must be first -->
 	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
@@ -88,6 +88,8 @@
 
 <script>
 	
+	var clientKeyId = getUrlParameter('key');
+
 	$(document).ready(function(){
 
 		firebase.auth().onAuthStateChanged(function(user) {
@@ -106,6 +108,14 @@
         });
 		document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
+		// ClientKeyId = localStorage.getItem("passClientKey");
+        firebase.database().ref("client/"+clientKeyId).on("value", function(childSnapshot){
+
+			document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='project.html?key=" + clientKeyId + "'</a>"+childSnapshot.val().client_name;
+			document.getElementById('block_client_name').innerHTML = childSnapshot.val().client_name;
+			document.getElementById('block_client_address').innerHTML = childSnapshot.val().client_address;
+		});
+
 	});
 
 	function userSignOut(){
@@ -117,89 +127,64 @@
         });
     }
 
-	function add_row(){
+    function getUrlParameter(name) {
+	    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+	    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+	    var results = regex.exec(location.search);
+	    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+	}
+
+    function add_row(){
 		$rowno=$("#item_table tr").length;
 		$rowno=$rowno+1;
-		$("#item_table tr:last").after("<tr id='row"+$rowno+"' style='text-align: center;'><td class='col-md-4'><div class='form-group'><input type='type' name='contact_name[]' class='form-control' style='text-transform: uppercase;' autocomplete='off' required></div></td><td class='col-md-4'><div class='form-group'><input type='type' name='contact_no[]' class='form-control' autocomplete='off' required></div></td><td class='col-md-4'><div class='form-group'><input type='button' value='Remove' class='btn btn-danger btn-md' onclick=delete_row('row"+$rowno+"') style='font-weight: bold;'></div></td></tr>");
+		$("#item_table tr:last").after("<tr id='row"+$rowno+"' style='text-align: center;'><td class='col-md-4'><div class='form-group'><input type='type' name='contact_name[]' id='contact_name[]' class='form-control' autocomplete='off' style='text-transform: uppercase;' required></div></td><td class='col-md-4'><div class='form-group'><input type='type' name='contact_no[]' id='contact_no[]' class='form-control' autocomplete='off' required></div></td><td class='col-md-4'><div class='form-group'><input type='button' value='Remove' class='btn btn-danger btn-md' onclick=delete_row('row"+$rowno+"') style='font-weight: bold;'></div></td></tr>");
 	}
 
 	function delete_row(rowno){
 		$('#'+rowno).remove();
 	}
 
-	function insertClient(){
+	function tableData(){
 
-		event.preventDefault();
+		var divBody = "";
+		firebase.database().ref('contact/'+clientKeyId).on('value', function(snapshot){
 
-		var client_contact_name = $("input[name='contact_name[]']").map(function(){return $(this).val();}).get();
-		var client_contact_no = $("input[name='contact_no[]']").map(function(){return $(this).val();}).get();
-		var client_name = document.getElementById('client_name').value;
-		var client_address = document.getElementById('client_address').value;
+			snapshot.forEach(function(childSnapshot){
+				
+				divBody += "<div class='form-group'>";
+                divBody += "<div class='row' style='margin-bottom: 2px;'>";
+				divBody += "<div class='col-md-5 col-md-offset-1'>";
+				divBody += childSnapshot.val().client_contact_name;
+				divBody += "</div>";
+				divBody += "<div class='col-md-1'> - </div>";
+				divBody += "<div class='col-md-5'>";
+				divBody += childSnapshot.val().client_contact_no;
+				divBody += "</div>";
+				divBody += "</div>";
+				divBody += "</div>";
 
-		console.log("Client Name: " + client_name.toUpperCase());
-		console.log("Client Address: " + client_address.toUpperCase());
-
-		for(var i = 0; i < client_contact_name.length; i++){
-			console.log("Client Contact Name: " + client_contact_name[i].toUpperCase());
-			console.log("Client Contact No: " + client_contact_no[i]);
-		}
-
-		var clientData = {
-			client_name: client_name.toUpperCase(),
-			client_address: client_address.toUpperCase()
-		};
-
-		var postData = firebase.database().ref().child("client");
-		var newPostRef = postData.push();
-		newPostRef.set(clientData);
-
-		var postId = newPostRef.key;
-		var postContact = firebase.database().ref("contact/"+postId);
-		var count = 0;
-		for(var i = 0; i < client_contact_name.length; i++){
-
-			var postContactData = {
-				client_contact_name: client_contact_name[i].toUpperCase(),
-				client_contact_no: client_contact_no[i]
-			}
-			postContact.push(postContactData);
-			count++;
-		}
-		
-		if(count == client_contact_name.length){
-			if(confirm("'New client added successfully. Proceed to Add Project?")){
-				window.location.href='add_project.html?key=' + childSnapshot.key;
-				// firebase.database().ref("client").limitToLast(1).on("child_added", function(childSnapshot){
-				// 	localStorage.setItem("passClientKey", childSnapshot.key);
-				// });
-			}
-			// alert("Success");
-		}else{
-			alert("Failed");
-		}
+				document.getElementById("div_contact_list").innerHTML = divBody;
+			})
+		});
 	}
-
 </script>
 </head>
-<body>
+<body onload="tableData();">
 	<section id="container" class="">
 	    <header class="header dark-bg">
 	        <div class="toggle-nav">
-	        <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
+	        	<div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
 	        </div>
 
-            <!--logo start-->
+	            <!--logo start-->
 
-            <!--logo end-->
+	            <!--logo end-->
+			<a href='index.php' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
 
-			<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
-
-            <div class="top-nav notification-row">                
-                <!-- notificatoin dropdown start-->
-                <ul class="nav pull-right top-menu">
-
-                	
-                    <!-- user login dropdown start-->
+			<div class="top-nav notification-row">                
+	            <!-- notificatoin dropdown start-->
+	            <ul class="nav pull-right top-menu">
+	                <!-- user login dropdown start-->
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
                         <!--  <span class="profile-ava">
@@ -215,14 +200,14 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- user login dropdown end -->
-                </ul>
-                <!-- notificatoin dropdown end-->
-            </div>
-        </header>      
-    	<!--header end-->
+	                <!-- user login dropdown end -->
+	            </ul>
+	            <!-- notificatoin dropdown end-->
+	    	</div>
+	 	</header>      
+		<!--header end-->
 
-    	<aside>
+		<aside>
 	        <div id="sidebar"  class="nav-collapse ">
 	            <!-- sidebar menu start-->
 	            <ul class="sidebar-menu">                
@@ -276,99 +261,120 @@
 	    </aside>
 	    <!--sidebar end-->
 
-	    <!--main content start-->
+	      <!--main content start-->
 	    <section id="main-content">
 	        <section class="wrapper">            
 	            <!--overview start-->
 	            <div class="row">
 	                <div class="col-md-12">
-	                    <!-- <h3 class="page-header">New Client</h3> -->
+	                    <!-- <h3 class="page-header">Client New Contact</h3> -->
 	                    <ol class="breadcrumb">
-	                        <li><i class="fa fa-address-book"></i><a href="client.html">Clients</a></li>						  	
-	                        <li><i class="icon_document"></i>New Client</li>						  	
+	                        <li><i class="fa fa-address-book"></i><a href="client.html">Clients</a></li>
+	                        <li id="div_client_name"></li>
+	                        <li><i class="icon_document"></i>New Contact Person</li>						  	
 	                    </ol>
 	                </div>
 	            </div>
-
-	            <!-- Basic Forms & Horizontal Forms-->
-	            <form class="form-horizontal" onsubmit="if(confirm('Proceed')) insertClient();">
+	            <form class="form-horizontal" role="form" onsubmit="if(confirm('Proceed?')) insertContact();">
 	            	<div class="row">
-						<div class="col-md-6">
-							<section class="panel">
-								<header class="panel-heading">
-								Client Info
-								</header>
-								<div class="panel-body">
-									<div class="form-group">
-										<label for="client_name" class="col-md-4 control-label">Client Name<span class="required" style="color: red;">*</span></label>
-										<div class="col-md-8">
-											<textarea name="client_name" id="client_name" class="form-control" style="resize: none; text-transform: uppercase;" required></textarea>
+	            		<!-- Start column for client and site info -->
+	            		<div class="col-md-6">
+	            			<div class="row">
+								<div class="col-md-12">
+									<section class="panel">
+										<header class="panel-heading">
+										Client Info
+										</header>
+										<div class="panel-body">
+											<div class="form-group">
+												<label for="site_name" class="col-md-4 control-label">Client Name:</label>
+												<div class="col-md-8">
+													<p class="help-block" id="block_client_name"></p>
+												</div>
+											</div>
+											<div class="form-group">
+												<label for="site_address" class="col-md-4 control-label">Client Address:</label>
+												<div class="col-md-8">
+													<p class="help-block" id="block_client_address"></p>
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="col-md-offset-8 col-md-4">
+													<input type="submit" name="submit" id="submit" value="Save" class="btn btn-primary" style="font-weight: bold;">
+													<a href="client.html" class="btn btn-default"><strong>Cancel</strong></a>
+													<!-- <input type="reset" name="reset" id="reset" value="Reset" class="btn btn-default" style="font-weight: bold;"> -->
+												</div>
+											</div>
 										</div>
-									</div>
-									<div class="form-group">
-										<label for="client_address" class="col-md-4 control-label">Client Address<span class="required" style="color: red;">*</span></label>
-										<div class="col-md-8">
-											<textarea name="client_address" id="client_address" class="form-control" rows="5" style="resize: none; text-transform: uppercase;" required></textarea>
-										</div>
-									</div>
-									<div class="form-group">
-										<div class="col-md-offset-8 col-md-4">
-											<input type="submit" name="submit" id="submit" value="Save" class="btn btn-primary" style="font-weight: bold;">
-											<a href="client.html" class="btn btn-default"><strong>Cancel</strong></a>
-										</div>
-									</div>
+									</section>
 								</div>
-							</section>
+							</div>
+							<div class="row">
+								<div class="col-md-12">
+									<section class="panel">
+										<header class="panel-heading">
+											List of Contacts
+										</header>
+										<div class="panel-body"> 
+											<div id="div_contact_list"></div>
+										</div>
+									</section>
+								</div>
+							</div>
 						</div>
 						<div class="col-md-6">
-							<section class="panel">
-								<header class="panel-heading">
-								Contact
-								</header>
-								<div class="panel-body">
-									<div class="row">
-										<table id="item_table" align="center">
-											<tr>
-												<td class="col-md-4">
-													<label for="contact_name">Name<span class="required" style="color: red;">*</span></label>
-												</td>
-												<td class="col-md-4">
-													<label for="contact_no">Number<span class="required" style="color: red;">*</span></label>
-												</td>
-												<td class="col-md-4">
-													<label for="button"></label>
-												</td>
-											</tr>
-											<tr id="row1" style="text-align: center;">
-												<td class="col-md-3">
-													<div class="form-group">
-														<input type="type" name="contact_name[]" class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
-													</div>
-												</td>
-												<td class="col-md-5">
-													<div class="form-group" >
-														<input type="type" name="contact_no[]" class="form-control" autocomplete="off" required>
-													</div>
-												</td>
-												<td class="col-md-4">
-													<div class="form-group">
-														<input type="button" onclick="add_row();" class='btn btn-primary btn-md' autocomplete="off" value="Add" style="font-weight: bold;">
-													</div>
-												</td>
-											</tr>
-										</table>
-									</div>
+	            			<div class="row">
+								<div class="col-md-12">
+									<section class="panel">
+										<header class="panel-heading">
+										New Contact Details
+										</header>
+										<div class="panel-body">
+											<div class="row">
+												<table id="item_table" align="center">
+													<tr>
+														<td class="col-md-4">
+															<label for="item_no">Name<span class="required" style="color: red;">*</span></label>
+														</td>
+														<td class="col-md-4">
+															<label for="quantity">Number<span class="required" style="color: red;">*</span></label>
+														</td>
+														<td class="col-md-4">
+															<label for="button"></label>
+														</td>
+													</tr>
+													<tr id="row1" style="text-align: center;">
+														<td class="col-md-3">
+															<div class="form-group">
+																<input type="type" name="contact_name[]" id="contact_name[]" class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+															</div>
+														</td>
+														<td class="col-md-5">
+															<div class="form-group" >
+																<input type="type" name="contact_no[]" id="contact_no[]" class="form-control" autocomplete="off" required>
+															</div>
+														</td>
+														<td class="col-md-4">
+															<div class="form-group">
+																<input type="button" onclick="add_row();" class='btn btn-primary btn-md' autocomplete="off" value="Add" style="font-weight: bold;">
+															</div>
+														</td>
+													</tr>
+												</table>
+											</div>
+										</div>
+										<footer class="panel-footer">
+											<p class="help-block"><span class="required" style="color: red;">*</span> - required</p>
+											<p class="help-block">Note: Put a comma between contact numbers. <strong>N/A</strong> for not available.</p>
+										</footer>
+									</section>
 								</div>
-								<footer class="panel-footer">
-									<p class="help-block"><span class="required" style="color: red;">*</span> - required</p>
-									<p class="help-block">Note: Put a comma between contact numbers. <strong>N/A</strong> for not available.</p>
-								</footer>
-							</section>
+							</div>
 						</div>
 					</div>
 	            </form>
-			</section>
-		</section>
-    </section>
+	        </section>
+	    </section>
+	</section>
 </body>
 </html>
