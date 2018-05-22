@@ -155,11 +155,11 @@
 				
 				divBody += "<div class='form-group'>";
                 divBody += "<div class='row' style='margin-bottom: 2px;'>";
-				divBody += "<div class='col-md-5 col-md-offset-1'>";
+				divBody += "<div class='col-md-3 col-md-offset-1'>";
 				divBody += childSnapshot.val().client_contact_name;
 				divBody += "</div>";
 				divBody += "<div class='col-md-1'> - </div>";
-				divBody += "<div class='col-md-5'>";
+				divBody += "<div class='col-md-7'>";
 				divBody += childSnapshot.val().client_contact_no;
 				divBody += "</div>";
 				divBody += "</div>";
@@ -193,11 +193,12 @@
 
 		if(count == client_contact_name.length){
 			if(confirm("'Contact details successfully added. Add another contact?")){
-				window.location.href='add_client_contact.html?key=' + childSnapshot.key;
+				window.location.href='add_client_contact.html?key=' + clientKeyId;
 				// firebase.database().ref("client").limitToLast(1).on("child_added", function(childSnapshot){
 				// 	localStorage.setItem("passClientKey", childSnapshot.key);
 				// });
 			}else{
+				event.preventDefault();
 				window.location.href='client.html';
 			}
 			// alert("Success");
