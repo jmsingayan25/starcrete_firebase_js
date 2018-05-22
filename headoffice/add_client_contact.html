@@ -109,13 +109,15 @@
 		document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
 		// ClientKeyId = localStorage.getItem("passClientKey");
-        firebase.database().ref("client/"+clientKeyId).on("value", function(childSnapshot){
+        firebase.database().ref("client/"+clientKeyId).once("value").then(function(childSnapshot){
 
 			document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='project.html?key=" + clientKeyId + "'</a>"+childSnapshot.val().client_name;
 			document.getElementById('block_client_name').innerHTML = childSnapshot.val().client_name;
 			document.getElementById('block_client_address').innerHTML = childSnapshot.val().client_address;
+		}).catch(function(error){
+			alert("Unknown Client");
+			window.location.href = 'client.html';
 		});
-
 	});
 
 	function userSignOut(){
@@ -147,7 +149,7 @@
 	function tableData(){
 
 		var divBody = "";
-		firebase.database().ref('contact/'+clientKeyId).on('value', function(snapshot){
+		firebase.database().ref('contact/'+clientKeyId).once('value').then(function(snapshot){
 
 			snapshot.forEach(function(childSnapshot){
 				
@@ -165,7 +167,43 @@
 
 				document.getElementById("div_contact_list").innerHTML = divBody;
 			})
+		}).catch(function(error){
+			alert("Unknown Client");
+			window.location.href = 'client.html';
 		});
+	}
+
+	function insertContact(){
+
+		var client_contact_name = $("input[name='contact_name[]']").map(function(){return $(this).val();}).get();
+		var client_contact_no = $("input[name='contact_no[]']").map(function(){return $(this).val();}).get();
+
+		var postContact = firebase.database().ref('contact/'+clientKeyId);
+		var count = 0
+		for(var i = 0; i < client_contact_name.length; i++){
+
+			var postContactData = {
+				client_contact_name: client_contact_name[i].toUpperCase(),
+				client_contact_no: client_contact_no[i]
+			}
+
+			postContact.push(postContactData);
+			count++;
+		}
+
+		if(count == client_contact_name.length){
+			if(confirm("'Contact details successfully added. Add another contact?")){
+				window.location.href='add_client_contact.html?key=' + childSnapshot.key;
+				// firebase.database().ref("client").limitToLast(1).on("child_added", function(childSnapshot){
+				// 	localStorage.setItem("passClientKey", childSnapshot.key);
+				// });
+			}else{
+				window.location.href='client.html';
+			}
+			// alert("Success");
+		}else{
+			alert("Failed");
+		}
 	}
 </script>
 </head>
