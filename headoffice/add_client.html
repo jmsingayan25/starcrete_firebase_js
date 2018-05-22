@@ -168,10 +168,10 @@
 		
 		if(count == client_contact_name.length){
 			if(confirm("'New client added successfully. Proceed to Add Project?")){
-				window.location.href='add_project.html';
-				firebase.database().ref("client").limitToLast(1).on("child_added", function(childSnapshot){
-					localStorage.setItem("passClientKey", childSnapshot.key);
-				});
+				window.location.href='add_project.html?key=' + childSnapshot.key;
+				// firebase.database().ref("client").limitToLast(1).on("child_added", function(childSnapshot){
+				// 	localStorage.setItem("passClientKey", childSnapshot.key);
+				// });
 			}
 			// alert("Success");
 		}else{
