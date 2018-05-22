@@ -149,7 +149,7 @@
 	function tableData(){
 
 		var divBody = "";
-		firebase.database().ref('contact/'+clientKeyId).once('value').then(function(snapshot){
+		firebase.database().ref('client_contact/'+clientKeyId).once('value').then(function(snapshot){
 
 			snapshot.forEach(function(childSnapshot){
 				
@@ -178,7 +178,7 @@
 		var client_contact_name = $("input[name='contact_name[]']").map(function(){return $(this).val();}).get();
 		var client_contact_no = $("input[name='contact_no[]']").map(function(){return $(this).val();}).get();
 
-		var postContact = firebase.database().ref('contact/'+clientKeyId);
+		var postContact = firebase.database().ref('client_contact/'+clientKeyId);
 		var count = 0
 		for(var i = 0; i < client_contact_name.length; i++){
 

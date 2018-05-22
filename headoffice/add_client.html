@@ -154,7 +154,7 @@
 		newPostRef.set(clientData);
 
 		var postId = newPostRef.key;
-		var postContact = firebase.database().ref("contact/"+postId);
+		var postContact = firebase.database().ref("client_contact/"+postId);
 		var count = 0;
 		for(var i = 0; i < client_contact_name.length; i++){
 
@@ -168,7 +168,7 @@
 		
 		if(count == client_contact_name.length){
 			if(confirm("'New client added successfully. Proceed to Add Project?")){
-				window.location.href='add_project.html?key=' + childSnapshot.key;
+				window.location.href='add_project.html?key=' + postId;
 				// firebase.database().ref("client").limitToLast(1).on("child_added", function(childSnapshot){
 				// 	localStorage.setItem("passClientKey", childSnapshot.key);
 				// });
