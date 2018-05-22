@@ -168,7 +168,6 @@
 	function userSignOut(){
 
         firebase.auth().signOut().then(function() {
-            // console.log('Signed Out');
             window.location.href = '../login.html';
         }, function(error) {
             // console.error('Sign Out Error', error);
@@ -204,6 +203,13 @@
                 // console.log(JSON.stringify(childSnapshot));
                 document.getElementById("projectList").innerHTML = myTbody;
             });
+
+            if(myTbody == ""){
+
+                myTbody = "<tr><td colspan='4' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                document.getElementById("clientList").innerHTML = myTbody;
+            }
         });
     }
 

@@ -209,16 +209,17 @@
                     document.getElementById("userList").innerHTML = myTbody;
 
                 });
-            }else{
+            }
+
+            if(myTbody == ""){
 
                 myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                 document.getElementById("userList").innerHTML = myTbody;
-
             }
-            
-
         });
+
+        
 
     }
 
