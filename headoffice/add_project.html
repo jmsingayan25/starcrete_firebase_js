@@ -87,6 +87,8 @@
     ======================================================= -->
 <script>
 
+	var clientKeyId = getUrlParameter('key');
+
 	$(document).ready(function(){
 
 		firebase.auth().onAuthStateChanged(function(user) {
@@ -104,10 +106,10 @@
             }
         });
 
-		ClientKeyId = localStorage.getItem("passClientKey");
-        firebase.database().ref("client/"+ClientKeyId).on("value", function(childSnapshot){
+		// ClientKeyId = localStorage.getItem("passClientKey");
+        firebase.database().ref("client/"+clientKeyId).on("value", function(childSnapshot){
 
-			document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='client_sites.html'</a>"+childSnapshot.val().client_name;
+			document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='project.html?key=" + clientKeyId + "'</a>"+childSnapshot.val().client_name;
 			document.getElementById('block_client_name').innerHTML = childSnapshot.val().client_name;
 			document.getElementById('block_client_address').innerHTML = childSnapshot.val().client_address;
 
@@ -124,6 +126,13 @@
             console.error('Sign Out Error', error);
         });
     }
+
+    function getUrlParameter(name) {
+	    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+	    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+	    var results = regex.exec(location.search);
+	    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+	}
 
 	function add_row(){
 		$rowno=$("#item_table tr").length;
@@ -144,9 +153,9 @@
 		var project_contact_name = $("input[name='contact_name[]']").map(function(){return $(this).val();}).get();
 		var project_contact_no = $("input[name='contact_no[]']").map(function(){return $(this).val();}).get();
 
-		firebase.database().ref("client").limitToLast(1).on("child_added", function(childSnapshot){
+		// firebase.database().ref("client").limitToLast(1).on("child_added", function(childSnapshot){
 
-			console.log(childSnapshot.key, childSnapshot.val());
+		// 	console.log(childSnapshot.key, childSnapshot.val());
 
 			for(var i = 0; i < project_contact_name.length; i++){
 				console.log("Client Contact Name: " + project_contact_name[i].toUpperCase());
@@ -158,7 +167,7 @@
 				project_address: project_address.toUpperCase()
 			}
 
-			var postData = firebase.database().ref('project/'+childSnapshot.key);
+			var postData = firebase.database().ref('project/'+clientKeyId);
 			var newPostData = postData.push();
 			newPostData.set(projectData);
 
@@ -176,17 +185,17 @@
 				count++;
 			}
 
-			if(count == client_contact_name.length){
+			if(count == project_contact_name.length){
 				if(confirm('New project added successfully. Add another project?')){
-					window.location.href='add_project.html';
+					window.location.href='add_project.html?key=' + clientKeyId;
 				}else{
-					window.location.href='project.html';
+					window.location.href='project.html?key=' + clientKeyId;
 				}
 				// alert("Success");
 			}else{
-				alert("Failed");
+				alert("Something went wrong. Please try again.");
 			}
-		});
+		// });
 	}
 </script>
 <style>
@@ -302,7 +311,7 @@
 	            </div>
 
 	            <!-- Basic Forms & Horizontal Forms-->
-	            <form class="form-horizontal" onsubmit="return insertProject();">
+	            <form class="form-horizontal" onsubmit="if(confirm('Proceed')) insertProject();">
 	            	<div class="row">
 						<div class="col-md-6">
 	            			<div class="row">
@@ -315,14 +324,12 @@
 											<div class="form-group">
 												<label for="client_name" class="col-md-4 control-label">Client Name: </label>
 												<div class="col-md-8">
-													<!-- <label class="control-label"><?php echo $client_name; ?></label> -->
 													<p class="help-block" id="block_client_name"></p>
 												</div>
 											</div>
 											<div class="form-group">
 												<label for="client_address" class="col-md-4 control-label">Client Address: </label>
 												<div class="col-md-8">
-													<!-- <label class="control-label"><?php echo $client_address; ?></label> -->
 													<p class="help-block" id="block_client_address"></p>
 												</div>
 											</div>
@@ -340,21 +347,19 @@
 											<div class="form-group">
 												<label for="project_name" class="col-md-4 control-label">Project Name<span class="required" style="color: red;">*</span></label>
 												<div class="col-md-8">
-													<!-- <input type="text" name="project_name" class="form-control" required> -->
 													<textarea name="project_name" id="project_name" class="form-control" style="resize: none; text-transform: uppercase;" required></textarea>
 												</div>
 											</div>
 											<div class="form-group">
 												<label for="project_address" class="col-md-4 control-label">Project Address<span class="required" style="color: red;">*</span> </label>
 												<div class="col-md-8">
-													<!-- <input type="textarea" name="project_address" class="form-control" required> -->
 													<textarea name="project_address" id="project_address" class="form-control" rows="5" style="resize: none; text-transform: uppercase;" required></textarea>
 												</div>
 											</div>
 											<div class="form-group">
 												<div class="col-md-offset-8 col-md-4">
 													<input type="submit" name="submit" id="submit" value="Save" class="btn btn-primary" style="font-weight: bold;">
-													<a href="projects.php" class="btn btn-default"><strong>Cancel</strong></a>
+													<a href="projects.html" class="btn btn-default"><strong>Cancel</strong></a>
 													<!-- <input type="reset" name="reset" id="reset" value="Reset" class="btn btn-default" style="font-weight: bold;"> -->
 												</div>
 											</div>
