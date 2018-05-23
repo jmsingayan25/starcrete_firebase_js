@@ -207,9 +207,11 @@
                     snapshot.forEach(function(childSnapshot){
                         console.log(childSnapshot.val());
 
-                         $("#list_contact_name").append("<div class='form-group'><div class='row' style='margin-bottom: 2px;'><div class='col-md-6'><strong>" + childSnapshot.val().client_contact_name + "</strong></div><div class='col-md-1'><strong>-</strong></div><div class='col-md-5'><div id='list_contact_no'></div></div>");
+                        firebase.database().ref('client_contact/'+key+"/"+childSnapshot.key).once('value').then(function(snapshot){
 
-                         $("#list_contact_no").append("<strong>" + childSnapshot.val().client_contact_no + "</strong>");
+                        });
+
+                         $("#list_contact_name").append("<div class='form-group'><div class='row' style='margin-bottom: 2px;'><div class='col-md-6'><strong>" + childSnapshot.val().client_contact_name + "</strong></div><div class='col-md-1'><strong>-</strong></div><div class='col-md-5'><strong>" + childSnapshot.val().client_contact_no + "</strong></div></div>");
                     });
 
 
