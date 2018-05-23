@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+    <link rel="shortcut icon" href="img/favicon.png">
+
+    <title>Update Details</title>
+
+    <!-- Firebase App is always required and must be first -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+
+	<!-- Add additional services you want to use -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+	<script src="../js_config/firebase_config.js"></script>
+
+	<!-- Bootstrap CSS -->    
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="../css/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="../css/elegant-icons-style.css" rel="stylesheet" />
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
+    <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="../css/fullcalendar.css">
+    <link href="../css/widgets.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/style-responsive.css" rel="stylesheet" />
+    <link href="../css/xcharts.min.css" rel=" stylesheet">	
+    <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+
+    <!-- javascripts -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery-ui-1.10.4.min.js"></script>
+    <script src="../js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+    <!-- bootstrap -->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- nice scroll -->
+    <script src="../js/jquery.scrollTo.min.js"></script>
+    <script src="../js/jquery.nicescroll.js" type="text/javascript"></script>
+    <!-- charts scripts -->
+    <script src="../assets/jquery-knob/js/jquery.knob.js"></script>
+    <script src="../js/jquery.sparkline.js" type="text/javascript"></script>
+    <script src="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+    <script src="../js/owl.carousel.js" ></script>
+    <!-- jQuery full calendar -->
+    <script src="../js/fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
+    <script src="../assets/fullcalendar/fullcalendar/fullcalendar.js"></script>
+    <!--script for this page only-->
+    <script src="../js/calendar-custom.js"></script>
+    <script src="../js/jquery.rateit.min.js"></script>
+    <!-- custom select -->
+    <script src="../js/jquery.customSelect.min.js" ></script>
+    <script src="../assets/chart-master/Chart.js"></script>
+
+    <!--custome script for all page-->
+    <script src="../js/scripts.js"></script>
+    <!-- custom script for this page-->
+    <script src="../js/sparkline-chart.js"></script>
+    <script src="../js/easy-pie-chart.js"></script>
+    <script src="../js/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="../js/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="../js/xcharts.min.js"></script>
+    <script src="../js/jquery.autosize.min.js"></script>
+    <script src="../js/jquery.placeholder.min.js"></script>
+    <script src="../js/gdp-data.js"></script>  
+    <script src="../js/morris.min.js"></script>
+    <script src="../js/sparklines.js"></script>    
+    <script src="../js/charts.js"></script>
+    <script src="../js/jquery.slimscroll.min.js"></script>
+
+    <!-- =======================================================
+    Theme Name: NiceAdmin
+    Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+    Author: BootstrapMade
+    Author URL: https://bootstrapmade.com
+    ======================================================= -->
+
+<script>
+	
+	var clientKeyId = getUrlParameter('key');
+
+    $(document).ready(function(){
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user != null) {
+
+                var uid = user.uid;
+        
+                firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+                    document.getElementById('username').innerHTML = snapshot.val().firstname; 
+                },(error) => {
+                    console.log(error);
+                });
+            } else {
+                window.location.href = '../login.html';
+            }
+        });
+        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+
+        firebase.database().ref("client/"+clientKeyId).once('value').then(function(childSnapshot){
+
+            document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='update_client_info.html?key=" + clientKeyId + "'</a>"+childSnapshot.val().client_name;
+
+            document.getElementById('update_client_name').value = childSnapshot.val().client_name;
+            document.getElementById('update_client_address').value = childSnapshot.val().client_address;
+
+        }).catch(function(error){
+            alert("Unknown Client");
+            window.location.href = 'client.html';
+        });
+
+        firebase.database().ref('client_contact/'+clientKeyId).once('value').then(function(snapshot){
+
+            snapshot.forEach(function(childSnapshot){
+                console.log(childSnapshot.val().client_contact_name);
+
+                $("#item_table").append("<tr style='text-align: center; vertical-align: top;'><td class='col-md-4'><div class='row'><div class='col-md-12' style='margin-bottom: 5px;'><input type='text' name='update_contact_name[]' id='update_contact_name[]' class='form-control' value='" + childSnapshot.val().client_contact_name + "' autocomplete='off' style='text-transform: uppercase' required></div></div></td><td class='col-md-8'><div class='row' style='margin-bottom: 5px;'><div class='col-md-7'><input type='text' name='update_contact_no[]' id='update_contact_no[]' class='form-control' autocomplete='off' value='" + childSnapshot.val().client_contact_no + "' required></div><div class='col-md-5'><button type='submit' name='delete_id' id='delete_id' class='btn btn-danger btn-sm btn-block' autocomplete='off' value='" + childSnapshot.key + "' style='font-weight: bold;' onclick='deleteContactNo(this.value);'>Remove</button></div></td></tr>");
+
+            });
+
+            // $("#item_table").append("<tr style='text-align: center; vertical-align: top;'><td class='col-md-6'><div class='row'><div class='col-md-12' style='margin-bottom: 5px;'><input type='text' name='update_contact_name[]' id='update_contact_name[]' class='form-control' autocomplete='off' required></div></div></td></tr>");
+
+            // document.getElementById('update_client_name').value = childSnapshot.val().client_contact_name;
+
+        });
+    });
+
+    function userSignOut(){
+
+        firebase.auth().signOut().then(function() {
+            window.location.href = '../login.html';
+        }, function(error) {
+            console.error('Sign Out Error', error);
+        });
+    }
+
+    function getUrlParameter(name) {
+        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+        var results = regex.exec(location.search);
+        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+    }
+
+    function updateClientInfo(){
+
+        event.preventDefault();
+
+        var input_client_name = document.getElementById('update_client_name').value;
+        var input_client_address = document.getElementById('update_client_address').value;
+
+        var clientData = {
+            client_name: input_client_name,
+            client_address: input_client_address
+        };
+
+        if(firebase.database().ref().child('client/'+clientKeyId).set(clientData)){
+            alert("Client info successfully update.");
+            window.location.href = 'client.html';
+        }else{
+            alert("Update Failed. Try again.");
+            window.location.reload();
+        }
+
+        // console.log(input_client_name.toUpperCase(), input_client_address.toUpperCase());
+    }
+
+    function deleteContactNo(contactKey){
+
+        event.preventDefault();
+        // console.log("DELETE");
+        if(confirm("Proceed?")){
+            if(firebase.database().ref('client_contact/'+clientKeyId+'/'+contactKey).remove()){
+                alert("Contact successfully deleted.");
+                window.location.href = 'update_client_info.html?key=' + clientKeyId;
+            }else{
+                alert("Delete Failed. Try again.");
+                window.location.reload();
+            }
+        }else{
+            event.preventDefault();
+            alert("CANCEL");
+        }
+    }
+
+</script>
+</head>
+<body>
+    <section id="container" class="">
+        <header class="header dark-bg">
+            <div class="toggle-nav">
+                <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
+            </div>
+
+            <!--logo start-->
+
+            <!--logo end-->
+
+            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+
+            <div class="top-nav notification-row">                
+                <!-- notificatoin dropdown start-->
+                <ul class="nav pull-right top-menu">
+
+                    <!-- user login dropdown start-->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <!--  <span class="profile-ava">
+                        <img alt="" src="img/avatar1_small.jpg">
+                        </span> -->
+                            <span class="username" id="username"></span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <div class="log-arrow-up"></div>
+                            <li>
+                                <a href="" id="logoutBtn"><i class="icon_key_alt"></i> Log Out</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->
+                </ul>
+                <!-- notificatoin dropdown end-->
+            </div>
+        </header>      
+        <!--header end-->
+
+        <aside>
+            <div id="sidebar"  class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu">                
+                    <li>
+                        <a class="" href="index.html">
+                            <i class="icon_house"></i>
+                            <span>History</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="" href="client.html">
+                            <i class="fa fa-address-book"></i>
+                            <span>Clients</span>
+                        </a>
+                    </li>
+                    <!-- <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Bravo</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order.php?office=bravo">Purchase Order</a></li>                          
+                            <li><a class="" href="delivery_order.php?office=bravo">Delivery Page</a></li>
+                        </ul>
+                    </li>  
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Delta</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order.php?office=bravo">Purchase Order</a></li>                          
+                             <li><a class="" href="delivery_order.php?office=bravo">Delivery Page</a></li>
+                        </ul>
+                    </li>    -->
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-file"></i>
+                            <span>Forms</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order_form.html">Add New P.O.</a></li>
+                        </ul>
+                    </li>      
+                </ul>
+                <!-- sidebar menu end-->
+            </div>
+        </aside>
+        <!--sidebar end-->
+
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">            
+                <!--overview start-->
+                <div class="row">
+                    <div class="col-md-12 page_links">
+                        <!-- <h3 class="page-header">Client Update Details</h3> -->
+                        <ol class="breadcrumb">
+                            <!-- <li><i class="fa fa-home"></i>Home</li> -->
+                            <li><i class="fa fa-address-book"></i><a href="client.html">Clients</a></li>
+                            <li id="div_client_name"></li>
+                            <li><i class="icon_document"></i>Update Info</li>
+                            <!-- <li><i class="fa fa-file-text"></i><a href="clients_update_info.php" style="color: inherit;">Update Info</a></li>                             -->
+                        </ol>
+                    </div>
+                </div>
+                <form class="form-horizontal" role="form" id="form" onsubmit="if(confirm('Proceed?')){updateClientInfo();}else{ event.preventDefault();}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                Client Info
+                                </header>
+                                <div class="panel-body">
+                                    <div class="form-group">
+                                        <label for="update_client_name" class="col-md-4 control-label">Client Name</label>
+                                        <div class="col-md-8">
+                                            <!-- <input type="text" id="update_client_name" name="update_client_name" class="form-control" autocomplete="off" value="<?php echo $client_name; ?>" required> -->
+                                            <textarea name="update_client_name" id="update_client_name" class="form-control" style="resize: none; text-transform: uppercase;" required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="update_client_address" class="col-md-4 control-label">Client Address</label>
+                                        <div class="col-md-8">
+                                            <!-- <input type="text" id="update_client_address" name="update_client_address" class="form-control" autocomplete="off" value="<?php echo $client_address; ?>" required> -->
+                                            <textarea name="update_client_address" id="update_client_address" class="form-control" rows="5" style="resize: none; text-transform: uppercase;" required></textarea>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-offset-8 col-md-4">
+                                            <input type="submit" name="submit" id="submit" value="Save" class="btn btn-primary" style="font-weight: bold;">
+                                            <a href="client.html" class="btn btn-default"><strong>Cancel</strong></a>
+                                            <!-- <input type="reset" name="reset" id="reset" value="Reset" class="btn btn-default" style="font-weight: bold;"> -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                        <div class="col-md-6">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                Contact
+                                </header>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <table id="item_table" align="center">
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </section>
+                        </div>
+                    </div>
+                </form>
+            </section>
+        </section>
+    </section>
+</body>
+</html>
