@@ -87,20 +87,6 @@
     ======================================================= -->
 <script>
 
-	// var timer = null;
-
- //    function goAway() {
- //        clearTimeout(timer);
- //        timer = setTimeout(function() {
- //            window.location.reload(true);
- //        }, 60000);
- //    }
-
- //    window.addEventListener('mousemove', goAway, true);
- //    window.addEventListener('keypress', goAway, true);
-
- //    goAway();
-
     $(document).ready(function(){
         $('.filterable .btn-filter').click(function(){
             var $panel = $(this).parents('.filterable'),
@@ -142,10 +128,6 @@
                  $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="3" style="height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
             }
         });
-
-        // $( "#search" ).autocomplete({
-        //     source: 'ajax/list_client_name.php'
-        // });
 
         firebase.auth().onAuthStateChanged(function(user) {
 			if (user != null) {
