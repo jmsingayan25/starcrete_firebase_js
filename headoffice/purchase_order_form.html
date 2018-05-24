@@ -143,28 +143,33 @@
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });  
 
-    function clientList(){
+    function issueFormDetails(){
 
         firebase.database().ref('client').once('value').then(function(snapshot){
-
             snapshot.forEach(function(childSnapshot){
 
-                $("#client").append("<option value='" + childSnapshot.val().client_name + "'>" + childSnapshot.val().client_name + "</option>");
+                $("#client").append("<option value='" + childSnapshot.key + "'>" + childSnapshot.val().client_name + "</option>");
             });        
         });
-    }
-
-    function projectList(){
-
-        var dropdownProject = "<select id='site_id' name='site_id' class='form-control' required>";
 
         $("#client").change(function(){
 
-            var clientValue = this.value;
+            var clientKey = this.value;
 
-            alert("ALERT");
+            firebase.database().ref('project/'+clientKey).once('value').then(function(snapshot){
+                snapshot.forEach(function(childSnapshot){
+
+                    $("#site_id").append("<option value='" + childSnapshot.val().project_name + "'>" + childSnapshot.val().project_name + " / " + childSnapshot.val().project_address + "</option>")
+                });
+            });
+        });
+
+        $("#site_id").change(function(){
+
+            
         });
     }
+
 
     function userSignOut(){
 
@@ -189,7 +194,7 @@
 
 </script>
 </head>
-<body onload="clientList(); projectList();">
+<body onload="issueFormDetails();">
     <!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">
@@ -334,15 +339,17 @@
                                         <label for="client" class="col-md-4 control-label">Client Name<span class="required" style="color: red;">*</span></label>
                                         <div class="col-md-8">
                                             <!-- <div id="dropdown_client_name"></div> -->
-                                            <select id='client' name='client' class='form-control' style='width: 100%;' required>
-                                                <option value=''>Select</option>
-                                                <div id="dropdown_client_name"></div>
+                                            <select id="client" name="client" class="form-control" style="width: 100%;" required>
+                                                <option value="">Select</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="site_id" class="col-md-4 control-label">Project Name / Address<span class="required" style="color: red;">*</span></label>
                                         <div class="col-md-8">
+                                            <select id="site_id" name="site_id" class="form-control" required>
+                                                <option value="">Select</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="form-group">
