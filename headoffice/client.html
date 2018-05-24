@@ -175,8 +175,8 @@
                 var clientAddress = childSnapshot.val().client_address;
                 var key = childSnapshot.key;
 
-                myTbody += "<tr><td>" + clientName + "</td>";
-                myTbody += "<td>" + clientAddress + "</td>";
+                myTbody += "<tr><td><strong>" + clientName + "<strong></td>";
+                myTbody += "<td><strong>" + clientAddress + "</strong></td>";
                 myTbody += "<td><div id='list_contact_name'></td>";
                 myTbody += "<td><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='add_client_contact.html?key=" + key + "'><button class='btn btn-sm btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='update_client_info.html?key=" + key + "'><button class='btn btn-sm btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='project.html?key=" + key + "' class='btn btn-sm btn-block' style='background-color: #388e3c; color: white;'><span class='fa fa-info-circle'></span> <strong>Projects</strong></a></div></div></td></tr>";
 
@@ -189,17 +189,12 @@
                     snapshot.forEach(function(childSnapshot){
                         console.log(childSnapshot.val());
 
-                        firebase.database().ref('client_contact/'+key+"/"+childSnapshot.key).once('value').then(function(snapshot){
+                        // firebase.database().ref('client_contact/'+key+"/"+childSnapshot.key).once('value').then(function(snapshot){
 
-                        });
+                        // });
 
                          $("#list_contact_name").append("<div class='form-group'><div class='row' style='margin-bottom: 2px;'><div class='col-md-6'><strong>" + childSnapshot.val().client_contact_name + "</strong></div><div class='col-md-1'><strong>-</strong></div><div class='col-md-5'><strong>" + childSnapshot.val().client_contact_no + "</strong></div></div>");
                     });
-
-
-
-                    // document.getElementById('update_client_name').value = childSnapshot.val().client_contact_name;
-
                 });
             });
 
