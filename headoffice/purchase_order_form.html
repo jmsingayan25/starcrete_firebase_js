@@ -143,34 +143,6 @@
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });  
 
-    function issueFormDetails(){
-
-        firebase.database().ref('client').once('value').then(function(snapshot){
-            snapshot.forEach(function(childSnapshot){
-
-                $("#client").append("<option value='" + childSnapshot.key + "'>" + childSnapshot.val().client_name + "</option>");
-            });        
-        });
-
-        $("#client").change(function(){
-
-            var clientKey = this.value;
-
-            firebase.database().ref('project/'+clientKey).once('value').then(function(snapshot){
-                snapshot.forEach(function(childSnapshot){
-
-                    $("#site_id").append("<option value='" + childSnapshot.val().project_name + "'>" + childSnapshot.val().project_name + " / " + childSnapshot.val().project_address + "</option>")
-                });
-            });
-        });
-
-        $("#site_id").change(function(){
-
-            
-        });
-    }
-
-
     function userSignOut(){
 
         firebase.auth().signOut().then(function() {
@@ -192,6 +164,62 @@
      $('#'+rowno).remove();
     }
 
+    function issueFormDetails(){
+
+        firebase.database().ref('client').once('value').then(function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+
+                $("#client").append("<option value='" + childSnapshot.key + "'>" + childSnapshot.val().client_name + "</option>");
+            });        
+        });
+
+        $("#client").change(function(){
+
+            var clientKey = this.value;
+            // alert(clientKey);
+            if(clientKey || 0 !== clientKey.length){
+
+                // var siteList = "<select id='site_id' name='site_id' class='form-control' required><option value =''>Select</option>";
+                firebase.database().ref('project/'+clientKey).once('value').then(function(snapshot){
+                    snapshot.forEach(function(childSnapshot){
+
+                        $("#site_id").append("<option value='" + childSnapshot.key + "'>" + childSnapshot.val().project_name + " / " + childSnapshot.val().project_address + "</option>");
+
+                        // siteList += "<option value='" + childSnapshot.key + "'>" + childSnapshot.val().project_name + " / " + childSnapshot.val().project_address + "</option>";
+
+
+                    });
+                    // siteList += "</select>"
+                    // document.getElementById('div_site_list').innerHTML = siteList;
+                });
+            }else{
+                // document.getElementById('div_site_list').innerHTML = "";
+                // $("#site_id").remove();
+                // $('#selectBox').find('option').remove().;
+                document.getElementById("site_id").options.length = 1;
+                $('#div_contact_list').empty();
+
+            }
+        });  
+
+        $("#site_id").change(function(){
+
+            var projectKey = this.value;
+            if(projectKey || 0 !== projectKey.length){
+                $("#div_contact_list").empty();
+                
+                firebase.database().ref('project_contact/'+projectKey).once('value').then(function(snapshot){
+                    snapshot.forEach(function(childSnapshot){
+
+                        $("#div_contact_list").append("<div class='form-group'><div class='col-md-6'><strong>" + childSnapshot.val().project_contact_name + "</strong></div><div class='col-md-6'><strong>" + childSnapshot.val().project_contact_no + "</strong></div></div>");
+                    });
+                });
+            }else{
+                $("#div_contact_list").empty();
+            }
+        });
+       
+    }
 </script>
 </head>
 <body onload="issueFormDetails();">
@@ -243,7 +271,7 @@
                             <span>History</span>
                         </a>
                     </li>
-                    <li class="active">
+                    <li class="">
                         <a class="" href="client.html">
                             <i class="fa fa-address-book"></i>
                             <span>Clients</span>
@@ -340,7 +368,7 @@
                                         <div class="col-md-8">
                                             <!-- <div id="dropdown_client_name"></div> -->
                                             <select id="client" name="client" class="form-control" style="width: 100%;" required>
-                                                <option value="">Select</option>
+                                                <option value=''>Select</option>
                                             </select>
                                         </div>
                                     </div>
@@ -350,10 +378,14 @@
                                             <select id="site_id" name="site_id" class="form-control" required>
                                                 <option value="">Select</option>
                                             </select>
+                                            <!-- <div id="div_site_list"></div> -->
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <div class="form-group" style="text-align: center;">
                                         <label for="contact_name" class="col-md-4 control-label">Contact Person</label>
+                                        <div class="col-md-8">
+                                            <div id="div_contact_list"></div>
+                                        </div>
                                     </div>
                                     <div class="form-group">
                                         <div class="col-md-offset-8 col-md-4">
