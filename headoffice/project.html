@@ -189,7 +189,7 @@
 
             snapshot.forEach(function(childSnapshot){
 
-            	// console.log(childSnapshot.val());
+            	console.log(childSnapshot.key, childSnapshot.val());
                 var projectName = childSnapshot.val().project_name;
                 var projectAddress = childSnapshot.val().project_address;
                 var key = childSnapshot.key;
@@ -199,17 +199,16 @@
                 myTbody += "<td><div id='list_contact_no'></div></td>";
                 myTbody += "<td><div class='row' style='margin-bottom: 2px;'> <div class='col-md-12'> <a href='add_project_contact.html'><button class='btn btn-sm btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='project_update_info.html'><button class='btn btn-sm btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'> <a href='client_sites_list_po.php'> <button class='btn btn-sm btn-block' style='background-color: #388e3c; color: white;'><span class='fa fa-info-circle'></span> <strong>List of P.O.</strong></button> </a></div></div></td></tr>";
 
-                document.getElementById("projectList").innerHTML = myTbody;
-
-                firebase.database().ref('project_contact/'+key).once('value').then(function(snapshot){
-
+                firebase.database().ref().child('project_contact/'+key).on('value', function(snapshot){
                     snapshot.forEach(function(childSnapshot){
 
-                        // console.log(childSnapshot1.val());
-                        $("#list_contact_no").append("<div class='form-group'><div class='row' style='margin-bottom: 2px;'><div class='col-md-6'><strong>" + childSnapshot.val().project_contact_name + "</strong></div><div class='col-md-1'><strong>-</strong></div><div class='col-md-5'><strong>" + childSnapshot.val().project_contact_no + "</strong></div></div>");
+                        // console.log(childSnapshot.val());
+                        $("#list_contact_no").append("<div class='row' style='margin-bottom: 2px;'><div class='col-md-6'><strong>" + childSnapshot.val().project_contact_name + "</strong></div><div class='col-md-1'><strong>-</strong></div><div class='col-md-5'><strong>" + childSnapshot.val().project_contact_no + "</strong></div>");
 
                     });
                 });
+
+                document.getElementById("projectList").innerHTML = myTbody;
             });
 
             if(myTbody == ""){
