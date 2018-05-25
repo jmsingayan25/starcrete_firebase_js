@@ -286,6 +286,20 @@
 
                 firebase.database().ref('purchase_order/'+plant+"/"+po_no+"/item/"+item_no[i]).set(itemData);
             }
+
+            firebase.database().ref('project_contact/'+project_id).on('value', function(snapshot){
+                snapshot.forEach(function(childSnapshot){
+
+                    var contactData = {
+                        contact_name: childSnapshot.val().project_contact_name,
+                        contact_no: childSnapshot.val().project_contact_no
+                    }
+
+                    console.log(childSnapshot.key, contactData);
+                    firebase.database().ref('purchase_order/'+plant+"/"+po_no+"/contact/"+childSnapshot.key).set(contactData);
+
+                });
+            });
             // console.log(plant, snapshot.val().project_name, snapshot.val().project_address, item_no, psi, quantity);
 
         });
