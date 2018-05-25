@@ -3,8 +3,55 @@
 <head>
 	<title></title>
 
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+
+	<!-- Add additional services you want to use -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+	<script src="js_config/firebase_config.js"></script>
+
+	<!-- javascripts -->
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery-ui-1.10.4.min.js"></script>
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.9.2.custom.min.js"></script>
 <script>
 	
+	$(document).ready(function(){
+
+		var itemData = {
+			// item: "1A",
+			// item: "1B",
+			// item: "1C",
+			// item: "1X",
+			// item: "1XX",
+			// item: "2A",
+			// item: "2B",
+			// item: "2C",
+			// item: "2X",
+			// item: "2XX",
+			// item: "3A",
+			// item: "3B",
+			// item: "3C",
+			// item: "3X",
+			// item: "3XX",
+			// item: "5A",
+			// item: "5B",
+			// item: "5C",
+			// item: "5X",
+			// item: "5XX",
+			// item: "BB",
+			// item: "LC",
+			// item: "NS",
+			// item: "SE",
+			quantity: "0"
+		}
+
+		if(firebase.database().ref('item').push(itemData)){
+			alert("YES");
+		}
+	});
+
 </script>
 </head>
 <body>

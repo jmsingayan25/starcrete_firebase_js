@@ -90,9 +90,9 @@
     $(document).ready(function() {
         
         var $form = $( "#form" );
-        var $input = $form.find( "#quantity, #psi" );
+        var $input = $form.find( "input[name='quantity[]'], input[name='psi[]']" );
 
-        $form.on( "keyup", "#quantity, #psi", function( event ) {
+        $form.on( "keyup", "input[name='quantity[]'], input[name='psi[]']", function( event ) {
             
             // When user select text in the document, also abort.
             var selection = window.getSelection().toString();
@@ -157,7 +157,14 @@
         // $count = $count + 1;                      
         $rowno=$("#item_table tr").length;
         $rowno=$rowno+1;
-        $("#item_table tr:last").after("<tr id='row"+$rowno+"' style='text-align: center;'><td class='col-md-1'><div class='form-group'><select id='item_no' name='item_no[]' class='form-control' required><option value=''>Select</option></select></div></td><td class='col-md-1'><div class='form-group'><input type='text' id='psi' name='psi[]' class='form-control' autocomplete='off' placeholder='PSI'></div></td><td class='col-md-1'><div class='form-group'><input type='text' id='quantity' name='quantity[]' class='form-control' placeholder='Quantity' required></div></td><td class='col-md-1'><div class='form-group'><input type='button' value='Remove' class='btn btn-danger btn-md' onclick=delete_row('row"+$rowno+"') style='font-weight: bold;'></div></td></tr>");
+        $("#item_table tr:last").after("<tr id='row"+$rowno+"' style='text-align: center;'><td class='col-md-1'><div class='form-group'><select name='item_no[]' class='form-control' required><option value=''>Select</option></select></div></td><td class='col-md-1'><div class='form-group'><input type='text' name='psi[]' class='form-control' autocomplete='off' placeholder='PSI'></div></td><td class='col-md-1'><div class='form-group'><input type='text'  name='quantity[]' class='form-control' placeholder='Quantity' required></div></td><td class='col-md-1'><div class='form-group'><input type='button' value='Remove' class='btn btn-danger btn-md' onclick=delete_row('row"+$rowno+"') style='font-weight: bold;'></div></td></tr>");
+
+        firebase.database().ref('item').once('value').then(function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+                $('[name="item_no[]"]').append("<option value='" + childSnapshot.val().item + "'>" + childSnapshot.val().item + "</option>");
+            });
+            // console.log(snapshot.val());
+        });
     }
 
     function delete_row(rowno){
@@ -179,11 +186,11 @@
             // alert(clientKey);
             if(clientKey || 0 !== clientKey.length){
 
-                // var siteList = "<select id='site_id' name='site_id' class='form-control' required><option value =''>Select</option>";
+                // var siteList = "<select id='project_id' name='project_id' class='form-control' required><option value =''>Select</option>";
                 firebase.database().ref('project/'+clientKey).once('value').then(function(snapshot){
                     snapshot.forEach(function(childSnapshot){
 
-                        $("#site_id").append("<option value='" + childSnapshot.key + "'>" + childSnapshot.val().project_name + " / " + childSnapshot.val().project_address + "</option>");
+                        $("#project_id").append("<option value='" + childSnapshot.key + "'>" + childSnapshot.val().project_name + " / " + childSnapshot.val().project_address + "</option>");
 
                         // siteList += "<option value='" + childSnapshot.key + "'>" + childSnapshot.val().project_name + " / " + childSnapshot.val().project_address + "</option>";
 
@@ -194,15 +201,15 @@
                 });
             }else{
                 // document.getElementById('div_site_list').innerHTML = "";
-                // $("#site_id").remove();
+                // $("#project_id").remove();
                 // $('#selectBox').find('option').remove().;
-                document.getElementById("site_id").options.length = 1;
+                document.getElementById("project_id").options.length = 1;
                 $('#div_contact_list').empty();
 
             }
         });  
 
-        $("#site_id").change(function(){
+        $("#project_id").change(function(){
 
             var projectKey = this.value;
             if(projectKey || 0 !== projectKey.length){
@@ -218,11 +225,40 @@
                 $("#div_contact_list").empty();
             }
         });
-       
     }
+
+    function itemList(){
+
+        firebase.database().ref('item').once('value').then(function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+                $('[name="item_no[]"]').append("<option value='" + childSnapshot.val().item + "'>" + childSnapshot.val().item + "</option>");
+            });
+            // console.log(snapshot.val());
+        });
+    }
+
+    function submitForm(){
+
+        event.preventDefault();
+
+        var plant = document.getElementById('plant').value;
+        var client_id = document.getElementById('client').value;
+        var project_id = document.getElementById('project_id').value;
+        var item_no = $("select[name='item_no[]']").map(function(){return $(this).val();}).get();
+        var psi = $("input[name='psi[]']").map(function(){return $(this).val() || "0";}).get();
+        var quantity = $("input[name='quantity[]']").map(function(){return $(this).val();}).get();
+
+        firebase.database().ref('project/'+client_id+"/"+project_id).once('value').then(function(snapshot){
+            // console.log(snapshot.val());
+
+            console.log(plant, snapshot.val().project_name, snapshot.val().project_address, item_no, psi, quantity);
+
+        });
+    }
+
 </script>
 </head>
-<body onload="issueFormDetails();">
+<body onload="issueFormDetails(); itemList();">
     <!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">
@@ -338,7 +374,7 @@
                     </div>
                 </div>
                 <!-- Basic Forms & Horizontal Forms-->
-                <form class="form-horizontal" role="form" action="purchase_order_form.php" id="form" method="post" onsubmit="return confirm('Proceed?');">
+                <form class="form-horizontal" role="form" id="form" onsubmit="submitForm();">
                     <div class="row">
                         <div class="col-md-6">
                             <section class="panel">
@@ -350,10 +386,10 @@
                                         <label for="plant" class="col-md-4 control-label">Plant<span class="required" style="color: red;">*</span></label>
                                         <div class="col-lg-8">
                                             <label class="radio-inline">
-                                                <input type="radio" id="plant" name="plant" value="bravo" required> <strong>Bravo</strong>
+                                                <input type="radio" id="plant" name="plant" value="Bravo" required> <strong>Bravo</strong>
                                             </label>
                                             <label class="radio-inline">
-                                                <input type="radio" id="plant" name="plant" value="delta"> <strong>Delta</strong>
+                                                <input type="radio" id="plant" name="plant" value="Delta"> <strong>Delta</strong>
                                             </label>
                                         </div>
                                     </div>
@@ -373,9 +409,9 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="site_id" class="col-md-4 control-label">Project Name / Address<span class="required" style="color: red;">*</span></label>
+                                        <label for="project_id" class="col-md-4 control-label">Project Name / Address<span class="required" style="color: red;">*</span></label>
                                         <div class="col-md-8">
-                                            <select id="site_id" name="site_id" class="form-control" required>
+                                            <select id="project_id" name="project_id" class="form-control" required>
                                                 <option value="">Select</option>
                                             </select>
                                             <!-- <div id="div_site_list"></div> -->
@@ -422,19 +458,19 @@
                                             <tr id="row1" style="text-align: center;">
                                                 <td class="col-md-1">
                                                     <div class="form-group">
-                                                        <select id="item_no" name="item_no[]" class="form-control" required>
+                                                        <select name="item_no[]" class="form-control" required>
                                                             <option value="">Select</option>
                                                         </select>
                                                     </div>
                                                 </td>
                                                 <td class="col-md-1">
                                                     <div class="form-group">
-                                                        <input type="text" id="psi" name="psi[]" class="form-control" autocomplete="off" placeholder="PSI">
+                                                        <input type="text"name="psi[]" class="form-control" autocomplete="off" placeholder="PSI">
                                                     </div>
                                                 </td>
                                                 <td class="col-md-1">
                                                     <div class="form-group">
-                                                        <input type="text" id="quantity" name="quantity[]" class="form-control" autocomplete="off" placeholder="Quantity" required>
+                                                        <input type="text" name="quantity[]" class="form-control" autocomplete="off" placeholder="Quantity" required>
                                                     </div>
                                                 </td>
                                                 <td class="col-md-1">
