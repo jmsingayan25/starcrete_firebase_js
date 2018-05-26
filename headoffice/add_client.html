@@ -154,7 +154,7 @@
 		newPostRef.set(clientData);
 
 		var postId = newPostRef.key;
-		var postContact = firebase.database().ref("client_contact/"+postId);
+		var postContact = firebase.database().ref("client/"+postId+"/contact");
 		var count = 0;
 		for(var i = 0; i < client_contact_name.length; i++){
 
