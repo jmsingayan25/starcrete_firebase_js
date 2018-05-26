@@ -168,7 +168,7 @@
 		newPostData.set(projectData);
 
 		var postId = newPostData.key;
-		var postContact = firebase.database().ref("project_contact/"+postId);
+		var postContact = firebase.database().ref('project/'+clientKeyId+'/'+postId+'/contact');
 		var count = 0;
 
 		for(var i = 0; i < project_contact_name.length; i++){

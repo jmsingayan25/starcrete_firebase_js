@@ -178,7 +178,7 @@
 		var client_contact_name = $("input[name='contact_name[]']").map(function(){return $(this).val();}).get();
 		var client_contact_no = $("input[name='contact_no[]']").map(function(){return $(this).val();}).get();
 
-		var postContact = firebase.database().ref('client_contact/'+clientKeyId);
+		var postContact = firebase.database().ref('client/'+clientKeyId+'/contact');
 		var count = 0
 		for(var i = 0; i < client_contact_name.length; i++){
 
