@@ -159,12 +159,10 @@
 
 			document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='project.html?key=" + clientKeyId + "'</a>"+childSnapshot.val().client_name;
 			document.getElementById('link_add_project').innerHTML = "<a href='add_project.html?key=" + clientKeyId + "'><button type='submit' class='btn btn-info' style='font-weight: bold;'><span class='fa fa-plus'></span> Add Project</button></a>"
-			// document.getElementById('block_client_name').innerHTML = childSnapshot.val().client_name;
-			// document.getElementById('block_client_address').innerHTML = childSnapshot.val().client_address;
 		}).catch(function(error){
             window.location.href = 'client.html';
         });
-        
+
 		document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
@@ -207,7 +205,7 @@
 
                         // console.log(childSnapshot.val());
                         // $("#list_contact_no").append("<div class='row' style='margin-bottom: 2px;'><div class='col-md-6'><strong>" + childSnapshot.val().project_contact_name + "</strong></div><div class='col-md-1'><strong>-</strong></div><div class='col-md-5'><strong>" + childSnapshot.val().project_contact_no + "</strong></div>");
-                        myTbody += "<div class='row' style=margin-bottom: 2px;><div class='col-md-12'><strong>" + contactChildSnapshot.val().project_contact_name + "<br> (" + contactChildSnapshot.val().project_contact_no + ")</strong></div></div><br>";
+                        myTbody += "<div class='form-group'><div class='row' style=margin-bottom: 2px;><div class='col-md-6'><strong>" + contactChildSnapshot.val().project_contact_name + "</strong></div><div class='col-md-1'>-</div><div class='col-md-5'><strong>" + contactChildSnapshot.val().project_contact_no + "</strong></div></div></div>";
 
                     });
                 });
