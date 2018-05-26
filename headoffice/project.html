@@ -155,13 +155,16 @@
 			}
 		});
 
-        firebase.database().ref("client/"+clientKeyId).on("value", function(childSnapshot){
+        firebase.database().ref("client/"+clientKeyId).once("value").then(function(childSnapshot){
 
 			document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='project.html?key=" + clientKeyId + "'</a>"+childSnapshot.val().client_name;
 			document.getElementById('link_add_project').innerHTML = "<a href='add_project.html?key=" + clientKeyId + "'><button type='submit' class='btn btn-info' style='font-weight: bold;'><span class='fa fa-plus'></span> Add Project</button></a>"
 			// document.getElementById('block_client_name').innerHTML = childSnapshot.val().client_name;
 			// document.getElementById('block_client_address').innerHTML = childSnapshot.val().client_address;
-		});
+		}).catch(function(error){
+            window.location.href = 'client.html';
+        });
+        
 		document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
@@ -186,7 +189,8 @@
         var myTbody = "";
 
         firebase.database().ref('project/'+clientKeyId).orderByChild('project_name').on('value', function(snapshot){
-
+            
+            if(snapshot != null){
             snapshot.forEach(function(childSnapshot){
 
             	console.log(childSnapshot.key, childSnapshot.val());
@@ -213,6 +217,7 @@
 
                 document.getElementById("projectList").innerHTML = myTbody;
             });
+            }
 
             if(myTbody == ""){
 
