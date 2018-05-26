@@ -207,24 +207,26 @@
                 $('#div_contact_list').empty();
 
             }
+
+            $("#project_id").change(function(){
+
+                var projectKey = this.value;
+                if(projectKey || 0 !== projectKey.length){
+                    $("#div_contact_list").empty();
+                    
+                    firebase.database().ref('project/'+clientKey+'/'+projectKey+'/contact').once('value').then(function(snapshot){
+                        snapshot.forEach(function(childSnapshot){
+
+                            $("#div_contact_list").append("<div class='form-group'><div class='col-md-6'><strong>" + childSnapshot.val().project_contact_name + "</strong></div><div class='col-md-6'><strong>" + childSnapshot.val().project_contact_no + "</strong></div></div>");
+                        });
+                    });
+                }else{
+                    $("#div_contact_list").empty();
+                }
+            });
         });  
 
-        $("#project_id").change(function(){
-
-            var projectKey = this.value;
-            if(projectKey || 0 !== projectKey.length){
-                $("#div_contact_list").empty();
-                
-                firebase.database().ref('project_contact/'+projectKey).once('value').then(function(snapshot){
-                    snapshot.forEach(function(childSnapshot){
-
-                        $("#div_contact_list").append("<div class='form-group'><div class='col-md-6'><strong>" + childSnapshot.val().project_contact_name + "</strong></div><div class='col-md-6'><strong>" + childSnapshot.val().project_contact_no + "</strong></div></div>");
-                    });
-                });
-            }else{
-                $("#div_contact_list").empty();
-            }
-        });
+        
     }
 
     function itemList(){
@@ -274,6 +276,7 @@
 
             firebase.database().ref('purchase_order/'+plant+"/"+po_no).set(poData);
 
+            var count = 0;
             for(var i = 0; i < item_no.length; i++){
 
                 var itemData = {
@@ -286,9 +289,11 @@
                 console.log(itemData);
 
                 firebase.database().ref('purchase_order/'+plant+"/"+po_no+"/item/"+item_no[i]).set(itemData);
+                count++;
             }
 
-            firebase.database().ref('project_contact/'+project_id).on('value', function(snapshot){
+            
+            firebase.database().ref('project/'+client_id+'/'+project_id+'/contact').on('value', function(snapshot){
                 snapshot.forEach(function(childSnapshot){
 
                     var contactData = {
@@ -296,13 +301,16 @@
                         contact_no: childSnapshot.val().project_contact_no
                     }
 
-                    console.log(childSnapshot.key, contactData);
+                    // console.log(childSnapshot.key, contactData);
                     firebase.database().ref('purchase_order/'+plant+"/"+po_no+"/contact/"+childSnapshot.key).set(contactData);
-
+                    
                 });
             });
-            // console.log(plant, snapshot.val().project_name, snapshot.val().project_address, item_no, psi, quantity);
 
+            if(count == item_no.length){
+                document.getElementById('msg').innerHTML = "Transaction complete. You can view the order on <a href='purchase_order.html?office='"+plant+"'>" + plant + " Purchase Order </a> page."
+                    $('#success_msg').show();
+            }
         });
     }
 
@@ -417,7 +425,7 @@
                 <div class="row">
                     <div class="col-lg-8 col-md-offset-2">
                         <!-- <div class="alert alert-success" id="success_msg" style="display: none;"></div> -->
-                        <div class="alert alert-success alert-dismissible" id="success_msg" style="display: block;">
+                        <div class="alert alert-success alert-dismissible" id="success_msg" style="display: none;">
                             <a href="#" class="close" data-dismiss="alert" aria-label="close" onclick="window.location.href='purchase_order_form.html';">&times;</a>
                             <strong><div id="msg"></div></strong>
                         </div>
