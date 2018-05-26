@@ -107,12 +107,14 @@
         });
 
 		// ClientKeyId = localStorage.getItem("passClientKey");
-        firebase.database().ref("client/"+clientKeyId).on("value", function(childSnapshot){
+        firebase.database().ref("client/"+clientKeyId).once("value").then(function(childSnapshot){
 
 			document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='project.html?key=" + clientKeyId + "'</a>"+childSnapshot.val().client_name;
 			document.getElementById('block_client_name').innerHTML = childSnapshot.val().client_name;
 			document.getElementById('block_client_address').innerHTML = childSnapshot.val().client_address;
 
+		}).catch(function(error){
+			window.location.href = 'client.html';
 		});
 
 		document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
