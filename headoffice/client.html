@@ -144,7 +144,7 @@
 
 					document.getElementById('username').innerHTML = snapshot.val().firstname; 
 				},(error) => {
-					console.log(error);
+					console.error(error);
 				});
 			} else {
 				window.location.href = '../login.html';
@@ -160,39 +160,36 @@
             // console.log('Signed Out');
             window.location.href = '../login.html';
         }, function(error) {
-            // console.error('Sign Out Error', error);
+            console.error('Sign Out Error', error);
         });
     }
 
     function tableData(){
 
         var myTbody = "";
-        firebase.database().ref().child('client').orderByChild('client_name').on('value', function(snapshot){
-            // console.log(snapshot.key, snapshot.val());
+        firebase.database().ref('client').on('value', function(snapshot){
             snapshot.forEach(function(childSnapshot){
 
                 var clientName = childSnapshot.val().client_name;
                 var clientAddress = childSnapshot.val().client_address;
                 var key = childSnapshot.key;
 
-                myTbody += "<tr><td>" + clientName + "</td>";
-                myTbody += "<td>" + clientAddress + "</td>";
-                myTbody += "<td><div id='list_contact_name'></div></td>";
+                myTbody += "<tr><td><strong>" + clientName + "</strong></td>";
+                myTbody += "<td><strong>" + clientAddress + "</strong></td>";
+                myTbody += "<td>";
+                firebase.database().ref('client/'+childSnapshot.key+'/contact').on('value',function(contactSnapshot){
+                        contactSnapshot.forEach(function(contactChildSnapshot){
+                            console.log(contactChildSnapshot.val());
+                            myTbody += "<div class='row' style=margin-bottom: 2px;><div class='col-md-12'><strong>" + contactChildSnapshot.val().client_contact_name + "<br> (" + contactChildSnapshot.val().client_contact_no + ")</strong></div></div><br>";
+                        });
+                    });
+
+
+                myTbody += "</td>";
                 myTbody += "<td><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='add_client_contact.html?key=" + key + "'><button class='btn btn-sm btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='update_client_info.html?key=" + key + "'><button class='btn btn-sm btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='project.html?key=" + key + "' class='btn btn-sm btn-block' style='background-color: #388e3c; color: white;'><span class='fa fa-info-circle'></span> <strong>Projects</strong></a></div></div></td></tr>";
 
-                
                 // console.log(JSON.stringify(childSnapshot));
                 document.getElementById("clientList").innerHTML = myTbody;
-
-                firebase.database().ref('client_contact/'+childSnapshot.key).on('value', function(snapshot){
-
-                    snapshot.forEach(function(childSnapshot){
-                        // console.log(childSnapshot.val());
-
-                        $("#list_contact_name").append("<div class='form-group'><div class='row' style='margin-bottom: 2px;'><div class='col-md-6'><strong>" + childSnapshot.val().client_contact_name + "</strong></div><div class='col-md-1'><strong>-</strong></div><div class='col-md-5'><strong>" + childSnapshot.val().client_contact_no + "</strong></div>");
-
-                    });
-                });
             });
 
             if(myTbody == ""){
@@ -202,8 +199,6 @@
                 document.getElementById("clientList").innerHTML = myTbody;
             }
         });
-
-
     }
 
 </script>
