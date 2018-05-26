@@ -15,46 +15,134 @@
     <script src="js/jquery-ui-1.10.4.min.js"></script>
     <script src="js/jquery-1.8.3.min.js"></script>
     <script type="text/javascript" src="js/jquery-ui-1.9.2.custom.min.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 <script>
 	
 	$(document).ready(function(){
 
-		var itemData = {
-			// item: "1A",
-			// item: "1B",
-			// item: "1C",
-			// item: "1X",
-			// item: "1XX",
-			// item: "2A",
-			// item: "2B",
-			// item: "2C",
-			// item: "2X",
-			// item: "2XX",
-			// item: "3A",
-			// item: "3B",
-			// item: "3C",
-			// item: "3X",
-			// item: "3XX",
-			// item: "5A",
-			// item: "5B",
-			// item: "5C",
-			// item: "5X",
-			// item: "5XX",
-			// item: "BB",
-			// item: "LC",
-			// item: "NS",
-			// item: "SE",
-			quantity: "0"
-		}
+		// var itemData = {
+		// 	// item: "1A",
+		// 	// item: "1B",
+		// 	// item: "1C",
+		// 	// item: "1X",
+		// 	// item: "1XX",
+		// 	// item: "2A",
+		// 	// item: "2B",
+		// 	// item: "2C",
+		// 	// item: "2X",
+		// 	// item: "2XX",
+		// 	// item: "3A",
+		// 	// item: "3B",
+		// 	// item: "3C",
+		// 	// item: "3X",
+		// 	// item: "3XX",
+		// 	// item: "5A",
+		// 	// item: "5B",
+		// 	// item: "5C",
+		// 	// item: "5X",
+		// 	// item: "5XX",
+		// 	// item: "BB",
+		// 	// item: "LC",
+		// 	// item: "NS",
+		// 	// item: "SE",
+		// 	quantity: "0"
+		// }
 
-		if(firebase.database().ref('item').push(itemData)){
-			alert("YES");
-		}
+		// if(firebase.database().ref('item').push(itemData)){
+		// 	alert("YES");
+		// }
+
+		var tBody = "";
+		var count = 1;
+		firebase.database().ref('purchase_order/Bravo').on('value', function(snapshot){
+			snapshot.forEach(function(childSnapshot){
+				childSnapshot.child('item').forEach(function(itemSnapshot){					
+
+					tBody += "<tr><td><strong>" + count + "</strong></td>";
+					tBody += "<td><strong>" + childSnapshot.val().po_no + "</strong></td>";
+					tBody += "<td><strong>" + itemSnapshot.val().item_no + "</strong></td>";
+					tBody += "<td><strong>" + itemSnapshot.val().quantity + " pcs / " + itemSnapshot.val().balance + " pcs</strong></td>";
+					tBody += "<td><strong>" + childSnapshot.val().project_name + "</strong></td>";
+					tBody += "<td><strong>" + childSnapshot.val().project_address + "</strong></td>";
+					// tBody += "<td><div id='contact_list'>";
+
+					// // firebase.database().ref('project_contact/'+childSnapshot.val().project_id).on('value',function(contactSnapshot){
+					// // 	contactSnapshot.forEach(function(contactChildSnapshot){
+					// // 		console.log(contactChildSnapshot.val());
+					// // 		tBody += "<strong>" + contactChildSnapshot.val().project_contact_name + "</strong>";
+					// // 	});
+					// // });
+
+					// tBody += "</div></td>";
+					
+					tBody += "<td>";
+					firebase.database().ref('purchase_order/Bravo/'+childSnapshot.val().po_no+'/contact').on('value',function(contactSnapshot){
+						contactSnapshot.forEach(function(contactChildSnapshot){
+							console.log(contactChildSnapshot.val());
+							// $("#contact_list").append("<strong>" + contactChildSnapshot.val().contact_name + "</strong>");
+							tBody += "<div class=row style=margin-bottom: 2px;><div class=col-md-12><strong>" + contactChildSnapshot.val().contact_name + "<br> (" + contactChildSnapshot.val().contact_no + ")</strong></div></div><br>";
+						});
+					});
+					tBody += "</td>";
+					tBody += "<td><strong>" + dateFormat(childSnapshot.val().date) + "</strong></td></tr>";
+					document.getElementById('list_po_no').innerHTML = tBody;
+					count++;
+
+
+				});
+				// for(var i = 0; i < childSnapshot.val().item.length; i++){
+
+					
+
+				// }
+				
+			});
+		});
 	});
+
+	function dateFormat(date){
+
+		var input_date = new Date(date);
+		var dd = input_date.getDate();
+		var mm = input_date.getMonth()+1;
+		var yy = input_date.getFullYear();
+
+		fulldate = mm+'/'+dd+'/'+yy;
+
+		return fulldate;
+	}
 
 </script>
 </head>
 <body>
-
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12">
+				<div class="table-responsive">
+					<table class="table table-bordered">
+						<thead>
+							<tr>
+								<th class="col-md-1">#</th>
+                                <th class="col-md-1">P.O. No.</th>
+                                <th class="col-md-1">Item</th>
+                                <th class="col-md-2">Ordered / Remaining</th>
+                                <th class="col-md-2">Project Name</th>
+                                <th class="col-md-2">Address</th>
+                                <th class="col-md-1">Contact</th>
+                                <th class="col-md-1">Date Order</th>
+							</tr>
+						</thead>
+						<tbody id="list_po_no">
+						</tbody>
+					</table>					
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
