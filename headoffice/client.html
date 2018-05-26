@@ -178,11 +178,11 @@
                 myTbody += "<td><strong>" + clientAddress + "</strong></td>";
                 myTbody += "<td>";
                 firebase.database().ref('client/'+childSnapshot.key+'/contact').on('value',function(contactSnapshot){
-                        contactSnapshot.forEach(function(contactChildSnapshot){
-                            console.log(contactChildSnapshot.val());
-                            myTbody += "<div class='row' style=margin-bottom: 2px;><div class='col-md-12'><strong>" + contactChildSnapshot.val().client_contact_name + "<br> (" + contactChildSnapshot.val().client_contact_no + ")</strong></div></div><br>";
-                        });
+                    contactSnapshot.forEach(function(contactChildSnapshot){
+                        console.log(contactChildSnapshot.val());
+                        myTbody += "<div class='row' style=margin-bottom: 2px;><div class='col-md-12'><strong>" + contactChildSnapshot.val().client_contact_name + "<br> (" + contactChildSnapshot.val().client_contact_no + ")</strong></div></div><br>";
                     });
+                });
 
 
                 myTbody += "</td>";
