@@ -182,22 +182,24 @@
 
         $("#client").change(function(){
 
+            $('#div_contact_list').empty();
             var clientKey = this.value;
             // alert(clientKey);
             if(clientKey || 0 !== clientKey.length){
 
                 // var siteList = "<select id='project_id' name='project_id' class='form-control' required><option value =''>Select</option>";
+                var div_project_list = "<option value=''>Select</option>";
                 firebase.database().ref('project/'+clientKey).once('value').then(function(snapshot){
                     snapshot.forEach(function(childSnapshot){
 
-                        $("#project_id").append("<option value='" + childSnapshot.key + "'>" + childSnapshot.val().project_name + " / " + childSnapshot.val().project_address + "</option>");
+                        // $("#project_id").append("<option value='" + childSnapshot.key + "'>" + childSnapshot.val().project_name + " / " + childSnapshot.val().project_address + "</option>");
 
-                        // siteList += "<option value='" + childSnapshot.key + "'>" + childSnapshot.val().project_name + " / " + childSnapshot.val().project_address + "</option>";
+                        div_project_list += "<option value='" + childSnapshot.key + "'>" + childSnapshot.val().project_name + " / " + childSnapshot.val().project_address + "</option>";
 
+                    document.getElementById('project_id').innerHTML = div_project_list;
 
                     });
                     // siteList += "</select>"
-                    // document.getElementById('div_site_list').innerHTML = siteList;
                 });
             }else{
                 // document.getElementById('div_site_list').innerHTML = "";
@@ -210,14 +212,16 @@
 
             $("#project_id").change(function(){
 
+                $("#div_contact_list").empty();
                 var projectKey = this.value;
                 if(projectKey || 0 !== projectKey.length){
-                    $("#div_contact_list").empty();
-                    
+                    var div_contact_list = "";
                     firebase.database().ref('project/'+clientKey+'/'+projectKey+'/contact').once('value').then(function(snapshot){
                         snapshot.forEach(function(childSnapshot){
 
-                            $("#div_contact_list").append("<div class='form-group'><div class='col-md-6'><strong>" + childSnapshot.val().project_contact_name + "</strong></div><div class='col-md-6'><strong>" + childSnapshot.val().project_contact_no + "</strong></div></div>");
+                            div_contact_list += "<div class='form-group'><div class='col-md-6'><strong>" + childSnapshot.val().project_contact_name + "</strong></div><div class='col-md-6'><strong>" + childSnapshot.val().project_contact_no + "</strong></div></div>";
+
+                            document.getElementById('div_contact_list').innerHTML = div_contact_list;
                         });
                     });
                 }else{
@@ -274,8 +278,11 @@
             }
             console.log(poData);
 
-            firebase.database().ref('purchase_order/'+plant+"/"+po_no).set(poData);
+            var postData = firebase.database().ref('purchase_order/'+plant+"/");
+            var newPostRef = postData.push();
+            newPostRef.set(poData);
 
+            var postId = newPostRef.key;
             var count = 0;
             for(var i = 0; i < item_no.length; i++){
 
@@ -288,7 +295,7 @@
 
                 console.log(itemData);
 
-                firebase.database().ref('purchase_order/'+plant+"/"+po_no+"/item/"+item_no[i]).set(itemData);
+                firebase.database().ref('purchase_order/'+plant+"/"+postId+"/item/"+item_no[i]).set(itemData);
                 count++;
             }
 
@@ -302,7 +309,7 @@
                     }
 
                     // console.log(childSnapshot.key, contactData);
-                    firebase.database().ref('purchase_order/'+plant+"/"+po_no+"/contact/"+childSnapshot.key).set(contactData);
+                    firebase.database().ref('purchase_order/'+plant+"/"+postId+"/contact/"+childSnapshot.key).set(contactData);
                     
                 });
             });
@@ -462,7 +469,7 @@
                                         <div class="col-md-8">
                                             <!-- <div id="dropdown_client_name"></div> -->
                                             <select id="client" name="client" class="form-control" style="width: 100%;" required>
-                                                <option value=''>Select</option>
+                                                <option value="">Select</option>
                                             </select>
                                         </div>
                                     </div>
