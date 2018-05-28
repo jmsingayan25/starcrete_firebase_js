@@ -315,7 +315,7 @@
             });
 
             if(count == item_no.length){
-                document.getElementById('msg').innerHTML = "Transaction complete. You can view the order on <a href='purchase_order.html?plant='"+plant+"'>" + plant + " Purchase Order </a> page."
+                document.getElementById('msg').innerHTML = "Transaction complete. You can view the order on <a href='purchase_order.html?plant="+plant+"'>" + plant + " Purchase Order </a> page."
                     $('#success_msg').show();
             }
         });
@@ -378,15 +378,15 @@
                             <span>Clients</span>
                         </a>
                     </li>
-                    <!-- <li class="sub-menu">
+                    <li class="sub-menu">
                         <a href="javascript:;" class="">
                             <i class="fa fa-building"></i>
                             <span>Bravo</span>
                             <span class="menu-arrow arrow_carrot-down"></span>
                         </a>
                         <ul class="sub">
-                            <li><a class="" href="purchase_order.php?office=bravo">Purchase Order</a></li>                          
-                            <li><a class="" href="delivery_order.php?office=bravo">Delivery Page</a></li>
+                            <li><a class="" href="purchase_order.html?plant=Bravo">Purchase Order</a></li>                          
+                            <!-- <li><a class="" href="delivery_order.html?plant=Bravo">Delivery Page</a></li> -->
                         </ul>
                     </li>  
                     <li class="sub-menu">
@@ -396,10 +396,10 @@
                             <span class="menu-arrow arrow_carrot-down"></span>
                         </a>
                         <ul class="sub">
-                            <li><a class="" href="purchase_order.php?office=delta">Purchase Order</a></li>                          
-                            <li><a class="" href="delivery_order.php?office=delta">Delivery Page</a></li>
+                            <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>                          
+                            <!-- <li><a class="" href="delivery_order.html?plant=Delta">Delivery Page</a></li> -->
                         </ul>
-                    </li>  --> 
+                    </li>  
                     <li class="sub-menu">
                         <a href="javascript:;" class="">
                             <i class="fa fa-file"></i>
