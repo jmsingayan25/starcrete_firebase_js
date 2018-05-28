@@ -189,32 +189,32 @@
         firebase.database().ref('project/'+clientKeyId).orderByChild('project_name').on('value', function(snapshot){
             
             if(snapshot != null){
-            snapshot.forEach(function(childSnapshot){
+                snapshot.forEach(function(childSnapshot){
 
-            	console.log(childSnapshot.key, childSnapshot.val());
-                var projectName = childSnapshot.val().project_name;
-                var projectAddress = childSnapshot.val().project_address;
-                var key = childSnapshot.key;
+                	console.log(childSnapshot.key, childSnapshot.val());
+                    var projectName = childSnapshot.val().project_name;
+                    var projectAddress = childSnapshot.val().project_address;
+                    var key = childSnapshot.key;
 
-                myTbody += "<tr><td><strong>" + projectName + "</strong></td>";
-                myTbody += "<td><strong>" + projectAddress + "</strong></td>";
-                myTbody += "<td>";
+                    myTbody += "<tr><td><strong>" + projectName + "</strong></td>";
+                    myTbody += "<td><strong>" + projectAddress + "</strong></td>";
+                    myTbody += "<td>";
 
-                firebase.database().ref('project/'+clientKeyId+'/'+childSnapshot.key+'/contact').on('value',function(contactSnapshot){
-                    contactSnapshot.forEach(function(contactChildSnapshot){
+                    firebase.database().ref('project/'+clientKeyId+'/'+childSnapshot.key+'/contact').orderByChild('project_contact_name').on('value',function(contactSnapshot){
+                        contactSnapshot.forEach(function(contactChildSnapshot){
 
-                        // console.log(childSnapshot.val());
-                        // $("#list_contact_no").append("<div class='row' style='margin-bottom: 2px;'><div class='col-md-6'><strong>" + childSnapshot.val().project_contact_name + "</strong></div><div class='col-md-1'><strong>-</strong></div><div class='col-md-5'><strong>" + childSnapshot.val().project_contact_no + "</strong></div>");
-                        myTbody += "<div class='form-group'><div class='row' style=margin-bottom: 2px;><div class='col-md-6'><strong>" + contactChildSnapshot.val().project_contact_name + "</strong></div><div class='col-md-1'>-</div><div class='col-md-5'><strong>" + contactChildSnapshot.val().project_contact_no + "</strong></div></div></div>";
+                            // console.log(childSnapshot.val());
+                            // $("#list_contact_no").append("<div class='row' style='margin-bottom: 2px;'><div class='col-md-6'><strong>" + childSnapshot.val().project_contact_name + "</strong></div><div class='col-md-1'><strong>-</strong></div><div class='col-md-5'><strong>" + childSnapshot.val().project_contact_no + "</strong></div>");
+                            myTbody += "<div class='form-group'><div class='row' style=margin-bottom: 2px;><div class='col-md-6'><strong>" + contactChildSnapshot.val().project_contact_name + "</strong></div><div class='col-md-1'>-</div><div class='col-md-5'><strong>" + contactChildSnapshot.val().project_contact_no + "</strong></div></div></div>";
 
+                        });
                     });
+
+                    myTbody += "</td>";
+                    myTbody += "<td><div class='row' style='margin-bottom: 2px;'> <div class='col-md-12'> <a href='add_project_contact.html'><button class='btn btn-sm btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='project_update_info.html'><button class='btn btn-sm btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'> <a href='client_sites_list_po.php'> <button class='btn btn-sm btn-block' style='background-color: #388e3c; color: white;'><span class='fa fa-info-circle'></span> <strong>List of P.O.</strong></button> </a></div></div></td></tr>";
+
+                    document.getElementById("projectList").innerHTML = myTbody;
                 });
-
-                myTbody += "</td>";
-                myTbody += "<td><div class='row' style='margin-bottom: 2px;'> <div class='col-md-12'> <a href='add_project_contact.html'><button class='btn btn-sm btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='project_update_info.html'><button class='btn btn-sm btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'> <a href='client_sites_list_po.php'> <button class='btn btn-sm btn-block' style='background-color: #388e3c; color: white;'><span class='fa fa-info-circle'></span> <strong>List of P.O.</strong></button> </a></div></div></td></tr>";
-
-                document.getElementById("projectList").innerHTML = myTbody;
-            });
             }
 
             if(myTbody == ""){
@@ -323,15 +323,15 @@
 	                        <span>Clients</span>
 	                    </a>
 	                </li>
-	                <!-- <li class="sub-menu">
+	                <li class="sub-menu">
 	                    <a href="javascript:;" class="">
 	                        <i class="fa fa-building"></i>
 	                        <span>Bravo</span>
 	                        <span class="menu-arrow arrow_carrot-down"></span>
 	                    </a>
 	                    <ul class="sub">
-	                        <li><a class="" href="purchase_order.php?office=bravo">Purchase Order</a></li>                          
-	                        <li><a class="" href="delivery_order.php?office=bravo">Delivery Page</a></li>
+	                        <li><a class="" href="purchase_order.html?plant=Bravo">Purchase Order</a></li>                          
+	                        <!-- <li><a class="" href="delivery_order.html?plant=Bravo">Delivery Page</a></li> -->
 	                    </ul>
 	                </li>  
 	                <li class="sub-menu">
@@ -341,10 +341,10 @@
 	                        <span class="menu-arrow arrow_carrot-down"></span>
 	                    </a>
 	                    <ul class="sub">
-	                        <li><a class="" href="purchase_order.php?office=delta">Purchase Order</a></li>                          
-	                        <li><a class="" href="delivery_order.php?office=delta">Delivery Page</a></li>
+	                        <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>                          
+	                        <!-- <li><a class="" href="delivery_order.html?plant=Delta">Delivery Page</a></li> -->
 	                    </ul>
-	                </li>  --> 
+	                </li>  
 	                <li class="sub-menu">
 	                    <a href="javascript:;" class="">
 	                        <i class="fa fa-file"></i>

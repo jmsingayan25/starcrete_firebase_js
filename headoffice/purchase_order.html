@@ -183,7 +183,7 @@
 
         var myTbody = "";
         var count = 1;
-        firebase.database().ref('purchase_order/'+plant).on('value', function(orderSnapshot){
+        firebase.database().ref('purchase_order/'+plant).orderByChild('date').on('value', function(orderSnapshot){
             
             if(orderSnapshot.val() != null){
                 console.log(orderSnapshot.val());
@@ -403,7 +403,7 @@
                     </div>
                     <div class="col-md-4">
                         <ol class="breadcrumb">
-                            <li>As of <strong><?php echo date_format($date_create, "M d, Y h:i A"); ?></strong></li>  
+                            <li>As of <strong></strong></li>  
 
                             <!-- <li>Last Entry: <strong><?php $date = lastPurchaseOrderEntry($db, $plant); $date_create = date_create($date); echo date_format($date_create, "M d, Y h:i A"); ?></strong></li> -->
                         </ol>
