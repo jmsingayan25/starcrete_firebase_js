@@ -184,45 +184,55 @@
         var myTbody = "";
         var count = 1;
         firebase.database().ref('purchase_order/'+plant).on('value', function(orderSnapshot){
-            // console.log(orderSnapshot.val());
-            orderSnapshot.forEach(function(orderChildsnapshot){
-                // console.log(orderChildsnapshot.val());
-                firebase.database().ref('purchase_order/'+plant+'/'+orderChildsnapshot.key+'/item').on('value', function(itemSnapshot){
-                    // console.log(itemSnapshot.val());  
-                    itemSnapshot.forEach(function(itemChildsnapshot){
+            
+            if(orderSnapshot.val() != null){
+                console.log(orderSnapshot.val());
 
-                        po_no = orderChildsnapshot.val().po_no;
-                        item_no = itemChildsnapshot.val().item_no;
-                        quantity = Number(itemChildsnapshot.val().quantity).toLocaleString('en');
-                        balance = Number(itemChildsnapshot.val().balance).toLocaleString('en');
-                        project_name = orderChildsnapshot.val().project_name;
-                        project_address = orderChildsnapshot.val().project_address;
+                orderSnapshot.forEach(function(orderChildsnapshot){
+                    // console.log(orderChildsnapshot.val());
+                    firebase.database().ref('purchase_order/'+plant+'/'+orderChildsnapshot.key+'/item').on('value', function(itemSnapshot){
+                        // console.log(itemSnapshot.val());  
+                        itemSnapshot.forEach(function(itemChildsnapshot){
 
-                        myTbody += "<tr><td>" + count  + "</td>";
-                        myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='purchase_order_detail.html?key=" + orderChildsnapshot.key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
-                        myTbody += "<td><strong>" + item_no + "</strong></td>";
-                        myTbody += "<td><strong>" + quantity + " pcs / " + balance + " pcs</strong></td>";
-                        myTbody += "<td><strong>" + project_name + "</strong></td>";
-                        myTbody += "<td><strong>" + project_address + "</strong></td>";
-                        myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+                            po_no = orderChildsnapshot.val().po_no;
+                            item_no = itemChildsnapshot.val().item_no;
+                            quantity = Number(itemChildsnapshot.val().quantity).toLocaleString('en');
+                            balance = Number(itemChildsnapshot.val().balance).toLocaleString('en');
+                            project_name = orderChildsnapshot.val().project_name;
+                            project_address = orderChildsnapshot.val().project_address;
 
-                        firebase.database().ref('purchase_order/'+plant+'/'+orderChildsnapshot.key+'/contact').on('value', function(contactSnapshot){
-                            contactSnapshot.forEach(function(contactChildsnapshot){
+                            myTbody += "<tr><td>" + count  + "</td>";
+                            myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='purchase_order_detail.html?key=" + orderChildsnapshot.key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
+                            myTbody += "<td><strong>" + item_no + "</strong></td>";
+                            myTbody += "<td><strong>" + quantity + " pcs / " + balance + " pcs</strong></td>";
+                            myTbody += "<td><strong>" + project_name + "</strong></td>";
+                            myTbody += "<td><strong>" + project_address + "</strong></td>";
+                            myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
 
-                                contact_name = contactChildsnapshot.val().contact_name;
-                                contact_no = contactChildsnapshot.val().contact_no;
+                            firebase.database().ref('purchase_order/'+plant+'/'+orderChildsnapshot.key+'/contact').on('value', function(contactSnapshot){
+                                contactSnapshot.forEach(function(contactChildsnapshot){
 
-                            myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+                                    contact_name = contactChildsnapshot.val().contact_name;
+                                    contact_no = contactChildsnapshot.val().contact_no;
+
+                                myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+                                });
                             });
-                        });
 
-                        myTbody += "</td>";
-                        myTbody += "<td><strong>" + dateFormat(orderChildsnapshot.val().date) + "</strong></td></tr>";
-                        document.getElementById('orderList').innerHTML = myTbody;
-                        count++;
+                            myTbody += "</td>";
+                            myTbody += "<td><strong>" + dateFormat(orderChildsnapshot.val().date) + "</strong></td></tr>";
+                            document.getElementById('orderList').innerHTML = myTbody;
+                            count++;
+                        });
                     });
                 });
-            });
+            }else{
+
+                myTbody = "<tr><td colspan='10' style='min-height: 100%; background: white; text-align: center; vertical-align: middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                document.getElementById('orderList').innerHTML = myTbody;
+            }
+            
         });
     }
 
