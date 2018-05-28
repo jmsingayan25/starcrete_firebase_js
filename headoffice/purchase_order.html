@@ -192,8 +192,8 @@
 
                         po_no = orderChildsnapshot.val().po_no;
                         item_no = itemChildsnapshot.val().item_no;
-                        quantity = itemChildsnapshot.val().quantity;
-                        balance = itemChildsnapshot.val().balance;
+                        quantity = Number(itemChildsnapshot.val().quantity).toLocaleString('en');
+                        balance = Number(itemChildsnapshot.val().balance).toLocaleString('en');
                         project_name = orderChildsnapshot.val().project_name;
                         project_address = orderChildsnapshot.val().project_address;
 
