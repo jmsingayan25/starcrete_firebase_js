@@ -91,6 +91,7 @@
 	var plant = getUrlParameter('plant');
 
 	$(document).ready(function(){
+
         $('.filterable .btn-filter').click(function(){
             var $panel = $(this).parents('.filterable'),
             $filters = $panel.find('.filters input'),
@@ -198,7 +199,7 @@
                         project_address = orderChildsnapshot.val().project_address;
 
                         myTbody += "<tr><td>" + count  + "</td>";
-                        myTbody += "<td><strong>" + po_no + "</strong></td>";
+                        myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='purchase_order_details.html?po_no=" + po_no + "'\"><strong>" + po_no + "</strong></div></td>";
                         myTbody += "<td><strong>" + item_no + "</strong></td>";
                         myTbody += "<td><strong>" + quantity + " pcs / " + balance + " pcs</strong></td>";
                         myTbody += "<td><strong>" + project_name + "</strong></td>";
