@@ -1,84 +1,161 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+    <link rel="shortcut icon" href="img/favicon.png">
+
 	<title>Home</title>
 
 	<!-- Firebase App is always required and must be first -->
-	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+	<!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-app.js"></script>
 
 	<!-- Add additional services you want to use -->
 	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
 	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+	<script src="../js_config/firebase_config.js"></script>
 
-	<!-- Load the jQuery library, which we'll use to manipulate HTML elements with Javascript. -->
-    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
-    
+	<!-- Bootstrap CSS -->    
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="../css/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="../css/elegant-icons-style.css" rel="stylesheet" />
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
+    <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="../css/fullcalendar.css">
+    <link href="../css/widgets.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/style-responsive.css" rel="stylesheet" />
+    <link href="../css/xcharts.min.css" rel=" stylesheet">	
+    <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
 
-    <!-- Load Bootstrap stylesheet, which will is CSS that makes everything prettier and also responsive (aka will work on all devices of all sizes). -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!-- javascripts -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery-ui-1.10.4.min.js"></script>
+    <script src="../js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+    <!-- bootstrap -->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- nice scroll -->
+    <script src="../js/jquery.scrollTo.min.js"></script>
+    <script src="../js/jquery.nicescroll.js" type="text/javascript"></script>
+    <!-- charts scripts -->
+    <script src="../assets/jquery-knob/js/jquery.knob.js"></script>
+    <script src="../js/jquery.sparkline.js" type="text/javascript"></script>
+    <script src="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+    <script src="../js/owl.carousel.js" ></script>
+    <!-- jQuery full calendar -->
+    <script src="../js/fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
+    <script src="../assets/fullcalendar/fullcalendar/fullcalendar.js"></script>
+    <!--script for this page only-->
+    <script src="../js/calendar-custom.js"></script>
+    <script src="../js/jquery.rateit.min.js"></script>
+    <!-- custom select -->
+    <script src="../js/jquery.customSelect.min.js" ></script>
+    <script src="../assets/chart-master/Chart.js"></script>
 
-    <!-- <script src="https://www.gstatic.com/firebasejs/5.0.2/firebase.js"></script> -->
-    <script src="../js_config/firebase_config.js"></script>
+    <!--custome script for all page-->
+    <script src="../js/scripts.js"></script>
+    <!-- custom script for this page-->
+    <script src="../js/sparkline-chart.js"></script>
+    <script src="../js/easy-pie-chart.js"></script>
+    <script src="../js/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="../js/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="../js/xcharts.min.js"></script>
+    <script src="../js/jquery.autosize.min.js"></script>
+    <script src="../js/jquery.placeholder.min.js"></script>
+    <script src="../js/gdp-data.js"></script>  
+    <script src="../js/morris.min.js"></script>
+    <script src="../js/sparklines.js"></script>    
+    <script src="../js/charts.js"></script>
+    <script src="../js/jquery.slimscroll.min.js"></script>
+
+    <!-- =======================================================
+    Theme Name: NiceAdmin
+    Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+    Author: BootstrapMade
+    Author URL: https://bootstrapmade.com
+    ======================================================= -->
+
 <script>
 	
-	function initState(){
+	$(document).ready(function(){
+        $('.filterable .btn-filter').click(function(){
+            var $panel = $(this).parents('.filterable'),
+            $filters = $panel.find('.filters input'),
+            $tbody = $panel.find('.table tbody');
+            if ($filters.prop('disabled') == true) {
+                $filters.prop('disabled', false);
+                $filters.first().focus();
+            } else {
+                $filters.val('').prop('disabled', true);
+                $tbody.find('.no-result').remove();
+                $tbody.find('tr').show();
+            }
+        });
 
-		firebase.auth().onAuthStateChanged(function(user) {
-			if (user != null) {
-				// User is signed in.
-				// user.providerData.forEach(function (profile) {
-				// 	console.log("Sign-in provider: " + profile.providerId);
-				// 	console.log("  Provider-specific UID: " + profile.uid);
-				// 	console.log("  Name: " + profile.displayName);
-				// 	console.log("  Email: " + profile.email);
-				// 	console.log("  Photo URL: " + profile.photoURL);
-				// });
+        $('.filterable .filters input').keyup(function(e){
+            /* Ignore tab key */
+            var code = e.keyCode || e.which;
+            if (code == '9') return;
+            /* Useful DOM data and selectors */
+            var $input = $(this),
+            inputContent = $input.val().toLowerCase(),
+            $panel = $input.parents('.filterable'),
+            column = $panel.find('.filters th').index($input.parents('th')),
+            $table = $panel.find('.table'),
+            $rows = $table.find('tbody tr');
+            /* Dirtiest filter function ever ;) */
+            var $filteredRows = $rows.filter(function(){
+                var value = $(this).find('td').eq(column).text().toLowerCase();
+                return value.indexOf(inputContent) === -1;
+            });
+            /* Clean previous no-result if exist */
+            $table.find('tbody .no-result').remove();
+            /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
+            $rows.show();
+            $filteredRows.hide();
+            /* Prepend no-result row if all rows are filtered */
+            if ($filteredRows.length === $rows.length) {
+                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="3" style="height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
+            }
+        });
 
-				// var displayName = user.displayName || "";
-				// var email = user.email;
-				// var emailVerified = user.emailVerified;
-				// var photoURL = user.photoURL;
-				// var isAnonymous = user.isAnonymous;
-				var uid = user.uid;
-				// var providerData = user.providerData;
-				
-				// document.getElementById('userInfo').innerHTML = JSON.stringify(user); 
-				// document.getElementById('userInfo').innerHTML = 'WELCOME ' + displayName + ' ' + email;
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user != null) {
 
-				firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-					console.log("UID: " + uid);
-					console.log("First Name: " + snapshot.val().firstname);
-					console.log("Last Name: " + snapshot.val().lastname);
-					console.log("Email: " + snapshot.val().email);
-					console.log("Position: " + snapshot.val().position);
-					console.log("Office: " + snapshot.val().office);
-				},(error) => {
-					console.log(error);
-				});
-			// ...
-			} else {
-				window.location.href = '../login.html';
-			}
-		});
-	}
+                var uid = user.uid;
+        
+                firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+                    // console.log("UID: " + uid);
+                    // console.log("First Name: " + snapshot.val().firstname);
+                    // console.log("Last Name: " + snapshot.val().lastname);
+                    // console.log("Email: " + snapshot.val().email);
+                    // console.log("Position: " + snapshot.val().position);
+                    // console.log("Office: " + snapshot.val().office);
 
-	function updateUserDetail(){
+                    document.getElementById('username').innerHTML = snapshot.val().firstname; 
+                },(error) => {
+                    console.log(error);
+                });
+            } else {
+                window.location.href = '../login.html';
+            }
+        });
 
-		var uname = document.getElementById('updateDisplayName').value;
+        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
-		firebase.auth().onAuthStateChanged(function(user){
-
-			user.updateProfile({
-				displayName: uname
-			}).then(function(){
-				var displayName = user.displayName;
-				console.log('Display Name:' + displayName);
-				window.refresh
-			}, function(error){
-				console.log('Update error');
-			});
-		});
-	}
+    });
 
 	function userSignOut(){
 
@@ -90,25 +167,259 @@
 		});
 	}
 
+	function tableData(){
+
+        var myTbody = "";
+        firebase.database().ref('users').orderByChild('firstname').on('value', function(snapshot) {
+            if(snapshot != null){
+
+                snapshot.forEach(function(childSnapshot) {
+
+                    var firstName = childSnapshot.val().firstname;   //Example of value
+                    var lastName = childSnapshot.val().lastname;   //Example of value
+                    var emailAdd = childSnapshot.val().email;   //Example of value
+
+                    // console.log("First Name: " + firstName);
+                    // console.log("Last Name: " + lastName);
+                    // console.log("Email: " + emailAdd);
+
+                    myTbody += "<tr><td>" + firstName + "</td>";
+                    myTbody += "<td>" + lastName + "</td>";
+                    myTbody += "<td>" + emailAdd + "</td></tr>";
+
+                    console.log(JSON.stringify(childSnapshot));
+                    document.getElementById("historyList").innerHTML = myTbody;
+
+                });
+            }
+
+            if(myTbody == ""){
+
+                myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                document.getElementById("historyList").innerHTML = myTbody;
+            }
+        });
+    }
 </script>
+<style>
+.table_page{
+    /*margin: auto;*/
+    margin-top: -40px;
+    /*width: 100%;*/
+    text-align: center;
+}
+
+.table_row_count{
+    margin-top: -15px;
+}
+
+.filterable .panel-heading .pull-right {
+    margin-top: -20px;
+}
+.filterable .filters input[disabled] {
+    background-color: transparent;
+    text-align: center;
+    border: none;
+    cursor: auto;
+    box-shadow: none;
+    padding: 0;
+    height: auto;
+}
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+    color: gray;
+    text-align: left;
+    font-weight: bold;
+}
+.filterable .filters input[disabled]::-moz-placeholder {
+     color: gray;
+     text-align: left;
+     font-weight: bold;
+}
+.filterable .filters input[disabled]:-ms-input-placeholder {
+     color: gray;
+     text-align: left;
+     font-weight: bold;
+}
+.page_links a{
+    color: inherit;
+}
+li.notif {
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
+
+}
+</style>
 </head>
-<body onload="initState();">
-	<div class="row">
-		<div class="col-md-12">
-			<!-- <p><h1>HELLO</h1></p> -->
-			<div id="userInfo"></div>	
-			<div class="form-group">
-				<input type="submit" name="signOutBtn" id="signOutBtn" value="Sign Out" onclick="userSignOut();">
-			</div>
+<body onload="">
+	<section id="container" class="">
+        <header class="header dark-bg">
+            <div class="toggle-nav">
+            <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
+            </div>
 
-			<div class="form-group">
-				<input type="text" name="updateDisplayName" id="updateDisplayName">
-			</div>
-			<div class="form-group">
-				<input type="submit" name="updateUserDetailBtn" id="updateUserDetailBtn" value="Update" onclick="updateUserDetail();">
-			</div>
-		</div>
-	</div>
+            <!--logo start-->
 
+            <!--logo end-->
+            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+            <div class="top-nav notification-row">                
+                <!-- notificatoin dropdown start-->
+                <ul class="nav pull-right top-menu">
+                    <!-- user login dropdown start-->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <!--  <span class="profile-ava">
+                        <img alt="" src="img/avatar1_small.jpg">
+                        </span> -->
+                            <span class="username" id="username"></span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <div class="log-arrow-up"></div>
+                            <li>
+                                <a href="" id="logoutBtn"><i class="icon_key_alt"></i> Log Out</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->
+                </ul>
+                <!-- notificatoin dropdown end-->
+            </div>
+        </header>  
+        <!--sidebar start-->
+
+        <!--sidebar start-->
+	    <aside>
+	        <div id="sidebar"  class="nav-collapse ">
+	            <!-- sidebar menu start-->
+	            <ul class="sidebar-menu">                
+	                <li class="active">
+	                    <a class="" href="index.html">
+	                        <i class="icon_house"></i>
+	                        <span>History</span>
+	                    </a>
+	                </li>
+	                <li class="sub-menu">
+	                    <a href="javascript:;" class="">
+	                        <i class="fa fa-building"></i>
+	                        <span>Purchase Order</span>
+	                        <span class="menu-arrow arrow_carrot-down"></span>
+	                    </a>
+	                    <ul class="sub">
+	                        <li><a class="" href="purchase_order.html">Pending P.O.</a></li>
+	                        <!-- <li><a class="" href="purchase_closed_order.html">Closed P.O.</a></li> -->
+	                    </ul>
+	                </li>  
+	                <!-- <li class="sub-menu">
+	                    <a href="javascript:;" class="">
+	                        <i class="fa fa-building"></i>
+	                        <span>Delivery Order</span>
+	                        <span class="menu-arrow arrow_carrot-down"></span>
+	                    </a>
+	                    <ul class="sub">
+	                        <li><a class="" href="delivery_issue.html">Existing P.O. <span class='badge'><?html echo getCountPlantPo($db, $office); ?></span></a></li>    
+	                        <li><a class="" href="delivery_order.html">Ongoing Delivery <span class="badge"><?html echo getDeliveryCountOnDeliveryOffice($db, $office); ?></span></a></li>                          
+	                        <li><a class="" href="delivery_delivered.html">Delivered Order</a></li>
+	                        <li><a class="" href="delivery_backloaded.html">Backloaded Order</a></li>
+	                    </ul>
+	                </li>   -->
+	            </ul>
+	            <!-- sidebar menu end-->
+	        </div>
+	    </aside>
+	    <!--sidebar end-->
+
+	    <!--main content start-->
+	    <section id="main-content">
+	        <section class="wrapper">            
+	            <!--overview start-->
+	            <div class="row">
+	                <div class="col-md-8">
+	                    <!-- <h3 class="page-header"><i class="fa fa-home"></i><a href="index.php">History</a></h3> -->
+	                    <ol class="breadcrumb">
+	                        <!-- <li><i class="fa fa-home"></i><a href="index.php">Home</a></li> -->
+	                        <li><i class="fa fa-home"></i><a href="index.html" style="color: inherit;">History</a></li>						  	
+	                    </ol>
+	                </div>
+	                <div class="col-md-4">
+	                    <ol class="breadcrumb">
+	                        <li>As of <strong></strong></li>  
+	                    </ol>
+	                </div>
+	            </div>
+	            <div class="row">
+	                <div class="col-md-12">
+	                    <section class="panel">
+	                        <form class="form-inline">
+	                             <header class="panel-heading">
+	                                <div class="row" style="margin-bottom: 5px;">
+	                                    <div class="col-md-2">
+	                                        <div class="form-group">
+	                                            <label for="start_date">From:</label>
+	                                            <div class="tooltips" data-original-title="Start date of transaction" data-placement="top">
+	                                                <input type="date" name="start_date" class="form-control">
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                    <div class="col-md-2">
+	                                        <div class="form-group">
+	                                            <label for="end_date">To:</label>
+	                                            <div class="tooltips" data-original-title="End date of transaction" data-placement="top">
+	                                                <input type="date" name="end_date" class="form-control">
+	                                            </div>
+	                                        </div>
+	                                    </div>  
+	                                    <div class="input-group col-md-5" style="margin: 38px 0px 0px 0px;">
+	                                        <div class="tooltips" data-original-title="Search Transaction or Description" data-placement="top">
+	                                            <input type="text" name="search" class="form-control" placeholder="Search...">
+	                                        </div>
+	                                        <span class="input-group-btn">
+	                                            <button class="btn btn-info" type="submit" name="search_table">
+	                                                <i class="fa fa-search"></i>
+	                                            </button>
+	                                        </span>
+	                                        
+	                                    </div>
+	                                    <div class="input-group col-md-2" style="white-space: nowrap; margin: 38px 0px 0px 60px;">
+	                                        <label for="view" class="col-md-8 control-label">Number of rows:</label>
+	                                        <div class="form-group">
+	                                            <div class="col-md-12">
+	                                                <select id="view" name="view" class="form-control" onchange="this.form.submit()">
+	                                                    <option value="25">25</option>
+	                                                    <option value="50">50</option>
+	                                                    <option value="75">75</option>
+	                                                    <option value="100">100</option>
+	                                                </select>
+	                                            </div>
+	                                        </div>
+	                                    </div>
+	                                </div>
+	                            </header>
+	                        </form>
+	                        <div class="table-responsive filterable">
+	                            <table class="table table-striped table-bordered" id="myTable">
+	                                <thead>
+	                                    <tr class="filterable">
+	                                       
+	                                        <th colspan="3">
+	                                            <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
+	                                        </th>
+	                                    </tr>
+	                                    <tr class="filters">
+	                                        <th class="col-md-1"><input type="text" class="form-control" placeholder="Transaction" disabled></th>
+	                                        <th class="col-md-5"><input type="text" class="form-control" placeholder="Description" disabled></th>
+	                                        <th class="col-md-1">Date</th>
+	                                      </tr>
+	                                </thead>
+	                                <tbody id="historyList">   
+	                                </tbody>
+	                            </table>
+	                        </div>
+	                    </section>
+	                </div>
+	        </section>
+	    </section>
+    </section>
 </body>
 </html>
