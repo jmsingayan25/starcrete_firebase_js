@@ -252,7 +252,7 @@
         var client_id = document.getElementById('client').value;
         var project_id = document.getElementById('project_id').value;
         var item_no = $("select[name='item_no[]']").map(function(){return $(this).val();}).get();
-        var psi = $("input[name='psi[]']").map(function(){return $(this).val() || "0";}).get();
+        var psi = $("input[name='psi[]']").map(function(){return $(this).val() || "";}).get();
         var quantity = $("input[name='quantity[]']").map(function(){return $(this).val();}).get();
 
         firebase.database().ref('project/'+client_id+"/"+project_id).once('value').then(function(snapshot){
