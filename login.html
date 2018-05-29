@@ -61,19 +61,16 @@
 
 				firebase.auth().onAuthStateChanged(function(user){
 
-					if (user != null) {
+					var uid = user.uid;
+					var uemail = user.email;
 
-						var uid = user.uid;
-						var uemail = user.email;
-
-						firebase.database().ref().child("users/"+uid).set({
-							firstname: "Carmela",
-							lastname: "Carmela",
-							email: uemail,
-							position: "secretary",
-							office: "Bravo"
-						});
-					}
+					firebase.database().ref().child("users/"+uid).set({
+						firstname: "Lhizel",
+						lastname: "Romulo",
+						email: uemail,
+						position: "secretary",
+						office: "Delta"
+					});
 				});
 			}).catch(function(error) {
 				// Handle Errors here.
@@ -88,18 +85,6 @@
 				console.log(error);
 			});
 		}
-	}
-
-	function signoutUser(){
-
-		firebase.auth().signOut().then(function() {
-		  window.location.href = 'login.php';
-		}).catch(function(error) {
-		  	var errorCode = error.code;
-			var errorMessage = error.message;
-
-			alert(errorMessage);
-		});
 	}
 
 	function initState(){
@@ -141,8 +126,6 @@
 	}
 
 	function signIn(){
-
-		event.preventDefault();
 
 		var email = document.getElementById('loginEmail').value;
 		var password = document.getElementById('loginPassword').value;
@@ -219,13 +202,17 @@
 
 	window.onload = function() {
 		initState();
+
+    	document.getElementById('login-submit').addEventListener('click', createUser, false);
+		
     };
+
 
 </script>
 </head>
 <body class="login-img3-body">
     <div class="container">
-        <form class="login-form" onsubmit="return signIn();">        
+        <form class="login-form">        
             <div class="login-wrap">
                 <p class="login-img"><i class="icon_lock_alt"></i></p>
                     <div class="alert alert-danger" id="error_msg" style="display: none;">
@@ -248,7 +235,7 @@
                             </div>
                         </div>
                     </div>
-                <input class="btn btn-primary btn-lg btn-block" name="login-submit" id="login-submit" type="submit" value="Login">
+                <input class="btn btn-primary btn-lg btn-block" name="login-submit" id="login-submit" type="button" value="Login">
             </div>
         </form>
     </div>
