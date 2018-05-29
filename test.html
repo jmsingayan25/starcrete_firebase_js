@@ -59,8 +59,9 @@
 
 		var tBody = "";
 		var count = 1;
-		firebase.database().ref('purchase_order/Bravo').on('value', function(snapshot){
+		firebase.database().ref('purchase_order/Delta').on('value', function(snapshot){
 			snapshot.forEach(function(childSnapshot){
+				console.log(childSnapshot.key, childSnapshot.val());
 				childSnapshot.child('item').forEach(function(itemSnapshot){					
 
 					tBody += "<tr><td><strong>" + count + "</strong></td>";
@@ -81,19 +82,17 @@
 					// tBody += "</div></td>";
 					
 					tBody += "<td>";
-					firebase.database().ref('purchase_order/Bravo/'+childSnapshot.val().po_no+'/contact').on('value',function(contactSnapshot){
+					firebase.database().ref('purchase_order/Delta/'+childSnapshot.key+'/contact').on('value',function(contactSnapshot){
 						contactSnapshot.forEach(function(contactChildSnapshot){
 							console.log(contactChildSnapshot.val());
 							// $("#contact_list").append("<strong>" + contactChildSnapshot.val().contact_name + "</strong>");
-							tBody += "<div class=row style=margin-bottom: 2px;><div class=col-md-12><strong>" + contactChildSnapshot.val().contact_name + "<br> (" + contactChildSnapshot.val().contact_no + ")</strong></div></div><br>";
+							tBody += "<div class='row' style=margin-bottom: 2px;><div class='col-md-12'><strong>" + contactChildSnapshot.val().contact_name + "<br> (" + contactChildSnapshot.val().contact_no + ")</strong></div></div><br>";
 						});
 					});
 					tBody += "</td>";
 					tBody += "<td><strong>" + dateFormat(childSnapshot.val().date) + "</strong></td></tr>";
 					document.getElementById('list_po_no').innerHTML = tBody;
 					count++;
-
-
 				});
 				// for(var i = 0; i < childSnapshot.val().item.length; i++){
 
