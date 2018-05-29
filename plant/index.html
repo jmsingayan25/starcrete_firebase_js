@@ -171,6 +171,7 @@
 
         var myTbody = "";
         firebase.database().ref('users').orderByChild('firstname').on('value', function(snapshot) {
+            console.log(snapshot.val());
             if(snapshot != null){
 
                 snapshot.forEach(function(childSnapshot) {
@@ -252,7 +253,7 @@ li.notif {
 }
 </style>
 </head>
-<body onload="">
+<body onload="tableData();">
 	<section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -311,19 +312,19 @@ li.notif {
 	                        <!-- <li><a class="" href="purchase_closed_order.html">Closed P.O.</a></li> -->
 	                    </ul>
 	                </li>  
-	                <!-- <li class="sub-menu">
+	                <li class="sub-menu">
 	                    <a href="javascript:;" class="">
 	                        <i class="fa fa-building"></i>
 	                        <span>Delivery Order</span>
 	                        <span class="menu-arrow arrow_carrot-down"></span>
 	                    </a>
 	                    <ul class="sub">
-	                        <li><a class="" href="delivery_issue.html">Existing P.O. <span class='badge'><?html echo getCountPlantPo($db, $office); ?></span></a></li>    
-	                        <li><a class="" href="delivery_order.html">Ongoing Delivery <span class="badge"><?html echo getDeliveryCountOnDeliveryOffice($db, $office); ?></span></a></li>                          
-	                        <li><a class="" href="delivery_delivered.html">Delivered Order</a></li>
-	                        <li><a class="" href="delivery_backloaded.html">Backloaded Order</a></li>
+	                        <li><a class="" href="delivery_pending_order.html">Existing P.O. <span class='badge'><?html echo getCountPlantPo($db, $office); ?></span></a></li>    
+	                        <!-- <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span class="badge"><?html echo getDeliveryCountOnDeliveryOffice($db, $office); ?></span></a></li>                           -->
+	                        <!-- <li><a class="" href="delivery_delivered.html">Delivered Order</a></li> -->
+	                        <!-- <li><a class="" href="delivery_backloaded.html">Backloaded Order</a></li> -->
 	                    </ul>
-	                </li>   -->
+	                </li>  
 	            </ul>
 	            <!-- sidebar menu end-->
 	        </div>
