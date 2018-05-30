@@ -174,26 +174,6 @@
 	    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
 	}
 
-	function compareValues(input) {
-		
-		var number = input.replace(",","");
-        number = Number(number);
-		var balance = Number(document.getElementById('hidden_quantity').value);
-		var submit = document.getElementById('submit');
-		// var letters = /^[0-9a-zA-Z]+$/; 
-
-		setTimeout(function () {
-			if(number > balance || number <= 0){
-				submit.disabled = true;
-				// a.style.display = "block";
-			}else{
-				submit.disabled = false;
-				// a.style.display = "none";
-			}
-		}, 0);
-		// alert(ordered);
-	}
-
 	function formData(plant){
 
 		firebase.database().ref('purchase_order/'+plant+'/'+orderKey).once('value').then(function(orderSnapshot){
@@ -211,6 +191,7 @@
 			quantity = Number(itemSnapshot.val().quantity).toLocaleString('en');
 			balance = Number(itemSnapshot.val().balance).toLocaleString('en');
 			document.getElementById('block_item_no').innerHTML = "<strong>" + item_no + "</strong>";
+			document.getElementById('hidden_balance').value = itemSnapshot.val().balance;
 			document.getElementById('block_ordered').innerHTML = "Ordered: <strong>" + quantity + " pcs / Balance: " + balance + "</strong>";
 
 		});
@@ -239,7 +220,9 @@
 				project_name: project_name,
 				project_address: project_address,
 				status: status,
-				po_key: orderKey
+				po_key: orderKey,
+				gate_pass: gate_pass,
+				date: firebase.database.ServerValue.TIMESTAMP
 			}
 			console.log(poData);
 
@@ -249,7 +232,7 @@
 
 			var postId = newPostRef.key;
 
-			firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/contact').once('value').then(function(contactSnapshot){
+			firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/contact').on('value', function(contactSnapshot){
 				// console.log(itemChildSnapshot.key, itemChildSnapshot.val());
 				contactSnapshot.forEach(function(contactChildSnapshot){
 					// console.log(contactChildSnapshot.key, contactChildSnapshot.val());
@@ -262,9 +245,9 @@
 						contact_no: contact_no
 					}
 
-					console.log(contactData);
+					// console.log(contactData);
 
-					firebase.database().ref('delivery_ongoing_order/'+plant+'/'+postId+'/contact').set(contactData);
+					firebase.database().ref('delivery_ongoing_order/'+plant+'/'+postId+'/contact').push(contactData);
 				});		
 			});
 
@@ -286,29 +269,46 @@
 	}
 
 	function compareValues(input) {
+		
+		var number = input.replace(",","");
+        number = Number(number);
+		var balance = Number(document.getElementById('hidden_balance').value);
+		var submit = document.getElementById('submit');
+		// var letters = /^[0-9a-zA-Z]+$/; 
+
+		setTimeout(function () {
+			if(number > balance || number <= 0){
+				submit.disabled = true;
+				// a.style.display = "block";
+			}else{
+				submit.disabled = false;
+				// a.style.display = "none";
+			}
+		}, 0);
+		// alert(ordered);
+	}
+	// function compareValues(input) {
         
-        firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/item/'+item_no).once('value').then(function(itemSnapshot){
+ //        firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/item/'+item_no).once('value').then(function(itemSnapshot){
 
-        	var number = input.replace(",","");
-	        number = Number(number);
-	        var balance = Number(itemSnapshot.val().balance);
-	        var submit = document.getElementById('submit');
-	        // var letters = /^[0-9a-zA-Z]+$/; 
+ //        	var number = input.replace(",","");
+	//         number = Number(number);
+	//         var balance = Number(itemSnapshot.val().balance);
+	//         var submit = document.getElementById('submit');
+	//         // var letters = /^[0-9a-zA-Z]+$/; 
 
-	        setTimeout(function () {
-	            if(number > balance || number <= 0){
-	                submit.disabled = true;
-	                // a.style.display = "block";
-	            }else{
-	                submit.disabled = false;
-	                // a.style.display = "none";
-	            }
-	        }, 0);
-        });
+	//         setTimeout(function () {
+	//             if(number > balance || number <= 0){
+	//                 submit.disabled = true;
+	//                 // a.style.display = "block";
+	//             }else{
+	//                 submit.disabled = false;
+	//                 // a.style.display = "none";
+	//             }
+	//         }, 0);
+ //        });
         
-    }
-</script>
-
+ //    }
 </script>
 </head>
 <body onload="compareValues('');">
@@ -438,6 +438,7 @@
 									<div class="form-group">
 										<label for="dr_no" class="col-md-3 control-label">Quantity<span class="required" style="color: red;">*</span></label>
 										<div class="col-md-6">
+											<input type="hidden" name="hidden_balance" id="hidden_balance">
 											<input type="text" id="quantity" name="quantity" class="class_quantity form-control" autocomplete="off" placeholder="Pieces to be delivered" onkeyup="compareValues(this.value);" required>
 
 											<p class="help-block" id="block_ordered"></p>
