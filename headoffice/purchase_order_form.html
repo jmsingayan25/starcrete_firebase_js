@@ -254,6 +254,7 @@
         var item_no = $("select[name='item_no[]']").map(function(){return $(this).val();}).get();
         var psi = $("input[name='psi[]']").map(function(){return $(this).val() || "";}).get();
         var quantity = $("input[name='quantity[]']").map(function(){return $(this).val();}).get();
+        var date = new Date().toLocaleString();
 
         firebase.database().ref('project/'+client_id+"/"+project_id).once('value').then(function(snapshot){
             // console.log(snapshot.val());
@@ -273,7 +274,7 @@
                 project_name: snapshot.val().project_name,
                 project_address: snapshot.val().project_address,
                 project_key: project_id,
-                date: firebase.database.ServerValue.TIMESTAMP,
+                date: date,
                 status: "PENDING"
             }
             console.log(poData);
@@ -320,6 +321,8 @@
             }
         });
     }
+
+    
 
 </script>
 </head>
