@@ -116,7 +116,7 @@
                 return;
             }
             
-            
+       
             var $this = $( this );
             
             // Get the value.
@@ -136,12 +136,6 @@
                 var uid = user.uid;
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-                    // console.log("UID: " + uid);
-                    // console.log("First Name: " + snapshot.val().firstname);
-                    // console.log("Last Name: " + snapshot.val().lastname);
-                    // console.log("Email: " + snapshot.val().email);
-                    // console.log("Position: " + snapshot.val().position);
-                    // console.log("Office: " + snapshot.val().office);
 
                     plant = snapshot.val().office;
 
@@ -217,8 +211,6 @@
 
 		firebase.database().ref('purchase_order/'+plant+'/'+orderKey).once('value').then(function(orderSnapshot){
 
-			var project_name = orderSnapshot.val().project_name;
-			var project_address = orderSnapshot.val().project_address;
 			var po_no = orderSnapshot.val().po_no;
 			var status = "PENDING";
 
@@ -228,8 +220,6 @@
 				item_no: item_no,
 				psi: psi || "",
 				quantity: quantity,
-				project_name: project_name,
-				project_address: project_address,
 				status: status,
 				po_key: orderKey,
 				gate_pass: gate_pass,
@@ -243,6 +233,17 @@
 
 			var postId = newPostRef.key;
 
+			firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/project_detail').once('value').then(function(projectSnapshot){
+				projectSnapshot.forEach(function(projectChildSnapshot){
+
+					var projectData = {
+						project_name: projectChildSnapshot.val().project_name,
+						project_address: projectChildSnapshot.val().project_address
+					}
+
+					firebase.database().ref('delivery_ongoing_order/'+plant+'/'+postId+'/project_detail/'+projectChildSnapshot.key).set(projectData);
+				});
+			});
 			firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/contact').on('value', function(contactSnapshot){
 				// console.log(itemChildSnapshot.key, itemChildSnapshot.val());
 				contactSnapshot.forEach(function(contactChildSnapshot){
