@@ -90,6 +90,7 @@
 	
 	var item_no = getUrlParameter('item');
 	var orderKey = getUrlParameter('key');
+	var psi = getUrlParameter('psi');
 
 	$(function() {
         
@@ -190,7 +191,15 @@
 			item_no = itemSnapshot.val().item_no;
 			quantity = Number(itemSnapshot.val().quantity).toLocaleString('en');
 			balance = Number(itemSnapshot.val().balance).toLocaleString('en');
-			document.getElementById('block_item_no').innerHTML = "<strong>" + item_no + "</strong>";
+			psi = itemSnapshot.val().psi || "";
+
+            if(psi != ""){
+                var psi_ext = "(" + psi + " psi)";
+            }else{
+                var psi_ext = "";
+            }
+                    
+			document.getElementById('block_item_no').innerHTML = "<strong>" + item_no + " " + psi_ext + "</strong>";
 			document.getElementById('hidden_balance').value = itemSnapshot.val().balance;
 			document.getElementById('block_ordered').innerHTML = "Ordered: <strong>" + quantity + " pcs / Balance: " + balance + "</strong>";
 
@@ -216,6 +225,7 @@
 				po_no: po_no,
 				delivery_no: delivery_no,
 				item_no: item_no,
+				psi: psi || "",
 				quantity: quantity,
 				project_name: project_name,
 				project_address: project_address,
