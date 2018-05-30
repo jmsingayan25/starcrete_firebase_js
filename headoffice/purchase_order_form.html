@@ -258,7 +258,7 @@
             }
             console.log(poData);
 
-            var postData = firebase.database().ref('purchase_order/'+plant+"/");
+            var postData = firebase.database().ref('purchase_order/'+plant+'/');
             var newPostRef = postData.push();
             newPostRef.set(poData);
 
