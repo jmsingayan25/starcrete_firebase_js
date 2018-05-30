@@ -108,7 +108,6 @@
         });
 		document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
-		// ClientKeyId = localStorage.getItem("passClientKey");
         firebase.database().ref("client/"+clientKeyId).once("value").then(function(childSnapshot){
 
 			document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='project.html?key=" + clientKeyId + "'</a>"+childSnapshot.val().client_name;
@@ -193,14 +192,10 @@
 		if(count == client_contact_name.length){
 			if(confirm("'Contact details successfully added. Add another contact?")){
 				window.location.href='add_client_contact.html?key=' + clientKeyId;
-				// firebase.database().ref("client").limitToLast(1).on("child_added", function(childSnapshot){
-				// 	localStorage.setItem("passClientKey", childSnapshot.key);
-				// });
 			}else{
 				event.preventDefault();
 				window.location.href='client.html';
 			}
-			// alert("Success");
 		}else{
 			alert("Failed");
 		}

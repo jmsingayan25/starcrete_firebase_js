@@ -169,14 +169,10 @@
 		if(count == client_contact_name.length){
 			if(confirm("'New client added successfully. Proceed to Add Project?") == true){
 				window.location.href='add_project.html?key=' + postId;
-				// firebase.database().ref("client").limitToLast(1).on("child_added", function(childSnapshot){
-				// 	localStorage.setItem("passClientKey", childSnapshot.key);
-				// });
 			}else{
 				event.preventDefault();
         		window.location.href = 'add_client.html';
 			}
-			// alert("Success");
 		}else{
 			alert("Failed");
 		}
@@ -260,7 +256,7 @@
 	                    </a>
 	                    <ul class="sub">
 	                        <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>                          
-	                         <!-- <li><a class="" href="delivery_order.html?plant=Delta">Delivery Page</a></li> -->
+	                        <!-- <li><a class="" href="delivery_order.html?plant=Delta">Delivery Page</a></li> -->
 	                    </ul>
 	                </li>   
 	                <li class="sub-menu">

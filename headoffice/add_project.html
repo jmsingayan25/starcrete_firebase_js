@@ -106,7 +106,6 @@
             }
         });
 
-		// ClientKeyId = localStorage.getItem("passClientKey");
         firebase.database().ref("client/"+clientKeyId).once("value").then(function(childSnapshot){
 
 			document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='project.html?key=" + clientKeyId + "'</a>"+childSnapshot.val().client_name;
@@ -189,17 +188,11 @@
 			}else{
 				window.location.href='project.html?key=' + clientKeyId;
 			}
-			// alert("Success");
 		}else{
 			alert("Something went wrong. Please try again.");
 		}
 	}
 </script>
-<style>
-/*.page_links a{
-	color: inherit;
-}*/
-</style>
 </head>
 <body>
 	<section id="container" class="">

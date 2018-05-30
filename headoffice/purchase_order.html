@@ -139,13 +139,8 @@
 				var uid = user.uid;
 		
 				firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-					console.log("UID: " + uid);
-					console.log("First Name: " + snapshot.val().firstname);
-					console.log("Last Name: " + snapshot.val().lastname);
-					console.log("Email: " + snapshot.val().email);
-					console.log("Position: " + snapshot.val().position);
-					console.log("Office: " + snapshot.val().office);
 
+                    tableData();
 					document.getElementById('username').innerHTML = snapshot.val().firstname; 
 				},(error) => {
 					console.error(error);
@@ -212,8 +207,8 @@
                             if(balance > 0){
 
                                 myTbody += "<tr><td>" + count  + "</td>";
-                                myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + " " + psi_ext + "' data-placement='top' onclick=\"window.location='purchase_order_detail.html?key=" + orderChildsnapshot.key + "&plant=" + plant + "'\"><strong>" + po_no + " " + psi_ext + "</strong></div></td>";
-                                myTbody += "<td><strong>" + item_no + "</strong></td>";
+                                myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='purchase_order_detail.html?key=" + orderChildsnapshot.key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
+                                myTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
                                 myTbody += "<td><strong>" + quantity.toLocaleString('en') + " pcs / " + balance.toLocaleString('en') + " pcs</strong></td>";
                                 myTbody += "<td><strong>" + project_name + "</strong></td>";
                                 myTbody += "<td><strong>" + project_address + "</strong></td>";
@@ -248,7 +243,6 @@
 
                 document.getElementById('orderList').innerHTML = myTbody;
             }
-            
         });
     }
 
@@ -307,7 +301,7 @@
 
 </style>
 </head>
-<body onload="tableData();">
+<body>
 	<!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">

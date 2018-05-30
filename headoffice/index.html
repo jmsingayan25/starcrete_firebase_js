@@ -137,12 +137,6 @@
                 var uid = user.uid;
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-                    // console.log("UID: " + uid);
-                    // console.log("First Name: " + snapshot.val().firstname);
-                    // console.log("Last Name: " + snapshot.val().lastname);
-                    // console.log("Email: " + snapshot.val().email);
-                    // console.log("Position: " + snapshot.val().position);
-                    // console.log("Office: " + snapshot.val().office);
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
@@ -179,10 +173,6 @@
                     var lastName = childSnapshot.val().lastname;   //Example of value
                     var emailAdd = childSnapshot.val().email;   //Example of value
 
-                    // console.log("First Name: " + firstName);
-                    // console.log("Last Name: " + lastName);
-                    // console.log("Email: " + emailAdd);
-
                     myTbody += "<tr><td>" + firstName + "</td>";
                     myTbody += "<td>" + lastName + "</td>";
                     myTbody += "<td>" + emailAdd + "</td></tr>";
@@ -200,9 +190,6 @@
                 document.getElementById("userList").innerHTML = myTbody;
             }
         });
-
-        
-
     }
 
 </script>

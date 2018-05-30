@@ -124,13 +124,9 @@
                 var uid = user.uid;
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-                    console.log("UID: " + uid);
-                    console.log("First Name: " + snapshot.val().firstname);
-                    console.log("Last Name: " + snapshot.val().lastname);
-                    console.log("Email: " + snapshot.val().email);
-                    console.log("Position: " + snapshot.val().position);
-                    console.log("Office: " + snapshot.val().office);
 
+                    issueFormDetails(); 
+                    itemList();
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
@@ -146,10 +142,9 @@
     function userSignOut(){
 
         firebase.auth().signOut().then(function() {
-            // console.log('Signed Out');
             window.location.href = '../login.html';
         }, function(error) {
-            // console.error('Sign Out Error', error);
+            console.error('Sign Out Error', error);
         });
     }
 
@@ -163,7 +158,6 @@
             snapshot.forEach(function(childSnapshot){
                 $('[name="item_no[]"]').append("<option value='" + childSnapshot.val().item + "'>" + childSnapshot.val().item + "</option>");
             });
-            // console.log(snapshot.val());
         });
     }
 
@@ -229,8 +223,6 @@
                 }
             });
         });  
-
-        
     }
 
     function itemList(){
@@ -311,12 +303,9 @@
             }
         });
     }
-
-    
-
 </script>
 </head>
-<body onload="issueFormDetails(); itemList();">
+<body>
     <!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">

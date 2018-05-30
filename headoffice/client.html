@@ -135,13 +135,8 @@
 				var uid = user.uid;
 		
 				firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-					console.log("UID: " + uid);
-					console.log("First Name: " + snapshot.val().firstname);
-					console.log("Last Name: " + snapshot.val().lastname);
-					console.log("Email: " + snapshot.val().email);
-					console.log("Position: " + snapshot.val().position);
-					console.log("Office: " + snapshot.val().office);
 
+                    tableData();
 					document.getElementById('username').innerHTML = snapshot.val().firstname; 
 				},(error) => {
 					console.error(error);
@@ -157,7 +152,6 @@
     function userSignOut(){
 
         firebase.auth().signOut().then(function() {
-            // console.log('Signed Out');
             window.location.href = '../login.html';
         }, function(error) {
             console.error('Sign Out Error', error);
@@ -183,7 +177,6 @@
                         myTbody += "<div class='form-group'><div class='row' style=margin-bottom: 2px;><div class='col-md-6'><strong>" + contactChildSnapshot.val().client_contact_name + "</strong></div><div class='col-md-1'>-</div><div class='col-md-5'><strong>" + contactChildSnapshot.val().client_contact_no + "</strong></div></div></div>";
                     });
                 });
-
 
                 myTbody += "</td>";
                 myTbody += "<td><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='add_client_contact.html?key=" + key + "'><button class='btn btn-sm btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='update_client_info.html?key=" + key + "'><button class='btn btn-sm btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='project.html?key=" + key + "' class='btn btn-sm btn-block' style='background-color: #388e3c; color: white;'><span class='fa fa-info-circle'></span> <strong>Projects</strong></a></div></div></td></tr>";
@@ -244,7 +237,7 @@
 
 </style>
 </head>
-<body onload="tableData();">
+<body>
 	<!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">

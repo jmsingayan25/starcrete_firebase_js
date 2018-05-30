@@ -138,14 +138,8 @@
 				var uid = user.uid;
 		
 				firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-					// console.log("UID: " + uid);
-					// console.log("First Name: " + snapshot.val().firstname);
-					// console.log("Last Name: " + snapshot.val().lastname);
-					// console.log("Email: " + snapshot.val().email);
-					// console.log("Position: " + snapshot.val().position);
-					// console.log("Office: " + snapshot.val().office);
 					// console.log(snapshot.val());
-
+                    tableData();
 					document.getElementById('username').innerHTML = snapshot.val().firstname; 
 				},(error) => {
 					console.log(error);
@@ -171,7 +165,7 @@
         firebase.auth().signOut().then(function() {
             window.location.href = '../login.html';
         }, function(error) {
-            // console.error('Sign Out Error', error);
+            console.error('Sign Out Error', error);
         });
     }
 
@@ -204,9 +198,7 @@
                         contactSnapshot.forEach(function(contactChildSnapshot){
 
                             // console.log(childSnapshot.val());
-                            // $("#list_contact_no").append("<div class='row' style='margin-bottom: 2px;'><div class='col-md-6'><strong>" + childSnapshot.val().project_contact_name + "</strong></div><div class='col-md-1'><strong>-</strong></div><div class='col-md-5'><strong>" + childSnapshot.val().project_contact_no + "</strong></div>");
                             myTbody += "<div class='form-group'><div class='row' style=margin-bottom: 2px;><div class='col-md-6'><strong>" + contactChildSnapshot.val().project_contact_name + "</strong></div><div class='col-md-1'>-</div><div class='col-md-5'><strong>" + contactChildSnapshot.val().project_contact_no + "</strong></div></div></div>";
-
                         });
                     });
 
@@ -268,7 +260,7 @@
 }
 </style>
 </head>
-<body onload="tableData();">
+<body>
 	<!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">
