@@ -246,18 +246,18 @@
     function deliveredForm(orderKey, plant){
 
     	event.preventDefault();
-    	firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey).on('value', function(orderSnapshot){
-    		orderSnapshot.forEach(function(orderChildSnapshot){
-	    		console.log(orderChildSnapshot.key, orderChildSnapshot.val());
+    	firebase.database().ref().child('delivery_ongoing_order/'+plant+'/'+orderKey).once('value').then(function(orderSnapshot){
+    		// orderSnapshot.forEach(function(orderChildSnapshot){
+	    		// console.log(orderSnapshot.key, orderSnapshot.val());
 
-				var date = new Date().toLocaleString();
-	    		var po_no = orderChildSnapshot.val().po_no;
-	    		var dr_no = orderChildSnapshot.val().delivery_no;
-	    		var gate_pass = orderChildSnapshot.val().gate_pass;
-	    		var item_no = orderChildSnapshot.val().item_no;
-	    		var psi = orderChildSnapshot.val().psi;
-	    		var quantity = orderChildSnapshot.val().quantity;
-	    		var po_no_key = orderChildSnapshot.val().po_key;
+				var date = new Date().toLocaleString('en');
+	    		var po_no = orderSnapshot.val().po_no;
+	    		var dr_no = orderSnapshot.val().delivery_no;
+	    		var gate_pass = orderSnapshot.val().gate_pass;
+	    		var item_no = orderSnapshot.val().item_no;
+	    		var psi = orderSnapshot.val().psi;
+	    		var quantity = orderSnapshot.val().quantity;
+	    		var po_no_key = orderSnapshot.val().po_key;
 	    		var status = "DELIVERED";
 
 	    		var drData = {
@@ -271,30 +271,30 @@
 	    			po_no_key: po_no_key,
 	    			status: status
 	    		}
-
-				var drPost = firebase.database().ref('delivery_delivered_order/'+plant+'/');
+	    		console.log(drData);
+				var drPost = firebase.database().ref('delivery_delivered_order/'+plant);
 				var drPostData = drPost.push();
 				drPostData.set(drData);
 
-				// var postId = drPostData.key;
+				var postId = drPostData.key;
 
-				// firebase.database().ref('delivery_ongoing_order/'+plant+'/'+key+'/project_detail').once('value').then(function(projectSnapshot){
-				// 	projectSnapshot.forEach(function(projectChildSnapshot){
+				firebase.database().ref('delivery_ongoing_order/'+plant+'/'+key+'/project_detail').once('value').then(function(projectSnapshot){
+					projectSnapshot.forEach(function(projectChildSnapshot){
 
-				// 		var project_address = projectChildSnapshot.val().project_address;
-			 //    		var project_name = projectChildSnapshot.val().project_name;
-			 //    		var project_key = projectChildSnapshot.key;
+						var project_address = projectChildSnapshot.val().project_address;
+			    		var project_name = projectChildSnapshot.val().project_name;
+			    		var project_key = projectChildSnapshot.key;
 
-			 //    		var projectData = {
-			 //    			project_address: project_address,
-			 //    			project_name: project_name
-			 //    		}
+			    		var projectData = {
+			    			project_address: project_address,
+			    			project_name: project_name
+			    		}
 
-			 //    		firebase.database().ref('delivery_delivered_order/'+plant+'/'+postId+'/'+project_key).push(projectData);
-				// 	});
-				// });		    		
+			    		firebase.database().ref('delivery_delivered_order/'+plant+'/'+postId+'/project_detail/'+project_key).set(projectData);
+					});
+				});		    		
     		});
-    	});
+    	// });
     }
 
 
