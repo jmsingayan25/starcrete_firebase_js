@@ -93,17 +93,11 @@
 	var psi = getUrlParameter('psi');
 
 	$(function() {
-        
-        // var $form = $( "#form" );
-        // var $input = $form.find( "#quantity" );
-
-        // $input.on( "keyup", function( event ) {
 
 	 	var $form = $( "#form" );
         var $input = $form.find( "#quantity" );
 
         $form.on( "keyup", "#quantity", function( event ) {
-            
             
             // When user select text in the document, also abort.
             var selection = window.getSelection().toString();
@@ -116,7 +110,6 @@
                 return;
             }
             
-       
             var $this = $( this );
             
             // Get the value.
