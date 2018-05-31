@@ -259,7 +259,7 @@
 
 					// console.log(contactData);
 
-					firebase.database().ref('delivery_ongoing_order/'+plant+'/'+postId+'/contact').push(contactData);
+					firebase.database().ref('delivery_ongoing_order/'+plant+'/'+postId+'/contact/'+contactChildSnapshot.key).set(contactData);
 				});		
 			});
 
