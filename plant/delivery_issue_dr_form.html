@@ -299,28 +299,6 @@
 		}, 0);
 		// alert(ordered);
 	}
-	// function compareValues(input) {
-        
- //        firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/item/'+item_no).once('value').then(function(itemSnapshot){
-
- //        	var number = input.replace(",","");
-	//         number = Number(number);
-	//         var balance = Number(itemSnapshot.val().balance);
-	//         var submit = document.getElementById('submit');
-	//         // var letters = /^[0-9a-zA-Z]+$/; 
-
-	//         setTimeout(function () {
-	//             if(number > balance || number <= 0){
-	//                 submit.disabled = true;
-	//                 // a.style.display = "block";
-	//             }else{
-	//                 submit.disabled = false;
-	//                 // a.style.display = "none";
-	//             }
-	//         }, 0);
- //        });
-        
- //    }
 </script>
 </head>
 <body onload="compareValues('');">
@@ -390,7 +368,7 @@
 	                    </a>
 	                    <ul class="sub">
 	                        <li><a class="" href="delivery_pending_order.html">Existing P.O. <span class='badge'><?html echo getCountPlantPo($db, $office); ?></span></a></li>    
-	                        <!-- <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span class="badge"><?html echo getDeliveryCountOnDeliveryOffice($db, $office); ?></span></a></li>                           -->
+	                        <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span class="badge"><?html echo getDeliveryCountOnDeliveryOffice($db, $office); ?></span></a></li>                          
 	                        <!-- <li><a class="" href="delivery_delivered.html">Delivered Order</a></li> -->
 	                        <!-- <li><a class="" href="delivery_backloaded.html">Backloaded Order</a></li> -->
 	                    </ul>
