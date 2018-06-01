@@ -152,56 +152,53 @@
         var count = 1;
         
         firebase.database().ref('purchase_order/'+plant).orderByChild('reverseDate').on('child_added', function(orderSnapshot){
-            // orderSnapshot.forEach(function(orderChildSnapshot){
-                firebase.database().ref('purchase_order/'+plant+'/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
-                    itemSnapshot.forEach(function(itemChildSnapshot){
-                        firebase.database().ref('purchase_order/'+plant+'/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
-                            projectSnapshot.forEach(function(projectChildSnapshot){
+            firebase.database().ref('purchase_order/'+plant+'/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
+                itemSnapshot.forEach(function(itemChildSnapshot){
+                    firebase.database().ref('purchase_order/'+plant+'/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
+                        projectSnapshot.forEach(function(projectChildSnapshot){
 
-                                po_no = orderSnapshot.val().po_no;
-                                item_no = itemChildSnapshot.val().item_no;
-                                quantity = Number(itemChildSnapshot.val().quantity).toLocaleString('en');
-                                balance = Number(itemChildSnapshot.val().balance).toLocaleString('en');
-                                project_name = projectChildSnapshot.val().project_name;
-                                project_address = projectChildSnapshot.val().project_address;
-                                date = dateFormat(orderSnapshot.val().date);
-                                psi = itemChildSnapshot.val().psi || "";
+                            po_no = orderSnapshot.val().po_no;
+                            item_no = itemChildSnapshot.val().item_no;
+                            quantity = Number(itemChildSnapshot.val().quantity).toLocaleString('en');
+                            balance = Number(itemChildSnapshot.val().balance).toLocaleString('en');
+                            project_name = projectChildSnapshot.val().project_name;
+                            project_address = projectChildSnapshot.val().project_address;
+                            date = dateFormat(orderSnapshot.val().date);
+                            psi = itemChildSnapshot.val().psi || "";
 
-                                if(psi != ""){
-                                    var psi_ext = "(" + psi + " psi)";
-                                }else{
-                                    var psi_ext = "";
-                                }
+                            if(psi != ""){
+                                var psi_ext = "(" + psi + " psi)";
+                            }else{
+                                var psi_ext = "";
+                            }
 
-                                myTbody += "<tr><td><strong>" + count + "</strong></td>";
-                                myTbody += "<td><strong>" + po_no + "</strong></td>";
-                                myTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
-                                myTbody += "<td><strong>" + quantity + " pcs / " + balance + " pcs</strong></td>";
-                                myTbody += "<td><strong>" + project_name + "</strong></td>";
-                                myTbody += "<td><strong>" + project_address + "</strong></td>";
-                                // myTbody += "<td>";
-                                myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+                            myTbody += "<tr><td><strong>" + count + "</strong></td>";
+                            myTbody += "<td><strong>" + po_no + "</strong></td>";
+                            myTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
+                            myTbody += "<td><strong>" + quantity + " pcs / " + balance + " pcs</strong></td>";
+                            myTbody += "<td><strong>" + project_name + "</strong></td>";
+                            myTbody += "<td><strong>" + project_address + "</strong></td>";
+                            myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
 
-                                firebase.database().ref('purchase_order/'+plant+'/'+orderSnapshot.key+'/contact').once('value', function(contactSnapshot){
-                                    contactSnapshot.forEach(function(contactChildSnapshot){
+                            firebase.database().ref('purchase_order/'+plant+'/'+orderSnapshot.key+'/contact').once('value', function(contactSnapshot){
+                                contactSnapshot.forEach(function(contactChildSnapshot){
 
-                                        contact_name = contactChildSnapshot.val().contact_name;
-                                        contact_no = contactChildSnapshot.val().contact_no;
-                                        myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
-                                    }); 
-                                });
-
-                                myTbody += "</td>";
-                                myTbody += "<td><strong>" + date + "</strong></td></tr>";
-
-                                document.getElementById('orderList').innerHTML = myTbody;
-                                count++;   
+                                    contact_name = contactChildSnapshot.val().contact_name;
+                                    contact_no = contactChildSnapshot.val().contact_no;
+                                    myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+                                }); 
                             });
-                        });   
-                    });                 
-                }); 
-            });        
-        // });
+
+                            myTbody += "</td>";
+                            myTbody += "<td><strong>" + date + "</strong></td></tr>";
+
+                            document.getElementById('orderList').innerHTML = myTbody;
+                            count++;   
+                        });
+                    });   
+                });                 
+            }); 
+        });        
     }
 
     function dateFormat(date){
