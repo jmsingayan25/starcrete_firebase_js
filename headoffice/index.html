@@ -138,12 +138,21 @@
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
 
+                    
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
                 });
             } else {
                 window.location.href = '../login.html';
+            }
+        });
+
+        $("input[name='plant']").change(function(event) {
+            if ($(this).val() == "Bravo"){ 
+                tableData('Bravo');
+            }else if ($(this).val() == "Delta"){
+                tableData('Delta');
             }
         });
 
@@ -161,35 +170,41 @@
         });
     }
 
-    function tableData(){
+    function tableData(plant){
 
         var myTbody = "";
-        firebase.database().ref('users').orderByChild('firstname').on('value', function(snapshot) {
-            if(snapshot != null){
 
-                snapshot.forEach(function(childSnapshot) {
+        firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value').then(function(historySnapshot) {
+            historySnapshot.forEach(function(historyChildSnapshot){
 
-                    var firstName = childSnapshot.val().firstname;   //Example of value
-                    var lastName = childSnapshot.val().lastname;   //Example of value
-                    var emailAdd = childSnapshot.val().email;   //Example of value
+                var type = historyChildSnapshot.val().type_of_transaction;   //Example of value
+                var detail = historyChildSnapshot.val().history;   //Example of value
+                var date = dateFormat(historyChildSnapshot.val().date);   //Example of value
 
-                    myTbody += "<tr><td>" + firstName + "</td>";
-                    myTbody += "<td>" + lastName + "</td>";
-                    myTbody += "<td>" + emailAdd + "</td></tr>";
+                myTbody += "<tr><td><strong>" + type + "</strong></td>";
+                myTbody += "<td><strong>" + detail + "</strong></td>";
+                myTbody += "<td><strong>" + date + "</strong></td></tr>";
 
-                    console.log(JSON.stringify(childSnapshot));
-                    document.getElementById("userList").innerHTML = myTbody;
+                document.getElementById("historyList").innerHTML = myTbody;
+            });
+        }),function(){
 
-                });
-            }
+            myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
-            if(myTbody == ""){
+            document.getElementById("historyList").innerHTML = myTbody;
+        }
+    }
 
-                myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+    function dateFormat(date){
 
-                document.getElementById("userList").innerHTML = myTbody;
-            }
-        });
+        var input_date = new Date(date);
+        var dd = input_date.getDate();
+        var mm = input_date.getMonth()+1;
+        var yy = input_date.getFullYear();
+
+        fulldate = mm+'/'+dd+'/'+yy;
+
+        return fulldate;
     }
 
 </script>
@@ -239,7 +254,7 @@
 
 </style>
 </head>
-<body onload="tableData();">
+<body onload="tableData('Bravo')">
 	<section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -359,10 +374,10 @@
                                             <div class="form-group">
                                                 <label for="search">Plant:</label>
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="plant" value="bravo" checked><strong>Bravo</strong>
+                                                    <input type="radio" name="plant" value="Bravo" checked><strong>Bravo</strong>
                                                 </label>
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="plant" value="delta"><strong>Delta</strong>
+                                                    <input type="radio" name="plant" value="Delta"><strong>Delta</strong>
                                                 </label>
                                             </div>
                                         </div>
@@ -428,7 +443,7 @@
                                                 <th class="col-md-1">Date</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="userList">
+                                        <tbody id="historyList">
                                             
                                         </tbody>
                                     </table>
