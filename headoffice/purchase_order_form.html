@@ -336,11 +336,27 @@
 
                 var historyData = {
                     date: date,
+                    reverseDate: firebase.database.ServerValue.TIMESTAMP,
                     type_of_transaction: "Issued P.O. No.",
                     history: client_name + " ordered " + item_ext + " with P.O. No. " + po_no + " to be delivered to " + snapshot.val().project_name + " in " + snapshot.val().project_address
                 }
 
-                db.ref('history/'+plant).push(historyData);
+                var postHistoryData = db.ref('history/'+plant+'/');
+                var newHistoryPostRef = postHistoryData.push();
+                newHistoryPostRef.set(historyData);
+
+                // db.ref('history/'+plant).push(historyData);
+                var postHistoryId = newHistoryPostRef.key;
+                
+                db.ref().child('history/'+plant+'/'+postHistoryId).once('value', function(snapshot){
+
+                    var timestamp = snapshot.val().reverseDate * -1;
+                    var timeUpdate = {
+                        reverseDate: timestamp
+                    } 
+
+                    db.ref('history/'+plant+'/'+postHistoryId).update(timeUpdate);
+                });
             });
 
             if(count == item_no.length){
