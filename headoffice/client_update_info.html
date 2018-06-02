@@ -110,7 +110,7 @@
 
         firebase.database().ref("client/"+clientKeyId).once('value').then(function(childSnapshot){
 
-            document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='update_client_info.html?key=" + clientKeyId + "'</a>"+childSnapshot.val().client_name;
+            document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='client_update_info.html?key=" + clientKeyId + "'</a>"+childSnapshot.val().client_name;
 
             document.getElementById('update_client_name').value = childSnapshot.val().client_name;
             document.getElementById('update_client_address').value = childSnapshot.val().client_address;
@@ -195,7 +195,7 @@
         if(confirm("Proceed?")){
             if(firebase.database().ref('client/'+clientKeyId+'/contact/'+contactKey).remove()){
                 alert("Contact successfully deleted.");
-                window.location.href = 'update_client_info.html?key=' + clientKeyId;
+                window.location.href = 'client_update_info.html?key=' + clientKeyId;
             }else{
                 alert("Delete Failed. Try again.");
                 window.location.reload();
