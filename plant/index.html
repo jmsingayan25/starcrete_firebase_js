@@ -89,6 +89,20 @@
 
 <script>
 	
+    var timer = null;
+
+    function goAway() {
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+            window.location.reload(true);
+        }, 60000);
+    }
+
+    window.addEventListener('mousemove', goAway, true);
+    window.addEventListener('keypress', goAway, true);
+
+    goAway();
+    
 	$(document).ready(function(){
         $('.filterable .btn-filter').click(function(){
             var $panel = $(this).parents('.filterable'),
@@ -143,6 +157,7 @@
                     // console.log("Email: " + snapshot.val().email);
                     // console.log("Position: " + snapshot.val().position);
                     // console.log("Office: " + snapshot.val().office);
+                    var plant = snapshot.val().office;
                     tableData(plant);
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
@@ -255,7 +270,7 @@ li.notif {
 }
 </style>
 </head>
-<body onload="tableData();">
+<body>
 	<section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
