@@ -218,7 +218,7 @@
 				gate_pass: gate_pass,
 				date: date
 			}
-			console.log(poData);
+			// console.log(poData);
 
 			var postData = firebase.database().ref('delivery_ongoing_order/'+plant);
 			var newPostRef = postData.push();
@@ -255,7 +255,44 @@
 					firebase.database().ref('delivery_ongoing_order/'+plant+'/'+postId+'/contact/'+contactChildSnapshot.key).set(contactData);
 				});		
 			});
+			firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/project_detail/').once('value', function(projectSnapshot){
+				projectSnapshot.forEach(function(projectChildSnapshot){
 
+					var project_name = projectChildSnapshot.val().project_name;
+					var project_address = projectChildSnapshot.val().project_address;
+
+					if(psi != ""){
+						psi_ext = " (" + psi + " psi)";
+					}else{
+						psi_ext = "";
+					}
+
+					var historyData = {
+						date: date,
+		                reverseDate: firebase.database.ServerValue.TIMESTAMP,
+		                type_of_transaction: "Issued DR No.",
+		                history: "Issued DR No. " + delivery_no + " with P.O. No. " + po_no + " and " + Number(quantity).toLocaleString('en') + " pcs of " + item_no + psi_ext + " to be deliver to " + project_name + " in " + project_address
+					}
+					// console.log(historyData);
+
+					var postHistoryData = firebase.database().ref('history/'+plant+'/');
+	                var newHistoryPostRef = postHistoryData.push();
+	                newHistoryPostRef.set(historyData);
+
+	                var postHistoryId = newHistoryPostRef.key;
+                
+	                firebase.database().ref().child('history/'+plant+'/'+postHistoryId).once('value', function(snapshot){
+
+	                    var timestamp = snapshot.val().reverseDate * -1;
+	                    var timeUpdate = {
+	                        reverseDate: timestamp
+	                    } 
+
+	                    firebase.database().ref('history/'+plant+'/'+postHistoryId).update(timeUpdate);
+	                });
+				});
+			});
+			
 			firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/item/'+item_no).once('value').then(function(itemSnapshot){
 
 				var new_balance = itemSnapshot.val().balance - quantity;
@@ -268,7 +305,6 @@
 					alert("DR No. " + delivery_no + " issued successfully. Transaction can be viewed on Delivery Report Page");
             		window.location.href = 'delivery_ongoing_order.html';
 				}
-
 			});
 		});
 	}
