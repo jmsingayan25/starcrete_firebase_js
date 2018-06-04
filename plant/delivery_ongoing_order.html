@@ -321,8 +321,6 @@
 
     	event.preventDefault();
     	firebase.database().ref().child('delivery_ongoing_order/'+plant+'/'+orderKey).once('value').then(function(orderSnapshot){
-    		// orderSnapshot.forEach(function(orderChildSnapshot){
-	    		// console.log(orderSnapshot.key, orderSnapshot.val());
 
             var key = orderSnapshot.key;
 			var date = new Date().toLocaleString('en');
@@ -330,7 +328,14 @@
     		var dr_no = orderSnapshot.val().delivery_no;
     		var gate_pass = orderSnapshot.val().gate_pass;
     		var item_no = orderSnapshot.val().item_no;
-    		var psi = orderSnapshot.val().psi;
+    		var psi = orderSnapshot.val().psi || "";
+
+            if(psi != ""){
+                psi_ext = " (" + psi + " psi)";
+            }else{
+                psi_ext = "";
+            }
+
     		var quantity = orderSnapshot.val().quantity;
     		var po_no_key = orderSnapshot.val().po_key;
     		var status = "DELIVERED";
@@ -347,13 +352,13 @@
     			po_no_key: po_no_key,
     			status: status
     		}
-    		console.log(drData);
+    		// console.log(drData);
 			var drPost = firebase.database().ref('delivery_delivered_order/'+plant);
 			var drPostData = drPost.push();
 			drPostData.set(drData);
-
 			var postId = drPostData.key;
 
+            // insert data of project details to recently added transaction
 			firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey+'/project_detail').once('value').then(function(projectSnapshot){
 				projectSnapshot.forEach(function(projectChildSnapshot){
 
@@ -367,9 +372,44 @@
 		    		}
 
 		    		firebase.database().ref('delivery_delivered_order/'+plant+'/'+postId+'/project_detail/'+project_key).set(projectData);
+
+                    var historyData = {
+                        date: date,
+                        reverseDate: firebase.database.ServerValue.TIMESTAMP,
+                        type_of_transaction: "Delivered DR No.",
+                        history: "Delivered DR No. " + dr_no + " with P.O. No. " + po_no + " and " + Number(quantity) + " pcs of " + item_no + psi_ext + " to " + project_name + " in " + project_address
+                    }
+
+                    var postHistoryData = firebase.database().ref('history/'+plant+'/');
+                    var newHistoryPostRef = postHistoryData.push();
+                    newHistoryPostRef.set(historyData);
+
+                    var postHistoryId = newHistoryPostRef.key;
+                
+                    firebase.database().ref().child('history/'+plant+'/'+postHistoryId).once('value', function(snapshot){
+
+                        var timestamp = snapshot.val().reverseDate * -1;
+                        var timeUpdate = {
+                            reverseDate: timestamp
+                        } 
+
+                        firebase.database().ref('history/'+plant+'/'+postHistoryId).update(timeUpdate);
+                    });
 				});
 			});	
 
+            //update on child node: reverseDate
+            firebase.database().ref().child('delivery_delivered_order/'+plant+'/'+postId).once('value', function(snapshot){
+
+                var timestamp = snapshot.val().reverseDate * -1;
+                var timeUpdate = {
+                    reverseDate: timestamp
+                } 
+
+                firebase.database().ref('delivery_delivered_order/'+plant+'/'+postId).update(timeUpdate);
+            });
+
+            // insert contact detail to recently added transaction
 			firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey+'/contact').once('value').then(function(contactSnapshot){
 				contactSnapshot.forEach(function(contactChildSnapshot){
 
