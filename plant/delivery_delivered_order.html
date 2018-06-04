@@ -88,6 +88,20 @@
 
 <script>
 	
+    var timer = null;
+
+    function goAway() {
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+            window.location.reload(true);
+        }, 60000);
+    }
+
+    window.addEventListener('mousemove', goAway, true);
+    window.addEventListener('keypress', goAway, true);
+
+    goAway();
+    
 	$(document).ready(function(){
         $('.filterable .btn-filter').click(function(){
             var $panel = $(this).parents('.filterable'),
@@ -175,69 +189,126 @@
         return fulldate;
     }
 
+    // function tableData(plant){
+
+    // 	var myTbody = "";
+    // 	var count = 1;
+
+    // 	firebase.database().ref('delivery_delivered_order/'+plant).on('value', function(orderSnapshot){
+    // 		orderSnapshot.forEach(function(orderChildSnapshot){
+
+    // 			var date = dateFormat(orderChildSnapshot.val().date);
+    // 			var dr_no = orderChildSnapshot.val().dr_no;
+    // 			var gate_pass = orderChildSnapshot.val().gate_pass;
+    // 			var item_no = orderChildSnapshot.val().item_no;
+    // 			var po_no = orderChildSnapshot.val().po_no;
+    // 			var psi = orderChildSnapshot.val().psi || "";
+    // 			var key = orderChildSnapshot.key;
+
+    // 			if(psi != ""){
+    // 				psi_ext = "(" + psi + "psi)";
+    // 			}else{
+    // 				psi_ext = "";
+    // 			}
+    // 			var quantity = orderChildSnapshot.val().quantity;
+    // 			var status = orderChildSnapshot.val().status;
+
+    // 			myTbody += "<tr><td><strong>" + count + "</strong></td>";
+    // 			myTbody += "<td><strong>" + dr_no + "</strong></td>";
+    // 			myTbody += "<td><strong>" + po_no + "</strong></td>";
+    // 			myTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
+    // 			myTbody += "<td><strong>" + Number(quantity).toLocaleString('en') + "</strong></td>";
+
+    // 			firebase.database().ref('delivery_delivered_order/'+plant+'/'+key+'/project_detail').on('value', function(projectSnapshot){
+    // 				projectSnapshot.forEach(function(projectChildSnapshot){
+
+    // 					var project_name = projectChildSnapshot.val().project_name;
+    // 					var project_address = projectChildSnapshot.val().project_address;
+
+		  //   			myTbody += "<td><strong>" + project_name + "</strong></td>";
+		  //   			myTbody += "<td><strong>" + project_address + "</strong></td>";
+
+    // 				});
+    // 			});
+
+    // 			myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+
+    // 			firebase.database().ref('delivery_delivered_order/'+plant+'/'+key+'/contact').on('value', function(contactSnapshot){
+    // 				contactSnapshot.forEach(function(contactChildSnapshot){
+
+    // 					var contact_name = contactChildSnapshot.val().contact_name;
+    // 					var contact_no = contactChildSnapshot.val().contact_no;
+
+		  //   			myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+
+    // 				});
+    // 			});
+
+    // 			myTbody += "</td>";
+    // 			myTbody += "<td><strong>" + date + "</strong></td>";
+    // 			myTbody += "<td style='color: #388e3c;'><strong>" + status + "</strong></td></tr>";
+
+    // 			document.getElementById('orderList').innerHTML = myTbody;
+    // 			count++;
+    // 		});
+    // 	});
+    // }
+
     function tableData(plant){
 
-    	var myTbody = "";
-    	var count = 1;
+        var myTbody = "";
+        var count = 1;
 
-    	firebase.database().ref('delivery_delivered_order/'+plant).on('value', function(orderSnapshot){
-    		orderSnapshot.forEach(function(orderChildSnapshot){
+        firebase.database().ref('delivery_delivered_order/'+plant).on('child_added', function(orderSnapshot){
+            firebase.database().ref('delivery_delivered_order/'+plant+'/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
+                projectSnapshot.forEach(function(projectChildSnapshot){
+                    // console.log(orderSnapshot.key, orderSnapshot.val());
 
-    			var date = dateFormat(orderChildSnapshot.val().date);
-    			var dr_no = orderChildSnapshot.val().dr_no;
-    			var gate_pass = orderChildSnapshot.val().gate_pass;
-    			var item_no = orderChildSnapshot.val().item_no;
-    			var po_no = orderChildSnapshot.val().po_no;
-    			var psi = orderChildSnapshot.val().psi || "";
-    			var key = orderChildSnapshot.key;
+                    var dr_no = orderSnapshot.val().dr_no;
+                    var po_no = orderSnapshot.val().po_no;
+                    var item_no = orderSnapshot.val().item_no;
+                    var psi = orderSnapshot.val().psi || "";
 
-    			if(psi != ""){
-    				psi_ext = "(" + psi + "psi)";
-    			}else{
-    				psi_ext = "";
-    			}
-    			var quantity = orderChildSnapshot.val().quantity;
-    			var status = orderChildSnapshot.val().status;
+                    if(psi != ""){
+                        psi_ext = " (" + psi + " psi)";
+                    }else{
+                        psi_ext = "";
+                    }
 
-    			myTbody += "<tr><td><strong>" + count + "</strong></td>";
-    			myTbody += "<td><strong>" + dr_no + "</strong></td>";
-    			myTbody += "<td><strong>" + po_no + "</strong></td>";
-    			myTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
-    			myTbody += "<td><strong>" + Number(quantity).toLocaleString('en') + "</strong></td>";
+                    var quantity = Number(orderSnapshot.val().quantity).toLocaleString('en');
+                    var project_name = projectChildSnapshot.val().project_name;
+                    var project_address = projectChildSnapshot.val().project_address;
+                    var status = orderSnapshot.val().status;
+                    var date = dateFormat(orderSnapshot.val().date);
 
-    			firebase.database().ref('delivery_delivered_order/'+plant+'/'+key+'/project_detail').on('value', function(projectSnapshot){
-    				projectSnapshot.forEach(function(projectChildSnapshot){
+                    myTbody += "<tr><td><strong>" + count + "</strong></td>";
+                    myTbody += "<td><strong>" + dr_no + "</strong></td>";
+                    myTbody += "<td><strong>" + po_no + "</strong></td>";
+                    myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+                    myTbody += "<td><strong>" + quantity + "</strong></td>";
+                    myTbody += "<td><strong>" + project_name + "</strong></td>";
+                    myTbody += "<td><strong>" + project_address + "</strong></td>";
+                    myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
 
-    					var project_name = projectChildSnapshot.val().project_name;
-    					var project_address = projectChildSnapshot.val().project_address;
+                    firebase.database().ref('delivery_delivered_order/'+plant+'/'+orderSnapshot.key+'/contact').once('value', function(contactSnapshot){
+                        contactSnapshot.forEach(function(contactChildSnapshot){
 
-		    			myTbody += "<td><strong>" + project_name + "</strong></td>";
-		    			myTbody += "<td><strong>" + project_address + "</strong></td>";
+                            contact_name = contactChildSnapshot.val().contact_name;
+                            contact_no = contactChildSnapshot.val().contact_no;
+                            
+                            myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+                        });
+                    });
 
-    				});
-    			});
+                    myTbody += "</td>";
+                    myTbody += "<td><strong>" + date + "</strong></td>";
+                    myTbody += "<td style='color: #388e3c;'><strong>" + status + "</strong></td></tr>";
 
-    			myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
-
-    			firebase.database().ref('delivery_delivered_order/'+plant+'/'+key+'/contact').on('value', function(contactSnapshot){
-    				contactSnapshot.forEach(function(contactChildSnapshot){
-
-    					var contact_name = contactChildSnapshot.val().contact_name;
-    					var contact_no = contactChildSnapshot.val().contact_no;
-
-		    			myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
-
-    				});
-    			});
-
-    			myTbody += "</td>";
-    			myTbody += "<td><strong>" + date + "</strong></td>";
-    			myTbody += "<td style='color: #388e3c;'><strong>" + status + "</strong></td></tr>";
-
-    			document.getElementById('orderList').innerHTML = myTbody;
-    			count++;
-    		});
-    	});
+                    document.getElementById('orderList').innerHTML = myTbody;
+                    count++;
+                });
+            });
+        });
     }
 
 </script>
