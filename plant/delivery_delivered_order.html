@@ -101,7 +101,7 @@
     window.addEventListener('keypress', goAway, true);
 
     goAway();
-    
+
 	$(document).ready(function(){
         $('.filterable .btn-filter').click(function(){
             var $panel = $(this).parents('.filterable'),
@@ -259,7 +259,7 @@
         var myTbody = "";
         var count = 1;
 
-        firebase.database().ref('delivery_delivered_order/'+plant).on('child_added', function(orderSnapshot){
+        firebase.database().ref('delivery_delivered_order/'+plant).orderByChild('reverseDate').on('child_added', function(orderSnapshot){
             firebase.database().ref('delivery_delivered_order/'+plant+'/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
                 projectSnapshot.forEach(function(projectChildSnapshot){
                     // console.log(orderSnapshot.key, orderSnapshot.val());
