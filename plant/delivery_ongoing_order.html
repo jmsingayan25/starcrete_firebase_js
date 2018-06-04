@@ -88,6 +88,20 @@
 
 <script>
 	
+    var timer = null;
+
+    function goAway() {
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+            window.location.reload(true);
+        }, 60000);
+    }
+
+    window.addEventListener('mousemove', goAway, true);
+    window.addEventListener('keypress', goAway, true);
+
+    goAway();
+
 	$(document).ready(function(){
         $('.filterable .btn-filter').click(function(){
             var $panel = $(this).parents('.filterable'),
@@ -183,64 +197,124 @@
 
     
 
+  //   function tableData(plant){
+
+  //   	var myTbody = "";
+  //   	var count = 1;
+
+  //   	firebase.database().ref('delivery_ongoing_order/'+plant).on('value', function(orderSnapshot){
+  //   		orderSnapshot.forEach(function(orderChildSnapshot){
+  //   			key = orderChildSnapshot.key;
+  //   			// console.log(orderChildSnapshot.key, orderChildSnapshot.val());
+  //   			firebase.database().ref('delivery_ongoing_order/'+plant+'/'+key+'/project_detail').once('value').then(function(projectSnapshot){
+  //   				projectSnapshot.forEach(function(projectChildSnapshot){
+		//     			delivery_no = orderChildSnapshot.val().delivery_no;
+		//     			po_no = orderChildSnapshot.val().po_no;
+		//     			item_no = orderChildSnapshot.val().item_no;
+		//     			psi = orderChildSnapshot.val().psi || "";
+
+		// 	            if(psi != ""){
+		// 	                var psi_ext = "(" + psi + " psi)";
+		// 	            }else{
+		// 	                var psi_ext = "";
+		// 	            }
+
+		//     			quantity = Number(orderChildSnapshot.val().quantity);
+		//     			gate_pass = orderChildSnapshot.val().gate_pass;
+		//     			date = dateFormat(orderChildSnapshot.val().date);
+		//     			project_name = projectChildSnapshot.val().project_name;
+  //   					project_address = projectChildSnapshot.val().project_address;
+
+		//     			myTbody += "<tr><td><strong>" + count + "</strong></td>";
+		//     			myTbody += "<td><strong>" + delivery_no + "</strong></td>";
+		//     			myTbody += "<td><strong>" + po_no + "</strong></td>";
+		//     			myTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
+		//     			myTbody += "<td><strong>" + quantity.toLocaleString('en') + " pcs</strong></td>";
+  //   					myTbody += "<td><strong>" + project_name + "</strong></td>";
+  //   					myTbody += "<td><strong>" + project_address + "</strong></td>";	
+		//     			myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+
+		//     			firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderChildSnapshot.key+'/contact').on('value', function(contactSnapshot){
+		//     				contactSnapshot.forEach(function(contactChildSnapshot){
+
+		//     					contact_name = contactChildSnapshot.val().contact_name;
+		//                         contact_no = contactChildSnapshot.val().contact_no;
+
+		//                     	myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+		//     				});
+		//     			});
+
+		//     			myTbody += "</td>";
+		//     			myTbody += "<td><strong>" + gate_pass + "</strong></td>";
+		//     			myTbody += "<td><strong>" + date + "</strong></td>";
+		//     			myTbody += "<td><strong><button type='submit' class='btn btn-sm btn-block' style='margin-bottom: 3px; width: 85px; background-color: #388e3c; color: white;' data-toggle='modal' data-target='#deliveryModal" + count + "'><span class='fa fa-check'></span> <strong>Delivered</strong></button><form onsubmit=\"if(confirm('Proceed?')){deliveredForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><div class='modal fade' id='deliveryModal" + count + "' role='dialog'><div class='modal-dialog modal-md'><div class='modal-content'><div class='modal-header'><h4 class='modal-title'>Delivery Details</h4></div><div class='modal-body' style='text-align: left;'><input type='hidden' id='hidden_key' name='hidden_key' value='" + key + "'><div class='row'><div class='col-md-6'><label>DR No.:</label> <strong>" + delivery_no + "</strong></div><div class='col-md-6'><label>Date Issued:</label> <strong>" + date + "</strong></div></div><div class='row'><div class='col-md-6'><label>P.O. No.:</label> <strong>" + po_no + "</strong></div><div class='col-md-6'><label>Date Delivered:</label> <input type='date' name='option_delivered' id='option_delivered' required></div></div><div class='row'><div class='col-md-6'><label>Gate Pass:</label> <strong>" + gate_pass + "</strong></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Item Information</strong></div></div><div class='row'><div class='col-md-6'><label>Item</label></div><div class='col-md-6'> <strong>" + item_no + " " + psi_ext + "</strong></div></div><div class='row'><div class='col-md-6'><label>Quantity</label></div><div class='col-md-6'> <strong>" + quantity.toLocaleString('en') + " pcs</strong></div></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Project Information</strong></div></div><div class='row'><div class='col-md-6'><label>Project Name</label></div><div class='col-md-6'> <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'><label>Project Address</label></div><div class='col-md-6'> <strong>" + project_address + "</strong></div></div></div></div><div class='modal-footer'><input type='submit' name='submit' id='submit' value='Confirm' class='btn btn-primary' style='font-weight: bold;'><button type='button' class='btn btn-default' data-dismiss='modal'><strong>Close</strong></button></div></div></div></div></form></strong></td></tr>";
+
+		//     			document.getElementById('orderList').innerHTML = myTbody;
+		//     			count++;
+		//     		});
+		//     	});
+		// 	});
+		// });
+  //   }
+
     function tableData(plant){
 
-    	var myTbody = "";
-    	var count = 1;
+        var myTbody = "";
+        var count = 1;
 
-    	firebase.database().ref('delivery_ongoing_order/'+plant).on('value', function(orderSnapshot){
-    		orderSnapshot.forEach(function(orderChildSnapshot){
-    			key = orderChildSnapshot.key;
-    			// console.log(orderChildSnapshot.key, orderChildSnapshot.val());
-    			firebase.database().ref('delivery_ongoing_order/'+plant+'/'+key+'/project_detail').once('value').then(function(projectSnapshot){
-    				projectSnapshot.forEach(function(projectChildSnapshot){
-		    			delivery_no = orderChildSnapshot.val().delivery_no;
-		    			po_no = orderChildSnapshot.val().po_no;
-		    			item_no = orderChildSnapshot.val().item_no;
-		    			psi = orderChildSnapshot.val().psi || "";
+        firebase.database().ref('delivery_ongoing_order/'+plant).orderByChild('reverseDate').on('child_added', function(orderSnapshot){
+            console.log(orderSnapshot.key, orderSnapshot.val());
+            firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
+                projectSnapshot.forEach(function(projectChildSnapshot){
 
-			            if(psi != ""){
-			                var psi_ext = "(" + psi + " psi)";
-			            }else{
-			                var psi_ext = "";
-			            }
+                    // console.log(projectSnapshot.key, projectSnapshot.val());
+                    var key = orderSnapshot.key;
+                    var dr_no = orderSnapshot.val().delivery_no;
+                    var po_no = orderSnapshot.val().po_no;
+                    var item_no = orderSnapshot.val().item_no;
+                    var psi = orderSnapshot.val().psi || "";
 
-		    			quantity = Number(orderChildSnapshot.val().quantity);
-		    			gate_pass = orderChildSnapshot.val().gate_pass;
-		    			date = dateFormat(orderChildSnapshot.val().date);
-		    			project_name = projectChildSnapshot.val().project_name;
-    					project_address = projectChildSnapshot.val().project_address;
+                    if(psi != ""){
+                        psi_ext = " (" + psi + " psi)";
+                    }else{
+                        psi_ext = "";
+                    }
 
-		    			myTbody += "<tr><td><strong>" + count + "</strong></td>";
-		    			myTbody += "<td><strong>" + delivery_no + "</strong></td>";
-		    			myTbody += "<td><strong>" + po_no + "</strong></td>";
-		    			myTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
-		    			myTbody += "<td><strong>" + quantity.toLocaleString('en') + " pcs</strong></td>";
-    					myTbody += "<td><strong>" + project_name + "</strong></td>";
-    					myTbody += "<td><strong>" + project_address + "</strong></td>";	
-		    			myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+                    var quantity = Number(orderSnapshot.val().quantity).toLocaleString('en');
+                    var project_name = projectChildSnapshot.val().project_name;
+                    var project_address = projectChildSnapshot.val().project_address;
+                    var gate_pass = orderSnapshot.val().gate_pass;
+                    var date = dateFormat(orderSnapshot.val().date);
 
-		    			firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderChildSnapshot.key+'/contact').on('value', function(contactSnapshot){
-		    				contactSnapshot.forEach(function(contactChildSnapshot){
+                    myTbody += "<tr><td><strong>" + count + "</strong></td>";
+                    myTbody += "<td><strong>" + dr_no + "</strong></td>";
+                    myTbody += "<td><strong>" + po_no + "</strong></td>";
+                    myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+                    myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+                    myTbody += "<td><strong>" + project_name + "</strong></td>";
+                    myTbody += "<td><strong>" + project_address + "</strong></td>";
+                    myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
 
-		    					contact_name = contactChildSnapshot.val().contact_name;
-		                        contact_no = contactChildSnapshot.val().contact_no;
+                    firebase.database().ref('delivery_ongoing_order/'+plant+'/'+key+'/contact').once('value', function(contactSnapshot){
+                        contactSnapshot.forEach(function(contactChildSnapshot){
 
-		                    	myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
-		    				});
-		    			});
+                            contact_name = contactChildSnapshot.val().contact_name;
+                            contact_no = contactChildSnapshot.val().contact_no;
+                            
+                            myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+                        });
+                    });
 
-		    			myTbody += "</td>";
-		    			myTbody += "<td><strong>" + gate_pass + "</strong></td>";
-		    			myTbody += "<td><strong>" + date + "</strong></td>";
-		    			myTbody += "<td><strong><button type='submit' class='btn btn-sm btn-block' style='margin-bottom: 3px; width: 85px; background-color: #388e3c; color: white;' data-toggle='modal' data-target='#deliveryModal" + count + "'><span class='fa fa-check'></span> <strong>Delivered</strong></button><form onsubmit=\"if(confirm('Proceed?')){deliveredForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><div class='modal fade' id='deliveryModal" + count + "' role='dialog'><div class='modal-dialog modal-md'><div class='modal-content'><div class='modal-header'><h4 class='modal-title'>Delivery Details</h4></div><div class='modal-body' style='text-align: left;'><input type='hidden' id='hidden_key' name='hidden_key' value='" + key + "'><div class='row'><div class='col-md-6'><label>DR No.:</label> <strong>" + delivery_no + "</strong></div><div class='col-md-6'><label>Date Issued:</label> <strong>" + date + "</strong></div></div><div class='row'><div class='col-md-6'><label>P.O. No.:</label> <strong>" + po_no + "</strong></div><div class='col-md-6'><label>Date Delivered:</label> <input type='date' name='option_delivered' id='option_delivered' required></div></div><div class='row'><div class='col-md-6'><label>Gate Pass:</label> <strong>" + gate_pass + "</strong></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Item Information</strong></div></div><div class='row'><div class='col-md-6'><label>Item</label></div><div class='col-md-6'> <strong>" + item_no + " " + psi_ext + "</strong></div></div><div class='row'><div class='col-md-6'><label>Quantity</label></div><div class='col-md-6'> <strong>" + quantity.toLocaleString('en') + " pcs</strong></div></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Project Information</strong></div></div><div class='row'><div class='col-md-6'><label>Project Name</label></div><div class='col-md-6'> <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'><label>Project Address</label></div><div class='col-md-6'> <strong>" + project_address + "</strong></div></div></div></div><div class='modal-footer'><input type='submit' name='submit' id='submit' value='Confirm' class='btn btn-primary' style='font-weight: bold;'><button type='button' class='btn btn-default' data-dismiss='modal'><strong>Close</strong></button></div></div></div></div></form></strong></td></tr>";
+                    myTbody += "</td>";
+                    myTbody += "<td><strong>" + gate_pass + "</strong></td>";
+                    myTbody += "<td><strong>" + date + "</strong></td>";
+                    myTbody += "<td><strong><button type='submit' class='btn btn-sm btn-block' style='margin-bottom: 3px; width: 85px; background-color: #388e3c; color: white;' data-toggle='modal' data-target='#deliveryModal" + count + "'><span class='fa fa-check'></span> <strong>Delivered</strong></button><form onsubmit=\"if(confirm('Proceed?')){deliveredForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><div class='modal fade' id='deliveryModal" + count + "' role='dialog'><div class='modal-dialog modal-md'><div class='modal-content'><div class='modal-header'><h4 class='modal-title'>Delivery Details</h4></div><div class='modal-body' style='text-align: left;'><input type='hidden' id='hidden_key' name='hidden_key' value='" + key + "'><div class='row'><div class='col-md-6'><label>DR No.:</label> <strong>" + dr_no + "</strong></div><div class='col-md-6'><label>Date Issued:</label> <strong>" + date + "</strong></div></div><div class='row'><div class='col-md-6'><label>P.O. No.:</label> <strong>" + po_no + "</strong></div><div class='col-md-6'><label>Date Delivered:</label> <input type='date' name='option_delivered' id='option_delivered' required></div></div><div class='row'><div class='col-md-6'><label>Gate Pass:</label> <strong>" + gate_pass + "</strong></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Item Information</strong></div></div><div class='row'><div class='col-md-6'><label>Item</label></div><div class='col-md-6'> <strong>" + item_no + " " + psi_ext + "</strong></div></div><div class='row'><div class='col-md-6'><label>Quantity</label></div><div class='col-md-6'> <strong>" + quantity + " pcs</strong></div></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Project Information</strong></div></div><div class='row'><div class='col-md-6'><label>Project Name</label></div><div class='col-md-6'> <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'><label>Project Address</label></div><div class='col-md-6'> <strong>" + project_address + "</strong></div></div></div></div><div class='modal-footer'><input type='submit' name='submit' id='submit' value='Confirm' class='btn btn-primary' style='font-weight: bold;'><button type='button' class='btn btn-default' data-dismiss='modal'><strong>Close</strong></button></div></div></div></div></form></strong></td></tr>";
 
-		    			document.getElementById('orderList').innerHTML = myTbody;
-		    			count++;
-		    		});
-		    	});
-			});
-		});
+                    document.getElementById('orderList').innerHTML = myTbody;
+                    count++;
+                });
+            });
+        });
     }
 
     function deliveredForm(orderKey, plant){
@@ -250,72 +324,73 @@
     		// orderSnapshot.forEach(function(orderChildSnapshot){
 	    		// console.log(orderSnapshot.key, orderSnapshot.val());
 
-				var date = new Date().toLocaleString('en');
-	    		var po_no = orderSnapshot.val().po_no;
-	    		var dr_no = orderSnapshot.val().delivery_no;
-	    		var gate_pass = orderSnapshot.val().gate_pass;
-	    		var item_no = orderSnapshot.val().item_no;
-	    		var psi = orderSnapshot.val().psi;
-	    		var quantity = orderSnapshot.val().quantity;
-	    		var po_no_key = orderSnapshot.val().po_key;
-	    		var status = "DELIVERED";
+            var key = orderSnapshot.key;
+			var date = new Date().toLocaleString('en');
+    		var po_no = orderSnapshot.val().po_no;
+    		var dr_no = orderSnapshot.val().delivery_no;
+    		var gate_pass = orderSnapshot.val().gate_pass;
+    		var item_no = orderSnapshot.val().item_no;
+    		var psi = orderSnapshot.val().psi;
+    		var quantity = orderSnapshot.val().quantity;
+    		var po_no_key = orderSnapshot.val().po_key;
+    		var status = "DELIVERED";
 
-	    		var drData = {
-	    			date: date,
-	    			po_no: po_no,
-	    			dr_no: dr_no,
-	    			gate_pass: gate_pass,
-	    			item_no: item_no,
-	    			psi: psi,
-	    			quantity: quantity,
-	    			po_no_key: po_no_key,
-	    			status: status
-	    		}
-	    		console.log(drData);
-				var drPost = firebase.database().ref('delivery_delivered_order/'+plant);
-				var drPostData = drPost.push();
-				drPostData.set(drData);
+    		var drData = {
+    			date: date,
+    			po_no: po_no,
+    			dr_no: dr_no,
+    			gate_pass: gate_pass,
+    			item_no: item_no,
+    			psi: psi,
+                reverseDate: firebase.database.ServerValue.TIMESTAMP,
+    			quantity: quantity,
+    			po_no_key: po_no_key,
+    			status: status
+    		}
+    		console.log(drData);
+			var drPost = firebase.database().ref('delivery_delivered_order/'+plant);
+			var drPostData = drPost.push();
+			drPostData.set(drData);
 
-				var postId = drPostData.key;
+			var postId = drPostData.key;
 
-				firebase.database().ref('delivery_ongoing_order/'+plant+'/'+key+'/project_detail').once('value').then(function(projectSnapshot){
-					projectSnapshot.forEach(function(projectChildSnapshot){
+			firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey+'/project_detail').once('value').then(function(projectSnapshot){
+				projectSnapshot.forEach(function(projectChildSnapshot){
 
-						var project_address = projectChildSnapshot.val().project_address;
-			    		var project_name = projectChildSnapshot.val().project_name;
-			    		var project_key = projectChildSnapshot.key;
+					var project_address = projectChildSnapshot.val().project_address;
+		    		var project_name = projectChildSnapshot.val().project_name;
+		    		var project_key = projectChildSnapshot.key;
 
-			    		var projectData = {
-			    			project_address: project_address,
-			    			project_name: project_name
-			    		}
+		    		var projectData = {
+		    			project_address: project_address,
+		    			project_name: project_name
+		    		}
 
-			    		firebase.database().ref('delivery_delivered_order/'+plant+'/'+postId+'/project_detail/'+project_key).set(projectData);
-					});
-				});	
+		    		firebase.database().ref('delivery_delivered_order/'+plant+'/'+postId+'/project_detail/'+project_key).set(projectData);
+				});
+			});	
 
-				firebase.database().ref('delivery_ongoing_order/'+plant+'/'+key+'/contact').once('value').then(function(contactSnapshot){
-					contactSnapshot.forEach(function(contactChildSnapshot){
+			firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey+'/contact').once('value').then(function(contactSnapshot){
+				contactSnapshot.forEach(function(contactChildSnapshot){
 
-						var contact_name = contactChildSnapshot.val().contact_name;
-			    		var contact_no = contactChildSnapshot.val().contact_no;
-			    		var contact_key = contactChildSnapshot.key;
+					var contact_name = contactChildSnapshot.val().contact_name;
+		    		var contact_no = contactChildSnapshot.val().contact_no;
+		    		var contact_key = contactChildSnapshot.key;
 
-			    		var contactData = {
-			    			contact_name: contact_name,
-			    			contact_no: contact_no
-			    		}
+		    		var contactData = {
+		    			contact_name: contact_name,
+		    			contact_no: contact_no
+		    		}
 
-			    		firebase.database().ref('delivery_delivered_order/'+plant+'/'+postId+'/contact/'+contact_key).set(contactData);
-					});
-				});		
+		    		firebase.database().ref('delivery_delivered_order/'+plant+'/'+postId+'/contact/'+contact_key).set(contactData);
+				});
+			});		
 
-				if(firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey).remove()){
-					alert("DR No. " + dr_no + " has been delivered successfully.");
-            		window.location.href = 'delivery_ongoing_order.html';
-				}
-    		});
-    	// });
+			if(firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey).remove()){
+				alert("DR No. " + dr_no + " has been delivered successfully.");
+        		window.location.href = 'delivery_ongoing_order.html';
+			}
+		});
     }
 
 
