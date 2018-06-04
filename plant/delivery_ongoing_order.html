@@ -308,13 +308,19 @@
                     myTbody += "</td>";
                     myTbody += "<td><strong>" + gate_pass + "</strong></td>";
                     myTbody += "<td><strong>" + date + "</strong></td>";
-                    myTbody += "<td><strong><button type='submit' class='btn btn-sm btn-block' style='margin-bottom: 3px; width: 85px; background-color: #388e3c; color: white;' data-toggle='modal' data-target='#deliveryModal" + count + "'><span class='fa fa-check'></span> <strong>Delivered</strong></button><form onsubmit=\"if(confirm('Proceed?')){deliveredForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><div class='modal fade' id='deliveryModal" + count + "' role='dialog'><div class='modal-dialog modal-md'><div class='modal-content'><div class='modal-header'><h4 class='modal-title'>Delivery Details</h4></div><div class='modal-body' style='text-align: left;'><input type='hidden' id='hidden_key' name='hidden_key' value='" + key + "'><div class='row'><div class='col-md-6'><label>DR No.:</label> <strong>" + dr_no + "</strong></div><div class='col-md-6'><label>Date Issued:</label> <strong>" + date + "</strong></div></div><div class='row'><div class='col-md-6'><label>P.O. No.:</label> <strong>" + po_no + "</strong></div><div class='col-md-6'><label>Date Delivered:</label> <input type='date' name='option_delivered' id='option_delivered' required></div></div><div class='row'><div class='col-md-6'><label>Gate Pass:</label> <strong>" + gate_pass + "</strong></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Item Information</strong></div></div><div class='row'><div class='col-md-6'><label>Item</label></div><div class='col-md-6'> <strong>" + item_no + " " + psi_ext + "</strong></div></div><div class='row'><div class='col-md-6'><label>Quantity</label></div><div class='col-md-6'> <strong>" + quantity + " pcs</strong></div></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Project Information</strong></div></div><div class='row'><div class='col-md-6'><label>Project Name</label></div><div class='col-md-6'> <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'><label>Project Address</label></div><div class='col-md-6'> <strong>" + project_address + "</strong></div></div></div></div><div class='modal-footer'><input type='submit' name='submit' id='submit' value='Confirm' class='btn btn-primary' style='font-weight: bold;'><button type='button' class='btn btn-default' data-dismiss='modal'><strong>Close</strong></button></div></div></div></div></form></strong></td></tr>";
+                    myTbody += "<td><strong><button type='submit' class='btn btn-sm btn-block' style='margin-bottom: 3px; width: 85px; background-color: #388e3c; color: white;' data-toggle='modal' data-target='#deliveryModal" + count + "'><span class='fa fa-check'></span> <strong>Delivered</strong></button><form onsubmit=\"if(confirm('Proceed?')){deliveredForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><div class='modal fade' id='deliveryModal" + count + "' role='dialog'><div class='modal-dialog modal-md'><div class='modal-content'><div class='modal-header'><h4 class='modal-title'>Delivery Details</h4></div><div class='modal-body' style='text-align: left;'><input type='hidden' id='hidden_key' name='hidden_key' value='" + key + "'><div class='row'><div class='col-md-6'><label>DR No.:</label> <strong>" + dr_no + "</strong></div><div class='col-md-6'><label>Date Issued:</label> <strong>" + date + "</strong></div></div><div class='row'><div class='col-md-6'><label>P.O. No.:</label> <strong>" + po_no + "</strong></div><div class='col-md-6'><label>Date Delivered:</label> <input type='date' name='option_delivered' id='option_delivered' required></div></div><div class='row'><div class='col-md-6'><label>Gate Pass:</label> <strong>" + gate_pass + "</strong></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Item Information</strong></div></div><div class='row'><div class='col-md-6'><label>Item</label></div><div class='col-md-6'> <strong>" + item_no + " " + psi_ext + "</strong></div></div><div class='row'><div class='col-md-6'><label>Quantity</label></div><div class='col-md-6'> <strong>" + quantity + " pcs</strong></div></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Project Information</strong></div></div><div class='row'><div class='col-md-6'><label>Project Name</label></div><div class='col-md-6'> <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'><label>Project Address</label></div><div class='col-md-6'> <strong>" + project_address + "</strong></div></div></div></div><div class='modal-footer'><input type='submit' name='submit' id='submit' value='Confirm' class='btn btn-primary' style='font-weight: bold;'><button type='button' class='btn btn-default' data-dismiss='modal'><strong>Close</strong></button></div></div></div></div></form></strong><form onsubmit=\"if(confirm('Proceed?')){backloadForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' id='returned' name='returned' value='' class='btn btn-sm btn-block' onclick='' style='background-color: #d32f2f; color: white; width: 85px;' ><span class='fa fa-close'></span> <strong>Backload</strong></button></form></td></tr>";
 
                     document.getElementById('orderList').innerHTML = myTbody;
                     count++;
                 });
             });
         });
+
+        // if(count == ""){
+        //     myTbody = "<tr><td colspan='11' style='min-height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+        //     document.getElementById('orderList').innerHTML = myTbody;
+        // }
     }
 
     function deliveredForm(orderKey, plant){
@@ -433,6 +439,100 @@
 		});
     }
 
+    function backloadForm(orderKey, plant){
+
+        event.preventDefault();
+        firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey).once('value', function(ongoingOrderSnapshot){
+
+            var key = ongoingOrderSnapshot.key;
+            var date = new Date().toLocaleString('en');
+            var po_no = ongoingOrderSnapshot.val().po_no;
+            var dr_no = ongoingOrderSnapshot.val().delivery_no;
+            var gate_pass = ongoingOrderSnapshot.val().gate_pass;
+            var item_no = ongoingOrderSnapshot.val().item_no;
+            var psi = ongoingOrderSnapshot.val().psi || "";
+
+            if(psi != ""){
+                psi_ext = " (" + psi + " psi)";
+            }else{
+                psi_ext = "";
+            }
+
+            var quantity = ongoingOrderSnapshot.val().quantity;
+            var po_no_key = ongoingOrderSnapshot.val().po_key;
+            var status = "BACKLOADED";
+
+            var drData = {
+                date: date,
+                po_no: po_no,
+                dr_no: dr_no,
+                gate_pass: gate_pass,
+                item_no: item_no,
+                psi: psi,
+                reverseDate: firebase.database.ServerValue.TIMESTAMP,
+                quantity: quantity,
+                po_no_key: po_no_key,
+                status: status
+            }
+
+            // console.log(drData);
+            var drPost = firebase.database().ref('delivery_backloaded_order/'+plant);
+            var drPostData = drPost.push();
+            drPostData.set(drData);
+            var postId = drPostData.key;
+
+            firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey+'/project_detail').once('value', function(projectSnapshot){
+                projectSnapshot.forEach(function(projectChildSnapshot){
+
+                    var projectData = {
+                        project_name: projectChildSnapshot.val().project_name,
+                        project_address: projectChildSnapshot.val().project_address,
+                    }
+
+                    firebase.database().ref('delivery_backloaded_order/'+plant+'/'+postId+'/project_detail/'+projectChildSnapshot.key).set(projectData);
+                });
+            });
+
+            firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey+'/contact').once('value', function(contactSnapshot){
+                contactSnapshot.forEach(function(contactChildSnapshot){
+
+                    var contactData = {
+                        contact_name: contactChildSnapshot.val().contact_name,
+                        contact_no: contactChildSnapshot.val().contact_no,
+                    }
+
+                    firebase.database().ref('delivery_backloaded_order/'+plant+'/'+postId+'/contact/'+contactChildSnapshot.key).set(contactData);
+                });
+            });
+
+            //update on child node: reverseDate
+            firebase.database().ref().child('delivery_backloaded_order/'+plant+'/'+postId).once('value', function(snapshot){
+
+                var timestamp = snapshot.val().reverseDate * -1;
+                var timeUpdate = {
+                    reverseDate: timestamp
+                } 
+
+                firebase.database().ref('delivery_backloaded_order/'+plant+'/'+postId).update(timeUpdate);
+            });
+
+            firebase.database().ref('purchase_order/'+plant+'/'+po_no_key+'/item/'+item_no).once('value', function(itemSnapshot){
+
+                var new_balance = Number(itemSnapshot.val().balance) + Number(quantity);
+                var updateBalance = {
+                    balance: new_balance
+                }
+
+                firebase.database().ref('purchase_order/'+plant+'/'+po_no_key+'/item/'+item_no).update(updateBalance);
+            });
+            
+            if(firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey).remove()){
+                alert("DR No. " + dr_no + " has been backloaded.");
+                window.location.href = 'delivery_ongoing_order.html';
+            } 
+        });
+    }
+
 
 </script>
 <style>
@@ -545,7 +645,7 @@
 	                    	<li><a class="" href="delivery_pending_order.html">Existing P.O. <span class='badge'><?php echo getCountPlantPo($db, $office); ?></span></a></li>       
 	                        <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span class="badge"><?php echo getDeliveryCountOnDeliveryOffice($db, $office); ?></span></a></li>         
 	                        <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
-	                        <!-- <li><a class="" href="delivery_backloaded.html">Backloaded Order</a></li> -->
+	                        <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
 	                    </ul>
 	                </li>  
 	            </ul>
