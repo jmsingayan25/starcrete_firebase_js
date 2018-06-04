@@ -214,6 +214,7 @@
 				psi: psi || "",
 				quantity: quantity,
 				status: status,
+				reverseDate: firebase.database.ServerValue.TIMESTAMP,
 				po_key: orderKey,
 				gate_pass: gate_pass,
 				date: date
@@ -226,6 +227,18 @@
 
 			var postId = newPostRef.key;
 
+			//update on child node: reverseDate
+			firebase.database().ref().child('delivery_ongoing_order/'+plant+'/'+postId).once('value', function(snapshot){
+
+                var timestamp = snapshot.val().reverseDate * -1;
+                var timeUpdate = {
+                    reverseDate: timestamp
+                } 
+
+                firebase.database().ref('delivery_ongoing_order/'+plant+'/'+postId).update(timeUpdate);
+            });
+
+			// insert data for child node: project detail
 			firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/project_detail').once('value').then(function(projectSnapshot){
 				projectSnapshot.forEach(function(projectChildSnapshot){
 
@@ -237,6 +250,8 @@
 					firebase.database().ref('delivery_ongoing_order/'+plant+'/'+postId+'/project_detail/'+projectChildSnapshot.key).set(projectData);
 				});
 			});
+
+			// insert data for child node: contact detail
 			firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/contact').on('value', function(contactSnapshot){
 				// console.log(itemChildSnapshot.key, itemChildSnapshot.val());
 				contactSnapshot.forEach(function(contactChildSnapshot){
@@ -255,6 +270,8 @@
 					firebase.database().ref('delivery_ongoing_order/'+plant+'/'+postId+'/contact/'+contactChildSnapshot.key).set(contactData);
 				});		
 			});
+
+			// insert data for child node: history and update on reverseDate to negative value
 			firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/project_detail/').once('value', function(projectSnapshot){
 				projectSnapshot.forEach(function(projectChildSnapshot){
 
