@@ -171,7 +171,7 @@
 
         document.getElementById('id_page_header').innerHTML = "<a href='delivery_pending_order.html?plant=" + plant + "' style='color: inherit;'>" + plant + " Delivery Order</a>";
 
-        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='delivery_ongoing_order.html?plant=" + plant + "'>Ongoing Delivery <span class='badge'><?php echo getDeliveryCountOnDeliveryOffice($db, $search_plant); ?></span></a></li><li><i class='fa fa-info-circle'></i>Existing P.O. <span class='badge'><?php echo countPendingPo($db, $search_plant); ?></span></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i><a href='delivery_backloaded_order.html?plant=" + plant + "'>Backload</a></li>";
+        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='delivery_ongoing_order.html?plant=" + plant + "'>Ongoing Delivery <span class='badge'><?php echo getDeliveryCountOnDeliveryOffice($db, $search_plant); ?></span></a></li><li><i class='fa fa-info-circle'></i>Existing P.O. <span class='badge'><?php echo countPendingPo($db, $search_plant); ?></span></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i><a href='delivery_backloaded_order.html?plant=" + plant + "'>Backloaded</a></li>";
 
     });
 
