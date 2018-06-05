@@ -459,7 +459,7 @@
             }
 
             var quantity = ongoingOrderSnapshot.val().quantity;
-            var po_no_key = ongoingOrderSnapshot.val().po_key;
+            var po_no_key = ongoingOrderSnapshot.val().po_no_key;
             var status = "BACKLOADED";
 
             var drData = {
@@ -491,6 +491,8 @@
 
                     firebase.database().ref('delivery_backloaded_order/'+plant+'/'+postId+'/project_detail/'+projectChildSnapshot.key).set(projectData);
                 });
+            }, function(error){
+                console.log(error);
             });
 
             firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey+'/contact').once('value', function(contactSnapshot){
@@ -503,6 +505,8 @@
 
                     firebase.database().ref('delivery_backloaded_order/'+plant+'/'+postId+'/contact/'+contactChildSnapshot.key).set(contactData);
                 });
+            }, function(error){
+                console.log(error);
             });
 
             //update on child node: reverseDate
@@ -514,6 +518,8 @@
                 } 
 
                 firebase.database().ref('delivery_backloaded_order/'+plant+'/'+postId).update(timeUpdate);
+            }, function(error){
+                console.log(error);
             });
 
             firebase.database().ref('purchase_order/'+plant+'/'+po_no_key+'/item/'+item_no).once('value', function(itemSnapshot){
@@ -524,6 +530,8 @@
                 }
 
                 firebase.database().ref('purchase_order/'+plant+'/'+po_no_key+'/item/'+item_no).update(updateBalance);
+            }, function(error){
+                console.log(error);
             });
             
             if(firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey).remove()){
