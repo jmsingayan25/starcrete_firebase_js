@@ -88,6 +88,7 @@
 
 <script>
 
+	var po_no_key = getUrlParameter('po_no_key');
 	var timer = null;
 
     function goAway() {
@@ -153,7 +154,7 @@
 
                     plant = snapshot.val().office;
 
-                    // tableData(plant);
+                    tableData(plant);
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
@@ -165,6 +166,8 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+
+
     });
 
     function userSignOut(){
@@ -189,8 +192,137 @@
         return fulldate;
     }
 
+    function getUrlParameter(name) {
+	    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+	    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+	    var results = regex.exec(location.search);
+	    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+	}
+
     function tableData(plant){
 
+    	var myTbody = "";
+
+    	firebase.database().ref('delivery_ongoing_order/'+plant).orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(ongoingOrderSnapshot){
+    		// console.log(ongoingOrderSnapshot.val());
+    		// ongoingOrderSnapshot.forEach(function(ongoingOrderChildSnapshot){
+    		// 	console.log(ongoingOrderChildSnapshot.key, ongoingOrderChildSnapshot.val());
+
+    			dr_no = ongoingOrderSnapshot.val().delivery_no;
+    			item_no = ongoingOrderSnapshot.val().item_no;
+    			psi = ongoingOrderSnapshot.val().psi;
+
+    			if(psi != ""){
+    				psi_ext = " (" + psi + " psi)";
+    			}else{
+    				psi_ext = "";
+    			}
+
+    			quantity = Number(ongoingOrderSnapshot.val().quantity).toLocaleString('en');
+    			date = dateFormat(ongoingOrderSnapshot.val().date);
+    			status = ongoingOrderSnapshot.val().status;
+
+    			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
+    			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+    			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+    			myTbody += "<td><strong>" + date + "</strong></td>";
+    			myTbody += "<td style='color: #ffa000;'><strong>" + status + "</strong></td></tr>";
+
+    			document.getElementById('orderList').innerHTML = myTbody;
+    		// });
+    	});
+
+    	firebase.database().ref('delivery_delivered_order/'+plant).orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(deliveredOrderSnapshot){
+    		// console.log(deliveredOrderSnapshot.val());
+    		// deliveredOrderSnapshot.forEach(function(deliveredOrderChildSnapshot){
+    		// 	console.log(deliveredOrderChildSnapshot.key, deliveredOrderChildSnapshot.val());
+    		
+    			dr_no = deliveredOrderSnapshot.val().dr_no;
+    			item_no = deliveredOrderSnapshot.val().item_no;
+    			psi = deliveredOrderSnapshot.val().psi;
+
+    			if(psi != ""){
+    				psi_ext = " (" + psi + " psi)";
+    			}else{
+    				psi_ext = "";
+    			}
+
+    			quantity = Number(deliveredOrderSnapshot.val().quantity).toLocaleString('en');
+    			date = dateFormat(deliveredOrderSnapshot.val().date);
+    			status = deliveredOrderSnapshot.val().status;
+
+    			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
+    			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+    			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+    			myTbody += "<td><strong>" + date + "</strong></td>";
+    			myTbody += "<td style='color: #388e3c;'><strong>" + status + "</strong></td></tr>";
+
+    			document.getElementById('orderList').innerHTML = myTbody;
+    		// });
+    	});
+
+    	firebase.database().ref('delivery_backloaded_order/'+plant).orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(backloadOrderSnapshot){
+    		// console.log(backloadOrderSnapshot.val());
+    		// backloadOrderSnapshot.forEach(function(backloadOrderChildSnapshot){
+    		// 	console.log(backloadOrderChildSnapshot.key, backloadOrderChildSnapshot.val());
+    		
+    			dr_no = backloadOrderSnapshot.val().dr_no;
+    			item_no = backloadOrderSnapshot.val().item_no;
+    			psi = backloadOrderSnapshot.val().psi;
+
+    			if(psi != ""){
+    				psi_ext = " (" + psi + " psi)";
+    			}else{
+    				psi_ext = "";
+    			}
+
+    			quantity = Number(backloadOrderSnapshot.val().quantity).toLocaleString('en');
+    			date = dateFormat(backloadOrderSnapshot.val().date);
+    			status = backloadOrderSnapshot.val().status;
+
+    			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
+    			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+    			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+    			myTbody += "<td><strong>" + date + "</strong></td>";
+    			myTbody += "<td style='color: #d32f2f;'><strong>" + status + "</strong></td></tr>";
+
+    			document.getElementById('orderList').innerHTML = myTbody;
+    		// });
+    	});
+
+		firebase.database().ref('purchase_order/'+plant+'/'+po_no_key).once('value', function(orderSnapshot){
+			firebase.database().ref('purchase_order/'+plant+'/'+po_no_key+'/project_detail').once('value', function(projectSnapshot){
+	    		console.log(projectSnapshot.key, projectSnapshot.val());
+	    		projectSnapshot.forEach(function(projectChildSnapshot){
+
+	    			po_no = orderSnapshot.val().po_no;
+	    			project_name = projectChildSnapshot.val().project_name;
+	    			project_address = projectChildSnapshot.val().project_address;
+
+	    			document.getElementById('id_dr_detail').innerHTML = "Delivery Details for P.O. No. <strong>" + po_no + "</strong>";
+
+
+	    			document.getElementById('id_project_name').innerHTML = "Project Name: <strong>" + project_name + "</strong>";
+	    			document.getElementById('id_project_address').innerHTML = "Project Address: <strong>" + project_address + "</strong>";
+	    		});
+	    	});
+		});   	
+
+		var contactTbody = "";
+
+		firebase.database().ref('purchase_order/'+plant+'/'+po_no_key+'/contact').once('value', function(contactSnapshot){
+			contactSnapshot.forEach(function(contactChildSnapshot){
+
+				contact_name = contactChildSnapshot.val().contact_name;
+				contact_no = contactChildSnapshot.val().contact_no;
+
+
+				contactTbody += "<tr><td><strong>" + contact_name + "</strong></td>";
+				contactTbody += "<td><strong>" + contact_no + "</strong></td></tr>";
+
+				document.getElementById('contactList').innerHTML = contactTbody;
+			});
+		})
     }
     
 </script>
@@ -335,7 +467,7 @@
                                 <header class="panel-heading">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            Delivery Details for P.O. No. <strong><?php echo $po_no_delivery; ?></strong>
+                                            <span id="id_dr_detail"></span>
                                         </div>
                                     </div>
                                     <br>
@@ -344,7 +476,7 @@
                                             Client Name: <strong><?php echo $client_name; ?></strong>
                                         </div>
                                         <div class="col-md-6">
-                                            Project Name: <strong><?php echo $site_name; ?></strong>
+                                            <span id="id_project_name"></span>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -352,7 +484,7 @@
                                             Client Address: <strong><?php echo $client_address; ?></strong>
                                         </div>
                                         <div class="col-md-6">
-                                            Project Address: <strong><?php echo $site_address; ?></strong>
+                                            <span id="id_project_address"></span>
                                         </div>
                                     </div>
                                 </header>
@@ -366,7 +498,7 @@
 	                                                </th>
 	                                            </tr>
 	                                            <tr class="filters">
-	                                                <th class="col-md-1">#</th>
+	                                                <!-- <th class="col-md-1">#</th> -->
 	                                                <!-- <th class="col-md-1">P.O. No.</th> -->
 	                                                <th class="col-md-1"><input type="text" class="form-control" placeholder="DR No." disabled></th>
 	                                                <th class="col-md-2"><input type="text" class="form-control" placeholder="Item" disabled></th>
