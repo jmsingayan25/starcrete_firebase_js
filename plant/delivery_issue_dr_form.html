@@ -181,7 +181,7 @@
 
 		event.preventDefault();
 
-		var delivery_no = document.getElementById('dr_no').value;
+		var dr_no = document.getElementById('dr_no').value;
 		var quantity = document.getElementById('quantity').value.replace(",","");
 		var gate_pass = document.getElementById('gate_pass_no').value;
 		var date = new Date().toLocaleString();
@@ -193,7 +193,7 @@
 
 			var poData = {
 				po_no: po_no,
-				delivery_no: delivery_no,
+				dr_no: dr_no,
 				item_no: item_no,
 				psi: psi || "",
 				quantity: quantity,
@@ -246,7 +246,7 @@
 						date: date,
 		                reverseDate: firebase.database.ServerValue.TIMESTAMP,
 		                type_of_transaction: "Issued DR No.",
-		                history: "Issued DR No. " + delivery_no + " with P.O. No. " + po_no + " and " + Number(quantity).toLocaleString('en') + " pcs of " + item_no + psi_ext + " to be deliver to " + project_name + " in " + project_address
+		                history: "Issued DR No. " + dr_no + " with P.O. No. " + po_no + " and " + Number(quantity).toLocaleString('en') + " pcs of " + item_no + psi_ext + " to be deliver to " + project_name + " in " + project_address
 					}
 					// console.log(historyData);
 
@@ -297,7 +297,7 @@
 				console.log(itemData);
 
 				if(firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/item/'+item_no).update(itemData)){
-					alert("DR No. " + delivery_no + " issued successfully. Transaction can be viewed on Delivery Report Page");
+					alert("DR No. " + dr_no + " issued successfully. Transaction can be viewed on Delivery Report Page");
             		window.location.href = 'delivery_ongoing_order.html';
 				}
 			});
