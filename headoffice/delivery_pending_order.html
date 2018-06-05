@@ -79,6 +79,7 @@
     <script src="../js/sparklines.js"></script>    
     <script src="../js/charts.js"></script>
     <script src="../js/jquery.slimscroll.min.js"></script>
+    <script src="../js_config/function.js"></script>
 
     <!-- =======================================================
     Theme Name: NiceAdmin
@@ -143,7 +144,7 @@
             $filteredRows.hide();
             /* Prepend no-result row if all rows are filtered */
             if ($filteredRows.length === $rows.length) {
-                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="3" style="height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
+                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="9" style="height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
             }
         });
 
@@ -173,22 +174,6 @@
         document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='delivery_ongoing_order.html?plant=" + plant + "'>Ongoing Delivery <span class='badge'><?php echo getDeliveryCountOnDeliveryOffice($db, $search_plant); ?></span></a></li><li><i class='fa fa-info-circle'></i>Existing P.O. <span class='badge'><?php echo countPendingPo($db, $search_plant); ?></span></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i><a href='delivery_backloaded_order.html?plant=" + plant + "'>Backload</a></li>";
 
     });
-
-    function userSignOut(){
-
-        firebase.auth().signOut().then(function() {
-            window.location.href = '../login.html';
-        }, function(error) {
-            console.error('Sign Out Error', error);
-        });
-    }
-
-    function getUrlParameter(name) {
-        name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-        var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-        var results = regex.exec(location.search);
-        return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-    }   
 
     function tableData(plant){
 
@@ -246,18 +231,6 @@
     			});
     		});
     	});
-    }
-
-    function dateFormat(date){
-
-        var input_date = new Date(date);
-        var dd = input_date.getDate();
-        var mm = input_date.getMonth()+1;
-        var yy = input_date.getFullYear();
-
-        fulldate = mm+'/'+dd+'/'+yy;
-
-        return fulldate;
     }
 
 </script> 

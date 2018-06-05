@@ -78,6 +78,7 @@
     <script src="../js/sparklines.js"></script>    
     <script src="../js/charts.js"></script>
     <script src="../js/jquery.slimscroll.min.js"></script>
+    <script src="../js_config/function.js"></script>
 
     <!-- =======================================================
     Theme Name: NiceAdmin
@@ -144,23 +145,6 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
-
-	function userSignOut(){
-
-        firebase.auth().signOut().then(function() {
-            // console.log('Signed Out');
-            window.location.href = '../login.html';
-        }, function(error) {
-            // console.error('Sign Out Error', error);
-        });
-    }
-
-	function getUrlParameter(name) {
-	    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-	    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-	    var results = regex.exec(location.search);
-	    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-	}
 
 	function formData(plant){
 

@@ -119,22 +119,6 @@
 		});
 	});
 
-	function userSignOut(){
-
-        firebase.auth().signOut().then(function() {
-            window.location.href = '../login.html';
-        }, function(error) {
-            console.error('Sign Out Error', error);
-        });
-    }
-
-    function getUrlParameter(name) {
-	    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
-	    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-	    var results = regex.exec(location.search);
-	    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
-	}
-
     function add_row(){
 		$rowno=$("#item_table tr").length;
 		$rowno=$rowno+1;

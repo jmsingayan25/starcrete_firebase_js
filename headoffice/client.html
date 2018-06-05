@@ -152,15 +152,6 @@
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
-    function userSignOut(){
-
-        firebase.auth().signOut().then(function() {
-            window.location.href = '../login.html';
-        }, function(error) {
-            console.error('Sign Out Error', error);
-        });
-    }
-
     // function tableData(){
 
     //     var myTbody = "";
