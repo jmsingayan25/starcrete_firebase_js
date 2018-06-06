@@ -163,23 +163,58 @@
             }
         });
 
-        $("input[name='plant']").change(function(event) {
-            if ($(this).val() == "Bravo"){ 
-                tableData('Bravo');
-            }else if ($(this).val() == "Delta"){
-                tableData('Delta');
-            }
-        });
+       
+
+        // var input_plant = document.getElementById('plant').value;
+
+        // $("select[name='view']").change(function(event) {
+        //     if ($(this).val() == "25"){ 
+        //         tableData(input_plant, 25);
+        //         console.log(input_plant, 25);
+        //     }else if ($(this).val() == "50"){
+        //         tableData(input_plant, 50);
+        //         console.log(input_plant, 50);
+        //     }
+        // });
+
+        // var input_limit = document.getElementById('view');
+        // var value_limit = input_limit.options[input_limit.selectedIndex].value;
+
+        // $("input[name='plant']").change(function(event) {
+        //     if ($(this).val() == "Bravo"){ 
+        //         tableData('Bravo', value_limit);
+        //     }else if ($(this).val() == "Delta"){
+        //         tableData('Delta', value_limit);
+        //     }
+        // });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
     });
 
-    function tableData(plant){
+    function sort(row_value){
+
+        var plant = $('input[name=plant]:checked').val(); 
+        // alert(plant);
+
+        tableData(plant, Number(row_value));
+        console.log(plant, row_value);
+    }
+
+    function plantView(plant_value){
+
+        var e = document.getElementById("view");
+        var view_value = e.options[e.selectedIndex].value;
+
+        tableData(plant_value, Number(view_value));
+        console.log(plant_value, view_value);
+    }
+
+    function tableData(plant, limit){
 
         var myTbody = "";
 
-        firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value').then(function(historySnapshot) {
+        firebase.database().ref('history/'+plant).limitToLast(limit).orderByChild('reverseDate').once('value').then(function(historySnapshot) {
             historySnapshot.forEach(function(historyChildSnapshot){
 
                 var type = historyChildSnapshot.val().type_of_transaction;   //Example of value
@@ -247,7 +282,7 @@
 
 </style>
 </head>
-<body onload="tableData('Bravo')">
+<body onload="tableData('Bravo', 25)">
 	<section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -367,10 +402,10 @@
                                             <div class="form-group">
                                                 <label for="search">Plant:</label>
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="plant" value="Bravo" checked><strong>Bravo</strong>
+                                                    <input type="radio" name="plant" id="plant" onchange="plantView(this.value)" value="Bravo" checked><strong>Bravo</strong>
                                                 </label>
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="plant" value="Delta"><strong>Delta</strong>
+                                                    <input type="radio" name="plant" id="plant" onchange="plantView(this.value)" value="Delta"><strong>Delta</strong>
                                                 </label>
                                             </div>
                                         </div>
@@ -406,7 +441,7 @@
                                             <label for="view" class="col-md-8 control-label">Number of rows:</label>
                                             <div class="form-group">
                                                 <div class="col-md-12">
-                                                    <select id="view" name="view" class="form-control">
+                                                    <select id="view" name="view" class="form-control" onchange="sort(this.value)">
                                                         <option value="25">25</option>
                                                         <option value="50">50</option>
                                                         <option value="75">75</option>
