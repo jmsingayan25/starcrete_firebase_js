@@ -192,13 +192,13 @@
 
     });
 
-    function sort(row_value){
+    function sort(view_value){
 
         var plant = $('input[name=plant]:checked').val(); 
         // alert(plant);
 
-        tableData(plant, Number(row_value));
-        console.log(plant, row_value);
+        tableData(plant, Number(view_value));
+        console.log(plant, view_value);
     }
 
     function plantView(plant_value){
@@ -210,6 +210,10 @@
         console.log(plant_value, view_value);
     }
 
+    function dateValue(date_value){
+        alert(date_value);
+
+    }
     function tableData(plant, limit){
 
         var myTbody = "";
@@ -415,7 +419,7 @@
                                             <div class="form-group">
                                                 <label for="start_date">From:</label>
                                                 <div class="tooltips" data-original-title="Start date of transaction" data-placement="top">
-                                                    <input type="date" name="start_date" class="form-control">
+                                                    <input type="date" id="start_date" onchange="dateValue(this.value)" name="start_date" class="form-control">
                                                 </div>
                                             </div>
                                         </div>
@@ -423,7 +427,7 @@
                                             <div class="form-group">
                                                 <label for="end_date">To:</label>
                                                 <div class="tooltips" data-original-title="End date of transaction" data-placement="top">
-                                                    <input type="date" name="end_date" class="form-control">
+                                                    <input type="date" id="end_date" name="end_date" class="form-control">
                                                 </div>
                                             </div>
                                         </div>  
