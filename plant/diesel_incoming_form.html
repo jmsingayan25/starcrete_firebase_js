@@ -120,7 +120,12 @@
                     } );
         } );      
     });
-
+    function submitForm()
+    {
+        event.preventDefault();
+        var firebaseRef = firebase.database().ref();
+        firebaseRef.child("text").set("some values");
+    }
 </script>
 </head>
 <body>
@@ -172,7 +177,7 @@
 	                    </a>
 	                </li>
 	                <li class="active">
-                        <a class="" href="plant_diesel.php">
+                        <a class="" href="diesel.html">
                             <i class="fa fa-building"></i>
                             <span>Diesel</span>
                         </a>
