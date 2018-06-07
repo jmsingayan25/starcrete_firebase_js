@@ -156,18 +156,24 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
-        firebase.database().ref('purchase_order/'+plant).once('value').then(function(poSnapshot){
+        firebase.database().ref('purchase_order/'+plant).once('value', function(poSnapshot){
             poSnapshot.forEach(function(poChildSnapshot){
                 document.getElementById('li_plant').innerHTML = "<i class='fa fa-building'></i>"+plant;
                 document.getElementById('li_po_list').innerHTML = "<i class='icon_document'></i><a href='purchase_order.html?plant=" + plant + "'>Pending P.O.</a>"
                 document.getElementById('po_no_id').innerHTML = poChildSnapshot.val().po_no;
                 document.getElementById('po_no_id1').innerHTML = poChildSnapshot.val().po_no;
                 document.getElementById('po_no_id2').innerHTML = poChildSnapshot.val().po_no;
-                document.getElementById('span_client_name').innerHTML = poChildSnapshot.val().po_no;
-                document.getElementById('span_client_address').innerHTML = poChildSnapshot.val().po_no;
-                document.getElementById('span_project_name').innerHTML = poChildSnapshot.val().project_name;
-                document.getElementById('span_project_address').innerHTML = poChildSnapshot.val().project_address;
+                document.getElementById('span_client_name').innerHTML = "";
+                document.getElementById('span_client_address').innerHTML = "";
                 document.getElementById('span_date').innerHTML = dateFormat(poChildSnapshot.val().date);
+            });
+        });
+
+        firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey+'/project_detail').once('value', function(poProjectSnapshot){
+            poProjectSnapshot.forEach(function(poProjectChildSnapshot){
+                // console.log(poProjectChildSnapshot.key,poProjectChildSnapshot.val());
+                document.getElementById('span_project_name').innerHTML = poProjectChildSnapshot.val().project_name;
+                document.getElementById('span_project_address').innerHTML = poProjectChildSnapshot.val().project_address;
             });
         });
     });
@@ -214,6 +220,77 @@
                 itemTbody += "<td><button type='button' class='btn btn-sm btn-block' style='margin-bottom: 5px; background-color: #ffa000; color: white;' data-toggle='modal' data-target='#purchaseOrderUpdateRow" + count + "'><span class='fa fa-edit'></span> <strong>Update</strong></button><div class='modal fade' id='purchaseOrderUpdateRow" + count + "' role='dialog'> <div class='modal-dialog modal-sm' style='max-width: 300px;'><div class='modal-content'><div class='modal-header'><div class='row' style='text-align: center;'><div class='col-md-12'><img src='../images/starcrete.png' width='150' height='50'></div></div></div><div class='modal-body' style='text-align: left;'><h4 class='modal-title' style='text-align: center'>Confirmation</h4><hr><div class='row'><div class='col-md-12'><div class='form-group'><label for='confirm_password'>Password</label><input type='password' name='confirm_password' class='form-control' required></div></div></div></div><div class='modal-footer'><button type='submit' name='update' id='update' class='btn btn-primary'><strong>Submit</strong></button><button type='button' class='btn btn-default' data-dismiss='modal'><strong>Close</strong></button></div></div></div></div></td></tr>";
                 document.getElementById('itemList').innerHTML = itemTbody;
                 count++;
+            });
+        });
+    }
+
+    function submitClosePo(){
+
+        event.preventDefault();
+        var input = document.getElementById('reason').value;
+
+        console.log(input);
+        firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey).once('value', function(poSnapshot){
+            // poSnapshot.forEach(function(poChildSnapshot){
+
+            var po_no_key = purchaseOrderKey;
+            var po_no = poSnapshot.val().po_no;
+            var date = new Date().toLocaleString();
+
+            var poData = {
+                po_no: po_no,
+                date: date,
+                po_no_key: po_no_key,
+                reverseDate: firebase.database.ServerValue.TIMESTAMP,
+                status: 'CLOSED'
+            }
+            console.log(poData);
+            var postData = firebase.database().ref('purchase_order_closed/'+plant);
+            var newPostRef = postData.push();
+            newPostRef.set(poData);
+
+            var postId = newPostRef.key;
+
+            firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey+'/contact').once('value', function(poContactSnapshot){
+                poContactSnapshot.forEach(function(poContactChildSnapshot){
+
+                    var contact_name = poContactChildSnapshot.val().contact_name;
+                    var contact_no = poContactChildSnapshot.val().contact_no;
+
+                    var contactData = {
+                        contact_name: contact_name,
+                        contact_no: contact_no
+                    }
+
+                    firebase.database().ref('purchase_order_closed/'+plant+'/'+postId+'/contact/'+poContactChildSnapshot.key).set(contactData);
+                    // console.log(contactData);
+                });      
+            });
+
+            firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey+'/project_detail').once('value', function(poProjectSnapshot){
+                poProjectSnapshot.forEach(function(poProjectChildSnapshot){
+
+                    var project_name = poProjectChildSnapshot.val().project_name;
+                    var project_address = poProjectChildSnapshot.val().project_address;
+
+                    var projectData = {
+                        project_name: project_name,
+                        project_address: project_address
+                    }
+
+                    firebase.database().ref('purchase_order_closed/'+plant+'/'+postId+'/project_detail/'+poProjectChildSnapshot.key).set(projectData);
+                });
+            });
+
+            firebase.database().ref('purchase_order_closed/'+plant+'/'+postId).once('value', function(poClosedSnapshot){
+
+                var timestamp = poClosedSnapshot.val().reverseDate * -1;
+
+                var timestampData = {
+                    reverseDate: timestamp
+                }
+
+                firebase.database().ref('purchase_order_closed/'+plant+'/'+postId).update(timestampData);
             });
         });
     }
@@ -377,6 +454,7 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <span>
+                                                        <form onsubmit="if(confirm('Proceed?')){submitClosePo();}else{ event.preventDefault();}">
                                                     	<button type="button" class="btn btn-sm" style="background-color: #d32f2f; color: white;" data-toggle='modal' data-target='#purchaseOrderClosedRow'><span class="fa fa-edit"></span> <strong>Click to Close P.O. No. <span id="po_no_id"></span></strong></button>
 
                                                     	<div class="modal fade" id="purchaseOrderClosedRow" role="dialog">
