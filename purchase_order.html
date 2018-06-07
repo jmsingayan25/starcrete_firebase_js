@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+    <link rel="shortcut icon" href="img/favicon.png">
+
+	<title>Pending P.O. - Purchase Order</title>
+
+	<!-- Firebase App is always required and must be first -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+
+	<!-- Add additional services you want to use -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+	<script src="../js_config/firebase_config.js"></script>
+
+	<!-- Bootstrap CSS -->    
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="../css/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="../css/elegant-icons-style.css" rel="stylesheet" />
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
+    <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="../css/fullcalendar.css">
+    <link href="../css/widgets.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/style-responsive.css" rel="stylesheet" />
+    <link href="../css/xcharts.min.css" rel=" stylesheet">	
+    <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+
+    <!-- javascripts -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery-ui-1.10.4.min.js"></script>
+    <script src="../js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+    <!-- bootstrap -->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- nice scroll -->
+    <script src="../js/jquery.scrollTo.min.js"></script>
+    <script src="../js/jquery.nicescroll.js" type="text/javascript"></script>
+    <!-- charts scripts -->
+    <script src="../assets/jquery-knob/js/jquery.knob.js"></script>
+    <script src="../js/jquery.sparkline.js" type="text/javascript"></script>
+    <script src="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+    <script src="../js/owl.carousel.js" ></script>
+    <!-- jQuery full calendar -->
+    <script src="../js/fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
+    <script src="../assets/fullcalendar/fullcalendar/fullcalendar.js"></script>
+    <!--script for this page only-->
+    <script src="../js/calendar-custom.js"></script>
+    <script src="../js/jquery.rateit.min.js"></script>
+    <!-- custom select -->
+    <script src="../js/jquery.customSelect.min.js" ></script>
+    <script src="../assets/chart-master/Chart.js"></script>
+
+    <!--custome script for all page-->
+    <script src="../js/scripts.js"></script>
+    <!-- custom script for this page-->
+    <script src="../js/sparkline-chart.js"></script>
+    <script src="../js/easy-pie-chart.js"></script>
+    <script src="../js/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="../js/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="../js/xcharts.min.js"></script>
+    <script src="../js/jquery.autosize.min.js"></script>
+    <script src="../js/jquery.placeholder.min.js"></script>
+    <script src="../js/gdp-data.js"></script>  
+    <script src="../js/morris.min.js"></script>
+    <script src="../js/sparklines.js"></script>    
+    <script src="../js/charts.js"></script>
+    <script src="../js/jquery.slimscroll.min.js"></script>
+
+    <!-- =======================================================
+    Theme Name: NiceAdmin
+    Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+    Author: BootstrapMade
+    Author URL: https://bootstrapmade.com
+    ======================================================= -->
+
+<script>
+	
+	var plant = getUrlParameter('plant');
+
+	$(document).ready(function(){
+
+        $('.filterable .btn-filter').click(function(){
+            var $panel = $(this).parents('.filterable'),
+            $filters = $panel.find('.filters input'),
+            $tbody = $panel.find('.table tbody');
+            if ($filters.prop('disabled') == true) {
+                $filters.prop('disabled', false);
+                $filters.first().focus();
+            } else {
+                $filters.val('').prop('disabled', true);
+                $tbody.find('.no-result').remove();
+                $tbody.find('tr').show();
+            }
+        });
+
+        $('.filterable .filters input').keyup(function(e){
+            /* Ignore tab key */
+            var code = e.keyCode || e.which;
+            if (code == '9') return;
+            /* Useful DOM data and selectors */
+            var $input = $(this),
+            inputContent = $input.val().toLowerCase(),
+            $panel = $input.parents('.filterable'),
+            column = $panel.find('.filters th').index($input.parents('th')),
+            $table = $panel.find('.table'),
+            $rows = $table.find('tbody tr');
+            /* Dirtiest filter function ever ;) */
+            var $filteredRows = $rows.filter(function(){
+                var value = $(this).find('td').eq(column).text().toLowerCase();
+                return value.indexOf(inputContent) === -1;
+            });
+            /* Clean previous no-result if exist */
+            $table.find('tbody .no-result').remove();
+            /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
+            $rows.show();
+            $filteredRows.hide();
+            /* Prepend no-result row if all rows are filtered */
+            if ($filteredRows.length === $rows.length) {
+                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="3" style="height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
+            }
+        });
+
+        firebase.auth().onAuthStateChanged(function(user) {
+			if (user != null) {
+
+				var uid = user.uid;
+		
+				firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+
+                    tableData();
+					document.getElementById('username').innerHTML = snapshot.val().firstname; 
+				},(error) => {
+					console.error(error);
+				});
+			} else {
+				window.location.href = '../login.html';
+			}
+		});
+
+		document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+
+		document.getElementById('page_header').innerHTML = "<a href='purchase_order.html?plant="+plant+"' style='color: inherit;'>"+ plant +" Pending Purchase Order</a>";
+		document.getElementById('link_closed_po').innerHTML = "<i class='icon_document'></i><a href='purchase_closed_order.html?office="+plant+"'>Closed P.O.</a>";
+		document.getElementById('link_plant_name').innerHTML = "<i class='fa fa-building'></i>"+plant;
+    });
+
+    function userSignOut(){
+
+        firebase.auth().signOut().then(function() {
+            // console.log('Signed Out');
+            window.location.href = '../login.html';
+        }, function(error) {
+            console.error('Sign Out Error', error);
+        });
+    }
+
+    function getUrlParameter(name) {
+	    name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+	    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+	    var results = regex.exec(location.search);
+	    return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+	}
+
+    function tableData(){
+
+        var myTbody = "";
+        var count = 1;
+        firebase.database().ref('purchase_order/'+plant).orderByChild('reverseDate').on('value', function(orderSnapshot){
+            
+            if(orderSnapshot.val() != null){
+                console.log(orderSnapshot.val());
+
+                orderSnapshot.forEach(function(orderChildsnapshot){
+                    // console.log(orderChildsnapshot.val());
+                    firebase.database().ref('purchase_order/'+plant+'/'+orderChildsnapshot.key+'/item').on('value', function(itemSnapshot){
+                        // console.log(itemSnapshot.val());  
+                        itemSnapshot.forEach(function(itemChildsnapshot){
+
+                            po_no = orderChildsnapshot.val().po_no;
+                            item_no = itemChildsnapshot.val().item_no;
+                            psi = itemChildsnapshot.val().psi || "";
+
+                            if(psi != ""){
+                                var psi_ext = "(" + psi + " psi)";
+                            }else{
+                                var psi_ext = "";
+                            }
+
+                            quantity = Number(itemChildsnapshot.val().quantity);
+                            balance = Number(itemChildsnapshot.val().balance);
+
+                            if(balance > 0){
+
+                                myTbody += "<tr><td>" + count  + "</td>";
+                                myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='purchase_order_detail.html?key=" + orderChildsnapshot.key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
+                                myTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
+                                myTbody += "<td><strong>" + quantity.toLocaleString('en') + " pcs / " + balance.toLocaleString('en') + " pcs</strong></td>";
+
+                                firebase.database().ref('purchase_order/'+plant+'/'+orderChildsnapshot.key+'/project_detail').on('value', function(projectSnapshot){
+                                    projectSnapshot.forEach(function(projectChildsnapshot){
+
+                                        project_name = projectChildsnapshot.val().project_name;
+                                        project_address = projectChildsnapshot.val().project_address;
+
+                                        myTbody += "<td><strong>" + project_name + "</strong></td>";
+                                        myTbody += "<td><strong>" + project_address + "</strong></td>";
+                                    });
+                                });
+
+                                myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+
+                                firebase.database().ref('purchase_order/'+plant+'/'+orderChildsnapshot.key+'/contact').on('value', function(contactSnapshot){
+                                    contactSnapshot.forEach(function(contactChildsnapshot){
+
+                                        contact_name = contactChildsnapshot.val().contact_name;
+                                        contact_no = contactChildsnapshot.val().contact_no;
+
+                                    myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+                                    });
+                                });
+
+                                myTbody += "</td>";
+                                myTbody += "<td><strong>" + dateFormat(orderChildsnapshot.val().date) + "</strong></td></tr>";
+                                document.getElementById('orderList').innerHTML = myTbody;
+                                count++;
+                            }else{
+
+                                // myTbody = "<tr><td colspan='10' style='min-height: 100%; background: white; text-align: center; vertical-align: middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                                // document.getElementById('orderList').innerHTML = myTbody;
+                            }
+                        });
+                    });
+                });
+            }else{
+
+                myTbody = "<tr><td colspan='10' style='min-height: 100%; background: white; text-align: center; vertical-align: middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                document.getElementById('orderList').innerHTML = myTbody;
+            }
+        });
+    }
+
+    function dateFormat(date){
+
+        var input_date = new Date(date);
+        var dd = input_date.getDate();
+        var mm = input_date.getMonth()+1;
+        var yy = input_date.getFullYear();
+
+        fulldate = mm+'/'+dd+'/'+yy;
+
+        return fulldate;
+    }
+
+</script>
+<style>
+.table_page{
+    /*margin: auto;*/
+    margin-top: -40px;
+    /*width: 100%;*/
+    text-align: center;
+}
+
+.table_row_count{
+    margin-top: -15px;
+}
+
+.filterable .panel-heading .pull-right {
+    margin-top: -20px;
+}
+.filterable .filters input[disabled] {
+    background-color: transparent;
+    text-align: center;
+    border: none;
+    cursor: auto;
+    box-shadow: none;
+    padding: 0;
+    height: auto;
+}
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+    color: gray;
+    text-align: left;
+    font-weight: bold;
+}
+.filterable .filters input[disabled]::-moz-placeholder {
+     color: gray;
+     text-align: left;
+     font-weight: bold;
+}
+.filterable .filters input[disabled]:-ms-input-placeholder {
+     color: gray;
+     text-align: left;
+     font-weight: bold;
+}
+
+</style>
+</head>
+<body>
+	<!-- container section start -->
+    <section id="container" class="">
+        <header class="header dark-bg">
+            <div class="toggle-nav">
+            <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
+            </div>
+
+            <!--logo start-->
+
+            <!--logo end-->
+            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+            <div class="top-nav notification-row">                
+                <!-- notificatoin dropdown start-->
+                <ul class="nav pull-right top-menu">
+                    <!-- user login dropdown start-->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <!--  <span class="profile-ava">
+                        <img alt="" src="img/avatar1_small.jpg">
+                        </span> -->
+                            <span class="username" id="username"></span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <div class="log-arrow-up"></div>
+                            <li>
+                                <a href="" id="logoutBtn"><i class="icon_key_alt"></i> Log Out</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->
+                </ul>
+                <!-- notificatoin dropdown end-->
+            </div>
+        </header>      
+    	<!--header end-->
+
+    	<!--sidebar start-->
+	    <aside>
+	        <div id="sidebar"  class="nav-collapse ">
+	            <!-- sidebar menu start-->
+	            <ul class="sidebar-menu">                
+	                <li class="">
+	                    <a class="" href="index.html">
+	                        <i class="icon_house"></i>
+	                        <span>History</span>
+	                    </a>
+	                </li>
+	                <li class="">
+	                    <a class="" href="client.html">
+	                        <i class="fa fa-address-book"></i>
+	                        <span>Clients</span>
+	                    </a>
+	                </li>
+	                <li class="sub-menu">
+	                    <a href="javascript:;" class="">
+	                        <i class="fa fa-building"></i>
+	                        <span>Bravo</span>
+	                        <span class="menu-arrow arrow_carrot-down"></span>
+	                    </a>
+	                    <ul class="sub">
+	                        <li><a class="" href="purchase_order.html?plant=Bravo">Purchase Order</a></li>                          
+	                        <!-- <li><a class="" href="delivery_order.html?plant=Bravo">Delivery Page</a></li> -->
+	                    </ul>
+	                </li>  
+	                <li class="sub-menu">
+	                    <a href="javascript:;" class="">
+	                        <i class="fa fa-building"></i>
+	                        <span>Delta</span>
+	                        <span class="menu-arrow arrow_carrot-down"></span>
+	                    </a>
+	                    <ul class="sub">
+	                        <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>                          
+	                        <!-- <li><a class="" href="delivery_order.html?plant=Delta">Delivery Page</a></li> -->
+	                    </ul>
+	                </li>  
+	                <li class="sub-menu">
+	                    <a href="javascript:;" class="">
+	                        <i class="fa fa-file"></i>
+	                        <span>Forms</span>
+	                        <span class="menu-arrow arrow_carrot-down"></span>
+	                    </a>
+	                    <ul class="sub">
+	                        <li><a class="" href="purchase_order_form.html">Add New P.O.</a></li>
+	                    </ul>
+	                </li>     
+	            </ul>
+	            <!-- sidebar menu end-->
+	        </div>
+	    </aside>
+	    <!--sidebar end-->
+
+	    <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">            
+                <!--overview start-->
+                <div class="row">
+                    <div class="col-lg-12 page_links">
+                        <h3 class="page-header" id="page_header"></h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <ol class="breadcrumb">
+                            <li id="link_plant_name"></li>
+                            <li><i class="icon_document"></i>Pending P.O.</li>                            
+                            <li id="link_closed_po"></li>                          
+                        </ol>
+                    </div>
+                    <div class="col-md-4">
+                        <ol class="breadcrumb">
+                            <li>As of <strong></strong></li>  
+
+                            <!-- <li>Last Entry: <strong><?php $date = lastPurchaseOrderEntry($db, $plant); $date_create = date_create($date); echo date_format($date_create, "M d, Y h:i A"); ?></strong></li> -->
+                        </ol>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <section class="panel">
+                            <form action="purchase_order.php" method="get" class="form-inline">
+                                <header class="panel-heading">
+                                    <div class="row" style="margin-bottom: 5px;">
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="start_date">From:</label>
+                                                <div class="tooltips" data-original-title="Start date of transaction" data-placement="top">
+                                                    <input type="date" name="start_date" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="end_date">To:</label>
+                                                <div class="tooltips" data-original-title="End date of transaction" data-placement="top">
+                                                    <input type="date" name="end_date" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>  
+                                        <div class="input-group col-md-5" style="margin: 38px 0px 0px 0px;">
+                                            <div class="tooltips" data-original-title="Search P.O. No., Item, Project Name, Address or Contact" data-placement="top">
+                                                <input type="text" name="search" class="form-control" placeholder="Search...">
+                                            </div>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-info" type="submit" name="search_table">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </span>
+                                            
+                                        </div>
+                                        <div class="input-group col-md-2" style="white-space: nowrap; margin: 38px 0px 0px 60px;">
+                                            <label for="view_count" class="col-md-8 control-label">Number of rows:</label>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <select id="view_count" name="view_count" class="form-control" onchange="this.form.submit()">
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                        <option value="75">75</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </header>
+                            </form>
+                            <div class="table-responsive filterable">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr class="filterable">
+                                            <th colspan="10">
+                                                <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
+                                            </th>
+                                        </tr>
+                                        <tr class="filters">
+                                            <th class="col-md-1">#</th>
+                                            <th class="col-md-1"><input type="text" class="form-control" placeholder="P.O. No." disabled></th>
+                                            <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
+                                            <th class="col-md-2">Ordered / Remaining</th>
+                                            <th class="col-md-2"><input type="text" class="form-control" placeholder="Project Name" disabled></th>
+                                            <th class="col-md-2"><input type="text" class="form-control" placeholder="Address" disabled></th>
+                                            <th class="col-md-1"><input type="text" class="form-control" placeholder="Contact" disabled></th>
+                                            <th class="col-md-1">Date Order</th>
+                                            <!-- <th class="col-md-1">Action</th> -->
+                                        </tr>
+                                    </thead>
+                                    <tbody id="orderList">
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </section>
+	</section>
+</body>
+</html>
