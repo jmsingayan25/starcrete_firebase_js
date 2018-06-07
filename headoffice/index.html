@@ -180,45 +180,45 @@
         // var input_limit = document.getElementById('view');
         // var value_limit = input_limit.options[input_limit.selectedIndex].value;
 
-        // $("input[name='plant']").change(function(event) {
-        //     if ($(this).val() == "Bravo"){ 
-        //         tableData('Bravo', value_limit);
-        //     }else if ($(this).val() == "Delta"){
-        //         tableData('Delta', value_limit);
-        //     }
-        // });
+        $("input[name='plant']").change(function(event) {
+            if ($(this).val() == "Bravo"){ 
+                tableData('Bravo');
+            }else if ($(this).val() == "Delta"){
+                tableData('Delta');
+            }
+        });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
     });
 
-    function sort(view_value){
+    // function sort(view_value){
 
-        var plant = $('input[name=plant]:checked').val(); 
-        // alert(plant);
+    //     var plant = $('input[name=plant]:checked').val(); 
+    //     // alert(plant);
 
-        tableData(plant, Number(view_value));
-        console.log(plant, view_value);
-    }
+    //     tableData(plant, Number(view_value));
+    //     console.log(plant, view_value);
+    // }
 
-    function plantView(plant_value){
+    // function plantView(plant_value){
 
-        var e = document.getElementById("view");
-        var view_value = e.options[e.selectedIndex].value;
+    //     var e = document.getElementById("view");
+    //     var view_value = e.options[e.selectedIndex].value;
 
-        tableData(plant_value, Number(view_value));
-        console.log(plant_value, view_value);
-    }
+    //     tableData(plant_value, Number(view_value));
+    //     console.log(plant_value, view_value);
+    // }
 
-    function dateValue(date_value){
-        alert(date_value);
+    // function dateValue(date_value){
+    //     alert(date_value);
 
-    }
-    function tableData(plant, limit){
+    // }
+    function tableData(plant){
 
         var myTbody = "";
 
-        firebase.database().ref('history/'+plant).limitToLast(limit).orderByChild('reverseDate').once('value').then(function(historySnapshot) {
+        firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value').then(function(historySnapshot) {
             historySnapshot.forEach(function(historyChildSnapshot){
 
                 var type = historyChildSnapshot.val().type_of_transaction;   //Example of value
@@ -286,7 +286,7 @@
 
 </style>
 </head>
-<body onload="tableData('Bravo', 25)">
+<body onload="tableData('Bravo')">
 	<section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -445,7 +445,7 @@
                                             <label for="view" class="col-md-8 control-label">Number of rows:</label>
                                             <div class="form-group">
                                                 <div class="col-md-12">
-                                                    <select id="view" name="view" class="form-control" onchange="sort(this.value)">
+                                                    <select id="view" name="view" class="form-control">
                                                         <option value="25">25</option>
                                                         <option value="50">50</option>
                                                         <option value="75">75</option>
