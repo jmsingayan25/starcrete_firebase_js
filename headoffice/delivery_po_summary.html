@@ -170,7 +170,7 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
-        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='delivery_ongoing_order.html?plant=" + plant + "'>Ongoing Delivery <span class='badge'><?php echo getDeliveryCountOnDeliveryOffice($db, $plant); ?></span></a></li><li><i class='fa fa-info-circle'></i><a href='delivery_pending_order.html?plant=" + plant + "'>Existing P.O. <span class='badge'><?php echo countPendingPo($db, $plant); ?></span></a></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i><a href='delivery_backloaded_order.php?plant=" + plant + "'>Backloaded</a></li>";
+        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='delivery_ongoing_order.html?plant=" + plant + "'>Ongoing Delivery <span class='badge'><?php echo getDeliveryCountOnDeliveryOffice($db, $plant); ?></span></a></li><li><i class='fa fa-info-circle'></i><a href='delivery_pending_order.html?plant=" + plant + "'>Existing P.O. <span class='badge'><?php echo countPendingPo($db, $plant); ?></span></a></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i><a href='delivery_backloaded_order.html?plant=" + plant + "'>Backloaded</a></li>";
 
     });
 
@@ -198,12 +198,13 @@
 			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
 			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
 			myTbody += "<td><strong>" + date + "</strong></td>";
-			myTbody += "<td style='color: #ffa000;'><strong>" + status + "</strong></td></tr>";
+            myTbody += "<td><span class='label' style='background-color: #ffa000; font-size: 11px;'><strong>" + status + "</strong></span></td></tr>";
+			
 
 			document.getElementById('orderList').innerHTML = myTbody;
     	});
 
-    	firebase.database().ref('delivery_delivery_order/'+plant).orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(ongoingOrderSnapshot){
+    	firebase.database().ref('delivery_delivered_order/'+plant).orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(ongoingOrderSnapshot){
 
 			dr_no = ongoingOrderSnapshot.val().dr_no;
 			item_no = ongoingOrderSnapshot.val().item_no;
@@ -223,7 +224,7 @@
 			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
 			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
 			myTbody += "<td><strong>" + date + "</strong></td>";
-			myTbody += "<td style='color: #388e3c;'><strong>" + status + "</strong></td></tr>";
+			myTbody += "<td><span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
 
 			document.getElementById('orderList').innerHTML = myTbody;
     	});
@@ -248,7 +249,7 @@
 			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
 			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
 			myTbody += "<td><strong>" + date + "</strong></td>";
-			myTbody += "<td style='color: #d32f2f;'><strong>" + status + "</strong></td></tr>";
+			myTbody += "<td><span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
 
 			document.getElementById('orderList').innerHTML = myTbody;
     	});

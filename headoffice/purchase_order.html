@@ -148,6 +148,7 @@
         });
 
         tableData(plant);
+        startTime();
         
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -172,56 +173,6 @@
         document.getElementById('link_closed_po').innerHTML = "<i class='icon_document'></i><a href='purchase_closed_order.html?office="+plant+"'>Closed P.O.</a>";
         document.getElementById('link_plant_name').innerHTML = "<i class='fa fa-building'></i>"+plant;
     });
-
-    // function tableData(){
-
-    //     var myTbody = "";
-    //     var count = 1;
-        
-    //     firebase.database().ref('purchase_order/'+plant).orderByChild('reverseDate').on('child_added', function(orderSnapshot){
-    //         // console.log(orderSnapshot.key, orderSnapshot.val());    
-    //         firebase.database().ref('purchase_order/'+plant+'/'+orderSnapshot.key+'/item').on('child_added', function(itemSnapshot){
-    //                 firebase.database().ref('purchase_order/'+plant+'/'+orderSnapshot.key+'/project_detail').on('child_added', function(projectSnapshot){
-    //                 myTbody += "<tr><td><strong>" + count + "</strong></td>";
-    //                 myTbody += "<td><strong>" + orderSnapshot.val().po_no + "</strong></td>";
-    //                 myTbody += "<td><strong>" + itemSnapshot.val().item_no + "</strong></td>";
-    //                 myTbody += "<td><strong>" + Number(itemSnapshot.val().quantity).toLocaleString('en') + " pcs / " + Number(itemSnapshot.val().balance).toLocaleString('en') +" pcs</strong></td>";
-    //                 myTbody += "<td><strong>" + projectSnapshot.val().project_name + "</strong></td>";
-    //                 myTbody += "<td><strong>" + projectSnapshot.val().project_address + "</strong></td>";
-    //                 myTbody += "<td>";
-
-    //                 firebase.database().ref('purchase_order/'+plant+'/'+orderSnapshot.key+'/contact').on('child_added', function(contactSnapshot){
-
-    //                     myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contactSnapshot.val().contact_name + "<br> (" + contactSnapshot.val().contact_no + ") <br><br></strong></div></div>";
-    //                 });
-
-    //                 myTbody += "</td>";
-    //                 myTbody += "<td><strong>" + dateFormat(orderSnapshot.val().date) + "</strong></td></tr>";
-
-    //                 document.getElementById('orderList').innerHTML = myTbody;
-    //                 count++;   
-    //             });                    
-    //         });         
-    //     });
-    // }
-
-    // function tableData(){
-
-    //     var myTbody = "";
-    //     var count = 1;
-        
-    //     firebase.database().ref('purchase_order/'+plant).orderByChild('reverseDate').on('child_added', function(orderSnapshot){
-    //         // console.log(orderSnapshot.key, orderSnapshot.val());    
-    //         firebase.database().ref('purchase_order/'+plant+'/'+orderSnapshot.key+'/item').on('child_added', function(itemSnapshot){
-    //             firebase.database().ref('purchase_order/'+plant+'/'+orderSnapshot.key+'/project_detail').on('child_added', function(projectSnapshot){
-
-    //                 $("<tr><td><strong>" + count + "</strong></td><td><strong>" + orderSnapshot.val().po_no + "</strong></td><td><strong>" + itemSnapshot.val().item_no + "</strong></td><td><strong>" + Number(itemSnapshot.val().quantity).toLocaleString('en') + " pcs / " + Number(itemSnapshot.val().balance).toLocaleString('en') +" pcs</strong></td><td><strong>" + projectSnapshot.val().project_name + "</strong></td><td><strong>" + projectSnapshot.val().project_address + "</strong></td><td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'></td><td><strong>" + dateFormat(orderSnapshot.val().date) + "</strong></td></tr>").prependTo("table > tbody");
-
-    //                 count++;   
-    //             });                    
-    //         });         
-    //     });
-    // }
 
     function tableData(plant){
 
@@ -276,6 +227,41 @@
                 });                 
             }); 
         });        
+    }
+
+    function startTime() {
+
+        var today = new Date();
+        var hr = today.getHours();
+        var min = today.getMinutes();
+        var sec = today.getSeconds();
+        ap = (hr < 12) ? "<span>AM</span>" : "<span>PM</span>";
+        hr = (hr == 0) ? 12 : hr;
+        hr = (hr > 12) ? hr - 12 : hr;
+        //Add a zero in front of numbers<10
+        hr = checkTime(hr);
+        min = checkTime(min);
+        sec = checkTime(sec);
+        document.getElementById("clock").innerHTML = hr + ":" + min + ":" + sec + " " + ap;
+        
+        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        var curWeekDay = days[today.getDay()];
+        var curDay = today.getDate();
+        var curMonth = months[today.getMonth()];
+        var curYear = today.getFullYear();
+        var date = curWeekDay+", "+curDay+" "+curMonth+" "+curYear;
+        document.getElementById("date").innerHTML = date;
+        
+        var time = setTimeout(function(){ startTime() }, 500);
+    }
+
+    function checkTime(i) {
+
+        if (i < 10) {
+            i = "0" + i;
+        }
+        return i;
     }
 
 </script>
@@ -433,7 +419,7 @@
                     </div>
                     <div class="col-md-4">
                         <ol class="breadcrumb">
-                            <li>As of <strong></strong></li>  
+                            <li>As of <strong><span id="clock"></span>, <span id="date"></span></strong></li>  
 
                             <!-- <li>Last Entry: <strong><?php $date = lastPurchaseOrderEntry($db, $plant); $date_create = date_create($date); echo date_format($date_create, "M d, Y h:i A"); ?></strong></li> -->
                         </ol>
