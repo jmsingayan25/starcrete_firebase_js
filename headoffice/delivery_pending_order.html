@@ -149,6 +149,7 @@
         });
 
         tableData(plant);
+        startTime();
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -222,7 +223,7 @@
 
     						myTbody += "</td>";
     						myTbody += "<td><strong>" + date + "</strong></td>";
-    						myTbody += "<td><strong>" + status + "</strong></td></tr>";
+    						myTbody += "<td><span class='label' style='background-color: #b3b3b3; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
     						
     						document.getElementById('orderList').innerHTML = myTbody;
     						count++;
@@ -231,6 +232,41 @@
     			});
     		});
     	});
+    }
+
+    function startTime() {
+
+        var today = new Date();
+        var hr = today.getHours();
+        var min = today.getMinutes();
+        var sec = today.getSeconds();
+        ap = (hr < 12) ? "<span>AM</span>" : "<span>PM</span>";
+        hr = (hr == 0) ? 12 : hr;
+        hr = (hr > 12) ? hr - 12 : hr;
+        //Add a zero in front of numbers<10
+        hr = checkTime(hr);
+        min = checkTime(min);
+        sec = checkTime(sec);
+        document.getElementById("clock").innerHTML = hr + ":" + min + ":" + sec + " " + ap;
+        
+        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        var curWeekDay = days[today.getDay()];
+        var curDay = today.getDate();
+        var curMonth = months[today.getMonth()];
+        var curYear = today.getFullYear();
+        var date = curWeekDay+", "+curDay+" "+curMonth+" "+curYear;
+        document.getElementById("date").innerHTML = date;
+        
+        var time = setTimeout(function(){ startTime() }, 500);
+    }
+
+    function checkTime(i) {
+
+        if (i < 10) {
+            i = "0" + i;
+        }
+        return i;
     }
 
 </script> 
@@ -385,7 +421,7 @@
                     </div>
                     <div class="col-md-4">
                         <ol class="breadcrumb">
-                            <li>As of <strong><?php echo date_format($date_create, "M d, Y h:i A"); ?></strong></li>  
+                            <li>As of <strong><span id="clock"></span>, <span id="date"></span></strong></li>  
                         </ol>
                     </div>
                 </div>
