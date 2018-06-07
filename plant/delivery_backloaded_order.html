@@ -217,7 +217,8 @@
     				});
     				myTbody += "</td>";
     				myTbody += "<td><strong>" + date + "</strong></td>";
-    				myTbody += "<td style='color: #d32f2f;'><strong>" + status + "</strong></td></tr>";
+                    myTbody += "<td><span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
+    				// myTbody += "<td style='color: #d32f2f;'><strong>" + status + "</strong></td></tr>";
 
     				document.getElementById('orderList').innerHTML = myTbody;
     				count++;
