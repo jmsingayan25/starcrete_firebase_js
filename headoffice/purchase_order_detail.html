@@ -282,6 +282,25 @@
                 });
             });
 
+            firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey+'/item').once('value', function(itemSnapshot){
+                itemSnapshot.forEach(function(itemChildsnapshot){
+
+                    var item_no = itemChildsnapshot.val().item_no;
+                    var psi = itemChildsnapshot.val().psi || "";
+                    var balance = itemChildsnapshot.val().balance;
+                    var quantity = itemChildsnapshot.val().quantity;
+
+                    var itemData = {
+                        item_no: item_no,
+                        psi: psi,
+                        balance: balance,
+                        quantity: quantity,
+                    }
+
+                    firebase.database().ref('purchase_order_closed/'+plant+'/'+postId+'/item/'+itemChildsnapshot.key).set(itemData);
+                });
+            });
+
             firebase.database().ref('purchase_order_closed/'+plant+'/'+postId).once('value', function(poClosedSnapshot){
 
                 var timestamp = poClosedSnapshot.val().reverseDate * -1;
@@ -292,6 +311,8 @@
 
                 firebase.database().ref('purchase_order_closed/'+plant+'/'+postId).update(timestampData);
             });
+
+
         });
     }
     
