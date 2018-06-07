@@ -132,6 +132,8 @@
             }
         });
 
+        startTime();
+
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
 
@@ -165,7 +167,7 @@
 
 		var myTbody = "";
         var count = 1;
-        firebase.database().ref('purchase_order/'+plant).orderByChild('date').on('value', function(orderSnapshot){
+        firebase.database().ref('purchase_order/'+plant).orderByChild('reverseDate').on('value', function(orderSnapshot){
             
             if(orderSnapshot.val() != null){
                 console.log(orderSnapshot.val());
@@ -228,7 +230,40 @@
         });
 	}
 
-    
+    function startTime() {
+
+        var today = new Date();
+        var hr = today.getHours();
+        var min = today.getMinutes();
+        var sec = today.getSeconds();
+        ap = (hr < 12) ? "<span>AM</span>" : "<span>PM</span>";
+        hr = (hr == 0) ? 12 : hr;
+        hr = (hr > 12) ? hr - 12 : hr;
+        //Add a zero in front of numbers<10
+        hr = checkTime(hr);
+        min = checkTime(min);
+        sec = checkTime(sec);
+        document.getElementById("clock").innerHTML = hr + ":" + min + ":" + sec + " " + ap;
+        
+        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        var curWeekDay = days[today.getDay()];
+        var curDay = today.getDate();
+        var curMonth = months[today.getMonth()];
+        var curYear = today.getFullYear();
+        var date = curWeekDay+", "+curDay+" "+curMonth+" "+curYear;
+        document.getElementById("date").innerHTML = date;
+        
+        var time = setTimeout(function(){ startTime() }, 500);
+    }
+
+    function checkTime(i) {
+
+        if (i < 10) {
+            i = "0" + i;
+        }
+        return i;
+    }
 
 </script>
 <style>
@@ -341,7 +376,7 @@
 	                        <li><a class="" href="delivery_pending_order.html">Existing P.O. <span class='badge'><?html echo getCountPlantPo($db, $office); ?></span></a></li>    
 	                        <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span class="badge"><?html echo getDeliveryCountOnDeliveryOffice($db, $office); ?></span></a></li>                          
 	                        <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
-	                        <!-- <li><a class="" href="delivery_backloaded.html">Backloaded Order</a></li> -->
+	                        <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
 	                    </ul>
 	                </li>  
 	            </ul>
@@ -368,7 +403,7 @@
 	                </div>
                     <div class="col-md-4">
                         <ol class="breadcrumb">
-                            <li>As of <strong></strong></li>  
+                            <li>As of <strong><span id="clock"></span>, <span id="date"></span></strong></li>  
                         </ol>
                     </div>
 	            </div>
