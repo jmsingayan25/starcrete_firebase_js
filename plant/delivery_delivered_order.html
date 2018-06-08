@@ -240,6 +240,15 @@
         var myTbody = "";
         var count = 1;
 
+        firebase.database().ref('delivery_delivered_order/'+plant).once('value').then(function(drSnapshot){
+            if(drSnapshot.val() == null){
+
+                myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                document.getElementById("orderList").innerHTML = myTbody;
+            }
+        });
+
         firebase.database().ref('delivery_delivered_order/'+plant).orderByChild('reverseDate').on('child_added', function(orderSnapshot){
             firebase.database().ref('delivery_delivered_order/'+plant+'/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
                 projectSnapshot.forEach(function(projectChildSnapshot){

@@ -179,6 +179,15 @@
 
         var myTbody = "";
 
+        firebase.database().ref('history/'+plant).once('value').then(function(drSnapshot){
+            if(drSnapshot.val() == null){
+
+                myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                document.getElementById("historyList").innerHTML = myTbody;
+            }
+        });
+
         firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value').then(function(historySnapshot) {
             historySnapshot.forEach(function(historyChildSnapshot){
 
