@@ -118,12 +118,184 @@
                     $this.val( function() {
                         return ( input === 0 ) ? "" : input.toLocaleString( "en-US" );
                     } );
-        } );      
+        } ); 
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user != null) {
+
+                var uid = user.uid;
+        
+                firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+
+                    plant = snapshot.val().office;
+
+                    // tableData(plant);
+
+                    document.getElementById('username').innerHTML = snapshot.val().firstname; 
+                },(error) => {
+                    console.log(error);
+                });
+            } else {
+                window.location.href = '../login.html';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);     
     });
     
 </script>    
 </head>
 <body>
+    <!-- container section start -->
+    <section id="container" class="">
+        <header class="header dark-bg">
+            <div class="toggle-nav">
+            <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
+            </div>
 
+            <!--logo start-->
+
+            <!--logo end-->
+            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+            <div class="top-nav notification-row">                
+                <!-- notificatoin dropdown start-->
+                <ul class="nav pull-right top-menu">
+                    <!-- user login dropdown start-->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <!--  <span class="profile-ava">
+                        <img alt="" src="img/avatar1_small.jpg">
+                        </span> -->
+                            <span class="username" id="username"></span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <div class="log-arrow-up"></div>
+                            <li>
+                                <a href="" id="logoutBtn"><i class="icon_key_alt"></i> Log Out</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->
+                </ul>
+                <!-- notificatoin dropdown end-->
+            </div>
+        </header>  
+
+        <!--sidebar start-->
+        <aside>
+            <div id="sidebar"  class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu">                
+                    <li class="">
+                        <a class="" href="index.html">
+                            <i class="icon_house"></i>
+                            <span>History</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a class="" href="diesel.html">
+                            <i class="fa fa-building"></i>
+                            <span>Diesel</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Purchase Order</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order.html">Pending P.O.</a></li>
+                            <!-- <li><a class="" href="purchase_closed_order.html">Closed P.O.</a></li> -->
+                        </ul>
+                    </li>  
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Delivery Order</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="delivery_pending_order.html">Existing P.O. <span class='badge'><?html echo getCountPlantPo($db, $office); ?></span></a></li>    
+                            <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span class="badge"><?html echo getDeliveryCountOnDeliveryOffice($db, $office); ?></span></a></li>                          
+                            <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
+                            <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
+                        </ul>
+                    </li>  
+                </ul>
+                <!-- sidebar menu end-->
+            </div>
+        </aside>
+        <!--sidebar end-->
+
+        <section id="main-content">
+            <section class="wrapper">            
+                <!--overview start-->
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- <h3 class="page-header"><i class="fa fa-home"></i> History</h3> -->
+                        <ol class="breadcrumb">
+                            <!-- <li><i class="fa fa-building"></i><?php echo $plant; ?></li> -->
+                            <li><i class="icon_document"></i><a href="diesel.php">Diesel</a></li>             
+                            <li><i class="icon_document"></i>Outgoing Diesel Form</li>             
+                        </ol>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <form id="form" name="form" class="form-horizontal" onsubmit="if(confirm('Proceed?')){submitForm();}else{ event.preventDefault();}">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                    Details
+                                </header>
+                                <div class="panel-body">
+                                    <!-- <input type="hidden" id="stock" name="stock" value="<?php echo getStock($db, 'Diesel', $search_plant); ?>"> -->
+                                    <div class="form-group">
+                                        <label for="quantity_out" class="col-md-4 control-label">Quantity (OUT)<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-5">
+                                            <input type="text" id="quantity_out" name="quantity_out" class="form-control" autocomplete="off" required>
+                                            <!-- <span class="help-block" id="stock_warning" style="color: red; display: none;"><strong>Warning!</strong> Available Stock: <?php echo number_format(getStock($db, 'Diesel', $search_plant)) . " liters"; ?></span>
+                                            <span class="help-block" id="stock_ok" style="display: none;">Available Stock: <?php echo number_format(getStock($db, 'Diesel', $search_plant)) . " liters"; ?></span> -->
+
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="destination" class="col-md-4 control-label">Destination<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-5">
+                                            <input type="text" name="destination" class="form-control" autocomplete="off" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="truck_no" class="col-md-4 control-label">Truck No.<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-5">
+                                            <input type="text" name="truck_no" class="form-control" autocomplete="off" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="operator" class="col-md-4 control-label">Operator / Driver<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-5">
+                                            <input type="text" name="operator" class="form-control" autocomplete="off" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-offset-8 col-md-4">
+                                            <input type="submit" name="submit" id="submit" value="Done" class="btn btn-primary" style="font-weight: bold;">
+                                            <a href="diesel.html" class="btn btn-default"><strong>Cancel</strong></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <footer class="panel-footer">
+                                    <p class="help-block"><span class="required" style="color: red;">*</span> - required</p>
+                                    <p class="help-block">Note: <strong>N/A</strong> for not available.</p>
+                                </footer>
+                            </section>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </section>
 </body>
 </html>

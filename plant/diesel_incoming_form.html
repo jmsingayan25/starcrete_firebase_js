@@ -118,7 +118,29 @@
                     $this.val( function() {
                         return ( input === 0 ) ? "" : input.toLocaleString( "en-US" );
                     } );
-        } );      
+        } );    
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user != null) {
+
+                var uid = user.uid;
+        
+                firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+
+                    plant = snapshot.val().office;
+
+                    // tableData(plant);
+
+                    document.getElementById('username').innerHTML = snapshot.val().firstname; 
+                },(error) => {
+                    console.log(error);
+                });
+            } else {
+                window.location.href = '../login.html';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);  
     });
     function submitForm()
     {
