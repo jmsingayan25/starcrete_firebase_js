@@ -156,26 +156,6 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
-        firebase.database().ref('purchase_order/'+plant).once('value', function(poSnapshot){
-            poSnapshot.forEach(function(poChildSnapshot){
-                document.getElementById('li_plant').innerHTML = "<i class='fa fa-building'></i>"+plant;
-                document.getElementById('li_po_list').innerHTML = "<i class='icon_document'></i><a href='purchase_order.html?plant=" + plant + "'>Pending P.O.</a>"
-                document.getElementById('po_no_id').innerHTML = poChildSnapshot.val().po_no;
-                document.getElementById('po_no_id1').innerHTML = poChildSnapshot.val().po_no;
-                document.getElementById('po_no_id2').innerHTML = poChildSnapshot.val().po_no;
-                document.getElementById('span_client_name').innerHTML = "";
-                document.getElementById('span_client_address').innerHTML = "";
-                document.getElementById('span_date').innerHTML = dateFormat(poChildSnapshot.val().date);
-            });
-        });
-
-        firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey+'/project_detail').once('value', function(poProjectSnapshot){
-            poProjectSnapshot.forEach(function(poProjectChildSnapshot){
-                // console.log(poProjectChildSnapshot.key,poProjectChildSnapshot.val());
-                document.getElementById('span_project_name').innerHTML = poProjectChildSnapshot.val().project_name;
-                document.getElementById('span_project_address').innerHTML = poProjectChildSnapshot.val().project_address;
-            });
-        });
     });
 
     function tableData(plant){
@@ -220,6 +200,45 @@
                 itemTbody += "<td><button type='button' class='btn btn-sm btn-block' style='margin-bottom: 5px; background-color: #ffa000; color: white;' data-toggle='modal' data-target='#purchaseOrderUpdateRow" + count + "'><span class='fa fa-edit'></span> <strong>Update</strong></button><div class='modal fade' id='purchaseOrderUpdateRow" + count + "' role='dialog'> <div class='modal-dialog modal-sm' style='max-width: 300px;'><div class='modal-content'><div class='modal-header'><div class='row' style='text-align: center;'><div class='col-md-12'><img src='../images/starcrete.png' width='150' height='50'></div></div></div><div class='modal-body' style='text-align: left;'><h4 class='modal-title' style='text-align: center'>Confirmation</h4><hr><div class='row'><div class='col-md-12'><div class='form-group'><label for='confirm_password'>Password</label><input type='password' name='confirm_password' class='form-control' required></div></div></div></div><div class='modal-footer'><button type='submit' name='update' id='update' class='btn btn-primary'><strong>Submit</strong></button><button type='button' class='btn btn-default' data-dismiss='modal'><strong>Close</strong></button></div></div></div></div></td></tr>";
                 document.getElementById('itemList').innerHTML = itemTbody;
                 count++;
+            });
+        });
+
+        firebase.database().ref('purchase_order/'+plant).once('value', function(poSnapshot){
+            poSnapshot.forEach(function(poChildSnapshot){
+                document.getElementById('li_plant').innerHTML = "<i class='fa fa-building'></i>"+plant;
+                document.getElementById('li_po_list').innerHTML = "<i class='icon_document'></i><a href='purchase_order.html?plant=" + plant + "'>Pending P.O.</a>"
+                document.getElementById('po_no_id').innerHTML = poChildSnapshot.val().po_no;
+                document.getElementById('po_no_id1').innerHTML = poChildSnapshot.val().po_no;
+                document.getElementById('po_no_id2').innerHTML = poChildSnapshot.val().po_no;
+                document.getElementById('span_client_name').innerHTML = "";
+                document.getElementById('span_client_address').innerHTML = "";
+                document.getElementById('span_date').innerHTML = dateFormat(poChildSnapshot.val().date);
+            });
+        });
+
+        firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey+'/project_detail').once('value', function(poProjectSnapshot){
+            poProjectSnapshot.forEach(function(poProjectChildSnapshot){
+
+                document.getElementById('span_project_name').innerHTML = poProjectChildSnapshot.val().project_name;
+                document.getElementById('span_project_address').innerHTML = poProjectChildSnapshot.val().project_address;
+
+                firebase.database().ref('project').once('value', function(clientSnapshot){
+                    // console.log(clientSnapshot.key, clientSnapshot.val());
+                    clientSnapshot.forEach(function(clientChildSnapshot){
+                        clientChildSnapshot.forEach(function(projectChildSnapshot){
+                            // console.log(projectChildSnapshot.key, projectChildSnapshot.val());
+                            if(projectChildSnapshot.key == poProjectChildSnapshot.key){
+                                // console.log(clientChildSnapshot.key, clientChildSnapshot.val());
+                                firebase.database().ref('client/'+clientChildSnapshot.key).once('value', function(clientSnapshot2){
+
+                                    document.getElementById('span_client_name').innerHTML = clientSnapshot2.val().client_name;
+                                    document.getElementById('span_client_address').innerHTML = clientSnapshot2.val().client_address;
+
+                                });
+                            }
+                        });
+                    });
+                });
             });
         });
     }
