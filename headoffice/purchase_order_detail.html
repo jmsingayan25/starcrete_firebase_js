@@ -198,6 +198,7 @@
                 itemTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
                 itemTbody += "<td><strong>" + quantity + " pcs / " + balance + " pcs</strong></td>";
                 itemTbody += "<td><button type='button' class='btn btn-sm btn-block' style='margin-bottom: 5px; background-color: #ffa000; color: white;' data-toggle='modal' data-target='#purchaseOrderUpdateRow" + count + "'><span class='fa fa-edit'></span> <strong>Update</strong></button><div class='modal fade' id='purchaseOrderUpdateRow" + count + "' role='dialog'> <div class='modal-dialog modal-sm' style='max-width: 300px;'><div class='modal-content'><div class='modal-header'><div class='row' style='text-align: center;'><div class='col-md-12'><img src='../images/starcrete.png' width='150' height='50'></div></div></div><div class='modal-body' style='text-align: left;'><h4 class='modal-title' style='text-align: center'>Confirmation</h4><hr><div class='row'><div class='col-md-12'><div class='form-group'><label for='confirm_password'>Password</label><input type='password' name='confirm_password' class='form-control' required></div></div></div></div><div class='modal-footer'><button type='submit' name='update' id='update' class='btn btn-primary'><strong>Submit</strong></button><button type='button' class='btn btn-default' data-dismiss='modal'><strong>Close</strong></button></div></div></div></div></td></tr>";
+
                 document.getElementById('itemList').innerHTML = itemTbody;
                 count++;
             });
@@ -263,13 +264,14 @@
                 reverseDate: firebase.database.ServerValue.TIMESTAMP,
                 status: 'CLOSED'
             }
-            console.log(poData);
+            // console.log(poData);
             var postData = firebase.database().ref('purchase_order_closed/'+plant);
             var newPostRef = postData.push();
             newPostRef.set(poData);
 
             var postId = newPostRef.key;
 
+            // insert contact detail to created closed po
             firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey+'/contact').once('value', function(poContactSnapshot){
                 poContactSnapshot.forEach(function(poContactChildSnapshot){
 
@@ -286,6 +288,7 @@
                 });      
             });
 
+            // insert project detail to created closed po
             firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey+'/project_detail').once('value', function(poProjectSnapshot){
                 poProjectSnapshot.forEach(function(poProjectChildSnapshot){
 
@@ -301,6 +304,7 @@
                 });
             });
 
+            // insert item detail to created closed po
             firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey+'/item').once('value', function(itemSnapshot){
                 itemSnapshot.forEach(function(itemChildsnapshot){
 
@@ -320,6 +324,7 @@
                 });
             });
 
+            // update reverseDate value to negative value
             firebase.database().ref('purchase_order_closed/'+plant+'/'+postId).once('value', function(poClosedSnapshot){
 
                 var timestamp = poClosedSnapshot.val().reverseDate * -1;
@@ -331,7 +336,29 @@
                 firebase.database().ref('purchase_order_closed/'+plant+'/'+postId).update(timestampData);
             });
 
+            var historyData = {
+                date: date,
+                type_of_transaction: "Closed P.O. No.",
+                reverseDate: firebase.database.ServerValue.TIMESTAMP,
+                history: "",
+            }
 
+            var postHistoryData = firebase.database().ref('history/'+plant+'/');
+            var newHistoryPostRef = postHistoryData.push();
+            newHistoryPostRef.set(historyData);
+
+            var postHistoryId = newHistoryPostRef.key;
+
+            firebase.database().ref('history/'+postHistoryId).once('value', function(historySnapshot){
+
+                var timestamp = historySnapshot.val().reverseDate * -1;
+
+                var timestampData = {
+                    reverseDate: timestamp
+                }
+
+                firebase.database().ref('history/'+postHistoryId).update(timestampData);
+            });
         });
     }
     
