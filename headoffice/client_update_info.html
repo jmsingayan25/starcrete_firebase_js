@@ -111,8 +111,8 @@
 
         firebase.database().ref("client/"+clientKeyId).once('value').then(function(childSnapshot){
 
-            document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='client_update_info.html?key=" + clientKeyId + "'</a>"+childSnapshot.val().client_name;
-
+            document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-address-book'></i><a href='client.html'>Clients</a></li><li><i class='fa fa-building'></i> " + childSnapshot.val().client_name + "</li><li><i class='icon_document'></i>Update Info</li>";
+            // document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='client_update_info.html?key=" + clientKeyId + "'</a>"+childSnapshot.val().client_name;
             document.getElementById('update_client_name').value = childSnapshot.val().client_name;
             document.getElementById('update_client_address').value = childSnapshot.val().client_address;
 
@@ -294,11 +294,11 @@
                 <div class="row">
                     <div class="col-md-12 page_links">
                         <!-- <h3 class="page-header">Client Update Details</h3> -->
-                        <ol class="breadcrumb">
+                        <ol class="breadcrumb" id="id_breadcrumb">
                             <!-- <li><i class="fa fa-home"></i>Home</li> -->
-                            <li><i class="fa fa-address-book"></i><a href="client.html">Clients</a></li>
-                            <li id="div_client_name"></li>
-                            <li><i class="icon_document"></i>Update Info</li>
+                            <!-- <li><i class="fa fa-address-book"></i><a href="client.html">Clients</a></li>
+                            <li><i class="fa fa-building"></i></li>
+                            <li><i class="icon_document"></i>Update Info</li> -->
                             <!-- <li><i class="fa fa-file-text"></i><a href="clients_update_info.php" style="color: inherit;">Update Info</a></li>                             -->
                         </ol>
                     </div>
