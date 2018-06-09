@@ -148,23 +148,35 @@
 
          var po_no = document.getElementById('po_no').value;
          var dr_no = document.getElementById('dr_no').value;
-         var quantity_in = document.getElementById('quantity_in').value;
+         var quantity_in = document.getElementById(Number('quantity_in')).value;
          var supplier = document.getElementById('supplier').value;
          var truck_no = document.getElementById('truck_no').value;
-         
+        //incoming data
          var IncomingData = 
          {
             po_no: po_no.toUpperCase(), dr_no: dr_no.toUpperCase(), quantity_in: quantity_in.toUpperCase(),
             supplier: supplier.toUpperCase(), truck_no: truck_no.toUpperCase()
          };
-        var PostDataBase = firebase.database().ref().child("incoming_diesel");
+
+        var PostDataBase = firebase.database().ref().child("incoming_diesel/" + plant);
         var newPostRef = PostDataBase.push();
         newPostRef.set(IncomingData);
-
-
-
-        /*var firebaseRef = firebase.database().ref();
-        firebaseRef.child("text").set("some values");*/
+        //available stock data
+        var liters_bravo = quantity_in;
+        //
+        var StockBravo =
+        {
+            Liters: liters_bravo.toUpperCase()
+        };
+        //getting the child of check snapshot
+        firebase.database().ref().child("available_stock/" + plant).once('value',function(CheckSnapshot)
+        {
+            CheckSnapshot.foreach(function(LitersSnapshot){
+                liters = LitersSnapshot.val().Liters;
+            })
+        });
+        //
+        firebase.database().ref().child("available_stock/" + plant).set(StockBravo);
     }
 </script>
 </head>
