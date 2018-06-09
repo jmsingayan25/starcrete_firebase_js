@@ -193,7 +193,7 @@
 			quantity = Number(ongoingOrderSnapshot.val().quantity).toLocaleString('en');
 			date = dateFormat(ongoingOrderSnapshot.val().date);
 			status = ongoingOrderSnapshot.val().status;
-            issued_plant = ongoingOrderSnapshot.val().issued_dr_plant;
+            issued_dr_plant = ongoingOrderSnapshot.val().issued_dr_plant;
 
 			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
 			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
@@ -477,14 +477,14 @@
                                                     <!-- <th class="col-md-1">#</th> -->
                                                     <!-- <th class="col-md-1">P.O. No.</th> -->
                                                     <th class="col-md-1"><input type="text" class="form-control" placeholder="DR No." disabled></th>
-                                                    <th class="col-md-2"><input type="text" class="form-control" placeholder="Item" disabled></th>
+                                                    <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
                                                     <th class="col-md-1">Quantity</th>
                                                     <!-- <th class="col-md-2">Project Name</th> -->
                                                     <!-- <th class="col-md-2">Address</th> -->
                                                     <!-- <th class="col-md-1">Contact</th> -->
                                                     <th class="col-md-1">Date Transaction</th>
-                                                    <th class="col-md-1">Delivered By</th>
-                                                    <th class="col-md-1">Status</th>
+                                                    <th class="col-md-1">Plant</th>
+                                                    <th class="col-md-2">Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="orderList">
