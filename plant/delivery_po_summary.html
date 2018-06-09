@@ -193,11 +193,13 @@
     			quantity = Number(ongoingOrderSnapshot.val().quantity).toLocaleString('en');
     			date = dateFormat(ongoingOrderSnapshot.val().date);
     			status = ongoingOrderSnapshot.val().status;
+                issued_dr_plant = ongoingOrderSnapshot.val().issued_dr_plant;
 
     			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
     			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
     			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
-    			myTbody += "<td><strong>" + date + "</strong></td>";
+                myTbody += "<td><strong>" + date + "</strong></td>";
+    			myTbody += "<td><strong>" + issued_dr_plant + "</strong></td>";
                 myTbody += "<td><span class='label' style='background-color: #ffa000; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
     			// myTbody += "<td style='color: #ffa000;'><strong>" + status + "</strong></td></tr>";
 
@@ -223,11 +225,13 @@
     			quantity = Number(deliveredOrderSnapshot.val().quantity).toLocaleString('en');
     			date = dateFormat(deliveredOrderSnapshot.val().date);
     			status = deliveredOrderSnapshot.val().status;
+                delivered_plant = deliveredOrderSnapshot.val().delivered_plant;
 
     			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
     			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
     			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
-    			myTbody += "<td><strong>" + date + "</strong></td>";
+                myTbody += "<td><strong>" + date + "</strong></td>";
+    			myTbody += "<td><strong>" + delivered_plant + "</strong></td>";
     			myTbody += "<td><span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
 
     			document.getElementById('orderList').innerHTML = myTbody;
@@ -252,11 +256,13 @@
     			quantity = Number(backloadOrderSnapshot.val().quantity).toLocaleString('en');
     			date = dateFormat(backloadOrderSnapshot.val().date);
     			status = backloadOrderSnapshot.val().status;
+                backloaded_plant = backloadOrderSnapshot.val().backloaded_plant;
 
     			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
     			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
     			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
-    			myTbody += "<td><strong>" + date + "</strong></td>";
+                myTbody += "<td><strong>" + date + "</strong></td>";
+    			myTbody += "<td><strong>" + backloaded_plant + "</strong></td>";
     			myTbody += "<td><span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
 
     			document.getElementById('orderList').innerHTML = myTbody;
@@ -477,7 +483,8 @@
 	                                                <th class="col-md-1">Quantity</th>
 	                                                <!-- <th class="col-md-2"><input type="text" class="form-control" placeholder="Project Name" disabled></th> -->
 	                                                <!-- <th class="col-md-2"><input type="text" class="form-control" placeholder="Address" disabled></th> -->
-	                                                <th class="col-md-1">Date Transaction</th>
+                                                    <th class="col-md-1">Date Transaction</th>
+	                                                <th class="col-md-1">Delivered By</th>
 	                                                <th class="col-md-1">Status</th>
 	                                            </tr>
 	                                        </thead>

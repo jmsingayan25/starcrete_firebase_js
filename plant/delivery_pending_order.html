@@ -288,7 +288,7 @@
                             }
 
                             myTbody += "<tr><td><strong>" + count + "</strong></td>";
-                            myTbody += "<td><strong>" + po_no + "</strong></td>";
+                            myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.key + "'\"><strong>" + po_no + "</strong></div></td>";
                             myTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
                             myTbody += "<td><strong>" + quantity + " pcs / " + balance + " pcs</strong></td>";
                             myTbody += "<td><strong>" + project_name + "</strong></td>";
