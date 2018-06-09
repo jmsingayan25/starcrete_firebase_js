@@ -88,7 +88,7 @@
     ======================================================= -->
 <script>
     
-    var clientKeyId = getUrlParameter('key');
+    var clientKeyId = getUrlParameter('key') || "0";
 
     $(document).ready(function(){
         $('.filterable .btn-filter').click(function(){
@@ -151,8 +151,11 @@
 
         firebase.database().ref("client/"+clientKeyId).once("value").then(function(childSnapshot){
 
-            document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='project.html?key=" + clientKeyId + "'</a>"+childSnapshot.val().client_name;
-            document.getElementById('link_add_project').innerHTML = "<a href='add_project.html?key=" + clientKeyId + "'><button type='submit' class='btn btn-info' style='font-weight: bold;'><span class='fa fa-plus'></span> Add Project</button></a>"
+            // document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='project.html?key=" + clientKeyId + "'</a>"+childSnapshot.val().client_name;
+            document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-address-book'></i><a href='client.html'>Clients</a></li><li><i class='fa fa-building'></i><a href='project.html?key=" + clientKeyId + "'>" + childSnapshot.val().client_name + "</a></li><li><i class='fa fa-address-card'></i>Projects</li>";
+
+            document.getElementById('link_add_project').innerHTML = "<a href='add_project.html?key=" + clientKeyId + "'><button type='submit' class='btn btn-info' style='font-weight: bold;'><span class='fa fa-plus'></span> Add Project</button></a>";
+
         }).catch(function(error){
             window.location.href = 'client.html';
         });
@@ -371,11 +374,10 @@
 	            <!--overview start-->
 	            <div class="row">
 	                <div class="col-md-12">
-	                    <ol class="breadcrumb">
-	                        <li><i class="fa fa-address-book"></i><a href="client.html">Clients</a></li>
-	                        <li id="div_client_name"></li>    
-	                        <!-- <li><i class="fa fa-building"></i><a href="project.html">Project</a></li>     -->
-	                        <li><i class="fa fa-address-card"></i>Projects</li>                         
+	                    <ol class="breadcrumb" id="id_breadcrumb">
+	                       <!--  <li><i class="fa fa-address-book"></i><a href="client.html">Clients</a></li>  
+	                        <li><i class="fa fa-building"></i><a href="project.html">Project</a></li>    
+	                        <li><i class="fa fa-address-card"></i>Projects</li>   -->                       
 	                    </ol>
 	                </div>
 	            </div>

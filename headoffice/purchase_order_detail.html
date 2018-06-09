@@ -162,6 +162,12 @@
 
         var contactTbody = "";
 
+        firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey).once('value').then(function(poSnapshot){
+            if(poSnapshot.val() == null){
+                window.location.href = 'purchase_order.html?plant='+plant;
+            }
+        });
+
         firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey+'/contact').once('value').then(function(contactSnapshot){
             contactSnapshot.forEach(function(contactChildSnapshot){
 
@@ -206,8 +212,10 @@
 
         firebase.database().ref('purchase_order/'+plant).once('value', function(poSnapshot){
             poSnapshot.forEach(function(poChildSnapshot){
-                document.getElementById('li_plant').innerHTML = "<i class='fa fa-building'></i>"+plant;
-                document.getElementById('li_po_list').innerHTML = "<i class='icon_document'></i><a href='purchase_order.html?plant=" + plant + "'>Pending P.O.</a>"
+                // document.getElementById('li_plant').innerHTML = "<i class='fa fa-building'></i>"+plant;
+                // document.getElementById('li_po_list').innerHTML = "<i class='icon_document'></i><a href='purchase_order.html?plant=" + plant + "'>Pending P.O.</a>";
+
+                document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='purchase_order.html?plant=" + plant + "'>Pending P.O.</a></li><li><i class='icon_document'></i>P.O. Details</li>";
                 document.getElementById('po_no_id').innerHTML = poChildSnapshot.val().po_no;
                 document.getElementById('po_no_id1').innerHTML = poChildSnapshot.val().po_no;
                 document.getElementById('po_no_id2').innerHTML = poChildSnapshot.val().po_no;
@@ -247,9 +255,9 @@
     function submitClosePo(){
 
         event.preventDefault();
-        var input = document.getElementById('reason').value;
+        var input_reason = document.getElementById('reason').value;
 
-        console.log(input);
+        console.log(input_reason);
         firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey).once('value', function(poSnapshot){
             // poSnapshot.forEach(function(poChildSnapshot){
 
@@ -340,7 +348,7 @@
                 date: date,
                 type_of_transaction: "Closed P.O. No.",
                 reverseDate: firebase.database.ServerValue.TIMESTAMP,
-                history: "",
+                history: "Reason: " + input_reason
             }
 
             var postHistoryData = firebase.database().ref('history/'+plant+'/');
@@ -349,7 +357,7 @@
 
             var postHistoryId = newHistoryPostRef.key;
 
-            firebase.database().ref('history/'+postHistoryId).once('value', function(historySnapshot){
+            firebase.database().ref('history/'+plant+'/'+postHistoryId).once('value', function(historySnapshot){
 
                 var timestamp = historySnapshot.val().reverseDate * -1;
 
@@ -357,9 +365,19 @@
                     reverseDate: timestamp
                 }
 
-                firebase.database().ref('history/'+postHistoryId).update(timestampData);
+                firebase.database().ref('history/'+plant+'/'+postHistoryId).update(timestampData);
             });
+
+            // if(firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey).remove()){
+            //     alert("P.O. No. " + po_no + " has been closed.");
+            //     window.location.href = 'purchase_order_closed.html';
+            // }
         });
+
+        if(firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey).remove()){
+            alert("P.O. No. " + po_no + " has been closed.");
+            window.location.href = 'purchase_order_closed.html';
+        }
     }
     
 </script>
@@ -497,10 +515,10 @@
                 <!--overview start-->
                 <div class="row">
                     <div class="col-md-12">
-                        <ol class="breadcrumb">
-                            <li id="li_plant"></li>
-                            <li id="li_po_list"></li>                            
-                            <li><i class="icon_document"></i>P.O. Details</li>                          
+                        <ol class="breadcrumb" id="id_breadcrumb">
+<!--                             <li><i class='fa fa-building'></i></li>
+                            <li><i class='icon_document'></i><a href='purchase_order.html?'></a></li>
+                            <li><i class="icon_document"></i>P.O. Details</li>  -->                      
                         </ol>
                     </div>
                 </div>
