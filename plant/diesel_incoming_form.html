@@ -148,10 +148,11 @@
 
          var po_no = document.getElementById('po_no').value;
          var dr_no = document.getElementById('dr_no').value;
-         var quantity_in = document.getElementById(Number('quantity_in')).value;
+         var quantity_in = document.getElementById('quantity_in').value;
          var supplier = document.getElementById('supplier').value;
          var truck_no = document.getElementById('truck_no').value;
-        //incoming data
+         
+         //incoming data
          var IncomingData = 
          {
             po_no: po_no.toUpperCase(), dr_no: dr_no.toUpperCase(), quantity_in: quantity_in.toUpperCase(),
@@ -161,22 +162,31 @@
         var PostDataBase = firebase.database().ref().child("incoming_diesel/" + plant);
         var newPostRef = PostDataBase.push();
         newPostRef.set(IncomingData);
-        //available stock data
-        var liters_bravo = quantity_in;
-        //
-        var StockBravo =
-        {
-            Liters: liters_bravo.toUpperCase()
-        };
         //getting the child of check snapshot
         firebase.database().ref().child("available_stock/" + plant).once('value',function(CheckSnapshot)
         {
-            CheckSnapshot.foreach(function(LitersSnapshot){
-                liters = LitersSnapshot.val().Liters;
-            })
+            if(CheckSnapshot.val() ==null){
+                var liters_bravo = quantity_in;
+                var StockBravo =
+                {
+                    Liters: liters_bravo
+                };
+                firebase.database().ref().child("available_stock/" + plant).set(StockBravo);  
+            }
+            else{
+               var get_liters_bravo = CheckSnapshot.val().Liters;
+               var total_int_liters = Number(quantity_in) + Number(get_liters_bravo);
+               var total_string_liters = total_int_liters.toString();
+               var new_liters = total_string_liters;
+               var StockBravo =
+                {
+                    Liters: new_liters
+                };
+                firebase.database().ref().child("available_stock/" + plant).set(StockBravo);
+
+            }
+            console.log(CheckSnapshot.val().Liters);
         });
-        //
-        firebase.database().ref().child("available_stock/" + plant).set(StockBravo);
     }
 </script>
 </head>
