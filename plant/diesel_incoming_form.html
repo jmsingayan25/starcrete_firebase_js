@@ -165,25 +165,18 @@
         //getting the child of check snapshot
         firebase.database().ref().child("available_stock/" + plant).once('value',function(CheckSnapshot)
         {
-            if(CheckSnapshot.val() ==null){
+            if(CheckSnapshot.val() == null){
                 var liters_bravo = quantity_in;
-                var StockBravo =
-                {
-                    Liters: liters_bravo
-                };
-                firebase.database().ref().child("available_stock/" + plant).set(StockBravo);  
+                var stock_available ={Liters: liters_bravo};
+                firebase.database().ref().child("available_stock/" + plant).set(stock_available );  
             }
             else{
-               var get_liters_bravo = CheckSnapshot.val().Liters;
-               var total_int_liters = Number(quantity_in) + Number(get_liters_bravo);
+               var get_liters = CheckSnapshot.val().Liters;
+               var total_int_liters = Number(quantity_in) + Number(get_liters);
                var total_string_liters = total_int_liters.toString();
                var new_liters = total_string_liters;
-               var StockBravo =
-                {
-                    Liters: new_liters
-                };
-                firebase.database().ref().child("available_stock/" + plant).set(StockBravo);
-
+               var stock_available  ={Liters: new_liters};
+                firebase.database().ref().child("available_stock/" + plant).set(stock_available );
             }
             console.log(CheckSnapshot.val().Liters);
         });
