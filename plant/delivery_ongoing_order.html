@@ -241,7 +241,7 @@
         var myTbody = "";
         var count = 1;
 
-        firebase.database().ref('delivery_ongoing_order/'+plant).once('value').then(function(drSnapshot){
+        firebase.database().ref('delivery_ongoing_order/').once('value').then(function(drSnapshot){
             if(drSnapshot.val() == null){
 
                 myTbody = "<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
@@ -250,9 +250,9 @@
             }
         });
 
-        firebase.database().ref('delivery_ongoing_order/'+plant).orderByChild('reverseDate').on('child_added', function(orderSnapshot){
+        firebase.database().ref('delivery_ongoing_order/').orderByChild('reverseDate').on('child_added', function(orderSnapshot){
             console.log(orderSnapshot.key, orderSnapshot.val());
-            firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
+            firebase.database().ref('delivery_ongoing_order/'+'/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
                 projectSnapshot.forEach(function(projectChildSnapshot){
 
                     // console.log(projectSnapshot.key, projectSnapshot.val());
@@ -314,7 +314,7 @@
     function deliveredForm(orderKey, plant){
 
     	event.preventDefault();
-    	firebase.database().ref().child('delivery_ongoing_order/'+plant+'/'+orderKey).once('value').then(function(orderSnapshot){
+    	firebase.database().ref().child('delivery_ongoing_order/'+'/'+orderKey).once('value').then(function(orderSnapshot){
 
             var key = orderSnapshot.key;
 			var date = new Date().toLocaleString('en');
@@ -333,6 +333,8 @@
     		var quantity = orderSnapshot.val().quantity;
     		var po_no_key = orderSnapshot.val().po_no_key;
     		var status = "DELIVERED";
+            var issued_po_plant = orderSnapshot.val().issued_po_plant;
+            var delivered_plant = orderSnapshot.val().issued_dr_plant
 
     		var drData = {
     			date: date,
@@ -344,16 +346,19 @@
                 reverseDate: firebase.database.ServerValue.TIMESTAMP,
     			quantity: quantity,
     			po_no_key: po_no_key,
-    			status: status
+    			status: status,
+                issued_po_plant: issued_po_plant,
+                delivered_plant: delivered_plant
     		}
+            
     		// console.log(drData);
-			var drPost = firebase.database().ref('delivery_delivered_order/'+plant);
+			var drPost = firebase.database().ref('delivery_delivered_order/');
 			var drPostData = drPost.push();
 			drPostData.set(drData);
 			var postId = drPostData.key;
 
             // insert data of project details to recently added transaction
-			firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey+'/project_detail').once('value').then(function(projectSnapshot){
+			firebase.database().ref('delivery_ongoing_order/'+orderKey+'/project_detail').once('value').then(function(projectSnapshot){
 				projectSnapshot.forEach(function(projectChildSnapshot){
 
 					var project_address = projectChildSnapshot.val().project_address;
@@ -365,7 +370,7 @@
 		    			project_name: project_name
 		    		}
 
-		    		firebase.database().ref('delivery_delivered_order/'+plant+'/'+postId+'/project_detail/'+project_key).set(projectData);
+		    		firebase.database().ref('delivery_delivered_order/'+postId+'/project_detail/'+project_key).set(projectData);
 
                     var historyData = {
                         date: date,
@@ -393,18 +398,18 @@
 			});	
 
             //update on child node: reverseDate
-            firebase.database().ref().child('delivery_delivered_order/'+plant+'/'+postId).once('value', function(snapshot){
+            firebase.database().ref().child('delivery_delivered_order/'+postId).once('value', function(snapshot){
 
                 var timestamp = snapshot.val().reverseDate * -1;
                 var timeUpdate = {
                     reverseDate: timestamp
                 } 
 
-                firebase.database().ref('delivery_delivered_order/'+plant+'/'+postId).update(timeUpdate);
+                firebase.database().ref('delivery_delivered_order/'+postId).update(timeUpdate);
             });
 
             // insert contact detail to recently added transaction
-			firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey+'/contact').once('value').then(function(contactSnapshot){
+			firebase.database().ref('delivery_ongoing_order/'+orderKey+'/contact').once('value').then(function(contactSnapshot){
 				contactSnapshot.forEach(function(contactChildSnapshot){
 
 					var contact_name = contactChildSnapshot.val().contact_name;
@@ -416,11 +421,11 @@
 		    			contact_no: contact_no
 		    		}
 
-		    		firebase.database().ref('delivery_delivered_order/'+plant+'/'+postId+'/contact/'+contact_key).set(contactData);
+		    		firebase.database().ref('delivery_delivered_order/'+postId+'/contact/'+contact_key).set(contactData);
 				});
 			});		
 
-			if(firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey).remove()){
+			if(firebase.database().ref('delivery_ongoing_order/'+orderKey).remove()){
 				alert("DR No. " + dr_no + " has been delivered successfully.");
         		window.location.href = 'delivery_ongoing_order.html';
 			}
@@ -430,7 +435,7 @@
     function backloadForm(orderKey, plant){
 
         event.preventDefault();
-        firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey).once('value', function(ongoingOrderSnapshot){
+        firebase.database().ref('delivery_ongoing_order/'+orderKey).once('value', function(ongoingOrderSnapshot){
 
             var key = ongoingOrderSnapshot.key;
             var date = new Date().toLocaleString('en');
@@ -449,6 +454,8 @@
             var quantity = ongoingOrderSnapshot.val().quantity;
             var po_no_key = ongoingOrderSnapshot.val().po_no_key;
             var status = "BACKLOADED";
+            var issued_po_plant = ongoingOrderSnapshot.val().issued_po_plant;
+            var backloaded_plant = ongoingOrderSnapshot.val().issued_dr_plant;
 
             var drData = {
                 date: date,
@@ -460,16 +467,18 @@
                 reverseDate: firebase.database.ServerValue.TIMESTAMP,
                 quantity: quantity,
                 po_no_key: po_no_key,
-                status: status
+                status: status,
+                issued_po_plant: issued_po_plant,
+                backloaded_plant: backloaded_plant
             }
 
             // console.log(drData);
-            var drPost = firebase.database().ref('delivery_backloaded_order/'+plant);
+            var drPost = firebase.database().ref('delivery_backloaded_order/');
             var drPostData = drPost.push();
             drPostData.set(drData);
             var postId = drPostData.key;
 
-            firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey+'/project_detail').once('value', function(projectSnapshot){
+            firebase.database().ref('delivery_ongoing_order/'+orderKey+'/project_detail').once('value', function(projectSnapshot){
                 projectSnapshot.forEach(function(projectChildSnapshot){
 
                     var projectData = {
@@ -477,13 +486,13 @@
                         project_address: projectChildSnapshot.val().project_address,
                     }
 
-                    firebase.database().ref('delivery_backloaded_order/'+plant+'/'+postId+'/project_detail/'+projectChildSnapshot.key).set(projectData);
+                    firebase.database().ref('delivery_backloaded_order/'+postId+'/project_detail/'+projectChildSnapshot.key).set(projectData);
                 });
             }, function(error){
                 console.log(error);
             });
 
-            firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey+'/contact').once('value', function(contactSnapshot){
+            firebase.database().ref('delivery_ongoing_order/'+orderKey+'/contact').once('value', function(contactSnapshot){
                 contactSnapshot.forEach(function(contactChildSnapshot){
 
                     var contactData = {
@@ -491,38 +500,38 @@
                         contact_no: contactChildSnapshot.val().contact_no,
                     }
 
-                    firebase.database().ref('delivery_backloaded_order/'+plant+'/'+postId+'/contact/'+contactChildSnapshot.key).set(contactData);
+                    firebase.database().ref('delivery_backloaded_order/'+postId+'/contact/'+contactChildSnapshot.key).set(contactData);
                 });
             }, function(error){
                 console.log(error);
             });
 
             //update on child node: reverseDate
-            firebase.database().ref().child('delivery_backloaded_order/'+plant+'/'+postId).once('value', function(snapshot){
+            firebase.database().ref().child('delivery_backloaded_order/'+postId).once('value', function(snapshot){
 
                 var timestamp = snapshot.val().reverseDate * -1;
                 var timeUpdate = {
                     reverseDate: timestamp
                 } 
 
-                firebase.database().ref('delivery_backloaded_order/'+plant+'/'+postId).update(timeUpdate);
+                firebase.database().ref('delivery_backloaded_order/'+postId).update(timeUpdate);
             }, function(error){
                 console.log(error);
             });
 
-            firebase.database().ref('purchase_order/'+plant+'/'+po_no_key+'/item/'+item_no).once('value', function(itemSnapshot){
+            firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_no).once('value', function(itemSnapshot){
 
                 var new_balance = Number(itemSnapshot.val().balance) + Number(quantity);
                 var updateBalance = {
                     balance: new_balance
                 }
 
-                firebase.database().ref('purchase_order/'+plant+'/'+po_no_key+'/item/'+item_no).update(updateBalance);
+                firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_no).update(updateBalance);
             }, function(error){
                 console.log(error);
             });
             
-            if(firebase.database().ref('delivery_ongoing_order/'+plant+'/'+orderKey).remove()){
+            if(firebase.database().ref('delivery_ongoing_order/'+orderKey).remove()){
                 alert("DR No. " + dr_no + " has been backloaded.");
                 window.location.href = 'delivery_ongoing_order.html';
             } 

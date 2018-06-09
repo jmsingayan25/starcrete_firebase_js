@@ -175,7 +175,7 @@
 
     	var myTbody = "";
 
-    	firebase.database().ref('delivery_ongoing_order/'+plant).orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(ongoingOrderSnapshot){
+    	firebase.database().ref('delivery_ongoing_order/').orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(ongoingOrderSnapshot){
     		// console.log(ongoingOrderSnapshot.val());
     		// ongoingOrderSnapshot.forEach(function(ongoingOrderChildSnapshot){
     		// 	console.log(ongoingOrderChildSnapshot.key, ongoingOrderChildSnapshot.val());
@@ -205,7 +205,7 @@
     		// });
     	});
 
-    	firebase.database().ref('delivery_delivered_order/'+plant).orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(deliveredOrderSnapshot){
+    	firebase.database().ref('delivery_delivered_order/').orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(deliveredOrderSnapshot){
     		// console.log(deliveredOrderSnapshot.val());
     		// deliveredOrderSnapshot.forEach(function(deliveredOrderChildSnapshot){
     		// 	console.log(deliveredOrderChildSnapshot.key, deliveredOrderChildSnapshot.val());
@@ -234,7 +234,7 @@
     		// });
     	});
 
-    	firebase.database().ref('delivery_backloaded_order/'+plant).orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(backloadOrderSnapshot){
+    	firebase.database().ref('delivery_backloaded_order/').orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(backloadOrderSnapshot){
     		// console.log(backloadOrderSnapshot.val());
     		// backloadOrderSnapshot.forEach(function(backloadOrderChildSnapshot){
     		// 	console.log(backloadOrderChildSnapshot.key, backloadOrderChildSnapshot.val());
@@ -263,8 +263,8 @@
     		// });
     	});
 
-		firebase.database().ref('purchase_order/'+plant+'/'+po_no_key).once('value', function(orderSnapshot){
-			firebase.database().ref('purchase_order/'+plant+'/'+po_no_key+'/project_detail').once('value', function(projectSnapshot){
+		firebase.database().ref('purchase_order/'+po_no_key).once('value', function(orderSnapshot){
+			firebase.database().ref('purchase_order/'+po_no_key+'/project_detail').once('value', function(projectSnapshot){
 	    		console.log(projectSnapshot.key, projectSnapshot.val());
 	    		projectSnapshot.forEach(function(projectChildSnapshot){
 
@@ -283,7 +283,7 @@
 
 		var contactTbody = "";
 
-		firebase.database().ref('purchase_order/'+plant+'/'+po_no_key+'/contact').once('value', function(contactSnapshot){
+		firebase.database().ref('purchase_order/'+po_no_key+'/contact').once('value', function(contactSnapshot){
 			contactSnapshot.forEach(function(contactChildSnapshot){
 
 				contact_name = contactChildSnapshot.val().contact_name;

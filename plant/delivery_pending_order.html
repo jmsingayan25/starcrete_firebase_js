@@ -256,7 +256,7 @@
         var myTbody = "";
         var count = 1;
         
-        firebase.database().ref('purchase_order/'+plant).once('value').then(function(drSnapshot){
+        firebase.database().ref('purchase_order/').once('value').then(function(drSnapshot){
             if(drSnapshot.val() == null){
 
                 myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
@@ -265,11 +265,11 @@
             }
         });
         
-        firebase.database().ref('purchase_order/'+plant).orderByChild('reverseDate').on('child_added', function(orderSnapshot){
+        firebase.database().ref('purchase_order/').orderByChild('reverseDate').on('child_added', function(orderSnapshot){
             // console.log(orderSnapshot.key, orderSnapshot.val());
-            firebase.database().ref('purchase_order/'+plant+'/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
+            firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
                 itemSnapshot.forEach(function(itemChildSnapshot){
-                     firebase.database().ref('purchase_order/'+plant+'/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
+                     firebase.database().ref('purchase_order/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
                         projectSnapshot.forEach(function(projectChildSnapshot){
 
                             po_no = orderSnapshot.val().po_no;
@@ -295,7 +295,7 @@
                             myTbody += "<td><strong>" + project_address + "</strong></td>";
                             myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
 
-                            firebase.database().ref('purchase_order/'+plant+'/'+orderSnapshot.key+'/contact').once('value', function(contactSnapshot){
+                            firebase.database().ref('purchase_order/'+orderSnapshot.key+'/contact').once('value', function(contactSnapshot){
                                 contactSnapshot.forEach(function(contactChildSnapshot){
                                     // console.log(contactChildSnapshot.key, contactChildSnapshot.val());
                                     contact_name = contactChildSnapshot.val().contact_name;
