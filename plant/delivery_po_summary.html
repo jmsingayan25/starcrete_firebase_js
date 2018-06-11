@@ -194,10 +194,12 @@
     			date = dateFormat(ongoingOrderSnapshot.val().date);
     			status = ongoingOrderSnapshot.val().status;
                 issued_dr_plant = ongoingOrderSnapshot.val().issued_dr_plant;
+                gate_pass = ongoingOrderSnapshot.val().gate_pass;
 
     			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
     			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
-    			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+                myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+    			myTbody += "<td><strong>" + gate_pass + "</strong></td>";
                 myTbody += "<td><strong>" + date + "</strong></td>";
     			myTbody += "<td><strong>" + issued_dr_plant + "</strong></td>";
                 myTbody += "<td><span class='label' style='background-color: #ffa000; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
@@ -226,10 +228,12 @@
     			date = dateFormat(deliveredOrderSnapshot.val().date);
     			status = deliveredOrderSnapshot.val().status;
                 delivered_plant = deliveredOrderSnapshot.val().delivered_plant;
+                gate_pass = deliveredOrderSnapshot.val().gate_pass;
 
     			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
     			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
     			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+                myTbody += "<td><strong>" + gate_pass + "</strong></td>";
                 myTbody += "<td><strong>" + date + "</strong></td>";
     			myTbody += "<td><strong>" + delivered_plant + "</strong></td>";
     			myTbody += "<td><span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
@@ -257,10 +261,12 @@
     			date = dateFormat(backloadOrderSnapshot.val().date);
     			status = backloadOrderSnapshot.val().status;
                 backloaded_plant = backloadOrderSnapshot.val().backloaded_plant;
+                gate_pass = backloadOrderSnapshot.val().gate_pass;
 
     			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
     			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
     			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+                myTbody += "<td><strong>" + gate_pass + "</strong></td>";
                 myTbody += "<td><strong>" + date + "</strong></td>";
     			myTbody += "<td><strong>" + backloaded_plant + "</strong></td>";
     			myTbody += "<td><span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
@@ -488,7 +494,8 @@
 	                                                <!-- <th class="col-md-1">P.O. No.</th> -->
 	                                                <th class="col-md-1"><input type="text" class="form-control" placeholder="DR No." disabled></th>
 	                                                <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
-	                                                <th class="col-md-1">Quantity</th>
+                                                    <th class="col-md-1">Quantity</th>
+	                                                <th class="col-md-1">Gate Pass</th>
 	                                                <!-- <th class="col-md-2"><input type="text" class="form-control" placeholder="Project Name" disabled></th> -->
 	                                                <!-- <th class="col-md-2"><input type="text" class="form-control" placeholder="Address" disabled></th> -->
                                                     <th class="col-md-1">Date Transaction</th>
