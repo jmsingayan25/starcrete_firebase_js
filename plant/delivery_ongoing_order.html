@@ -258,53 +258,64 @@
 
                 console.log(orderSnapshot.key, orderSnapshot.val());
                 firebase.database().ref('delivery_ongoing_order/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
-                    projectSnapshot.forEach(function(projectChildSnapshot){
+                    projectSnapshot.forEach(function(dOprojectChildSnapshot){
+                        firebase.database().ref('project').once('value', function(clientSnapshot){
+                            // console.log(clientSnapshot.key, clientSnapshot.val());
+                            clientSnapshot.forEach(function(clientChildSnapshot){
+                                clientChildSnapshot.forEach(function(projectChildSnapshot){
+                                    if(projectChildSnapshot.key == dOprojectChildSnapshot.key){
+                                        firebase.database().ref('client/'+clientChildSnapshot.key).once('value', function(clientSnapshot2){
+                                        // console.log(projectSnapshot.key, projectSnapshot.val());
+                                        var key = orderSnapshot.key;
+                                        var dr_no = orderSnapshot.val().dr_no;
+                                        var po_no = orderSnapshot.val().po_no;
+                                        var item_no = orderSnapshot.val().item_no;
+                                        var psi = orderSnapshot.val().psi || "";
 
-                        // console.log(projectSnapshot.key, projectSnapshot.val());
-                        var key = orderSnapshot.key;
-                        var dr_no = orderSnapshot.val().dr_no;
-                        var po_no = orderSnapshot.val().po_no;
-                        var item_no = orderSnapshot.val().item_no;
-                        var psi = orderSnapshot.val().psi || "";
+                                        if(psi != ""){
+                                            psi_ext = " (" + psi + " psi)";
+                                        }else{
+                                            psi_ext = "";
+                                        }
 
-                        if(psi != ""){
-                            psi_ext = " (" + psi + " psi)";
-                        }else{
-                            psi_ext = "";
-                        }
+                                        var quantity = Number(orderSnapshot.val().quantity).toLocaleString('en');
+                                        var project_name = dOprojectChildSnapshot.val().project_name;
+                                        var project_address = dOprojectChildSnapshot.val().project_address;
+                                        var client_name = clientSnapshot2.val().client_name;
+                                        var gate_pass = orderSnapshot.val().gate_pass;
+                                        var date = dateFormat(orderSnapshot.val().date);
 
-                        var quantity = Number(orderSnapshot.val().quantity).toLocaleString('en');
-                        var project_name = projectChildSnapshot.val().project_name;
-                        var project_address = projectChildSnapshot.val().project_address;
-                        var gate_pass = orderSnapshot.val().gate_pass;
-                        var date = dateFormat(orderSnapshot.val().date);
+                                        myTbody += "<tr><td><strong>" + count + "</strong></td>";
+                                        myTbody += "<td><strong>" + dr_no + "</strong></td>";
+                                        myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "'\"><strong>" + po_no + "</strong></div></td>";
+                                        myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+                                        myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+                                        myTbody += "<td><strong>" + project_name + "</strong></td>";
+                                        myTbody += "<td><strong>" + project_address + "</strong></td>";
+                                        myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
 
-                        myTbody += "<tr><td><strong>" + count + "</strong></td>";
-                        myTbody += "<td><strong>" + dr_no + "</strong></td>";
-                        myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "'\"><strong>" + po_no + "</strong></div></td>";
-                        myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
-                        myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
-                        myTbody += "<td><strong>" + project_name + "</strong></td>";
-                        myTbody += "<td><strong>" + project_address + "</strong></td>";
-                        myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+                                        firebase.database().ref('delivery_ongoing_order/'+key+'/contact').once('value', function(contactSnapshot){
+                                            contactSnapshot.forEach(function(contactChildSnapshot){
 
-                        firebase.database().ref('delivery_ongoing_order/'+key+'/contact').once('value', function(contactSnapshot){
-                            contactSnapshot.forEach(function(contactChildSnapshot){
+                                                contact_name = contactChildSnapshot.val().contact_name;
+                                                contact_no = contactChildSnapshot.val().contact_no;
+                                                
+                                                myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+                                            });
+                                        });
 
-                                contact_name = contactChildSnapshot.val().contact_name;
-                                contact_no = contactChildSnapshot.val().contact_no;
-                                
-                                myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+                                        myTbody += "</td>";
+                                        myTbody += "<td><strong>" + gate_pass + "</strong></td>";
+                                        myTbody += "<td><strong>" + date + "</strong></td>";
+                                        myTbody += "<td><strong><button type='submit' class='btn btn-sm btn-block' style='margin-bottom: 3px; width: 85px; background-color: #388e3c; color: white;' data-toggle='modal' data-target='#deliveryModal" + count + "'><span class='fa fa-check'></span> <strong>Delivered</strong></button><form onsubmit=\"if(confirm('Proceed?')){deliveredForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><div class='modal fade' id='deliveryModal" + count + "' role='dialog'><div class='modal-dialog modal-md'><div class='modal-content'><div class='modal-header'><h4 class='modal-title'>Delivery Details</h4></div><div class='modal-body' style='text-align: left;'><input type='hidden' id='hidden_key' name='hidden_key' value='" + key + "'><div class='row'><div class='col-md-6'><label>DR No.:</label> <strong>" + dr_no + "</strong></div><div class='col-md-6'><label>Date Issued:</label> <strong>" + date + "</strong></div></div><div class='row'><div class='col-md-6'><label>P.O. No.:</label> <strong>" + po_no + "</strong></div><div class='col-md-6'><label>Date Delivered:</label> <input type='date' name='option_delivered' id='option_delivered' required></div></div><div class='row'><div class='col-md-6'><label>Gate Pass:</label> <strong>" + gate_pass + "</strong></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Item Information</strong></div></div><div class='row'><div class='col-md-6'><label>Item</label></div><div class='col-md-6'> <strong>" + item_no + " " + psi_ext + "</strong></div></div><div class='row'><div class='col-md-6'><label>Quantity</label></div><div class='col-md-6'> <strong>" + quantity + " pcs</strong></div></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Project Information</strong></div></div><div class='row'><div class='col-md-6'><label>Client Name</label></div><div class='col-md-6'> <strong>" + client_name + "</strong></div></div><div class='row'><div class='col-md-6'><label>Project Name</label></div><div class='col-md-6'> <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'><label>Project Address</label></div><div class='col-md-6'> <strong>" + project_address + "</strong></div></div></div></div><div class='modal-footer'><input type='submit' name='submit' id='submit' value='Confirm' class='btn btn-primary' style='font-weight: bold;'><button type='button' class='btn btn-default' data-dismiss='modal'><strong>Close</strong></button></div></div></div></div></form></strong><form onsubmit=\"if(confirm('Proceed?')){backloadForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' id='returned' name='returned' value='' class='btn btn-sm btn-block' onclick='' style='background-color: #d32f2f; color: white; width: 85px;' ><span class='fa fa-close'></span> <strong>Backload</strong></button></form></td></tr>";
+
+                                        document.getElementById('orderList').innerHTML = myTbody;
+                                        count++;
+                                        });
+                                    }
+                                });
                             });
                         });
-
-                        myTbody += "</td>";
-                        myTbody += "<td><strong>" + gate_pass + "</strong></td>";
-                        myTbody += "<td><strong>" + date + "</strong></td>";
-                        myTbody += "<td><strong><button type='submit' class='btn btn-sm btn-block' style='margin-bottom: 3px; width: 85px; background-color: #388e3c; color: white;' data-toggle='modal' data-target='#deliveryModal" + count + "'><span class='fa fa-check'></span> <strong>Delivered</strong></button><form onsubmit=\"if(confirm('Proceed?')){deliveredForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><div class='modal fade' id='deliveryModal" + count + "' role='dialog'><div class='modal-dialog modal-md'><div class='modal-content'><div class='modal-header'><h4 class='modal-title'>Delivery Details</h4></div><div class='modal-body' style='text-align: left;'><input type='hidden' id='hidden_key' name='hidden_key' value='" + key + "'><div class='row'><div class='col-md-6'><label>DR No.:</label> <strong>" + dr_no + "</strong></div><div class='col-md-6'><label>Date Issued:</label> <strong>" + date + "</strong></div></div><div class='row'><div class='col-md-6'><label>P.O. No.:</label> <strong>" + po_no + "</strong></div><div class='col-md-6'><label>Date Delivered:</label> <input type='date' name='option_delivered' id='option_delivered' required></div></div><div class='row'><div class='col-md-6'><label>Gate Pass:</label> <strong>" + gate_pass + "</strong></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Item Information</strong></div></div><div class='row'><div class='col-md-6'><label>Item</label></div><div class='col-md-6'> <strong>" + item_no + " " + psi_ext + "</strong></div></div><div class='row'><div class='col-md-6'><label>Quantity</label></div><div class='col-md-6'> <strong>" + quantity + " pcs</strong></div></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Project Information</strong></div></div><div class='row'><div class='col-md-6'><label>Project Name</label></div><div class='col-md-6'> <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'><label>Project Address</label></div><div class='col-md-6'> <strong>" + project_address + "</strong></div></div></div></div><div class='modal-footer'><input type='submit' name='submit' id='submit' value='Confirm' class='btn btn-primary' style='font-weight: bold;'><button type='button' class='btn btn-default' data-dismiss='modal'><strong>Close</strong></button></div></div></div></div></form></strong><form onsubmit=\"if(confirm('Proceed?')){backloadForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' id='returned' name='returned' value='' class='btn btn-sm btn-block' onclick='' style='background-color: #d32f2f; color: white; width: 85px;' ><span class='fa fa-close'></span> <strong>Backload</strong></button></form></td></tr>";
-
-                        document.getElementById('orderList').innerHTML = myTbody;
-                        count++;
                     });
                 });
             }
@@ -330,16 +341,20 @@
     	event.preventDefault();
 
         var date_value = document.getElementById('option_delivered').value;
+        var currentDateTime = formatDate(date_value);
+
     	firebase.database().ref().child('delivery_ongoing_order/'+orderKey).once('value').then(function(orderSnapshot){
 
             var key = orderSnapshot.key;
-			var date = new Date().toLocaleString('en');
-            var date1 = new Date(date_value).toLocaleString('en');
-    		var po_no = orderSnapshot.val().po_no;
-    		var dr_no = orderSnapshot.val().dr_no;
-    		var gate_pass = orderSnapshot.val().gate_pass;
-    		var item_no = orderSnapshot.val().item_no;
-    		var psi = orderSnapshot.val().psi || "";
+            var date = new Date().toLocaleString('en');
+            var time = new Date().toLocaleTimeString('en');
+            
+            var date1 = currentDateTime + ", " + time;
+            var po_no = orderSnapshot.val().po_no;
+            var dr_no = orderSnapshot.val().dr_no;
+            var gate_pass = orderSnapshot.val().gate_pass;
+            var item_no = orderSnapshot.val().item_no;
+            var psi = orderSnapshot.val().psi || "";
 
             if(psi != ""){
                 psi_ext = " (" + psi + " psi)";
@@ -347,27 +362,29 @@
                 psi_ext = "";
             }
 
-    		var quantity = orderSnapshot.val().quantity;
-    		var po_no_key = orderSnapshot.val().po_no_key;
-    		var status = "DELIVERED";
+            var quantity = orderSnapshot.val().quantity;
+            var po_no_key = orderSnapshot.val().po_no_key;
+            var status = "DELIVERED";
             var issued_po_plant = orderSnapshot.val().issued_po_plant;
             var delivered_plant = orderSnapshot.val().issued_dr_plant
 
-    		var drData = {
+            var drData = {
                 date: date,
-    			date1: date1,
-    			po_no: po_no,
-    			dr_no: dr_no,
-    			gate_pass: gate_pass,
-    			item_no: item_no,
-    			psi: psi,
+                date1: date1,
+                date2: date_value,
+                time: time,
+                po_no: po_no,
+                dr_no: dr_no,
+                gate_pass: gate_pass,
+                item_no: item_no,
+                psi: psi,
                 reverseDate: firebase.database.ServerValue.TIMESTAMP,
-    			quantity: quantity,
-    			po_no_key: po_no_key,
-    			status: status,
+                quantity: quantity,
+                po_no_key: po_no_key,
+                status: status,
                 issued_po_plant: issued_po_plant,
                 delivered_plant: delivered_plant
-    		}
+            }
 
     		console.log(drData);
 			// var drPost = firebase.database().ref('delivery_delivered_order/');
@@ -613,6 +630,23 @@
             document.getElementById('id_count_ongoing_order1').innerHTML = "<span class='badge'>" + do_count + "</span>";
         });
 
+    }
+
+    function formatDate(date) {
+        var today = new Date(date);
+        // var hr = today.getHours();
+        // var min = today.getMinutes();
+        // var sec = today.getSeconds();
+        // ap = (hr < 12) ? "AM" : "PM";
+        // hr = (hr == 0) ? 12 : hr;
+        // hr = (hr > 12) ? hr - 12 : hr;
+
+        // hr = checkTime(hr);
+        // min = checkTime(min);
+        // sec = checkTime(sec);
+        // var strTime = hr + ":" + min + ":" + sec + " " + ap;
+
+        return today.getMonth()+1 + "/" + today.getDate() + "/" + today.getFullYear();
     }
 
 </script>
