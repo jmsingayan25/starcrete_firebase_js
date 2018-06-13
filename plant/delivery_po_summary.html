@@ -176,6 +176,39 @@
 
     	var myTbody = "";
 
+        firebase.database().ref('delivery_ongoing_order/').orderByChild('po_no_key').equalTo(po_no_key).once('value').then(function(drOngoingSnapshot){
+            firebase.database().ref('delivery_delivered_order/').orderByChild('po_no_key').equalTo(po_no_key).once('value').then(function(drDeliveredSnapshot){   
+                 firebase.database().ref('delivery_backloaded_order/').orderByChild('po_no_key').equalTo(po_no_key).once('value').then(function(drBackloadedSnapshot){    
+                    if(drOngoingSnapshot.val() == null && drDeliveredSnapshot.val() == null && drBackloadedSnapshot.val() == null){
+
+                        myTbody = "<tr><td colspan='7' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                        document.getElementById("orderList").innerHTML = myTbody;
+                    }
+                });
+            }); 
+        });
+
+        // firebase.database().ref('delivery_delivered_order/').orderByChild('po_no_key').equalTo(po_no_key).once('value').then(function(drSnapshot){
+            
+        //     if(drSnapshot.val() == null){
+
+        //         myTbody = "<tr><td colspan='7' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+        //         document.getElementById("orderList").innerHTML = myTbody;
+        //     }
+        // });
+
+        // firebase.database().ref('delivery_backloaded_order/').orderByChild('po_no_key').equalTo(po_no_key).once('value').then(function(drSnapshot){
+            
+        //     if(drSnapshot.val() == null){
+
+        //         myTbody = "<tr><td colspan='7' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+        //         document.getElementById("orderList").innerHTML = myTbody;
+        //     }
+        // });
+
     	firebase.database().ref('delivery_ongoing_order/').orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(ongoingOrderSnapshot){
     		// console.log(ongoingOrderSnapshot.val());
     		// ongoingOrderSnapshot.forEach(function(ongoingOrderChildSnapshot){
@@ -284,9 +317,10 @@
 	    			po_no = orderSnapshot.val().po_no;
 	    			project_name = projectChildSnapshot.val().project_name;
 	    			project_address = projectChildSnapshot.val().project_address;
+                    plant = orderSnapshot.val().issued_po_plant;
 
 	    			document.getElementById('id_dr_detail').innerHTML = "Delivery Details for P.O. No. <strong>" + po_no + "</strong>";
-
+                    document.getElementById('id_issued_po_to').innerHTML = "Issued P.O. to: <strong>" + plant + "</strong>";
 
 	    			document.getElementById('id_project_name').innerHTML = "Project Name: <strong>" + project_name + "</strong>";
 	    			document.getElementById('id_project_address').innerHTML = "Project Address: <strong>" + project_address + "</strong>";
@@ -482,8 +516,11 @@
                             <div class="col-md-12">
                                 <header class="panel-heading">
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-6">
                                             <span id="id_dr_detail"></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <span id="id_issued_po_to"></span>
                                         </div>
                                     </div>
                                     <br>
