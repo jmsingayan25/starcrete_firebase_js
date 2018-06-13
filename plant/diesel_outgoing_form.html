@@ -150,9 +150,11 @@
         var destination = document.getElementById('destination').value;
         var truck_no = document.getElementById('truck_no').value;
         var operator = document.getElementById('operator').value;
+        var date = new Date().toLocaleDateString('en');
+        var time = new Date().toLocaleTimeString('en');
         
         var OutcomingData ={ quantity_out: quantity_out.toUpperCase(), destination: destination.toUpperCase(),
-            truck_no: truck_no.toUpperCase(), operator: operator.toUpperCase()};
+            truck_no: truck_no.toUpperCase(), operator: operator.toUpperCase(),reverseDate: firebase.database.ServerValue.TIMESTAMP,date: date, time: time};
 
         var PostDataBase = firebase.database().ref().child("outcoming_diesel/" + plant);
         var newPostRef = PostDataBase.push();
