@@ -307,7 +307,7 @@
                                         myTbody += "</td>";
                                         myTbody += "<td><strong>" + gate_pass + "</strong></td>";
                                         myTbody += "<td><strong>" + date + "</strong></td>";
-                                        myTbody += "<td><strong><button type='submit' class='btn btn-sm btn-block' style='margin-bottom: 3px; width: 85px; background-color: #388e3c; color: white;' data-toggle='modal' data-target='#deliveryModal" + count.rowIndex + "'><span class='fa fa-check'></span> <strong>Delivered</strong></button><form onsubmit=\"if(confirm('Proceed?')){deliveredForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><div class='modal fade' id='deliveryModal" + count.rowIndex + "' role='dialog'><div class='modal-dialog modal-md'><div class='modal-content'><div class='modal-header'><h4 class='modal-title'>Delivery Details</h4></div><div class='modal-body' style='text-align: left;'><input type='hidden' id='hidden_key' name='hidden_key' value='" + key + "'><div class='row'><div class='col-md-6'><label>DR No.:</label> <strong>" + dr_no + "</strong></div><div class='col-md-6'><label>Date Issued:</label> <strong>" + date + "</strong></div></div><div class='row'><div class='col-md-6'><label>P.O. No.:</label> <strong>" + po_no + "</strong></div><div class='col-md-6'><label>Date Delivered:</label> <input type='date' name='option_delivered' id='option_delivered' required></div></div><div class='row'><div class='col-md-6'><label>Gate Pass:</label> <strong>" + gate_pass + "</strong></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Item Information</strong></div></div><div class='row'><div class='col-md-6'><label>Item</label></div><div class='col-md-6'> <strong>" + item_no + " " + psi_ext + "</strong></div></div><div class='row'><div class='col-md-6'><label>Quantity</label></div><div class='col-md-6'> <strong>" + quantity + " pcs</strong></div></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Project Information</strong></div></div><div class='row'><div class='col-md-6'><label>Client Name</label></div><div class='col-md-6'> <strong>" + client_name + "</strong></div></div><div class='row'><div class='col-md-6'><label>Project Name</label></div><div class='col-md-6'> <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'><label>Project Address</label></div><div class='col-md-6'> <strong>" + project_address + "</strong></div></div></div></div><div class='modal-footer'><input type='submit' name='submit' id='submit' value='Confirm' class='btn btn-primary' style='font-weight: bold;'><button type='button' class='btn btn-default' data-dismiss='modal'><strong>Close</strong></button></div></div></div></div></form></strong><form onsubmit=\"if(confirm('Proceed?')){backloadForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' id='returned' name='returned' value='' class='btn btn-sm btn-block' onclick='' style='background-color: #d32f2f; color: white; width: 85px;' ><span class='fa fa-close'></span> <strong>Backload</strong></button></form></td></tr>";
+                                        myTbody += "<td><strong><button type='submit' class='btn btn-sm btn-block' style='margin-bottom: 3px; width: 85px; background-color: #388e3c; color: white;' data-toggle='modal' data-target='#deliveryModal" + count + "'><span class='fa fa-check'></span> <strong>Delivered</strong></button><form onsubmit=\"if(confirm('Proceed?')){deliveredForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><div class='modal fade' id='deliveryModal" + count + "' role='dialog'><div class='modal-dialog modal-md'><div class='modal-content'><div class='modal-header'><h4 class='modal-title'>Delivery Details</h4></div><div class='modal-body' style='text-align: left;'><input type='hidden' id='hidden_key' name='hidden_key' value='" + key + "'><div class='row'><div class='col-md-6'><label>DR No.:</label> <strong>" + dr_no + "</strong></div><div class='col-md-6'><label>Date Issued:</label> <strong>" + date + "</strong></div></div><div class='row'><div class='col-md-6'><label>P.O. No.:</label> <strong>" + po_no + "</strong></div><div class='col-md-6'><label>Date Delivered:</label> <input type='date' name='option_delivered' id='option_delivered' onchange='dateChange(this.value);' required></div></div><div class='row'><div class='col-md-6'><label>Gate Pass:</label> <strong>" + gate_pass + "</strong></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Item Information</strong></div></div><div class='row'><div class='col-md-6'><label>Item</label></div><div class='col-md-6'> <strong>" + item_no + " " + psi_ext + "</strong></div></div><div class='row'><div class='col-md-6'><label>Quantity</label></div><div class='col-md-6'> <strong>" + quantity + " pcs</strong></div></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Project Information</strong></div></div><div class='row'><div class='col-md-6'><label>Client Name</label></div><div class='col-md-6'> <strong>" + client_name + "</strong></div></div><div class='row'><div class='col-md-6'><label>Project Name</label></div><div class='col-md-6'> <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'><label>Project Address</label></div><div class='col-md-6'> <strong>" + project_address + "</strong></div></div></div></div><div class='modal-footer'><input type='submit' name='submit' id='submit' value='Confirm' class='btn btn-primary' style='font-weight: bold;'><button type='button' class='btn btn-default' data-dismiss='modal'><strong>Close</strong></button></div></div></div></div></form></strong><form onsubmit=\"if(confirm('Proceed?')){backloadForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' id='returned' name='returned' value='' class='btn btn-sm btn-block' onclick='' style='background-color: #d32f2f; color: white; width: 85px;' ><span class='fa fa-close'></span> <strong>Backload</strong></button></form></td></tr>";
 
                                         document.getElementById('orderList').innerHTML = myTbody;
                                         count++;
@@ -336,20 +336,23 @@
         document.getElementById('id_plant_name').innerHTML = plant_name;
     }
 
+    var date_value = "";
+    function dateChange(val){
+        date_value = val;
+    }
+
     function deliveredForm(orderKey, plant){
 
     	event.preventDefault();
 
-        var date_value = document.getElementById('option_delivered').value;
         var currentDateTime = formatDate(date_value);
 
     	firebase.database().ref().child('delivery_ongoing_order/'+orderKey).once('value').then(function(orderSnapshot){
 
             var key = orderSnapshot.key;
-            var date = new Date().toLocaleString('en');
             var time = new Date().toLocaleTimeString('en');
             
-            var date1 = currentDateTime + ", " + time;
+            var date = currentDateTime + ", " + time;
             var po_no = orderSnapshot.val().po_no;
             var dr_no = orderSnapshot.val().dr_no;
             var gate_pass = orderSnapshot.val().gate_pass;
@@ -370,9 +373,6 @@
 
             var drData = {
                 date: date,
-                date1: date1,
-                date2: date_value,
-                time: time,
                 po_no: po_no,
                 dr_no: dr_no,
                 gate_pass: gate_pass,
@@ -386,84 +386,84 @@
                 delivered_plant: delivered_plant
             }
 
-    		console.log(drData);
-			// var drPost = firebase.database().ref('delivery_delivered_order/');
-			// var drPostData = drPost.push();
-			// drPostData.set(drData);
-			// var postId = drPostData.key;
+    		// console.log(drData);
+			var drPost = firebase.database().ref('delivery_delivered_order/');
+			var drPostData = drPost.push();
+			drPostData.set(drData);
+			var postId = drPostData.key;
 
-   //          // insert data of project details to recently added transaction
-			// firebase.database().ref('delivery_ongoing_order/'+orderKey+'/project_detail').once('value').then(function(projectSnapshot){
-			// 	projectSnapshot.forEach(function(projectChildSnapshot){
+            // insert data of project details to recently added transaction
+			firebase.database().ref('delivery_ongoing_order/'+orderKey+'/project_detail').once('value').then(function(projectSnapshot){
+				projectSnapshot.forEach(function(projectChildSnapshot){
 
-			// 		var project_address = projectChildSnapshot.val().project_address;
-		 //    		var project_name = projectChildSnapshot.val().project_name;
-		 //    		var project_key = projectChildSnapshot.key;
+					var project_address = projectChildSnapshot.val().project_address;
+		    		var project_name = projectChildSnapshot.val().project_name;
+		    		var project_key = projectChildSnapshot.key;
 
-		 //    		var projectData = {
-		 //    			project_address: project_address,
-		 //    			project_name: project_name
-		 //    		}
+		    		var projectData = {
+		    			project_address: project_address,
+		    			project_name: project_name
+		    		}
 
-		 //    		firebase.database().ref('delivery_delivered_order/'+postId+'/project_detail/'+project_key).set(projectData);
+		    		firebase.database().ref('delivery_delivered_order/'+postId+'/project_detail/'+project_key).set(projectData);
 
-   //                  var historyData = {
-   //                      date: date,
-   //                      reverseDate: firebase.database.ServerValue.TIMESTAMP,
-   //                      type_of_transaction: "Delivered DR No.",
-   //                      history: "Delivered DR No. " + dr_no + " with P.O. No. " + po_no + " and " + Number(quantity) + " pcs of " + item_no + psi_ext + " to " + project_name + " in " + project_address
-   //                  }
+                    var historyData = {
+                        date: date,
+                        reverseDate: firebase.database.ServerValue.TIMESTAMP,
+                        type_of_transaction: "Delivered DR No.",
+                        history: "Delivered DR No. " + dr_no + " with P.O. No. " + po_no + " and " + Number(quantity) + " pcs of " + item_no + psi_ext + " to " + project_name + " in " + project_address
+                    }
 
-   //                  var postHistoryData = firebase.database().ref('history/'+plant+'/');
-   //                  var newHistoryPostRef = postHistoryData.push();
-   //                  newHistoryPostRef.set(historyData);
+                    var postHistoryData = firebase.database().ref('history/'+plant+'/');
+                    var newHistoryPostRef = postHistoryData.push();
+                    newHistoryPostRef.set(historyData);
 
-   //                  var postHistoryId = newHistoryPostRef.key;
+                    var postHistoryId = newHistoryPostRef.key;
                 
-   //                  firebase.database().ref().child('history/'+plant+'/'+postHistoryId).once('value', function(snapshot){
+                    firebase.database().ref().child('history/'+plant+'/'+postHistoryId).once('value', function(snapshot){
 
-   //                      var timestamp = snapshot.val().reverseDate * -1;
-   //                      var timeUpdate = {
-   //                          reverseDate: timestamp
-   //                      } 
+                        var timestamp = snapshot.val().reverseDate * -1;
+                        var timeUpdate = {
+                            reverseDate: timestamp
+                        } 
 
-   //                      firebase.database().ref('history/'+plant+'/'+postHistoryId).update(timeUpdate);
-   //                  });
-			// 	});
-			// });	
+                        firebase.database().ref('history/'+plant+'/'+postHistoryId).update(timeUpdate);
+                    });
+				});
+			});	
 
-   //          //update on child node: reverseDate
-   //          firebase.database().ref().child('delivery_delivered_order/'+postId).once('value', function(snapshot){
+            //update on child node: reverseDate
+            firebase.database().ref().child('delivery_delivered_order/'+postId).once('value', function(snapshot){
 
-   //              var timestamp = snapshot.val().reverseDate * -1;
-   //              var timeUpdate = {
-   //                  reverseDate: timestamp
-   //              } 
+                var timestamp = snapshot.val().reverseDate * -1;
+                var timeUpdate = {
+                    reverseDate: timestamp
+                } 
 
-   //              firebase.database().ref('delivery_delivered_order/'+postId).update(timeUpdate);
-   //          });
+                firebase.database().ref('delivery_delivered_order/'+postId).update(timeUpdate);
+            });
 
-   //          // insert contact detail to recently added transaction
-			// firebase.database().ref('delivery_ongoing_order/'+orderKey+'/contact').once('value').then(function(contactSnapshot){
-			// 	contactSnapshot.forEach(function(contactChildSnapshot){
+            // insert contact detail to recently added transaction
+			firebase.database().ref('delivery_ongoing_order/'+orderKey+'/contact').once('value').then(function(contactSnapshot){
+				contactSnapshot.forEach(function(contactChildSnapshot){
 
-			// 		var contact_name = contactChildSnapshot.val().contact_name;
-		 //    		var contact_no = contactChildSnapshot.val().contact_no;
-		 //    		var contact_key = contactChildSnapshot.key;
+					var contact_name = contactChildSnapshot.val().contact_name;
+		    		var contact_no = contactChildSnapshot.val().contact_no;
+		    		var contact_key = contactChildSnapshot.key;
 
-		 //    		var contactData = {
-		 //    			contact_name: contact_name,
-		 //    			contact_no: contact_no
-		 //    		}
+		    		var contactData = {
+		    			contact_name: contact_name,
+		    			contact_no: contact_no
+		    		}
 
-		 //    		firebase.database().ref('delivery_delivered_order/'+postId+'/contact/'+contact_key).set(contactData);
-			// 	});
-			// });		
+		    		firebase.database().ref('delivery_delivered_order/'+postId+'/contact/'+contact_key).set(contactData);
+				});
+			});		
 
-			// if(firebase.database().ref('delivery_ongoing_order/'+orderKey).remove()){
-			// 	alert("DR No. " + dr_no + " has been delivered successfully.");
-   //      		window.location.href = 'delivery_ongoing_order.html';
-			// }
+			if(firebase.database().ref('delivery_ongoing_order/'+orderKey).remove()){
+				alert("DR No. " + dr_no + " has been delivered successfully.");
+        		window.location.href = 'delivery_ongoing_order.html';
+			}
 		});
     }
 
