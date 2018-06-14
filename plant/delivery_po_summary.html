@@ -155,6 +155,10 @@
 
                     plant = snapshot.val().office;
 
+                    if(plant == 'Head Office'){
+                        window.location.href = '../headoffice/index.html';
+                    }
+                    
                     tableData(plant);
                     totalCountBadge(plant);
 

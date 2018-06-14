@@ -153,14 +153,13 @@
                 var uid = user.uid;
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-                    // console.log("UID: " + uid);
-                    // console.log("First Name: " + snapshot.val().firstname);
-                    // console.log("Last Name: " + snapshot.val().lastname);
-                    // console.log("Email: " + snapshot.val().email);
-                    // console.log("Position: " + snapshot.val().position);
-                    // console.log("Office: " + snapshot.val().office);
+
                     plant = snapshot.val().office;
 
+                    if(plant == 'Head Office'){
+                        window.location.href = '../headoffice/index.html';
+                    }
+                    
                     tableData(plant);
                     totalCountBadge(plant);
 

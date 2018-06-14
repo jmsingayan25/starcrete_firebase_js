@@ -133,6 +133,10 @@
 
                     plant = snapshot.val().office;
 
+                    if(plant == 'Head Office'){
+                        window.location.href = '../headoffice/index.html';
+                    }
+                    
                     formData(plant);
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {

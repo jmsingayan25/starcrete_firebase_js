@@ -129,6 +129,10 @@
 
                     plant = snapshot.val().office;
 
+                    if(plant == 'Head Office'){
+                        window.location.href = '../headoffice/index.html';
+                    }
+                    
                     // tableData(plant);
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
