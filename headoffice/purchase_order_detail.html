@@ -164,13 +164,13 @@
 
         var contactTbody = "";
 
-        firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey).once('value').then(function(poSnapshot){
+        firebase.database().ref('purchase_order/'+purchaseOrderKey).once('value').then(function(poSnapshot){
             if(poSnapshot.val() == null){
                 window.location.href = 'purchase_order.html?plant='+plant;
             }
         });
 
-        firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey+'/contact').once('value').then(function(contactSnapshot){
+        firebase.database().ref('purchase_order/'+purchaseOrderKey+'/contact').once('value').then(function(contactSnapshot){
             contactSnapshot.forEach(function(contactChildSnapshot){
 
                 contactTbody += "<tr><td><strong>" + contactChildSnapshot.val().contact_name + "</strong></td>";
@@ -187,7 +187,7 @@
         var itemTbody = "";
         count = 1;
 
-        firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey+'/item').once('value').then(function(itemSnapshot){
+        firebase.database().ref('purchase_order/'+purchaseOrderKey+'/item').once('value').then(function(itemSnapshot){
             itemSnapshot.forEach(function(itemChildsnapshot){
 
                 item_no = itemChildsnapshot.val().item_no;
@@ -205,29 +205,31 @@
                 itemTbody += "<tr><td><strong>" + count + "</strong></td>";
                 itemTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
                 itemTbody += "<td><strong>" + quantity + " pcs / " + balance + " pcs</strong></td>";
-                itemTbody += "<td><button type='button' class='btn btn-sm btn-block' style='margin-bottom: 5px; background-color: #ffa000; color: white;' data-toggle='modal' data-target='#purchaseOrderUpdateRow" + count + "'><span class='fa fa-edit'></span> <strong>Update</strong></button><div class='modal fade' id='purchaseOrderUpdateRow" + count + "' role='dialog'> <div class='modal-dialog modal-sm' style='max-width: 300px;'><div class='modal-content'><div class='modal-header'><div class='row' style='text-align: center;'><div class='col-md-12'><img src='../images/starcrete.png' width='150' height='50'></div></div></div><div class='modal-body' style='text-align: left;'><h4 class='modal-title' style='text-align: center'>Confirmation</h4><hr><div class='row'><div class='col-md-12'><div class='form-group'><label for='confirm_password'>Password</label><input type='password' name='confirm_password' class='form-control' required></div></div></div></div><div class='modal-footer'><button type='submit' name='update' id='update' class='btn btn-primary'><strong>Submit</strong></button><button type='button' class='btn btn-default' data-dismiss='modal'><strong>Close</strong></button></div></div></div></div></td></tr>";
+                // itemTbody += "<td><button type='button' class='btn btn-sm btn-block' style='margin-bottom: 5px; background-color: #ffa000; color: white;' data-toggle='modal' data-target='#purchaseOrderUpdateRow" + count + "'><span class='fa fa-edit'></span> <strong>Update</strong></button><div class='modal fade' id='purchaseOrderUpdateRow" + count + "' role='dialog'> <div class='modal-dialog modal-sm' style='max-width: 300px;'><div class='modal-content'><div class='modal-header'><div class='row' style='text-align: center;'><div class='col-md-12'><img src='../images/starcrete.png' width='150' height='50'></div></div></div><div class='modal-body' style='text-align: left;'><h4 class='modal-title' style='text-align: center'>Confirmation</h4><hr><div class='row'><div class='col-md-12'><div class='form-group'><label for='confirm_password'>Password</label><input type='password' name='confirm_password' class='form-control' required></div></div></div></div><div class='modal-footer'><button type='submit' name='update' id='update' class='btn btn-primary'><strong>Submit</strong></button><button type='button' class='btn btn-default' data-dismiss='modal'><strong>Close</strong></button></div></div></div></div></td></tr>";
+                itemTbody += "<td><a href='purchase_order_update.html?key="+purchaseOrderKey+"&item_no="+item_no+"&plant=" + plant + "' class='btn btn-sm btn-block' style='margin-bottom: 5px; background-color: #ffa000; color: white;'><strong>Update</strong></a></td></tr>";
 
                 document.getElementById('itemList').innerHTML = itemTbody;
                 count++;
             });
         });
 
-        firebase.database().ref('purchase_order/'+plant).once('value', function(poSnapshot){
-            poSnapshot.forEach(function(poChildSnapshot){
+        firebase.database().ref('purchase_order/'+purchaseOrderKey).once('value', function(poSnapshot){
+            // poSnapshot.forEach(function(poChildSnapshot){
+
                 // document.getElementById('li_plant').innerHTML = "<i class='fa fa-building'></i>"+plant;
                 // document.getElementById('li_po_list').innerHTML = "<i class='icon_document'></i><a href='purchase_order.html?plant=" + plant + "'>Pending P.O.</a>";
 
                 document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='purchase_order.html?plant=" + plant + "'>Pending P.O.</a></li><li><i class='icon_document'></i>P.O. Details</li>";
-                document.getElementById('po_no_id').innerHTML = poChildSnapshot.val().po_no;
-                document.getElementById('po_no_id1').innerHTML = poChildSnapshot.val().po_no;
-                document.getElementById('po_no_id2').innerHTML = poChildSnapshot.val().po_no;
+                document.getElementById('po_no_id').innerHTML = poSnapshot.val().po_no;
+                document.getElementById('po_no_id1').innerHTML = poSnapshot.val().po_no;
+                document.getElementById('po_no_id2').innerHTML = poSnapshot.val().po_no;
                 document.getElementById('span_client_name').innerHTML = "";
                 document.getElementById('span_client_address').innerHTML = "";
-                document.getElementById('span_date').innerHTML = dateFormat(poChildSnapshot.val().date);
-            });
+                document.getElementById('span_date').innerHTML = dateFormat(poSnapshot.val().date);
+            // });
         });
 
-        firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey+'/project_detail').once('value', function(poProjectSnapshot){
+        firebase.database().ref('purchase_order/'+purchaseOrderKey+'/project_detail').once('value', function(poProjectSnapshot){
             poProjectSnapshot.forEach(function(poProjectChildSnapshot){
 
                 document.getElementById('span_project_name').innerHTML = poProjectChildSnapshot.val().project_name;
@@ -260,7 +262,7 @@
         var input_reason = document.getElementById('reason').value;
 
         console.log(input_reason);
-        firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey).once('value', function(poSnapshot){
+        firebase.database().ref('purchase_order/'+purchaseOrderKey).once('value', function(poSnapshot){
             // poSnapshot.forEach(function(poChildSnapshot){
 
             var po_no_key = purchaseOrderKey;
@@ -275,14 +277,14 @@
                 status: 'CLOSED'
             }
             // console.log(poData);
-            var postData = firebase.database().ref('purchase_order_closed/'+plant);
+            var postData = firebase.database().ref('purchase_order_closed/');
             var newPostRef = postData.push();
             newPostRef.set(poData);
 
             var postId = newPostRef.key;
 
             // insert contact detail to created closed po
-            firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey+'/contact').once('value', function(poContactSnapshot){
+            firebase.database().ref('purchase_order/'+purchaseOrderKey+'/contact').once('value', function(poContactSnapshot){
                 poContactSnapshot.forEach(function(poContactChildSnapshot){
 
                     var contact_name = poContactChildSnapshot.val().contact_name;
@@ -293,13 +295,13 @@
                         contact_no: contact_no
                     }
 
-                    firebase.database().ref('purchase_order_closed/'+plant+'/'+postId+'/contact/'+poContactChildSnapshot.key).set(contactData);
+                    firebase.database().ref('purchase_order_closed/'+postId+'/contact/'+poContactChildSnapshot.key).set(contactData);
                     // console.log(contactData);
                 });      
             });
 
             // insert project detail to created closed po
-            firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey+'/project_detail').once('value', function(poProjectSnapshot){
+            firebase.database().ref('purchase_order/'+purchaseOrderKey+'/project_detail').once('value', function(poProjectSnapshot){
                 poProjectSnapshot.forEach(function(poProjectChildSnapshot){
 
                     var project_name = poProjectChildSnapshot.val().project_name;
@@ -310,12 +312,12 @@
                         project_address: project_address
                     }
 
-                    firebase.database().ref('purchase_order_closed/'+plant+'/'+postId+'/project_detail/'+poProjectChildSnapshot.key).set(projectData);
+                    firebase.database().ref('purchase_order_closed/'+postId+'/project_detail/'+poProjectChildSnapshot.key).set(projectData);
                 });
             });
 
             // insert item detail to created closed po
-            firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey+'/item').once('value', function(itemSnapshot){
+            firebase.database().ref('purchase_order/'+purchaseOrderKey+'/item').once('value', function(itemSnapshot){
                 itemSnapshot.forEach(function(itemChildsnapshot){
 
                     var item_no = itemChildsnapshot.val().item_no;
@@ -330,12 +332,12 @@
                         quantity: quantity,
                     }
 
-                    firebase.database().ref('purchase_order_closed/'+plant+'/'+postId+'/item/'+itemChildsnapshot.key).set(itemData);
+                    firebase.database().ref('purchase_order_closed/'+postId+'/item/'+itemChildsnapshot.key).set(itemData);
                 });
             });
 
             // update reverseDate value to negative value
-            firebase.database().ref('purchase_order_closed/'+plant+'/'+postId).once('value', function(poClosedSnapshot){
+            firebase.database().ref('purchase_order_closed/'+postId).once('value', function(poClosedSnapshot){
 
                 var timestamp = poClosedSnapshot.val().reverseDate * -1;
 
@@ -343,7 +345,7 @@
                     reverseDate: timestamp
                 }
 
-                firebase.database().ref('purchase_order_closed/'+plant+'/'+postId).update(timestampData);
+                firebase.database().ref('purchase_order_closed/'+postId).update(timestampData);
             });
 
             var historyData = {
@@ -370,16 +372,12 @@
                 firebase.database().ref('history/'+plant+'/'+postHistoryId).update(timestampData);
             });
 
-            // if(firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey).remove()){
-            //     alert("P.O. No. " + po_no + " has been closed.");
-            //     window.location.href = 'purchase_order_closed.html';
-            // }
         });
 
-        if(firebase.database().ref('purchase_order/'+plant+'/'+purchaseOrderKey).remove()){
-            alert("P.O. No. " + po_no + " has been closed.");
-            window.location.href = 'purchase_order_closed.html';
-        }
+        // if(firebase.database().ref('purchase_order/'+purchaseOrderKey).remove()){
+        //     alert("P.O. No. " + po_no + " has been closed.");
+        //     window.location.href = 'purchase_order_closed.html?plant=' + plant;
+        // }
     }
     
 </script>
