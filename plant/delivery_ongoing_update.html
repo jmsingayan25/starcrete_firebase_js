@@ -8,7 +8,7 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="img/favicon.png">
 
-	<title></title>
+	<title>Ongoing Delivery Update - Delivery Order</title>
 
 	<!-- Firebase App is always required and must be first -->
 	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
@@ -138,7 +138,7 @@
 
                     tableData(plant);
                     totalCountBadge(plant);
-
+                    itemList();
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
@@ -219,9 +219,18 @@
     		quantity = Number(deliverySnapshot.val().quantity).toLocaleString('en');
 
     		myTbody = "<div class='form-group'><label for='po_no' class='col-md-5 control-label'>P.O. No.</label><div class='col-md-7'><p class='help-block'><strong>" + po_no + "</strong></p></div></div><div class='form-group'><label for='update_delivery_receipt_no' class='col-md-5 control-label'>DR No.</label><div class='col-md-7'><p class='help-block'><strong>" + dr_no + "</strong></p></div></div><div class='form-group'><label for='update_gate_pass' class='col-md-5 control-label'>Gate Pass</label><div class='col-md-7'><p class='help-block'><strong>" + gate_pass + "</strong></p></div></div><div class='form-group'><label for='item_no' class='col-md-5 control-label'>Current Item</label><div class='col-md-7'><p class='help-block'><strong>" + item_no + psi_ext + "</strong></p></div></div><div class='form-group'><label for='update_quantity' class='col-md-5 control-label'>Issued Quantity</label><div class='col-md-7'><p class='help-block'><strong>" + quantity + " pcs</strong></p></div></div>";
-    		document.getElementById('update_form').innerHTML = myTbody;
+    		document.getElementById('dr_details').innerHTML = myTbody;
 
+    		firebase.database().ref('purchase_order/'+deliverySnapshot.val().po_no_key+'/item/'+item_no).once('value', function(itemSnapshot){
+    			
+    			balance = Number(itemSnapshot.val().balance).toLocaleString('en');
+
+    			document.getElementById('id_remaining_balance').innerHTML = "<strong>" + balance + " pcs</strong>";
+
+    		});
     	});
+
+
 
     	if(plant == 'Bravo'){
             plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
@@ -253,6 +262,73 @@
             document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
         });
 
+    }
+
+    function itemList(){
+
+        firebase.database().ref('item').once('value').then(function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+                $('[name="new_item_no"]').append("<option value='" + childSnapshot.val().item + "'>" + childSnapshot.val().item + "</option>");
+            });
+            // console.log(snapshot.val());
+        });
+    }
+
+    function submitForm(){
+
+    	event.preventDefault();
+    	firebase.database().ref('delivery_ongoing_order/'+deliveryKey).once('value', function(ongoingOrderSnapshot){
+
+    		// var new_dr_no = document.getElementById('new_dr_no').value || "";
+	    	// var new_gate_pass = document.getElementById('new_gate_pass').value || "";
+	    	// var new_item_no = document.getElementById('new_item_no').value || "";
+	    	// var new_psi = document.getElementById('new_psi').value || "";
+	    	// var new_issued_quantity = document.getElementById('new_issued_quantity').value || "";
+
+	    	if(document.getElementById('new_dr_no').value){
+	    		new_dr_no = document.getElementById('new_dr_no').value;
+	    	}else{
+	    		new_dr_no = ongoingOrderSnapshot.val().dr_no;
+	    	}
+
+	    	if(document.getElementById('new_gate_pass').value){
+	    		new_gate_pass = document.getElementById('new_gate_pass').value;
+	    	}else{
+	    		new_gate_pass = ongoingOrderSnapshot.val().gate_pass;
+	    	}
+
+	    	if(document.getElementById('new_item_no').value){
+	    		new_item_no = document.getElementById('new_item_no').value;
+	    	}else{
+	    		new_item_no = ongoingOrderSnapshot.val().item_no;
+	    	}
+
+	    	if(document.getElementById('new_psi').value){
+	    		new_psi = document.getElementById('new_psi').value;
+	    	}else{
+	    		new_psi = ongoingOrderSnapshot.val().psi;
+	    	}
+
+	    	if(document.getElementById('new_issued_quantity').value){
+	    		new_issued_quantity = document.getElementById('new_issued_quantity').value;
+	    	}else{
+	    		new_issued_quantity = ongoingOrderSnapshot.val().quantity;
+	    	}
+
+	    	var drData = {
+	    		dr_no: new_dr_no,
+	    		gate_pass: new_gate_pass,
+	    		item_no: new_item_no,
+	    		psi: new_psi,
+	    		quantity: new_issued_quantity
+	    	}
+
+	    	console.log(drData);
+	    	if(firebase.database().ref('delivery_ongoing_order/'+deliveryKey).update(drData)){
+	    		alert("DR Details update success.");
+	    		window.location.href = 'delivery_ongoing_order.html';
+	    	}
+    	});
     }
 
 </script>
@@ -359,11 +435,70 @@
 							Delivery Receipt Details
 							</header>
 							<div class="panel-body">
-								<form class="form-horizontal" role="form" id="update_form">	
+								<form class="form-horizontal" role="form" id="dr_details">	
 								</form>
 							</div>
 						</section>
 					</div>
+					<div class="col-md-6">
+                        <section class="panel">
+                            <header class="panel-heading">
+                                Update
+                            </header>
+                            <div class="panel-body">
+                                <form class="form-horizontal" role="form" id="update_details" onsubmit="if(confirm('Proceed?')){submitForm();}else{event.preventDefault();}">
+                                	<div class="form-group">
+                                		<label for="new_dr_no" class="col-md-4 control-label">New DR No.</label>
+                                		<div class="col-md-4">
+                                			<input type="text" id="new_dr_no" name="new_dr_no" class="form-control" autocomplete="off">
+                                		</div>
+                                	</div>
+                                	<div class="form-group">
+                                		<label for="new_gate_pass" class="col-md-4 control-label">New Gate Pass No.</label>
+                                		<div class="col-md-4">
+                                			<input type="text" id="new_gate_pass" name="new_gate_pass" class="form-control" autocomplete="off">
+                                		</div>
+                                	</div>
+                                	<div class="form-group">
+                                		<label for="new_item_no" class="col-md-4 control-label">New Item</label>
+                                		<div class="col-md-4">
+                                			<select id="new_item_no" name="new_item_no" class="form-control">
+                                                <option value="">Select</option>
+                                            </select>
+                                		</div>
+                                	</div>
+                                	<div class="form-group">
+                                		<label for="new_psi" class="col-md-4 control-label">New PSI <span class="required" style="color: red;">*</span></label>
+                                		<div class="col-md-4">
+                                			<input type="text" id="new_psi" name="new_psi" class="form-control" autocomplete="off">
+                                		</div>
+                                	</div>
+                                	<div class="form-group">
+                                		<label for="new_issued_quantity" class="col-md-4 control-label">New Issued Quantity</label>
+                                		<div class="col-md-4">
+                                			<input type="text" id="new_issued_quantity" name="new_issued_quantity" class="form-control" autocomplete="off">
+                                		</div>
+                                	</div>
+                                	<div class="form-group">
+                                		<label for="remaining_balance" class="col-md-4 control-label">Remaining Balance</label>
+                                		<div class="col-md-4">
+                                			<p class="help-block" id="id_remaining_balance"></p> 
+                                		</div>
+                                	</div>
+                                	<div class="form-group">
+                                        <div class="col-md-offset-8 col-md-4">
+                                            <input type="submit" name="submit" id="submit" value="Done" class="btn btn-primary" style="font-weight: bold;">
+                                            <a href="plant_delivery_order.php" class="btn btn-default"><strong>Cancel</strong></a>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <footer class="panel-footer">
+                                Note: Leave input field blank if no changes.<br>
+                                <span class="required" style="color: red;">*</span> - Put number '0' on PSI field to remove PSI value 
+                            </footer>
+                        </section>
+                    </div>
 				</div>
 	        </section>
 	    </section>
