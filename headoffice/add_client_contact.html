@@ -99,7 +99,9 @@
                 var uid = user.uid;
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-
+                	if(snapshot.val().plant != 'Head Office'){
+                        window.location.href = '../plant/index.html';
+                    }
                 	tableData();
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
