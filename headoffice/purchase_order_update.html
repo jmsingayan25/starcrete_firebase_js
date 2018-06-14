@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+    <link rel="shortcut icon" href="img/favicon.png">
+
+    <title>Purchase Order Update</title>
+
+    <!-- Firebase App is always required and must be first -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+
+	<!-- Add additional services you want to use -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+	<script src="../js_config/firebase_config.js"></script>
+
+	<!-- Bootstrap CSS -->    
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="../css/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="../css/elegant-icons-style.css" rel="stylesheet" />
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
+    <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="../css/fullcalendar.css">
+    <link href="../css/widgets.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/style-responsive.css" rel="stylesheet" />
+    <link href="../css/xcharts.min.css" rel=" stylesheet">	
+    <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+
+    <!-- javascripts -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery-ui-1.10.4.min.js"></script>
+    <script src="../js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+    <!-- bootstrap -->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- nice scroll -->
+    <script src="../js/jquery.scrollTo.min.js"></script>
+    <script src="../js/jquery.nicescroll.js" type="text/javascript"></script>
+    <!-- charts scripts -->
+    <script src="../assets/jquery-knob/js/jquery.knob.js"></script>
+    <script src="../js/jquery.sparkline.js" type="text/javascript"></script>
+    <script src="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+    <script src="../js/owl.carousel.js" ></script>
+    <!-- jQuery full calendar -->
+    <script src="../js/fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
+    <script src="../assets/fullcalendar/fullcalendar/fullcalendar.js"></script>
+    <!--script for this page only-->
+    <script src="../js/calendar-custom.js"></script>
+    <script src="../js/jquery.rateit.min.js"></script>
+    <!-- custom select -->
+    <script src="../js/jquery.customSelect.min.js" ></script>
+    <script src="../assets/chart-master/Chart.js"></script>
+
+    <!--custome script for all page-->
+    <script src="../js/scripts.js"></script>
+    <!-- custom script for this page-->
+    <script src="../js/sparkline-chart.js"></script>
+    <script src="../js/easy-pie-chart.js"></script>
+    <script src="../js/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="../js/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="../js/xcharts.min.js"></script>
+    <script src="../js/jquery.autosize.min.js"></script>
+    <script src="../js/jquery.placeholder.min.js"></script>
+    <script src="../js/gdp-data.js"></script>  
+    <script src="../js/morris.min.js"></script>
+    <script src="../js/sparklines.js"></script>    
+    <script src="../js/charts.js"></script>
+    <script src="../js/jquery.slimscroll.min.js"></script>
+    <script src="../js_config/function.js"></script>
+
+    <!-- =======================================================
+    Theme Name: NiceAdmin
+    Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+    Author: BootstrapMade
+    Author URL: https://bootstrapmade.com
+    ======================================================= -->
+
+<script>
+	
+	var po_no_key = getUrlParameter('key');
+	var item_no = getUrlParameter('item_no');
+    var plant = getUrlParameter('plant');
+
+	$(function() {
+        
+	 	var $form = $( "#form" );
+        var $input = $form.find( "#update_quantity" );
+
+        $form.on( "keyup", "#update_quantity", function( event ) {
+            
+            // When user select text in the document, also abort.
+            var selection = window.getSelection().toString();
+            if ( selection !== '' ) {
+                return;
+            }
+            
+            // When the arrow keys are pressed, abort.
+            if ( $.inArray( event.keyCode, [38,40,37,39] ) !== -1 ) {
+                return;
+            }
+            
+            var $this = $( this );
+            
+            // Get the value.
+            var input = $this.val();
+            
+            var input = input.replace(/[\D\s\._\-]+/g, "");
+            input = input ? parseInt( input, 10 ) : 0;
+
+            $this.val( function() {
+                return ( input === 0 ) ? "" : input.toLocaleString( "en-US" );
+            });
+        });    
+
+        tableData(plant);
+        itemList();
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user != null) {
+
+                var uid = user.uid;
+        
+                firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+                    if(snapshot.val().office != 'Head Office'){
+                        window.location.href = '../plant/index.html';
+                    }
+                        
+                    document.getElementById('username').innerHTML = snapshot.val().firstname; 
+                },(error) => {
+                    console.error(error);
+                });
+            } else {
+                window.location.href = '../login.html';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+    });
+
+	function tableData(plant){
+
+		firebase.database().ref('purchase_order/'+po_no_key).once('value', function(poSnapshot){
+			// console.log(poSnapshot.key, poSnapshot.val());
+			po_no = poSnapshot.val().po_no;
+
+			document.getElementById('id_po_no').innerHTML = "<strong>" + po_no + "</strong>";
+
+			firebase.database().ref('purchase_order/'+po_no_key+'/project_detail').once('value', function(projectSnapshot){
+				projectSnapshot.forEach(function(projectChildSnapshot){
+
+					project_name = projectChildSnapshot.val().project_name;
+					project_address = projectChildSnapshot.val().project_address;
+
+					document.getElementById('id_project_name').innerHTML = "<strong>" + project_name + "</strong>";
+					document.getElementById('id_project_address').innerHTML = "<strong>" + project_address + "</strong>";
+				});
+			});
+
+			firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_no).once('value', function(itemSnapshot){
+
+				
+				item_no = itemSnapshot.val().item_no;
+				psi = itemSnapshot.val().psi;
+				quantity = Number(itemSnapshot.val().quantity).toLocaleString('en');
+
+				if(psi != ""){
+					psi_ext = " (" + psi + " psi)";
+				}else{
+					psi_ext = "";
+				}
+
+				document.getElementById('id_current_item_no').innerHTML = "<strong>" + item_no + psi_ext + "</strong>";
+				document.getElementById('id_ordered_quantity').innerHTML = "<strong>" + quantity + " pcs</strong>";
+				checkBalance(quantity);
+			});
+		});
+
+		document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</a></li><li><i class='icon_document'></i><a href='purchase_order.html?plant=" + plant + "'>Pending P.O.</a></li><li><i class='icon_document'></i><a href='purchase_order_detail.html?key=" + po_no_key + "&plant=" + plant + "'>P.O. Details</a></li><li><i class='fa fa-file-text'></i>Update</li>";
+	}
+
+	function checkBalance(input_val){
+
+		firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_no).once('value', function(itemSnapshot){
+
+			var quantity = Number(itemSnapshot.val().quantity);
+			var balance = Number(itemSnapshot.val().balance);
+			var button = document.getElementById('submit');
+			var input_borderColor = document.getElementById('update_quantity');
+
+			input_val = input_val.replace(",","");
+			input_val = Number(input_val);
+
+			new_quantity = quantity - input_val;
+        	new_value = balance - new_quantity;
+        	console.log(new_value);
+        	if(input_val == ''){
+	            new_value = balance;
+	        }
+
+	        if(new_value < 0 && input_val != ''){
+	            button.disabled = 'true';
+	            input_borderColor.style.borderColor = 'red';
+	        }else if(new_value < 0 && input_val == ''){
+	            button.disabled = 'false';
+	            input_borderColor.style.borderColor = '';
+	        }else{
+	            button.disabled = '';
+	            input_borderColor.style.borderColor = '';
+	        }
+
+	        string_new_value = new_value.toLocaleString('en') + " pcs";
+	        if(new_value < 1350){
+	            document.getElementById('balance').innerHTML = string_new_value.bold().fontcolor("red");
+	                    
+	        }else{
+	            document.getElementById('balance').innerHTML = string_new_value.bold();
+	        }
+
+		});
+	}
+
+	function itemList(){
+
+        firebase.database().ref('item').once('value').then(function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+                $('[name="update_item_no"]').append("<option value='" + childSnapshot.val().item + "'>" + childSnapshot.val().item + "</option>");
+            });
+            // console.log(snapshot.val());
+        });
+    }
+
+	function submitForm(){
+
+		event.preventDefault();
+
+		var new_po_no = null;
+		var new_item_no = null;
+		var new_psi = null;
+		var new_ordered_quantity = null;
+
+		firebase.database().ref('purchase_order/'+po_no_key).once('value', function(poSnapshot){
+			firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_no).once('value', function(itemSnapshot){
+				if(document.getElementById('update_po_no').value){
+					new_po_no = document.getElementById('update_po_no').value;
+				}else{
+					new_po_no = poSnapshot.val().po_no;
+				}
+
+				if(document.getElementById('update_item_no').value){
+					new_item_no = document.getElementById('update_item_no').value;
+				}else{
+					new_item_no = itemSnapshot.val().item_no;
+				}
+
+				if(document.getElementById('update_psi').value){
+					new_psi = document.getElementById('update_psi').value;
+				}else{
+					new_psi = itemSnapshot.val().psi;
+				}
+
+				if(document.getElementById('update_quantity').value){
+					new_ordered_quantity = document.getElementById('update_quantity').value;
+					new_ordered_quantity = new_ordered_quantity.replace(",","");
+				}else{
+					new_ordered_quantity = itemSnapshot.val().quantity;
+				}
+
+				var poData = {
+					po_no: new_po_no,
+					item_no: new_item_no,
+					psi: new_psi,
+					quantity: new_ordered_quantity
+				}
+
+				console.log(poData);
+			});	
+		});
+	}
+</script>
+</head>
+<body>
+	<section id="container" class="">
+        <header class="header dark-bg">
+            <div class="toggle-nav">
+            <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
+            </div>
+
+            <!--logo start-->
+
+            <!--logo end-->
+            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+            <div class="top-nav notification-row">                
+                <!-- notificatoin dropdown start-->
+                <ul class="nav pull-right top-menu">
+                    <!-- user login dropdown start-->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <!--  <span class="profile-ava">
+                        <img alt="" src="img/avatar1_small.jpg">
+                        </span> -->
+                            <span class="username" id="username"></span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <div class="log-arrow-up"></div>
+                            <li>
+                                <a href="" id="logoutBtn"><i class="icon_key_alt"></i> Log Out</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->
+                </ul>
+                <!-- notificatoin dropdown end-->
+            </div>
+        </header>  
+        <!--sidebar start-->
+        <aside>
+            <div id="sidebar"  class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu">                
+                    <li class="">
+                        <a class="" href="index.html">
+                            <i class="icon_house"></i>
+                            <span>History</span>
+                        </a>
+                    </li> 
+                    <li>
+                        <a class="" href="client.html">
+                            <i class="fa fa-address-book"></i>
+                            <span>Clients</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Bravo</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order.html?plant=Bravo">Purchase Order</a></li>                          
+                            <li><a class="" href="delivery_ongoing_order.html?plant=Bravo">Delivery Page</a></li>
+                        </ul>
+                    </li>  
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Delta</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>                          
+                            <li><a class="" href="delivery_ongoing_order.html?plant=Delta">Delivery Page</a></li>
+                        </ul>
+                    </li>  
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-file"></i>
+                            <span>Forms</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order_form.html">Add New P.O.</a></li>
+                            <!-- <li><a class="" href="purchase_aggregates_order_form.php">P.O. Aggregates Form</a></li>                           -->
+                        </ul>
+                    </li>
+                </ul>
+                <!-- sidebar menu end-->
+            </div>
+        </aside>
+        <!--sidebar end-->
+
+        <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">            
+                <!--overview start-->
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- <h3 class="page-header"><i class="fa fa-building"></i> Purchase Order Update</h3> -->
+                        <ol class="breadcrumb" id="id_breadcrumb"></ol>
+                    </div>
+                </div>
+
+                <!-- Basic Forms & Horizontal Forms-->
+              
+				<div class="row">
+					<div class="col-md-6">
+						<section class="panel">
+							<header class="panel-heading">
+							Purchase Order Details
+							</header>
+							<div class="panel-body">
+								<form class="form-horizontal" role="form">
+									<div class="form-group">
+										<label for="update_po_no" class="col-md-3 control-label">P.O. No.</label>
+										<div class="col-md-6">
+                                            <p class="help-block" id="id_po_no"></p>
+										</div>
+									</div>
+                                    <div class="form-group">
+                                        <label for="update_project_name" class="col-md-3 control-label">Project Name</label>
+                                        <div class="col-md-8">
+                                            <p class="help-block" id="id_project_name"></p>
+                                        </div>
+                                    </div>
+									<div class="form-group">
+										<label for="update_address" class="col-md-3 control-label">Project Address</label>
+										<div class="col-md-8">
+                                            <p class="help-block" id="id_project_address"></p>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="item_no" class="col-md-3 control-label">Current Item</label>
+										<div class="col-md-6">
+                                            <p class="help-block" id="id_current_item_no"></p>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="quantity" class="col-md-3 control-label">Ordered Quantity</label>
+										<div class="col-md-6">
+                                            <p class="help-block" id="id_ordered_quantity"></p>
+										</div>
+									</div>
+								</form>
+							</div>
+						</section>
+					</div>
+					<div class="col-md-6">
+                        <section class="panel">
+                            <header class="panel-heading">
+                                Update
+                            </header>
+                            <form class="form-horizontal" role="form" id="form" onsubmit="if(confirm('Proceed?')){submitForm();}else{event.preventDefault();}">
+                                <div class="panel-body">
+                                	<div class="form-group">
+                                        <label for="update_po_no" class="col-md-4 control-label">New P.O. No.</label>
+                                        <div class="col-md-4">
+                                            <input type="text" id="update_po_no" name="update_po_no" class="form-control" value="" autocomplete="off">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="update_item_no" class="col-md-4 control-label">New Item</label>
+                                        <div class="col-md-4">
+                                            <select id="update_item_no" name="update_item_no" class="form-control" style="width: 150px;">
+                                                <option value="">Select</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="update_item_no" class="col-md-4 control-label">New PSI<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-4">
+                                            <input type="text" id="update_psi" name="update_psi" class="form-control" value="">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="update_quantity" class="col-md-4 control-label">New Ordered Quantity</label>
+                                        <div class="col-md-4">
+                                            <input type="text" id="update_quantity" name="update_quantity" class="form-control" autocomplete="off" onkeyup="checkBalance(this.value);">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="balance" class="col-md-4 control-label">New Remaining Balance</label>
+                                        <div class="col-md-6">
+                                            <!-- <p class="help-block"><strong><?php echo number_format($purchase_row['balance']) . " pcs" ?></strong></p> -->
+                                            <p class="help-block" id="balance"></p> 
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-offset-8 col-md-4">
+                                            <input type="submit" name="submit" id="submit" value="Done" class="btn btn-primary" style="font-weight: bold;">
+                                            <a href="purchase_order_detail.html" class="btn btn-default"><strong>Cancel</strong></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                            <footer class="panel-footer">
+                                Note: Leave input field blank if no changes.<br>
+                                <span class="required" style="color: red;">*</span> - Put number '0' on PSI field to remove PSI value 
+                            </footer>
+                        </section>
+                    </div>
+				</div>
+            </section>
+        </section>
+    </section>
+</body>
+</html>
