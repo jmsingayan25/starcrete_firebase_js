@@ -100,7 +100,7 @@
                 var uid = user.uid;
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-                    if(snapshot.val().plant != 'Head Office'){
+                    if(snapshot.val().office != 'Head Office'){
                         window.location.href = '../plant/index.html';
                     }
                     tableData();
