@@ -150,6 +150,7 @@
 
         tableData(plant);
         startTime();
+        totalCountBadge(plant);
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -174,7 +175,7 @@
 
         document.getElementById('id_page_header').innerHTML = "<a href='delivery_backloaded_order.html?plant=" + plant + "' style='color: inherit;'>" + plant + " Delivery Order</a>";
 
-        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='delivery_ongoing_order.html?plant=" + plant + "'>Ongoing Delivery <span class='badge'><?php echo getDeliveryCountOnDeliveryOffice($db, $search_plant); ?></span></a></li><li><i class='fa fa-info-circle'></i><a href='delivery_pending_order.html?plant=" + plant + "'>Existing P.O. <span class='badge'><?php echo countPendingPo($db, $search_plant); ?></span></a></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i>Backloaded</li>";
+        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='delivery_ongoing_order.html?plant=" + plant + "'>Ongoing Delivery <span id='id_count_ongoing_order'></span></a></li><li><i class='fa fa-info-circle'></i><a href='delivery_pending_order.html?plant=" + plant + "'>Existing P.O. <span id='id_count_existing_po'></span></a></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i>Backloaded</li>";
 
     });
 
@@ -183,7 +184,7 @@
     	var myTbody = "";
     	var count = 1;
 
-        firebase.database().ref('purchase_order').once('value').then(function(drSnapshot){
+        firebase.database().ref('delivery_backloaded_order').orderByChild('backloaded_plant').equalTo(plant).once('value').then(function(drSnapshot){
             if(drSnapshot.val() == null){
 
                 myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
@@ -281,6 +282,31 @@
         return i;
     }
 
+    function totalCountBadge(plant){
+
+        po_count = 0;
+        firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
+            firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
+                itemSnapshot.forEach(function(itemChildSnapshot){
+                    if(itemChildSnapshot.val().balance != 0){
+                        po_count++;
+                        document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
+                    }
+                });
+            });
+        });
+
+        do_count = 0;
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot){
+
+            if(ongoingOrderSnapshot.val() != null){
+                do_count++;
+                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+            }else{
+                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + 0 + "</span>";
+            }
+        });
+    }
 </script>
 <style>
 .table_page{

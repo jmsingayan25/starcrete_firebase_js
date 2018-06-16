@@ -150,6 +150,7 @@
 
         tableData(plant);
         startTime();
+        totalCountBadge(plant);
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -174,7 +175,7 @@
 
         document.getElementById('id_page_header').innerHTML = "<a href='delivery_pending_order.html?plant=" + plant + "' style='color: inherit;'>" + plant + " Delivery Order</a>";
 
-        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='delivery_ongoing_order.html?plant=" + plant + "'>Ongoing Delivery <span class='badge'><?php echo getDeliveryCountOnDeliveryOffice($db, $search_plant); ?></span></a></li><li><i class='fa fa-info-circle'></i>Existing P.O. <span class='badge'><?php echo countPendingPo($db, $search_plant); ?></span></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i><a href='delivery_backloaded_order.html?plant=" + plant + "'>Backloaded</a></li>";
+        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='delivery_ongoing_order.html?plant=" + plant + "'>Ongoing Delivery <span id='id_count_ongoing_order'></span></a></li><li><i class='fa fa-info-circle'></i>Existing P.O. <span id='id_count_existing_po'></span></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i><a href='delivery_backloaded_order.html?plant=" + plant + "'>Backloaded</a></li>";
 
     });
 
@@ -195,51 +196,55 @@
     	firebase.database().ref('purchase_order/').orderByChild('reverseDate').on('child_added', function(orderSnapshot){
     		firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
     			itemSnapshot.forEach(function(itemChildSnapshot){
-    				firebase.database().ref('purchase_order/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
-    					projectSnapshot.forEach(function(projectChildSnapshot){
 
-    						po_no = orderSnapshot.val().po_no;
-    						item_no = itemChildSnapshot.val().item_no;
-    						psi = itemChildSnapshot.val().psi;
+                    if(itemChildSnapshot.val().balance != 0){
 
-    						if(psi != ""){
-    							psi_ext = " (" + psi + " psi)";
-    						}else{
-    							psi_ext = "";
-    						}
+                        firebase.database().ref('purchase_order/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
+                            projectSnapshot.forEach(function(projectChildSnapshot){
 
-    						quantity = Number(itemChildSnapshot.val().quantity).toLocaleString('en');
-    						balance = Number(itemChildSnapshot.val().balance).toLocaleString('en');
-    						project_name = projectChildSnapshot.val().project_name;
-    						project_address = projectChildSnapshot.val().project_address;
-    						date = dateFormat(orderSnapshot.val().date);
-    						status = orderSnapshot.val().status;
+                                po_no = orderSnapshot.val().po_no;
+                                item_no = itemChildSnapshot.val().item_no;
+                                psi = itemChildSnapshot.val().psi;
 
-    						myTbody += "<tr><td><strong>" + count + "</strong></td>";
-    						myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + plant + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
-    						myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
-    						myTbody += "<td><strong>" + quantity + " pcs / " + balance +" pcs</strong></td>";
-    						myTbody += "<td><strong>" + project_name + "</strong></td>";
-    						myTbody += "<td><strong>" + project_address + "</strong></td>";
-    						myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+                                if(psi != ""){
+                                    psi_ext = " (" + psi + " psi)";
+                                }else{
+                                    psi_ext = "";
+                                }
 
-    						firebase.database().ref('purchase_order/'+orderSnapshot.key+'/contact').once('value', function(contactSnapshot){
-                                contactSnapshot.forEach(function(contactChildSnapshot){
+                                quantity = Number(itemChildSnapshot.val().quantity).toLocaleString('en');
+                                balance = Number(itemChildSnapshot.val().balance).toLocaleString('en');
+                                project_name = projectChildSnapshot.val().project_name;
+                                project_address = projectChildSnapshot.val().project_address;
+                                date = dateFormat(orderSnapshot.val().date);
+                                status = orderSnapshot.val().status;
 
-                                    contact_name = contactChildSnapshot.val().contact_name;
-                                    contact_no = contactChildSnapshot.val().contact_no;
-                                    myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
-                                }); 
+                                myTbody += "<tr><td><strong>" + count + "</strong></td>";
+                                myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + plant + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
+                                myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+                                myTbody += "<td><strong>" + quantity + " pcs / " + balance +" pcs</strong></td>";
+                                myTbody += "<td><strong>" + project_name + "</strong></td>";
+                                myTbody += "<td><strong>" + project_address + "</strong></td>";
+                                myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+
+                                firebase.database().ref('purchase_order/'+orderSnapshot.key+'/contact').once('value', function(contactSnapshot){
+                                    contactSnapshot.forEach(function(contactChildSnapshot){
+
+                                        contact_name = contactChildSnapshot.val().contact_name;
+                                        contact_no = contactChildSnapshot.val().contact_no;
+                                        myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+                                    }); 
+                                });
+
+                                myTbody += "</td>";
+                                myTbody += "<td><strong>" + date + "</strong></td>";
+                                myTbody += "<td><span class='label' style='background-color: #b3b3b3; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
+                                
+                                document.getElementById('orderList').innerHTML = myTbody;
+                                count++;
                             });
-
-    						myTbody += "</td>";
-    						myTbody += "<td><strong>" + date + "</strong></td>";
-    						myTbody += "<td><span class='label' style='background-color: #b3b3b3; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
-    						
-    						document.getElementById('orderList').innerHTML = myTbody;
-    						count++;
-    					});
-    				});
+                        });
+                    }
     			});
     		});
     	});
@@ -278,6 +283,29 @@
             i = "0" + i;
         }
         return i;
+    }
+
+    function totalCountBadge(plant){
+
+        po_count = 0;
+        firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
+            firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
+                itemSnapshot.forEach(function(itemChildSnapshot){
+                    if(itemChildSnapshot.val().balance != 0){
+                        po_count++;
+                        document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
+                    }
+                });
+            });
+        });
+
+        do_count = 0;
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot) {
+            console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
+            do_count++;
+            document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+        });
+
     }
 
 </script> 
