@@ -152,6 +152,7 @@
          var po_no = document.getElementById('po_no').value;
          var dr_no = document.getElementById('dr_no').value;
          var quantity_in = document.getElementById('quantity_in').value;
+         quantity_in = quantity_in.replace(",","");
          var supplier = document.getElementById('supplier').value;
          var truck_no = document.getElementById('truck_no').value;
          var date = new Date().toLocaleDateString('en');

@@ -184,13 +184,15 @@ function DisplayCurrentData()
                 if(dateFormat(CurrentDate)== date)
                 {
                 var truckno = dieselChildSnapshot.val().truck_no;
-                var quantityin = dieselChildSnapshot.val().quantity_in;
-                var availablestock = CheckSnapshot.val().Liters;
+                var suppliername = dieselChildSnapshot.val().supplier;
+                var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
+                var availablestock = Number(CheckSnapshot.val().Liters).toLocaleString("en");
                 var time = dieselChildSnapshot.val().time;
 
-                myTbody += "<tr><td><strong>" + truckno+ "</strong></td><td></td>";
-                myTbody += "<td><strong>" + quantityin +" liters(s)" +"</strong></td><td></td>";
-                myTbody += "<td><strong>" + availablestock + "</strong></td><td></td>";
+                myTbody += "<tr><td><strong>" + truckno+ "</strong></td>";
+                myTbody += "<td><strong>" + suppliername + "</strong></td>";
+                myTbody += "<td><strong>" + quantityin +" liter(s)" +"</strong></td><td></td>";
+                myTbody += "<td><strong>" + availablestock + " liter(s)"+"</strong></td><td></td>";
                 myTbody += "<td><strong>" + time + "</strong></td></tr>";
 
                 document.getElementById("DieselList").innerHTML = myTbody; 
@@ -211,16 +213,16 @@ function DisplayCurrentData()
 
                 var truckno = dieselChildSnapshotout.val().truck_no;
                 var operator= dieselChildSnapshotout.val().operator;
-                var quantityout= dieselChildSnapshotout.val().quantity_out;
-                var availablestock = CheckSnapshotout.val().Liters;
+                var quantityout= Number(dieselChildSnapshotout.val().quantity_out).toLocaleString("en");
+                var availablestock = Number(CheckSnapshotout.val().Liters).toLocaleString("en");
                 var address = dieselChildSnapshotout.val().destination;
                 var time = dieselChildSnapshotout.val().time;
                 
                 
                  myTbody += "<tr><td><strong>" + truckno+ "</strong></td>";
                  myTbody += "<td><strong>" + operator+"</strong></td><td></td>";
-                 myTbody += "<td><strong>" + quantityout+" liters(s)"+"</strong></td>";
-                 myTbody += "<td><strong>" + availablestock+"</strong></td>";
+                 myTbody += "<td><strong>" + quantityout+" liter(s)"+"</strong></td>";
+                 myTbody += "<td><strong>" + availablestock+" liter(s)"+"</strong></td>";
                  myTbody += "<td><strong>" + address+"</strong></td>";
                  myTbody += "<td><strong>" + time+"</strong></td>";
 
