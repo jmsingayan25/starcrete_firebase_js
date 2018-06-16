@@ -138,6 +138,8 @@
                     }
                     
                     formData(plant);
+                    totalCountBadge(plant);
+
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
@@ -187,6 +189,7 @@
         }
 
         document.getElementById('id_plant_name').innerHTML = plant_name;
+        document.getElementById('id_button').innerHTML = "<input type='submit' name='submit' id='submit' value='Done' class='btn btn-primary' style='font-weight: bold;'> <a href='delivery_pending_order.html?plant=" + plant + "' class='btn btn-default'><strong>Cancel</strong></a>";
 	}
 
 	function submitForm(){
@@ -338,6 +341,40 @@
 		}, 0);
 		// alert(ordered);
 	}
+
+	function totalCountBadge(plant){
+
+        po_count = 0;
+        firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
+
+            if(orderSnapshot.val() != null){
+                firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
+                    itemSnapshot.forEach(function(itemChildSnapshot){
+                        if(itemChildSnapshot.val().balance != 0){
+                            po_count++;
+                            document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
+                        }
+                    });
+                });
+            }else{
+                document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
+
+            }
+            
+        });
+
+        do_count = 0;
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).once('value', function(ongoingOrderSnapshot) {
+
+            if(ongoingOrderSnapshot.val() != null){
+                console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
+                do_count++;
+                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+            }else{
+                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+            }
+        });
+    }
 </script>
 </head>
 <body onload="compareValues('');">
@@ -406,8 +443,8 @@
 	                        <span class="menu-arrow arrow_carrot-down"></span>
 	                    </a>
 	                    <ul class="sub">
-	                        <li><a class="" href="delivery_pending_order.html">Existing P.O. <span class='badge'><?html echo getCountPlantPo($db, $office); ?></span></a></li>    
-	                        <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span class="badge"><?html echo getDeliveryCountOnDeliveryOffice($db, $office); ?></span></a></li>                          
+	                        <li><a class="" href="delivery_pending_order.html">Existing P.O. <span id="id_count_existing_po"></span></a></li>    
+	                        <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span id="id_count_ongoing_order"></span></a></li>                          
 	                        <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
 	                        <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
 	                    </ul>
@@ -423,7 +460,7 @@
 	        <section class="wrapper">            
 	            <!--overview start-->
 	            <div class="row">
-	                <div class="col-md-12 page_links">
+	                <div class="col-md-12">
 	                    <!-- <h3 class="page-header"><i class="fa fa-file"></i><a href="plant_delivery_issue_form.php">Issue Form</a></h3> -->
 	                    <ol class="breadcrumb">
 	                        <li><i class="fa fa-building"></i>Delivery Order</li>
@@ -481,8 +518,7 @@
 									</div>
 									<div class="form-group">
 										<div class="col-md-offset-2 col-md-10">
-											<input type="submit" name="submit" id="submit" value="Done" class="btn btn-primary" style="font-weight: bold;">
-											<a href="delivery_pending_order.html" class="btn btn-default"><strong>Cancel</strong></a>
+											<span id="id_button"></span>
 										</div>
 									</div>
 								</form>
