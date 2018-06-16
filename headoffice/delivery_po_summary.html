@@ -8,7 +8,7 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="img/favicon.png">
 
-	<title></title>
+	<title>P.O. No. Details - Delivery Page</title>
 
 	<!-- Firebase App is always required and must be first -->
 	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
@@ -178,7 +178,7 @@
 
     	var myTbody = "";
 
-    	firebase.database().ref('delivery_ongoing_order/'+plant).orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(ongoingOrderSnapshot){
+    	firebase.database().ref('delivery_ongoing_order/').orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(ongoingOrderSnapshot){
 
 			dr_no = ongoingOrderSnapshot.val().dr_no;
 			item_no = ongoingOrderSnapshot.val().item_no;
@@ -193,18 +193,21 @@
 			quantity = Number(ongoingOrderSnapshot.val().quantity).toLocaleString('en');
 			date = dateFormat(ongoingOrderSnapshot.val().date);
 			status = ongoingOrderSnapshot.val().status;
+            issued_dr_plant = ongoingOrderSnapshot.val().issued_dr_plant;
 
 			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
 			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
 			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
-			myTbody += "<td><strong>" + date + "</strong></td>";
+            myTbody += "<td><strong>" + date + "</strong></td>";
+			myTbody += "<td><strong>" + issued_dr_plant + "</strong></td>";
             myTbody += "<td><span class='label' style='background-color: #ffa000; font-size: 11px;'><strong>" + status + "</strong></span></td></tr>";
+
 			
 
 			document.getElementById('orderList').innerHTML = myTbody;
     	});
 
-    	firebase.database().ref('delivery_delivered_order/'+plant).orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(ongoingOrderSnapshot){
+    	firebase.database().ref('delivery_delivered_order/').orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(ongoingOrderSnapshot){
 
 			dr_no = ongoingOrderSnapshot.val().dr_no;
 			item_no = ongoingOrderSnapshot.val().item_no;
@@ -219,17 +222,19 @@
 			quantity = Number(ongoingOrderSnapshot.val().quantity).toLocaleString('en');
 			date = dateFormat(ongoingOrderSnapshot.val().date);
 			status = ongoingOrderSnapshot.val().status;
+            delivered_plant = ongoingOrderSnapshot.val().delivered_plant;
 
 			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
 			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
 			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
-			myTbody += "<td><strong>" + date + "</strong></td>";
+            myTbody += "<td><strong>" + date + "</strong></td>";
+			myTbody += "<td><strong>" + delivered_plant + "</strong></td>";
 			myTbody += "<td><span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
 
 			document.getElementById('orderList').innerHTML = myTbody;
     	});
 
-    	firebase.database().ref('delivery_backloaded_order/'+plant).orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(ongoingOrderSnapshot){
+    	firebase.database().ref('delivery_backloaded_order/').orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(ongoingOrderSnapshot){
 
 			dr_no = ongoingOrderSnapshot.val().dr_no;
 			item_no = ongoingOrderSnapshot.val().item_no;
@@ -244,18 +249,20 @@
 			quantity = Number(ongoingOrderSnapshot.val().quantity).toLocaleString('en');
 			date = dateFormat(ongoingOrderSnapshot.val().date);
 			status = ongoingOrderSnapshot.val().status;
+            backloaded_plant = ongoingOrderSnapshot.val().backloaded_plant;
 
 			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
 			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
 			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
-			myTbody += "<td><strong>" + date + "</strong></td>";
+            myTbody += "<td><strong>" + date + "</strong></td>";
+			myTbody += "<td><strong>" + backloaded_plant + "</strong></td>";
 			myTbody += "<td><span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
 
 			document.getElementById('orderList').innerHTML = myTbody;
     	});
 
-    	firebase.database().ref('purchase_order/'+plant+'/'+po_no_key).once('value', function(orderSnapshot){
-			firebase.database().ref('purchase_order/'+plant+'/'+po_no_key+'/project_detail').once('value', function(projectSnapshot){
+    	firebase.database().ref('purchase_order/'+po_no_key).once('value', function(orderSnapshot){
+			firebase.database().ref('purchase_order/'+po_no_key+'/project_detail').once('value', function(projectSnapshot){
 	    		console.log(projectSnapshot.key, projectSnapshot.val());
 	    		projectSnapshot.forEach(function(projectChildSnapshot){
 
@@ -272,7 +279,7 @@
 
 		var contactTbody = "";
 
-		firebase.database().ref('purchase_order/'+plant+'/'+po_no_key+'/contact').once('value', function(contactSnapshot){
+		firebase.database().ref('purchase_order/'+po_no_key+'/contact').once('value', function(contactSnapshot){
 			contactSnapshot.forEach(function(contactChildSnapshot){
 
 				contact_name = contactChildSnapshot.val().contact_name;
@@ -470,13 +477,14 @@
                                                     <!-- <th class="col-md-1">#</th> -->
                                                     <!-- <th class="col-md-1">P.O. No.</th> -->
                                                     <th class="col-md-1"><input type="text" class="form-control" placeholder="DR No." disabled></th>
-                                                    <th class="col-md-2"><input type="text" class="form-control" placeholder="Item" disabled></th>
+                                                    <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
                                                     <th class="col-md-1">Quantity</th>
                                                     <!-- <th class="col-md-2">Project Name</th> -->
                                                     <!-- <th class="col-md-2">Address</th> -->
                                                     <!-- <th class="col-md-1">Contact</th> -->
                                                     <th class="col-md-1">Date Transaction</th>
-                                                    <th class="col-md-1">Status</th>
+                                                    <th class="col-md-1">Plant</th>
+                                                    <th class="col-md-2">Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="orderList">

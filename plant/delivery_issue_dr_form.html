@@ -148,7 +148,7 @@
 
 	function formData(plant){
 
-		firebase.database().ref('purchase_order/'+plant+'/'+orderKey).once('value').then(function(orderSnapshot){
+		firebase.database().ref('purchase_order/'+orderKey).once('value').then(function(orderSnapshot){
 				// console.log(orderChildSnapshot.key, orderChildSnapshot.val());
 				
 				po_no = orderSnapshot.val().po_no;
@@ -156,7 +156,7 @@
 				document.getElementById('block_po_no').innerHTML = "<strong>" + po_no + "</strong>";
 		});
 
-		firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/item/'+item_no).once('value').then(function(itemSnapshot){
+		firebase.database().ref('purchase_order/'+orderKey+'/item/'+item_no).once('value').then(function(itemSnapshot){
 				// console.log(itemChildSnapshot.key, itemChildSnapshot.val());
 
 			item_no = itemSnapshot.val().item_no;
@@ -175,6 +175,14 @@
 			document.getElementById('block_ordered').innerHTML = "Ordered: <strong>" + quantity + " pcs / Balance: " + balance + "</strong>";
 
 		});
+
+		if(plant == 'Bravo'){
+            plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
+        }else{
+            plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
+        }
+
+        document.getElementById('id_plant_name').innerHTML = plant_name;
 	}
 
 	function submitForm(){
@@ -186,10 +194,11 @@
 		var gate_pass = document.getElementById('gate_pass_no').value;
 		var date = new Date().toLocaleString();
 
-		firebase.database().ref('purchase_order/'+plant+'/'+orderKey).once('value').then(function(orderSnapshot){
+		firebase.database().ref('purchase_order/'+orderKey).once('value').then(function(orderSnapshot){
 
 			var po_no = orderSnapshot.val().po_no;
 			var status = "ONGOING DELIVERY";
+			var issued_po_plant = orderSnapshot.val().issued_po_plant;
 
 			var poData = {
 				po_no: po_no,
@@ -201,29 +210,31 @@
 				reverseDate: firebase.database.ServerValue.TIMESTAMP,
 				po_no_key: orderKey,
 				gate_pass: gate_pass,
-				date: date
+				date: date,
+				issued_po_plant: issued_po_plant,
+				issued_dr_plant: plant
 			}
-			// console.log(poData);
+			console.log(poData);
 
-			var postData = firebase.database().ref('delivery_ongoing_order/'+plant);
+			var postData = firebase.database().ref('delivery_ongoing_order/');
 			var newPostRef = postData.push();
 			newPostRef.set(poData);
 
 			var postId = newPostRef.key;
 
 			//update on child node: reverseDate
-			firebase.database().ref().child('delivery_ongoing_order/'+plant+'/'+postId).once('value', function(snapshot){
+			firebase.database().ref().child('delivery_ongoing_order/'+postId).once('value', function(snapshot){
 
                 var timestamp = snapshot.val().reverseDate * -1;
                 var timeUpdate = {
                     reverseDate: timestamp
                 } 
 
-                firebase.database().ref('delivery_ongoing_order/'+plant+'/'+postId).update(timeUpdate);
+                firebase.database().ref('delivery_ongoing_order/'+postId).update(timeUpdate);
             });
 
 			// insert data for child node: project detail
-			firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/project_detail').once('value').then(function(projectSnapshot){
+			firebase.database().ref('purchase_order/'+orderKey+'/project_detail').once('value').then(function(projectSnapshot){
 				projectSnapshot.forEach(function(projectChildSnapshot){
 
 					var projectData = {
@@ -231,7 +242,7 @@
 						project_address: projectChildSnapshot.val().project_address
 					}
 
-					firebase.database().ref('delivery_ongoing_order/'+plant+'/'+postId+'/project_detail/'+projectChildSnapshot.key).set(projectData);
+					firebase.database().ref('delivery_ongoing_order/'+postId+'/project_detail/'+projectChildSnapshot.key).set(projectData);
 
 					var project_name = projectChildSnapshot.val().project_name;
 					var project_address = projectChildSnapshot.val().project_address;
@@ -269,7 +280,7 @@
 			});
 
 			// insert data for child node: contact detail
-			firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/contact').on('value', function(contactSnapshot){
+			firebase.database().ref('purchase_order/'+orderKey+'/contact').on('value', function(contactSnapshot){
 				// console.log(itemChildSnapshot.key, itemChildSnapshot.val());
 				contactSnapshot.forEach(function(contactChildSnapshot){
 					// console.log(contactChildSnapshot.key, contactChildSnapshot.val());
@@ -284,11 +295,11 @@
 
 					// console.log(contactData);
 
-					firebase.database().ref('delivery_ongoing_order/'+plant+'/'+postId+'/contact/'+contactChildSnapshot.key).set(contactData);
+					firebase.database().ref('delivery_ongoing_order/'+postId+'/contact/'+contactChildSnapshot.key).set(contactData);
 				});		
 			});
 
-			firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/item/'+item_no).once('value').then(function(itemSnapshot){
+			firebase.database().ref('purchase_order/'+orderKey+'/item/'+item_no).once('value').then(function(itemSnapshot){
 
 				var new_balance = itemSnapshot.val().balance - quantity;
 				var itemData = {
@@ -296,7 +307,7 @@
 				}
 				console.log(itemData);
 
-				if(firebase.database().ref('purchase_order/'+plant+'/'+orderKey+'/item/'+item_no).update(itemData)){
+				if(firebase.database().ref('purchase_order/'+orderKey+'/item/'+item_no).update(itemData)){
 					alert("DR No. " + dr_no + " issued successfully. Transaction can be viewed on Delivery Report Page");
             		window.location.href = 'delivery_ongoing_order.html';
 				}
@@ -336,7 +347,7 @@
             <!--logo start-->
 
             <!--logo end-->
-            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+            <span id="id_plant_name"></span>
             <div class="top-nav notification-row">                
                 <!-- notificatoin dropdown start-->
                 <ul class="nav pull-right top-menu">

@@ -162,6 +162,8 @@
                     // console.log("Office: " + snapshot.val().office);
                     var plant = snapshot.val().office;
                     tableData(plant);
+                    totalCountBadge(plant)
+                    
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
@@ -172,6 +174,13 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+        if(plant == 'Bravo'){
+            plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
+        }else{
+            plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
+        }
+
+        document.getElementById('id_plant_name').innerHTML = plant_name;
 
     });
 
@@ -207,6 +216,14 @@
 
             document.getElementById("historyList").innerHTML = myTbody;
         }
+
+        if(plant == 'Bravo'){
+            plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
+        }else{
+            plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
+        }
+
+        document.getElementById('id_plant_name').innerHTML = plant_name;
     }
 
     function startTime() {
@@ -242,6 +259,29 @@
             i = "0" + i;
         }
         return i;
+    }
+
+    function totalCountBadge(plant){
+
+        po_count = 0;
+        firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
+            firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
+                itemSnapshot.forEach(function(itemChildSnapshot){
+                    if(itemChildSnapshot.val().balance != 0){
+                        po_count++;
+                        document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
+                    }
+                });
+            });
+        });
+
+        do_count = 0;
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot) {
+            console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
+            do_count++;
+            document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+        });
+
     }
 
 </script>
@@ -305,7 +345,7 @@ li.notif {
             <!--logo start-->
 
             <!--logo end-->
-            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+            <span id="id_plant_name"></span>
             <div class="top-nav notification-row">                
                 <!-- notificatoin dropdown start-->
                 <ul class="nav pull-right top-menu">
@@ -361,8 +401,8 @@ li.notif {
 	                        <span class="menu-arrow arrow_carrot-down"></span>
 	                    </a>
 	                    <ul class="sub">
-	                        <li><a class="" href="delivery_pending_order.html">Existing P.O. <span class='badge'><?html echo getCountPlantPo($db, $office); ?></span></a></li>    
-	                        <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span class="badge"><?html echo getDeliveryCountOnDeliveryOffice($db, $office); ?></span></a></li>                          
+	                        <li><a class="" href="delivery_pending_order.html">Existing P.O. <span id="id_count_existing_po"></span></a></li>    
+	                        <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span id="id_count_ongoing_order"></span></a></li>                          
 	                        <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
 	                        <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
 	                    </ul>

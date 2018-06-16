@@ -156,6 +156,7 @@
                     plant = snapshot.val().office;
 
                     tableData(plant);
+                    totalCountBadge(plant);
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
@@ -175,7 +176,7 @@
 
     	var myTbody = "";
 
-    	firebase.database().ref('delivery_ongoing_order/'+plant).orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(ongoingOrderSnapshot){
+    	firebase.database().ref('delivery_ongoing_order/').orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(ongoingOrderSnapshot){
     		// console.log(ongoingOrderSnapshot.val());
     		// ongoingOrderSnapshot.forEach(function(ongoingOrderChildSnapshot){
     		// 	console.log(ongoingOrderChildSnapshot.key, ongoingOrderChildSnapshot.val());
@@ -193,11 +194,15 @@
     			quantity = Number(ongoingOrderSnapshot.val().quantity).toLocaleString('en');
     			date = dateFormat(ongoingOrderSnapshot.val().date);
     			status = ongoingOrderSnapshot.val().status;
+                issued_dr_plant = ongoingOrderSnapshot.val().issued_dr_plant;
+                gate_pass = ongoingOrderSnapshot.val().gate_pass;
 
     			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
     			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
-    			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
-    			myTbody += "<td><strong>" + date + "</strong></td>";
+                myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+    			myTbody += "<td><strong>" + gate_pass + "</strong></td>";
+                myTbody += "<td><strong>" + date + "</strong></td>";
+    			myTbody += "<td><strong>" + issued_dr_plant + "</strong></td>";
                 myTbody += "<td><span class='label' style='background-color: #ffa000; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
     			// myTbody += "<td style='color: #ffa000;'><strong>" + status + "</strong></td></tr>";
 
@@ -205,7 +210,7 @@
     		// });
     	});
 
-    	firebase.database().ref('delivery_delivered_order/'+plant).orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(deliveredOrderSnapshot){
+    	firebase.database().ref('delivery_delivered_order/').orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(deliveredOrderSnapshot){
     		// console.log(deliveredOrderSnapshot.val());
     		// deliveredOrderSnapshot.forEach(function(deliveredOrderChildSnapshot){
     		// 	console.log(deliveredOrderChildSnapshot.key, deliveredOrderChildSnapshot.val());
@@ -223,18 +228,22 @@
     			quantity = Number(deliveredOrderSnapshot.val().quantity).toLocaleString('en');
     			date = dateFormat(deliveredOrderSnapshot.val().date);
     			status = deliveredOrderSnapshot.val().status;
+                delivered_plant = deliveredOrderSnapshot.val().delivered_plant;
+                gate_pass = deliveredOrderSnapshot.val().gate_pass;
 
     			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
     			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
     			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
-    			myTbody += "<td><strong>" + date + "</strong></td>";
+                myTbody += "<td><strong>" + gate_pass + "</strong></td>";
+                myTbody += "<td><strong>" + date + "</strong></td>";
+    			myTbody += "<td><strong>" + delivered_plant + "</strong></td>";
     			myTbody += "<td><span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
 
     			document.getElementById('orderList').innerHTML = myTbody;
     		// });
     	});
 
-    	firebase.database().ref('delivery_backloaded_order/'+plant).orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(backloadOrderSnapshot){
+    	firebase.database().ref('delivery_backloaded_order/').orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(backloadOrderSnapshot){
     		// console.log(backloadOrderSnapshot.val());
     		// backloadOrderSnapshot.forEach(function(backloadOrderChildSnapshot){
     		// 	console.log(backloadOrderChildSnapshot.key, backloadOrderChildSnapshot.val());
@@ -252,19 +261,23 @@
     			quantity = Number(backloadOrderSnapshot.val().quantity).toLocaleString('en');
     			date = dateFormat(backloadOrderSnapshot.val().date);
     			status = backloadOrderSnapshot.val().status;
+                backloaded_plant = backloadOrderSnapshot.val().backloaded_plant;
+                gate_pass = backloadOrderSnapshot.val().gate_pass;
 
     			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
     			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
     			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
-    			myTbody += "<td><strong>" + date + "</strong></td>";
+                myTbody += "<td><strong>" + gate_pass + "</strong></td>";
+                myTbody += "<td><strong>" + date + "</strong></td>";
+    			myTbody += "<td><strong>" + backloaded_plant + "</strong></td>";
     			myTbody += "<td><span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
 
     			document.getElementById('orderList').innerHTML = myTbody;
     		// });
     	});
 
-		firebase.database().ref('purchase_order/'+plant+'/'+po_no_key).once('value', function(orderSnapshot){
-			firebase.database().ref('purchase_order/'+plant+'/'+po_no_key+'/project_detail').once('value', function(projectSnapshot){
+		firebase.database().ref('purchase_order/'+po_no_key).once('value', function(orderSnapshot){
+			firebase.database().ref('purchase_order/'+po_no_key+'/project_detail').once('value', function(projectSnapshot){
 	    		console.log(projectSnapshot.key, projectSnapshot.val());
 	    		projectSnapshot.forEach(function(projectChildSnapshot){
 
@@ -283,7 +296,7 @@
 
 		var contactTbody = "";
 
-		firebase.database().ref('purchase_order/'+plant+'/'+po_no_key+'/contact').once('value', function(contactSnapshot){
+		firebase.database().ref('purchase_order/'+po_no_key+'/contact').once('value', function(contactSnapshot){
 			contactSnapshot.forEach(function(contactChildSnapshot){
 
 				contact_name = contactChildSnapshot.val().contact_name;
@@ -295,6 +308,37 @@
 				document.getElementById('contactList').innerHTML = contactTbody;
 			});
 		});
+
+        if(plant == 'Bravo'){
+            plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
+        }else{
+            plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
+        }
+
+        document.getElementById('id_plant_name').innerHTML = plant_name;
+    }
+
+    function totalCountBadge(plant){
+
+        po_count = 0;
+        firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
+            firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
+                itemSnapshot.forEach(function(itemChildSnapshot){
+                    if(itemChildSnapshot.val().balance != 0){
+                        po_count++;
+                        document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
+                    }
+                });
+            });
+        });
+
+        do_count = 0;
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot) {
+            console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
+            do_count++;
+            document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+        });
+
     }
     
 </script>
@@ -347,7 +391,7 @@
             <!--logo start-->
 
             <!--logo end-->
-            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+            <span id="id_plant_name"></span>
             <div class="top-nav notification-row">                
                 <!-- notificatoin dropdown start-->
                 <ul class="nav pull-right top-menu">
@@ -402,8 +446,8 @@
 	                        <span class="menu-arrow arrow_carrot-down"></span>
 	                    </a>
 	                    <ul class="sub">
-	                    	<li><a class="" href="delivery_pending_order.html">Existing P.O. <span class='badge'><?php echo getCountPlantPo($db, $office); ?></span></a></li>       
-	                        <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span class="badge"><?php echo getDeliveryCountOnDeliveryOffice($db, $office); ?></span></a></li>         
+	                    	<li><a class="" href="delivery_pending_order.html">Existing P.O. <span id="id_count_existing_po"></span></a></li>       
+	                        <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span id="id_count_ongoing_order"></span></a></li>         
 	                        <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
 	                        <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
 	                    </ul>
@@ -473,12 +517,14 @@
 	                                                <!-- <th class="col-md-1">#</th> -->
 	                                                <!-- <th class="col-md-1">P.O. No.</th> -->
 	                                                <th class="col-md-1"><input type="text" class="form-control" placeholder="DR No." disabled></th>
-	                                                <th class="col-md-2"><input type="text" class="form-control" placeholder="Item" disabled></th>
-	                                                <th class="col-md-1">Quantity</th>
+	                                                <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
+                                                    <th class="col-md-1">Quantity</th>
+	                                                <th class="col-md-1">Gate Pass</th>
 	                                                <!-- <th class="col-md-2"><input type="text" class="form-control" placeholder="Project Name" disabled></th> -->
 	                                                <!-- <th class="col-md-2"><input type="text" class="form-control" placeholder="Address" disabled></th> -->
-	                                                <th class="col-md-1">Date Transaction</th>
-	                                                <th class="col-md-1">Status</th>
+                                                    <th class="col-md-1">Date Transaction</th>
+	                                                <th class="col-md-1">Plant</th>
+	                                                <th class="col-md-2">Status</th>
 	                                            </tr>
 	                                        </thead>
 	                                        <tbody id="orderList">
