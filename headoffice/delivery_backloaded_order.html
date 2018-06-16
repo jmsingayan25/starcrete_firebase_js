@@ -297,8 +297,8 @@
         });
 
         do_count = 0;
-        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot){
-
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).once('value', function(ongoingOrderSnapshot){
+            console.log(ongoingOrderSnapshot.val());
             if(ongoingOrderSnapshot.val() != null){
                 do_count++;
                 document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";

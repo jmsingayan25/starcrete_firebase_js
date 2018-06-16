@@ -183,7 +183,7 @@
     	var myTbody = "";
     	var count = 1;
 
-        firebase.database().ref('purchase_order/').orderByChild('delivered_plant').equalTo(plant).once('value').then(function(drSnapshot){
+        firebase.database().ref('delivery_delivered_order').orderByChild('delivered_plant').equalTo(plant).once('value').then(function(drSnapshot){
             if(drSnapshot.val() == null){
 
                 myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
@@ -192,7 +192,7 @@
             }
         });
 
-    	firebase.database().ref('delivery_delivered_order/').orderByChild('reverseDate').on('child_added', function(orderSnapshot){
+    	firebase.database().ref('delivery_delivered_order').orderByChild('reverseDate').on('child_added', function(orderSnapshot){
 
             if(orderSnapshot.val().delivered_plant == plant){
         		firebase.database().ref('delivery_delivered_order/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
@@ -296,10 +296,14 @@
         });
 
         do_count = 0;
-        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot) {
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).once('value', function(ongoingOrderSnapshot) {
             console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
-            do_count++;
-            document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+            if(ongoingOrderSnapshot.val() != null){
+                do_count++;
+                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+            }else{
+                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>"
+            }
         });
 
     }
