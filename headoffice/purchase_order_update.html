@@ -204,7 +204,7 @@
 
 			new_quantity = quantity - input_val;
         	new_value = balance - new_quantity;
-        	console.log(new_value);
+        	// console.log(new_value);
         	if(input_val == ''){
 	            new_value = balance;
 	        }
@@ -264,8 +264,10 @@
 					new_item_no = itemSnapshot.val().item_no;
 				}
 
-				if(document.getElementById('update_psi').value){
+				if(document.getElementById('update_psi').value && document.getElementById('update_psi').value != 0){
 					new_psi = document.getElementById('update_psi').value;
+				}else if(document.getElementById('update_psi').value == 0){
+					new_psi = "";
 				}else{
 					new_psi = itemSnapshot.val().psi;
 				}
@@ -279,12 +281,30 @@
 
 				var poData = {
 					po_no: new_po_no,
+				}
+				// firebase.database().ref('purchase_order/'+po_no_key).update(poData);
+				quantity = itemSnapshot.val().quantity;
+				balance = itemSnapshot.val().balance;
+				difference = Number(new_ordered_quantity) - Number(quantity);
+				new_balance = Number(balance) + Number(difference);
+				console.log(new_balance);
+
+				var itemData = {
+					balance: new_balance,
 					item_no: new_item_no,
 					psi: new_psi,
 					quantity: new_ordered_quantity
 				}
 
-				console.log(poData);
+				// var ref = firebase.database().ref();
+				// var child = ref.child('purchase_order/'+po_no_key+'/item/'+item_no);
+				// child.once('value', function(snapshot){
+				// 	ref.child('purchase_order/'+po_no_key+'/item/'+new_item_no).set(snapshot.val());
+				// 	child.remove();
+				// 	ref.child('purchase_order/'+po_no_key+'/item/'+new_item_no).update(itemData);
+				// });
+
+				console.log(itemData);
 			});	
 		});
 	}
