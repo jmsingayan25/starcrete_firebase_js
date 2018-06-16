@@ -264,7 +264,7 @@
 					new_item_no = itemSnapshot.val().item_no;
 				}
 
-				if(document.getElementById('update_psi').value && document.getElementById('update_psi').value != 0){
+				if(document.getElementById('update_psi').value != "" && document.getElementById('update_psi').value != 0){
 					new_psi = document.getElementById('update_psi').value;
 				}else if(document.getElementById('update_psi').value == 0){
 					new_psi = "";
@@ -296,13 +296,16 @@
 					quantity: new_ordered_quantity
 				}
 
-				// var ref = firebase.database().ref();
-				// var child = ref.child('purchase_order/'+po_no_key+'/item/'+item_no);
-				// child.once('value', function(snapshot){
-				// 	ref.child('purchase_order/'+po_no_key+'/item/'+new_item_no).set(snapshot.val());
-				// 	child.remove();
-				// 	ref.child('purchase_order/'+po_no_key+'/item/'+new_item_no).update(itemData);
-				// });
+				var ref = firebase.database().ref();
+				var child = ref.child('purchase_order/'+po_no_key+'/item/'+item_no);
+				child.once('value', function(snapshot){
+					ref.child('purchase_order/'+po_no_key+'/item/'+new_item_no).set(snapshot.val());
+					child.remove();
+					if(ref.child('purchase_order/'+po_no_key+'/item/'+new_item_no).update(itemData)){
+						alert("P.O. No. details updated successfully");
+						window.location.href = "purchase_order_detail.html?key=" + po_no_key + "&plant=" + plant 
+					}
+				});
 
 				console.log(itemData);
 			});	
