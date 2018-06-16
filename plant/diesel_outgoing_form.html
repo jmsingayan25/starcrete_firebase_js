@@ -146,7 +146,41 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);     
     });
-    
+    function submitForm()
+    {
+        event.preventDefault();
+
+        var quantity_out = document.getElementById('quantity_out').value;
+        var destination = document.getElementById('destination').value;
+        var truck_no = document.getElementById('truck_no').value;
+        var operator = document.getElementById('operator').value;
+        var date = new Date().toLocaleDateString('en');
+        var time = new Date().toLocaleTimeString('en');
+        
+        var OutcomingData ={ quantity_out: quantity_out.toUpperCase(), destination: destination.toUpperCase(),
+            truck_no: truck_no.toUpperCase(), operator: operator.toUpperCase(),reverseDate: firebase.database.ServerValue.TIMESTAMP,date: date, time: time};
+
+        var PostDataBase = firebase.database().ref().child("outcoming_diesel/" + plant);
+        var newPostRef = PostDataBase.push();
+        newPostRef.set(OutcomingData);
+        //decrease liters
+       firebase.database().ref().child("available_stock/" + plant).once('value',function(CheckSnapshot)
+        {
+            if (CheckSnapshot.val() == null) 
+            {
+
+            }else
+            {
+             var get_liters = CheckSnapshot.val().Liters;
+             var decrease_int_liters = Number(get_liters) - Number(quantity_out);
+             var decrease_string_liters = decrease_int_liters.toString();
+             var new_liters = decrease_string_liters;
+             var stock_available  ={Liters: new_liters};
+             firebase.database().ref().child("available_stock/" + plant).set(stock_available);  
+            }
+            
+        });
+    }
 </script>    
 </head>
 <body>
@@ -241,7 +275,7 @@
                         <!-- <h3 class="page-header"><i class="fa fa-home"></i> History</h3> -->
                         <ol class="breadcrumb">
                             <!-- <li><i class="fa fa-building"></i><?php echo $plant; ?></li> -->
-                            <li><i class="icon_document"></i><a href="diesel.php">Diesel</a></li>             
+                            <li><i class="icon_document"></i><a href="diesel.html">Diesel</a></li>             
                             <li><i class="icon_document"></i>Outgoing Diesel Form</li>             
                         </ol>
                     </div>
@@ -268,19 +302,19 @@
                                     <div class="form-group">
                                         <label for="destination" class="col-md-4 control-label">Destination<span class="required" style="color: red;">*</span></label>
                                         <div class="col-md-5">
-                                            <input type="text" name="destination" class="form-control" autocomplete="off" required>
+                                            <input type="text" name="destination" id="destination"class="form-control" autocomplete="off" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="truck_no" class="col-md-4 control-label">Truck No.<span class="required" style="color: red;">*</span></label>
                                         <div class="col-md-5">
-                                            <input type="text" name="truck_no" class="form-control" autocomplete="off" required>
+                                            <input type="text" name="truck_no" id="truck_no" class="form-control" autocomplete="off" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="operator" class="col-md-4 control-label">Operator / Driver<span class="required" style="color: red;">*</span></label>
                                         <div class="col-md-5">
-                                            <input type="text" name="operator" class="form-control" autocomplete="off" required>
+                                            <input type="text" name="operator" id="operator"class="form-control" autocomplete="off" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
