@@ -485,7 +485,7 @@
             });
 
             if(count == item_no.length){
-                document.getElementById('msg').innerHTML = "Transaction complete. You can view the order on <a href='purchase_order.html'> Purchase Order Page </a>.";
+                document.getElementById('msg').innerHTML = "Transaction complete. You can view the order on <a href='purchase_order.html?plant=" + plant + "'>" + plant + " Purchase Order Page </a>.";
                     $('#success_msg').show();
             }
         });
