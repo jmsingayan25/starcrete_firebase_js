@@ -239,6 +239,8 @@
 
             document.getElementById("historyList").innerHTML = myTbody;
         }
+
+        document.getElementById('id_plant').innerHTML = plant;
     }
 
     function startTime() {
@@ -498,7 +500,7 @@
                                         <thead>
                                             <tr class="filterable">
                                                 <th colspan="3">
-                                                    <p style="float: left;">Plant:</p>
+                                                    <p style="float: left;">Plant: <span id="id_plant"></span></p>
                                                     <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                                 </th>
                                                 <!-- <th colspan="3">
