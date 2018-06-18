@@ -91,10 +91,10 @@
 
         // $input.on( "keyup", function( event ) {
 
-	 	var $form = $( "#form" );
-        var $input = $form.find( "#update_quantity" );
+	 	var $form = $( "#update_details" );
+        var $input = $form.find( "#new_issued_quantity" );
 
-        $form.on( "keyup", "#update_quantity", function( event ) {
+        $form.on( "keyup", "#new_issued_quantity", function( event ) {
             
             
             // When user select text in the document, also abort.
@@ -122,6 +122,9 @@
                     } );
         });
 
+        itemList();
+
+
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
 
@@ -137,7 +140,6 @@
                     
                     tableData(plant);
                     totalCountBadge(plant);
-                    itemList();
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
