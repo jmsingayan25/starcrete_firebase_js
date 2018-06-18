@@ -152,49 +152,66 @@
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);      
     });
 
+  //   function displayQuantityError(val){
+
+  //   	var balance = document.getElementById('hidden_balance').value;
+  //   	var quantity = document.getElementById('hidden_quantity').value;
+		// var button = document.getElementById('submit');
+  //   	// var div = document.getElementById('error');
+  //   	var input = document.getElementById('update_quantity');
+  //       var remaining = document.getElementById('balance');
+
+  //       balance = balance.replace(",","");
+  //       balance = Number(balance);
+  //       val = val.replace(",","");
+  //       val = Number(val);
+  //   	quantity = quantity.replace(",","");
+  //   	quantity = Number(quantity);
+
+  //   	new_quantity = val - quantity;
+  //   	new_value = balance - new_quantity;
+    	
+  //       if(val == ''){
+  //           new_value = balance;
+  //       }
+
+  //      	if(new_value < 0 && val != ''){
+  //           // div.style.display = 'block';
+  //           button.disabled = 'true';
+  //           input.style.borderColor = 'red';
+  //       }else if(new_value < 0 && val == ''){
+  //       	button.disabled = 'true';
+  //       	input.style.borderColor = 'red';
+  //       }else{
+  //           // div.style.display = 'none';
+  //           button.disabled = '';
+  //           input.style.borderColor = '';
+  //       }
+
+  //       string_new_value = new_value.toLocaleString('en') + " pcs";
+  //       if(new_value < 1350){
+  //           remaining.innerHTML = string_new_value.bold().fontcolor("red");
+                    
+  //       }else{
+  //           remaining.innerHTML = string_new_value.bold();
+  //       }
+  //   }
+
     function displayQuantityError(val){
 
-    	var balance = document.getElementById('hidden_balance').value;
-    	var quantity = document.getElementById('hidden_quantity').value;
-		var button = document.getElementById('submit');
-    	// var div = document.getElementById('error');
-    	var input = document.getElementById('update_quantity');
-        var remaining = document.getElementById('balance');
+        firebase.database().ref('delivery_ongoing_order/'+deliveryKey).once('value', function(drOngoingSnapshot){
+            firebase.database().ref('purchase_order/'+drOngoingSnapshot.val().po_no_key+'/item/'+drOngoingSnapshot.val().item_no).once('value', function(poSnapshot){
 
-        balance = balance.replace(",","");
-        balance = Number(balance);
-        val = val.replace(",","");
-        val = Number(val);
-    	quantity = quantity.replace(",","");
-    	quantity = Number(quantity);
+                console.log(poSnapshot.key, poSnapshot.val(), drOngoingSnapshot.key, drOngoingSnapshot.val());
+            
+                var remaining_balance = poSnapshot.val().balance;
+                var ordered_quantity = poSnapshot.val().quantity;
+                var issued_quantity = drOngoingSnapshot.val().quantity;
 
-    	new_quantity = val - quantity;
-    	new_value = balance - new_quantity;
-    	
-        if(val == ''){
-            new_value = balance;
-        }
+                
 
-       	if(new_value < 0 && val != ''){
-            // div.style.display = 'block';
-            button.disabled = 'true';
-            input.style.borderColor = 'red';
-        }else if(new_value < 0 && val == ''){
-        	button.disabled = 'true';
-        	input.style.borderColor = 'red';
-        }else{
-            // div.style.display = 'none';
-            button.disabled = '';
-            input.style.borderColor = '';
-        }
-
-        string_new_value = new_value.toLocaleString('en') + " pcs";
-        if(new_value < 1350){
-            remaining.innerHTML = string_new_value.bold().fontcolor("red");
-                    
-        }else{
-            remaining.innerHTML = string_new_value.bold();
-        }
+            });
+        });
     }
 
     function tableData(plant){
@@ -203,7 +220,7 @@
     	var count = 1;
 
     	firebase.database().ref('delivery_ongoing_order/'+deliveryKey).once('value', function(deliverySnapshot){
-    		console.log(deliverySnapshot.key,deliverySnapshot.val());
+    		// console.log(deliverySnapshot.key,deliverySnapshot.val());
 
     		dr_no = deliverySnapshot.val().dr_no;
     		po_no = deliverySnapshot.val().po_no;
@@ -489,7 +506,7 @@
                                 	<div class="form-group">
                                 		<label for="new_issued_quantity" class="col-md-4 control-label">New Issued Quantity</label>
                                 		<div class="col-md-4">
-                                			<input type="text" id="new_issued_quantity" name="new_issued_quantity" class="form-control" autocomplete="off">
+                                			<input type="text" id="new_issued_quantity" name="new_issued_quantity" class="form-control" autocomplete="off" onkeyup="displayQuantityError(this.value);">
                                 		</div>
                                 	</div>
                                 	<div class="form-group">
