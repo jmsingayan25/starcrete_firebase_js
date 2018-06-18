@@ -149,6 +149,8 @@
             }
         });
 
+        document.getElementById('id_button').innerHTML = "<input type='submit' name='submit' id='submit' value='Done' class='btn btn-primary' style='font-weight: bold;'> <a href='delivery_pending_order.html' class='btn btn-default'><strong>Cancel</strong></a>";
+
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
@@ -189,7 +191,7 @@
         }
 
         document.getElementById('id_plant_name').innerHTML = plant_name;
-        document.getElementById('id_button').innerHTML = "<input type='submit' name='submit' id='submit' value='Done' class='btn btn-primary' style='font-weight: bold;'> <a href='delivery_pending_order.html?plant=" + plant + "' class='btn btn-default'><strong>Cancel</strong></a>";
+        
 	}
 
 	function submitForm(){
