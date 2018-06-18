@@ -404,7 +404,7 @@
 
                 console.log(itemData);
 
-                db.ref('purchase_order/'+postId+'/item/'+item_no[i]).set(itemData);
+                db.ref('purchase_order/'+postId+'/item/').push(itemData);
                 count++;
 
                 if(psi[i] != ""){
