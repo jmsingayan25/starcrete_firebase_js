@@ -556,6 +556,31 @@
             }, function(error){
                 console.log(error);
             });
+
+            var historyData = {
+                date: date,
+                reverseDate: firebase.database.ServerValue.TIMESTAMP,
+                type_of_transaction: "Backloaded DR No.",
+                history: "Backloaded delivery of DR No. " + dr_no + " with P.O. No. " + po_no + " and " + + Number(quantity).toLocaleString('en') + " pcs of " + item_no + psi_ext
+            }
+
+            var postHistoryData = firebase.database().ref('history/'+plant);
+            var newHistoryPostRef = postHistoryData.push();
+            newHistoryPostRef.set(historyData);
+
+            var postHistoryId = newHistoryPostRef.key;
+            firebase.database().ref('history/'+plant+'/'+postHistoryId).once('value', function(historySnapshot){
+
+                var timestamp = historySnapshot.val().reverseDate * -1;
+                var timeUpdate = {
+                    reverseDate: timestamp
+                }    
+
+                firebase.database().ref('history/'+plant+'/'+postHistoryId).update(timeUpdate);
+            });
+            
+
+            // console.log(historyData);
             
             if(firebase.database().ref('delivery_ongoing_order/'+orderKey).remove()){
                 alert("DR No. " + dr_no + " has been backloaded.");
