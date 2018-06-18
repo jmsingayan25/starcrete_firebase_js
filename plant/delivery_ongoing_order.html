@@ -642,7 +642,6 @@
                 document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
 
             }
-            
         });
 
         do_count = 0;
@@ -661,18 +660,8 @@
     }
 
     function formatDate(date) {
-        var today = new Date(date);
-        // var hr = today.getHours();
-        // var min = today.getMinutes();
-        // var sec = today.getSeconds();
-        // ap = (hr < 12) ? "AM" : "PM";
-        // hr = (hr == 0) ? 12 : hr;
-        // hr = (hr > 12) ? hr - 12 : hr;
 
-        // hr = checkTime(hr);
-        // min = checkTime(min);
-        // sec = checkTime(sec);
-        // var strTime = hr + ":" + min + ":" + sec + " " + ap;
+        var today = new Date(date);
 
         return today.getMonth()+1 + "/" + today.getDate() + "/" + today.getFullYear();
     }

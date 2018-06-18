@@ -336,8 +336,10 @@
                     new_item_no = ongoingOrderSnapshot.val().item_no;
                 }
 
-                if(document.getElementById('new_psi').value){
+                if(document.getElementById('new_psi').value && document.getElementById('new_psi').value != 0){
                     new_psi = document.getElementById('new_psi').value;
+                }else if(document.getElementById('new_psi') == 0){
+                    new_psi = "";
                 }else{
                     new_psi = ongoingOrderSnapshot.val().psi;
                 }
