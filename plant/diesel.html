@@ -186,7 +186,7 @@ function DisplayCurrentData()
                 var truckno = dieselChildSnapshot.val().truck_no;
                 var suppliername = dieselChildSnapshot.val().supplier;
                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
-                var availablestock = Number(CheckSnapshot.val().Liters).toLocaleString("en");
+                var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
                 var time = dieselChildSnapshot.val().time;
 
                 myTbody += "<tr><td><strong>" + truckno+ "</strong></td>";
