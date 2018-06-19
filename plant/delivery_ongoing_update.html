@@ -208,7 +208,10 @@
                 var remaining_balance = Number(poSnapshot.val().balance);
                 var ordered_quantity = Number(poSnapshot.val().quantity);
                 var issued_quantity = Number(drOngoingSnapshot.val().quantity);
+                var textbox = document.getElementById('new_issued_quantity');
+                var button = document.getElementById('submit');
 
+                val = val.replace(',','');
                 val = Number(val);
 
                 if(val != remaining_balance && val != ""){
@@ -218,6 +221,14 @@
                     current_bal = remaining_balance;
                 }else{
                     current_bal = remaining_balance;
+                }
+
+                if(current_bal < 0){
+                    submit.disabled = true;
+                    textbox.style.borderColor = 'red';
+                }else{
+                    submit.disabled = false;
+                    textbox.style.borderColor = '';
                 }
 
                 document.getElementById('id_remaining_balance').innerHTML = "<strong>" + Number(current_bal).toLocaleString('en') + " pcs</strong>";
@@ -253,7 +264,7 @@
 
             firebase.database().ref('purchase_order/'+deliverySnapshot.val().po_no_key+'/item/'+itemKey).once('value', function(poSnapshot){
 
-                var remaining_balance = Number(poSnapshot.val().balance);
+                var remaining_balance = Number(poSnapshot.val().balance).toLocaleString('en');
                 displayQuantityError(remaining_balance);
             });
     	});
