@@ -295,19 +295,35 @@
 
 		firebase.database().ref('purchase_order/'+po_no_key).once('value', function(orderSnapshot){
 			firebase.database().ref('purchase_order/'+po_no_key+'/project_detail').once('value', function(projectSnapshot){
-	    		console.log(projectSnapshot.key, projectSnapshot.val());
 	    		projectSnapshot.forEach(function(projectChildSnapshot){
+                    firebase.database().ref('project').once('value', function(projectClientSnapshot){
+                        projectClientSnapshot.forEach(function(projectClientChildSnapshot){
+                            projectClientChildSnapshot.forEach(function(projectClientChildChildSnapshot){
+                                if(projectChildSnapshot.key == projectClientChildChildSnapshot.key){
+                                // console.log(projectClientChildSnapshot.key, projectClientChildSnapshot.val());
+                                    firebase.database().ref('client/'+projectClientChildSnapshot.key).once('value', function(clientSnapshot){
 
-	    			po_no = orderSnapshot.val().po_no;
-	    			project_name = projectChildSnapshot.val().project_name;
-	    			project_address = projectChildSnapshot.val().project_address;
-                    plant = orderSnapshot.val().issued_po_plant;
+                                        po_no = orderSnapshot.val().po_no;
+                                        project_name = projectChildSnapshot.val().project_name;
+                                        project_address = projectChildSnapshot.val().project_address;
+                                        plant = orderSnapshot.val().issued_po_plant;
+                                        client_name = clientSnapshot.val().client_name;
+                                        client_address = clientSnapshot.val().client_address;
 
-	    			document.getElementById('id_dr_detail').innerHTML = "Delivery Details for P.O. No. <strong>" + po_no + "</strong>";
-                    document.getElementById('id_issued_po_to').innerHTML = "Issued P.O. to: <strong>" + plant + "</strong>";
+    document.getElementById('id_dr_detail').innerHTML = "<div class='row'><div class='col-md-6'>Delivery Details for P.O. No. <strong>" + po_no + "</strong></div><div class='col-md-6'>Issued P.O. to Plant: <strong>" + plant + "</strong></div></div><br><div class='row'><div class='col-md-6'>Client Name: <strong>" + client_name + "</strong></div><div class='col-md-6'>Project Name: <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'>Client Address: <strong>" + client_address + "</strong></div><div class='col-md-6'>Project Address: <strong>" + project_address + "</strong></div></div>";
+                                    });
+                                }
+                            });
+                        });
+                    });
 
-	    			document.getElementById('id_project_name').innerHTML = "Project Name: <strong>" + project_name + "</strong>";
-	    			document.getElementById('id_project_address').innerHTML = "Project Address: <strong>" + project_address + "</strong>";
+	    			
+
+	    			// document.getElementById('id_dr_detail').innerHTML = "Delivery Details for P.O. No. <strong>" + po_no + "</strong>";
+        //             document.getElementById('id_issued_po_to').innerHTML = "Issued P.O. to: <strong>" + plant + "</strong>";
+
+	    			// document.getElementById('id_project_name').innerHTML = "Project Name: <strong>" + project_name + "</strong>";
+	    			// document.getElementById('id_project_address').innerHTML = "Project Address: <strong>" + project_address + "</strong>";
 	    		});
 	    	});
 		});   	
@@ -499,7 +515,8 @@
                     	<div class="row">
                             <div class="col-md-12">
                                 <header class="panel-heading">
-                                    <div class="row">
+                                    <span id="id_dr_detail"></span>
+                                    <!-- <div class="row">
                                         <div class="col-md-6">
                                             <span id="id_dr_detail"></span>
                                         </div>
@@ -523,7 +540,7 @@
                                         <div class="col-md-6">
                                             <span id="id_project_address"></span>
                                         </div>
-                                    </div>
+                                    </div> -->
                                 </header>
                                 <section class="panel">
 	                                <div class="table-responsive filterable">

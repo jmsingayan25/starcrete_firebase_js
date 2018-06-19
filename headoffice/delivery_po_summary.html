@@ -204,8 +204,6 @@
 			myTbody += "<td><strong>" + issued_dr_plant + "</strong></td>";
             myTbody += "<td><span class='label' style='background-color: #ffa000; font-size: 11px;'><strong>" + status + "</strong></span></td></tr>";
 
-			
-
 			document.getElementById('orderList').innerHTML = myTbody;
     	});
 
@@ -281,7 +279,7 @@
                                         client_name = clientSnapshot.val().client_name;
                                         client_address = clientSnapshot.val().client_address;
 
-    document.getElementById('id_dr_detail').innerHTML = "<div class='row'><div class='col-md-12'>Delivery Details for P.O. No. <strong>" + po_no + "</strong></div></div><br><div class='row'><div class='col-md-6'>Client Name: <strong>" + client_name + "</strong></div><div class='col-md-6'>Project Name: <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'>Client Address: <strong>" + client_address + "</strong></div><div class='col-md-6'>Project Address: <strong>" + project_address + "</strong></div></div>";
+    document.getElementById('id_dr_detail').innerHTML = "<div class='row'><div class='col-md-6'>Delivery Details for P.O. No. <strong>" + po_no + "</strong></div><div class='col-md-6'>Issued P.O. to Plant: <strong>" +plant + "</strong></div></div><br><div class='row'><div class='col-md-6'>Client Name: <strong>" + client_name + "</strong></div><div class='col-md-6'>Project Name: <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'>Client Address: <strong>" + client_address + "</strong></div><div class='col-md-6'>Project Address: <strong>" + project_address + "</strong></div></div>";
 
                                     }); 
                                 }
@@ -453,28 +451,6 @@
                     	<div class="row">
                             <div class="col-md-12">
                                 <header class="panel-heading">
-                                    <!-- <div class="row">
-                                        <div class="col-md-12">
-                                            <span id="id_dr_detail"></span>                                            
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            Client Name: <strong><?php echo $client_name; ?></strong>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <span id="id_project_name"></span>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            Client Address: <strong><?php echo $client_address; ?></strong>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <span id="id_project_address"></span>
-                                        </div>
-                                    </div> -->
                                     <span id="id_dr_detail"></span>
                                 </header>
                                 <section class="panel">
