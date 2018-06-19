@@ -183,7 +183,21 @@
                  time: time,
                  currentstockCopy: currentStockCopy};
 
-            firebase.database().ref().child("outcoming_diesel/" + plant).push(OutcomingData); 
+            //firebase.database().ref().child("outcoming_diesel/" + plant).push(OutcomingData);
+                var postData = firebase.database().ref('outcoming_diesel/' + plant);
+                var newPostRef = postData.push();
+                newPostRef.set(OutcomingData);
+
+                var postId = newPostRef.key;
+                
+                firebase.database().ref().child("outcoming_diesel/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot)
+                {
+                    var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
+                    var UpdateReverseDate = {reverseDate: StartReverseDate};
+                    firebase.database().ref().child("outcoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
+                    console.log(StartReverseDate);
+                });
+            //
             }
             
         });
