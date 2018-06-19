@@ -83,6 +83,7 @@
 <script>
 	
 	var deliveryKey = getUrlParameter('key');
+    var itemKey = getUrlParameter('itemKey');
 
 	$(function() {
         
@@ -200,7 +201,7 @@
     function displayQuantityError(val){
 
         firebase.database().ref('delivery_ongoing_order/'+deliveryKey).once('value', function(drOngoingSnapshot){
-            firebase.database().ref('purchase_order/'+drOngoingSnapshot.val().po_no_key+'/item/'+drOngoingSnapshot.val().item_no).once('value', function(poSnapshot){
+            firebase.database().ref('purchase_order/'+drOngoingSnapshot.val().po_no_key+'/item/'+itemKey).once('value', function(poSnapshot){
 
                 console.log(poSnapshot.key, poSnapshot.val(), drOngoingSnapshot.key, drOngoingSnapshot.val());
             
@@ -217,7 +218,6 @@
                     current_bal = remaining_balance;
                 }else{
                     current_bal = remaining_balance;
-
                 }
 
                 document.getElementById('id_remaining_balance').innerHTML = "<strong>" + Number(current_bal).toLocaleString('en') + " pcs</strong>";
@@ -251,7 +251,7 @@
     		myTbody = "<div class='form-group'><label for='po_no' class='col-md-5 control-label'>P.O. No.</label><div class='col-md-7'><p class='help-block'><strong>" + po_no + "</strong></p></div></div><div class='form-group'><label for='update_delivery_receipt_no' class='col-md-5 control-label'>DR No.</label><div class='col-md-7'><p class='help-block'><strong>" + dr_no + "</strong></p></div></div><div class='form-group'><label for='update_gate_pass' class='col-md-5 control-label'>Gate Pass</label><div class='col-md-7'><p class='help-block'><strong>" + gate_pass + "</strong></p></div></div><div class='form-group'><label for='item_no' class='col-md-5 control-label'>Current Item</label><div class='col-md-7'><p class='help-block'><strong>" + item_no + psi_ext + "</strong></p></div></div><div class='form-group'><label for='update_quantity' class='col-md-5 control-label'>Issued Quantity</label><div class='col-md-7'><p class='help-block'><strong>" + quantity + " pcs</strong></p></div></div>";
     		document.getElementById('dr_details').innerHTML = myTbody;
 
-            firebase.database().ref('purchase_order/'+deliverySnapshot.val().po_no_key+'/item/'+deliverySnapshot.val().item_no).once('value', function(poSnapshot){
+            firebase.database().ref('purchase_order/'+deliverySnapshot.val().po_no_key+'/item/'+itemKey).once('value', function(poSnapshot){
 
                 var remaining_balance = Number(poSnapshot.val().balance);
                 displayQuantityError(remaining_balance);
@@ -316,7 +316,7 @@
 
     	event.preventDefault();
     	firebase.database().ref('delivery_ongoing_order/'+deliveryKey).once('value', function(ongoingOrderSnapshot){
-            firebase.database().ref('purchase_order/'+ongoingOrderSnapshot.val().po_no_key+'/item/'+ongoingOrderSnapshot.val().item_no).once('value', function(orderSnapshot){
+            firebase.database().ref('purchase_order/'+ongoingOrderSnapshot.val().po_no_key+'/item/'+itemKey).once('value', function(orderSnapshot){
 
                 if(document.getElementById('new_dr_no').value){
                     new_dr_no = document.getElementById('new_dr_no').value;
@@ -375,7 +375,7 @@
                     balance: new_balance
                 }
                 // console.log(updateBalance);
-                if(firebase.database().ref('purchase_order/'+ongoingOrderSnapshot.val().po_no_key+'/item/'+ongoingOrderSnapshot.val().item_no).update(updateBalance)){
+                if(firebase.database().ref('purchase_order/'+ongoingOrderSnapshot.val().po_no_key+'/item/'+itemKey).update(updateBalance)){
                     alert("DR Details update success.");
                     window.location.href = 'delivery_ongoing_order.html';
                 }

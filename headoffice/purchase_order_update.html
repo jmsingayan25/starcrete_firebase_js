@@ -90,7 +90,7 @@
 <script>
 	
 	var po_no_key = getUrlParameter('key');
-	var item_no = getUrlParameter('item_no');
+	var itemKey = getUrlParameter('itemKey');
     var plant = getUrlParameter('plant');
 
 	$(function() {
@@ -168,7 +168,7 @@
 				});
 			});
 
-			firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_no).once('value', function(itemSnapshot){
+			firebase.database().ref('purchase_order/'+po_no_key+'/item/'+itemKey).once('value', function(itemSnapshot){
 
 				
 				item_no = itemSnapshot.val().item_no;
@@ -192,7 +192,7 @@
 
 	function checkBalance(input_val){
 
-		firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_no).once('value', function(itemSnapshot){
+		firebase.database().ref('purchase_order/'+po_no_key+'/item/'+itemKey).once('value', function(itemSnapshot){
 
 			var quantity = Number(itemSnapshot.val().quantity);
 			var balance = Number(itemSnapshot.val().balance);
@@ -251,7 +251,7 @@
 		var new_ordered_quantity = null;
 
 		firebase.database().ref('purchase_order/'+po_no_key).once('value', function(poSnapshot){
-			firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_no).once('value', function(itemSnapshot){
+			firebase.database().ref('purchase_order/'+po_no_key+'/item/'+itemKey).once('value', function(itemSnapshot){
 				if(document.getElementById('update_po_no').value){
 					new_po_no = document.getElementById('update_po_no').value;
 				}else{
@@ -297,7 +297,7 @@
 				}
 
 				var ref = firebase.database().ref();
-				var child = ref.child('purchase_order/'+po_no_key+'/item/'+item_no);
+				var child = ref.child('purchase_order/'+po_no_key+'/item/'+itemKey);
 				child.once('value', function(snapshot){
 					ref.child('purchase_order/'+po_no_key+'/item/'+new_item_no).set(snapshot.val());
 					child.remove();

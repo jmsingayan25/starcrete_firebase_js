@@ -311,7 +311,7 @@
 
                                 myTbody += "</td>";
                                 myTbody += "<td><strong>" + date + "</strong></td>";
-                                myTbody += "<td><a href='delivery_issue_dr_form.html?key=" + orderSnapshot.key + "&item=" + item_no + "&psi=" + psi + "' value='Issue DR No.' class='btn btn-sm btn-block' style='background-color: #388e3c; color: white; margin-bottom: 5px; font-weight: bold;'><strong>Issue DR No.</a></strong></td></tr>";
+                                myTbody += "<td><a href='delivery_issue_dr_form.html?key=" + orderSnapshot.key + "&itemKey=" + itemChildSnapshot.key + "' value='Issue DR No.' class='btn btn-sm btn-block' style='background-color: #388e3c; color: white; margin-bottom: 5px; font-weight: bold;'><strong>Issue DR No.</a></strong></td></tr>";
 
                                 document.getElementById('orderList').innerHTML = myTbody;
                                 count++;
