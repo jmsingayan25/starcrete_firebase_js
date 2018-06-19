@@ -220,6 +220,15 @@
 
         var myTbody = "";
 
+        firebase.database().ref('history/'+plant).once('value').then(function(historySnapshot){
+            if(historySnapshot.val() == null){
+
+                myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                document.getElementById("historyList").innerHTML = myTbody;
+            }
+        });
+
         firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value').then(function(historySnapshot) {
             historySnapshot.forEach(function(historyChildSnapshot){
 
@@ -233,12 +242,7 @@
 
                 document.getElementById("historyList").innerHTML = myTbody;
             });
-        }),function(){
-
-            myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-
-            document.getElementById("historyList").innerHTML = myTbody;
-        }
+        });
 
         document.getElementById('id_plant').innerHTML = plant;
     }
@@ -445,10 +449,10 @@
                                             <div class="form-group">
                                                 <label for="search">Plant:</label>
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="plant" id="plant" onchange="plantView(this.value)" value="Bravo" checked><strong>Bravo</strong>
+                                                    <input type="radio" name="plant" id="plant" value="Bravo" checked><strong>Bravo</strong>
                                                 </label>
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="plant" id="plant" onchange="plantView(this.value)" value="Delta"><strong>Delta</strong>
+                                                    <input type="radio" name="plant" id="plant" value="Delta"><strong>Delta</strong>
                                                 </label>
                                             </div>
                                         </div>
@@ -458,7 +462,7 @@
                                             <div class="form-group">
                                                 <label for="start_date">From:</label>
                                                 <div class="tooltips" data-original-title="Start date of transaction" data-placement="top">
-                                                    <input type="date" id="start_date" onchange="dateValue(this.value)" name="start_date" class="form-control">
+                                                    <input type="date" id="start_date" name="start_date" class="form-control">
                                                 </div>
                                             </div>
                                         </div>
