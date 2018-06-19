@@ -147,6 +147,7 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+        document.getElementById('id_button').innerHTML = "<input type='submit' name='submit' id='submit' value='Done' class='btn btn-primary' style='font-weight: bold;'> <a href='purchase_order_detail.html?key=" + po_no_key + "&plant=" + plant + "' class='btn btn-default'><strong>Cancel</strong></a>";
     });
 
 	function tableData(plant){
@@ -194,19 +195,19 @@
 
 		firebase.database().ref('purchase_order/'+po_no_key+'/item/'+itemKey).once('value', function(itemSnapshot){
 
-			var quantity = Number(itemSnapshot.val().quantity);
-			var balance = Number(itemSnapshot.val().balance);
+			var ordered_quantity = Number(itemSnapshot.val().quantity);
+			var remaining_balance = Number(itemSnapshot.val().balance);
 			var button = document.getElementById('submit');
 			var input_borderColor = document.getElementById('update_quantity');
 
 			input_val = input_val.replace(",","");
 			input_val = Number(input_val);
 
-			new_quantity = quantity - input_val;
-        	new_value = balance - new_quantity;
+			new_quantity = ordered_quantity - input_val;
+        	new_value = remaining_balance - new_quantity;
         	// console.log(new_value);
         	if(input_val == ''){
-	            new_value = balance;
+	            new_value = remaining_balance;
 	        }
 
 	        if(new_value < 0 && input_val != ''){
@@ -502,8 +503,7 @@
                                     </div>
                                     <div class="form-group">
                                         <div class="col-md-offset-8 col-md-4">
-                                            <input type="submit" name="submit" id="submit" value="Done" class="btn btn-primary" style="font-weight: bold;">
-                                            <a href="purchase_order_detail.html" class="btn btn-default"><strong>Cancel</strong></a>
+                                            <span id="id_button"></span>
                                         </div>
                                     </div>
                                 </div>
