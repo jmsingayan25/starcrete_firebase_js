@@ -164,7 +164,7 @@
                 var time = new Date().toLocaleTimeString('en');
                 //
                 var liters_bravo = quantity_in;
-                var stock_available ={Liters: liters_bravo};
+                var stock_available = {Liters: liters_bravo};
                 firebase.database().ref().child("available_stock/" + plant).set(stock_available );
                 //
                 var currentStockCopy = liters_bravo;

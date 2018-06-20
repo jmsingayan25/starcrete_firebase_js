@@ -169,7 +169,7 @@
              var decrease_int_liters = Number(get_liters) - Number(quantity_out);
              var decrease_string_liters = decrease_int_liters.toString();
              var new_liters = decrease_string_liters;
-             var stock_available  ={Liters: new_liters};
+             var stock_available  = {Liters: new_liters};
              firebase.database().ref().child("available_stock/" + plant).set(stock_available); 
 
                var currentStockCopy = new_liters;
@@ -194,6 +194,7 @@
                 {
                     var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
                     var UpdateReverseDate = {reverseDate: StartReverseDate};
+                    
                     firebase.database().ref().child("outcoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
                     console.log(StartReverseDate);
                 });
