@@ -334,14 +334,20 @@
 		var number = input.replace(",","");
         number = Number(number);
 		var balance = Number(document.getElementById('hidden_balance').value);
+        var quantity_textbox = document.getElementById('quantity');
 		var submit = document.getElementById('submit');
 		// var letters = /^[0-9a-zA-Z]+$/; 
 
 		setTimeout(function () {
-			if(number > balance || number <= 0){
+			if((number > balance || number <= 0) && input != ''){
 				submit.disabled = true;
+                quantity_textbox.style.borderColor = 'red';
 				// a.style.display = "block";
+            }else if(input == ''){
+                quantity_textbox.style.borderColor = '';
+                submit.disabled = false;
 			}else{
+                quantity_textbox.style.borderColor = '';
 				submit.disabled = false;
 				// a.style.display = "none";
 			}
