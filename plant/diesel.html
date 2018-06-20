@@ -165,71 +165,115 @@
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
-function submit()
+function Go()
 {
+   event.preventDefault();
+   var myTbody = "";
 
+        date = dateFormat(document.getElementById('date_view').value);
+        var GetStringDate = date.toString();
+
+        firebase.database().ref('incoming_diesel/'+plant).orderByChild('reverseDate').once('value').then(function(DateSnapshotIn) {
+            DateSnapshotIn.forEach(function(dieselChildSnapshotsIn){
+            if (GetStringDate == dieselChildSnapshotsIn.val().date) 
+            {
+                 var truckno = dieselChildSnapshotsIn.val().truck_no;
+                 var suppliername = dieselChildSnapshotsIn.val().supplier;
+                 var quantityin = Number(dieselChildSnapshotsIn.val().quantity_in).toLocaleString("en");
+                 var availablestock = Number(dieselChildSnapshotsIn.val().currentstockCopy).toLocaleString("en");
+                 var time = dieselChildSnapshotsIn.val().time;
+
+                 myTbody += "<tr><td><strong>" + truckno+ "</strong></td>";
+                 myTbody += "<td><strong>" + suppliername + "</strong></td>";
+                 myTbody += "<td><strong>" + quantityin +" liter(s)" +"</strong></td><td></td>";
+                 myTbody += "<td><strong>" + availablestock + " liter(s)"+"</strong></td><td></td>";
+                 myTbody += "<td><strong>" + time + "</strong></td></tr>";
+
+                document.getElementById("DieselList").innerHTML = myTbody;
+            }
+        
+            });
+        });
+        firebase.database().ref('outcoming_diesel/'+plant).orderByChild('reverseDate').once('value').then(function(DateSnapshotOut) {
+            DateSnapshotOut.forEach(function(dieselChildSnapshotsOut){
+            if (GetStringDate == dieselChildSnapshotsOut.val().date) 
+            {
+            var truckno = dieselChildSnapshotsOut.val().truck_no;
+            var operator= dieselChildSnapshotsOut.val().operator;
+            var quantityout= Number(dieselChildSnapshotsOut.val().quantity_out).toLocaleString("en");
+            var availablestock = Number(dieselChildSnapshotsOut.val().currentstockCopy).toLocaleString("en");
+            var address = dieselChildSnapshotsOut.val().destination;
+            var time = dieselChildSnapshotsOut.val().time;
+                
+                 myTbody += "<tr><td><strong>" + truckno+ "</strong></td>";
+                 myTbody += "<td><strong>" + operator+"</strong></td><td></td>";
+                 myTbody += "<td><strong>" + quantityout+" liter(s)"+"</strong></td>";
+                 myTbody += "<td><strong>" + availablestock+" liter(s)"+"</strong></td>";
+                 myTbody += "<td><strong>" + address+"</strong></td>";
+                 myTbody += "<td><strong>" + time+"</strong></td>";
+
+                document.getElementById("DieselList").innerHTML = myTbody;
+            }
+        
+            });
+        });
 }
 
 function DisplayCurrentData()
 {
     var myTbody = "";
 
-    firebase.database().ref('incoming_diesel/'+plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshot) {
+    firebase.database().ref('incoming_diesel/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshot) {
         DieselSnapshot.forEach(function(dieselChildSnapshot){
-    firebase.database().ref().child("available_stock/" + plant).once('value',function(CheckSnapshot)
-            {
                 var date = dieselChildSnapshot.val().date;
                 var CurrentDate = new Date();
                 
-                if(dateFormat(CurrentDate)== date)
+                if(dateFormat(CurrentDate) == date)
                 {
                 var truckno = dieselChildSnapshot.val().truck_no;
-                var quantityin = dieselChildSnapshot.val().quantity_in;
-                var availablestock = CheckSnapshot.val().Liters;
+                var suppliername = dieselChildSnapshot.val().supplier;
+                var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
+                var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
                 var time = dieselChildSnapshot.val().time;
 
-                myTbody += "<tr><td><strong>" + truckno+ "</strong></td><td></td>";
-                myTbody += "<td><strong>" + quantityin +" liters(s)" +"</strong></td><td></td>";
-                myTbody += "<td><strong>" + availablestock + "</strong></td><td></td>";
+                myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+                myTbody += "<td><strong>" + suppliername + "</strong></td>";
+                myTbody += "<td><strong>" + quantityin + " liter(s)" + "</strong></td><td></td>";
+                myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td><td></td>";
                 myTbody += "<td><strong>" + time + "</strong></td></tr>";
 
                 document.getElementById("DieselList").innerHTML = myTbody; 
                 }
-            });
         });
     });
     //
-     firebase.database().ref('outcoming_diesel/'+plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotout) {
+     firebase.database().ref('outcoming_diesel/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotout) {
          DieselSnapshotout.forEach(function(dieselChildSnapshotout){
-    firebase.database().ref().child("available_stock/" + plant).once('value',function(CheckSnapshotout)
-            {
                 var date = dieselChildSnapshotout.val().date;
                 var CurrentDate = new Date();
 
-                if(dateFormat(CurrentDate)== date)
+                if(dateFormat(CurrentDate) == date)
                 {
-
                 var truckno = dieselChildSnapshotout.val().truck_no;
-                var operator= dieselChildSnapshotout.val().operator;
-                var quantityout= dieselChildSnapshotout.val().quantity_out;
-                var availablestock = CheckSnapshotout.val().Liters;
+                var operator = dieselChildSnapshotout.val().operator;
+                var quantityout = Number(dieselChildSnapshotout.val().quantity_out).toLocaleString("en");
+                var availablestock = Number(dieselChildSnapshotout.val().currentstockCopy).toLocaleString("en");
                 var address = dieselChildSnapshotout.val().destination;
                 var time = dieselChildSnapshotout.val().time;
                 
-                
-                 myTbody += "<tr><td><strong>" + truckno+ "</strong></td>";
-                 myTbody += "<td><strong>" + operator+"</strong></td><td></td>";
-                 myTbody += "<td><strong>" + quantityout+" liters(s)"+"</strong></td>";
-                 myTbody += "<td><strong>" + availablestock+"</strong></td>";
-                 myTbody += "<td><strong>" + address+"</strong></td>";
-                 myTbody += "<td><strong>" + time+"</strong></td>";
+                 myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+                 myTbody += "<td><strong>" + operator + "</strong></td><td></td>";
+                 myTbody += "<td><strong>" + quantityout + " liter(s)"+"</strong></td>";
+                 myTbody += "<td><strong>" + availablestock + " liter(s)"+"</strong></td>";
+                 myTbody += "<td><strong>" + address + "</strong></td>";
+                 myTbody += "<td><strong>" + time + "</strong></td>";
 
-                 document.getElementById("DieselList").innerHTML = myTbody; 
-                }
-
-            });
+                 document.getElementById("DieselList").innerHTML = myTbody;}
          });
      });
+     firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot)
+     {var get_totalStock = totalstockSnapshot.val().Liters;
+        document.getElementById("id_stock").innerHTML = get_totalStock + " Liter(s)";});
 }
 
 </script>
@@ -364,7 +408,7 @@ function DisplayCurrentData()
                 <div class="row">
                     <div class="col-md-12">
                         <section class="panel">
-                        	<form class="form-inline">
+                        	<form class="form-inline" onsubmit="return Go()">
                                 <header class="panel-heading">
                                     <div class="row" style="margin-bottom: 5px;">
                                         <div class="col-md-6" style="margin: 5px 0px 0px 0px;">
@@ -373,8 +417,8 @@ function DisplayCurrentData()
                                                     <div class="col-md-12" style=" white-space: nowrap;">
                                                         <label for="date_view" class="col-md-3 control-label" style="white-space: nowrap;"><strong>Select Date:</strong></label>
                                                         <div class="col-md-7">
-                                                            <input type="date" name="date_view" class="form-control">   
-                                                            <button type="submit" id = "submit"class="btn btn-md btn-info" style=""><strong>Go</strong></button>                      
+                                                            <input type="date" id = "date_view" name="date_view" class="form-control">   
+                                                            <button type="submit" id = "submitGo" class="btn btn-md btn-info" style=""><strong>Go</strong></button>                      
                                                         </div> 
                                                     </div>
                                                 </div>
@@ -398,6 +442,7 @@ function DisplayCurrentData()
                         			<thead>
                         				<tr class="filterable">
                         					<th colspan="7">
+                                                <span>Available stock as of today: <span id="id_stock"></span></span>
                                                 <!-- <input type="hidden" id="hidden_stock" value="<?php echo getDieselStock($db, $search_plant); ?>">
                         						<?php 
                             						$date_view = date_create($_GET['date_view']); 

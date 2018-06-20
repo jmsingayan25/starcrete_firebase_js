@@ -150,15 +150,74 @@
     {
         event.preventDefault();
 
-        var quantity_out = document.getElementById('quantity_out').value;
+        firebase.database().ref().child("available_stock/" + plant).once('value',function(CheckSnapshot)
+        {
+            if (CheckSnapshot.val() == null) 
+            {
+                alert("Fill Incoming Required");
+            }else
+            {
+             var quantity_out = document.getElementById('quantity_out').value;
+             quantity_out = quantity_out.replace(",","");
+             var destination = document.getElementById('destination').value;
+             var truck_no = document.getElementById('truck_no').value;
+             var operator = document.getElementById('operator').value;
+             var date = new Date().toLocaleDateString('en');
+             var time = new Date().toLocaleTimeString('en');
+
+             var get_liters = CheckSnapshot.val().Liters;
+             var decrease_int_liters = Number(get_liters) - Number(quantity_out);
+             var decrease_string_liters = decrease_int_liters.toString();
+             var new_liters = decrease_string_liters;
+             var stock_available  = {Liters: new_liters};
+             firebase.database().ref().child("available_stock/" + plant).set(stock_available); 
+
+               var currentStockCopy = new_liters;
+               var OutcomingData = { 
+                 quantity_out: quantity_out, 
+                 destination: destination,
+                 truck_no: truck_no, 
+                 operator: operator,
+                 reverseDate: firebase.database.ServerValue.TIMESTAMP,
+                 date: date, 
+                 time: time,
+                 currentstockCopy: currentStockCopy};
+
+            //firebase.database().ref().child("outcoming_diesel/" + plant).push(OutcomingData);
+                var postData = firebase.database().ref('outcoming_diesel/' + plant);
+                var newPostRef = postData.push();
+                newPostRef.set(OutcomingData);
+
+                var postId = newPostRef.key;
+                
+                firebase.database().ref().child("outcoming_diesel/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot)
+                {
+                    var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
+                    var UpdateReverseDate = {reverseDate: StartReverseDate};
+                    
+                    firebase.database().ref().child("outcoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
+                    console.log(StartReverseDate);
+                });
+            //
+            }
+            
+        });
+
+        /*var quantity_out = document.getElementById('quantity_out').value;
         var destination = document.getElementById('destination').value;
         var truck_no = document.getElementById('truck_no').value;
         var operator = document.getElementById('operator').value;
         var date = new Date().toLocaleDateString('en');
         var time = new Date().toLocaleTimeString('en');
         
-        var OutcomingData ={ quantity_out: quantity_out.toUpperCase(), destination: destination.toUpperCase(),
-            truck_no: truck_no.toUpperCase(), operator: operator.toUpperCase(),reverseDate: firebase.database.ServerValue.TIMESTAMP,date: date, time: time};
+        var OutcomingData = { 
+            quantity_out: quantity_out, 
+            destination: destination,
+            truck_no: truck_no, 
+            operator: operator,
+            reverseDate: firebase.database.ServerValue.TIMESTAMP,
+            date: date, 
+            time: time};
 
         var PostDataBase = firebase.database().ref().child("outcoming_diesel/" + plant);
         var newPostRef = PostDataBase.push();
@@ -179,7 +238,7 @@
              firebase.database().ref().child("available_stock/" + plant).set(stock_available);  
             }
             
-        });
+        });*/
     }
 </script>    
 </head>
