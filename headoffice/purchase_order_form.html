@@ -373,7 +373,8 @@
         var item_no = $("select[name='item_no[]']").map(function(){return $(this).val();}).get();
         var psi = $("input[name='psi[]']").map(function(){return $(this).val() || "";}).get();
         var quantity = $("input[name='quantity[]']").map(function(){return $(this).val();}).get();
-        var date = new Date().toLocaleString();
+        var date = new Date().toLocaleDateString('en');
+        var time = new Date().toLocaleTimeString('en');
 
         db.ref('project/'+client_id+'/'+project_id).once('value').then(function(snapshot){
             // console.log(snapshot.val());
@@ -381,6 +382,7 @@
             var poData = {
                 po_no: po_no,
                 date: date,
+                time: time,
                 reverseDate: firebase.database.ServerValue.TIMESTAMP,
                 status: "PENDING",
                 issued_po_plant: plant
@@ -461,6 +463,7 @@
 
                 var historyData = {
                     date: date,
+                    time: time,
                     reverseDate: firebase.database.ServerValue.TIMESTAMP,
                     type_of_transaction: "Issued P.O. No.",
                     history: client_name + " ordered " + item_ext + " with P.O. No. " + po_no + " to be delivered to " + snapshot.val().project_name + " in " + snapshot.val().project_address

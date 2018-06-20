@@ -269,14 +269,15 @@
 
     	event.preventDefault();
 
-        var currentDateTime = formatDate(date_value);
+        // var currentDateTime = formatDate(date_value);
 
     	firebase.database().ref().child('delivery_ongoing_order/'+orderKey).once('value').then(function(orderSnapshot){
 
             var key = orderSnapshot.key;
             var time = new Date().toLocaleTimeString('en');
             
-            var date = currentDateTime + ", " + time;
+            // var date = currentDateTime;
+            var date = new Date(date_value).toLocaleDateString('en');
             var po_no = orderSnapshot.val().po_no;
             var dr_no = orderSnapshot.val().dr_no;
             var gate_pass = orderSnapshot.val().gate_pass;
@@ -298,6 +299,7 @@
 
             var drData = {
                 date: date,
+                time: time,
                 po_no: po_no,
                 dr_no: dr_no,
                 gate_pass: gate_pass,
@@ -335,6 +337,7 @@
 
                     var historyData = {
                         date: date,
+                        time: time,
                         reverseDate: firebase.database.ServerValue.TIMESTAMP,
                         type_of_transaction: "Delivered DR No.",
                         history: "Delivered DR No. " + dr_no + " with P.O. No. " + po_no + " and " + Number(quantity) + " pcs of " + item_no + psi_ext + " to " + project_name + " in " + project_address
@@ -391,6 +394,7 @@
                 psi: psi,
                 quantity: quantity,
                 date: date,
+                time: time,
                 issued_po_plant: issued_po_plant,
                 delivered_plant: delivered_plant,
                 po_no: po_no,
@@ -447,7 +451,8 @@
         firebase.database().ref('delivery_ongoing_order/'+orderKey).once('value', function(ongoingOrderSnapshot){
 
             var key = ongoingOrderSnapshot.key;
-            var date = new Date().toLocaleString('en');
+            var date = new Date().toLocaleDateString('en');
+            var time = new Date().toLocaleTimeString('en');
             var po_no = ongoingOrderSnapshot.val().po_no;
             var dr_no = ongoingOrderSnapshot.val().dr_no;
             var gate_pass = ongoingOrderSnapshot.val().gate_pass;
@@ -469,6 +474,7 @@
 
             var drData = {
                 date: date,
+                time: time,
                 po_no: po_no,
                 dr_no: dr_no,
                 gate_pass: gate_pass,
@@ -544,6 +550,7 @@
 
             var historyData = {
                 date: date,
+                time: time,
                 reverseDate: firebase.database.ServerValue.TIMESTAMP,
                 type_of_transaction: "Backloaded DR No.",
                 history: "Backloaded delivery of DR No. " + dr_no + " with P.O. No. " + po_no + " and " + + Number(quantity).toLocaleString('en') + " pcs of " + item_no + psi_ext
@@ -644,12 +651,12 @@
         });
     }
 
-    function formatDate(date) {
+    // function formatDate(date) {
 
-        var today = new Date(date);
+    //     var today = new Date(date);
 
-        return today.getMonth()+1 + "/" + today.getDate() + "/" + today.getFullYear();
-    }
+    //     return today.getMonth()+1 + "/" + today.getDate() + "/" + today.getFullYear();
+    // }
 
 </script>
 <style>

@@ -199,7 +199,8 @@
 		var dr_no = document.getElementById('dr_no').value;
 		var quantity = document.getElementById('quantity').value.replace(",","");
 		var gate_pass = document.getElementById('gate_pass_no').value;
-		var date = new Date().toLocaleString();
+		var date = new Date().toLocaleDateString('en');
+        var time = new Date().toLocaleTimeString('en');
 
 		firebase.database().ref('purchase_order/'+orderKey).once('value').then(function(orderSnapshot){
 			firebase.database().ref('purchase_order/'+orderKey+'/item/'+itemKey).once('value', function(itemSnapshot){
@@ -222,6 +223,7 @@
 					po_no_key: orderKey,
 					gate_pass: gate_pass,
 					date: date,
+                    time: time,
 					issued_po_plant: issued_po_plant,
 					issued_dr_plant: plant
 				}
@@ -266,6 +268,7 @@
 
 						var historyData = {
 							date: date,
+                            time: time,
 			                reverseDate: firebase.database.ServerValue.TIMESTAMP,
 			                type_of_transaction: "Issued DR No.",
 			                history: "Issued DR No. " + dr_no + " with P.O. No. " + po_no + " and " + Number(quantity).toLocaleString('en') + " pcs of " + item_no + psi_ext + " to be deliver to " + project_name + " in " + project_address
@@ -382,7 +385,7 @@
     // function checkDrExist(val){
 
     //     firebase.database().ref('').on('value', function(){
-            
+
     //     });
     // }
 </script>

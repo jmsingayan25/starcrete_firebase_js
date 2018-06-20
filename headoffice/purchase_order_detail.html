@@ -277,11 +277,13 @@
 
             var po_no_key = purchaseOrderKey;
             var po_no = poSnapshot.val().po_no;
-            var date = new Date().toLocaleString();
+            var date = new Date().toLocaleDateString();
+            var time = new Date().toLocaleTimeString();
 
             var poData = {
                 po_no: po_no,
                 date: date,
+                time: time,
                 po_no_key: po_no_key,
                 reverseDate: firebase.database.ServerValue.TIMESTAMP,
                 status: 'CLOSED'
@@ -382,6 +384,7 @@
 
                         var historyData = {
                             date: date,
+                            time: time,
                             type_of_transaction: "Closed P.O. No.",
                             reverseDate: firebase.database.ServerValue.TIMESTAMP,
                             history: "P.O. No. " + po_no + " with remaining balance of " + item_ext + "to be delivered to " + poProjectChildSnapshot.val().project_name + " has been closed. Reason: " + input_reason
