@@ -369,13 +369,21 @@
 
                     console.log(historyChildSnapshot.key,historyChildSnapshot.val().date);
 
-                    var type = historyChildSnapshot.val().type_of_transaction;   //Example of value
-                    var detail = historyChildSnapshot.val().history;   //Example of value
-                    var date = historyChildSnapshot.val().date;   //Example of value
+                    text = historyChildSnapshot.val().history.toLowerCase();
+                    console.log(text.replace(",",""));
+                    search = text.search(search_text.toLowerCase());
 
-                    myTbody += "<tr><td><strong>" + type + "</strong></td>";
-                    myTbody += "<td><strong>" + detail + "</strong></td>";
-                    myTbody += "<td><strong>" + date + "</strong></td></tr>";
+                    if(search != -1){
+                        
+                        var type = historyChildSnapshot.val().type_of_transaction;   //Example of value
+                        var detail = historyChildSnapshot.val().history;   //Example of value
+                        var date = historyChildSnapshot.val().date;   //Example of value
+
+                        myTbody += "<tr><td><strong>" + type + "</strong></td>";
+                        myTbody += "<td><strong>" + detail + "</strong></td>";
+                        myTbody += "<td><strong>" + date + "</strong></td></tr>";
+
+                    }
 
                 });
 
