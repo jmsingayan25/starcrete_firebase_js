@@ -317,14 +317,16 @@
 
         if(fromDate == '' && endDate == ''){
 
-            console.log(fromDate, endDate);
+            // console.log(fromDate, endDate);
 
-            firebase.database().ref('history/'+plant).orderByChild('reverseDate').on('value', function(historySnapshot){
+            firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value', function(historySnapshot){
                 historySnapshot.forEach(function(historyChildSnapshot){
                     console.log(historyChildSnapshot.key,historyChildSnapshot.val().date);
 
                     text = historyChildSnapshot.val().history.toLowerCase();
-                    console.log(text.replace(",",""));
+                    // console.log(text.replace(",",""));
+                    sample_text = search_text.replace(" ","|");
+                    console.log(sample_text);
                     search = text.search(search_text.toLowerCase());
 
                     if(search != -1){
@@ -364,7 +366,7 @@
 
             console.log(fromDate, endDate);
 
-            firebase.database().ref('history/'+plant).orderByChild('date').startAt(fromDate).endAt(endDate).on('value', function(historySnapshot){
+            firebase.database().ref('history/'+plant).orderByChild('date').startAt(fromDate).endAt(endDate).once('value', function(historySnapshot){
                 historySnapshot.forEach(function(historyChildSnapshot){
 
                     console.log(historyChildSnapshot.key,historyChildSnapshot.val().date);
@@ -402,7 +404,7 @@
 
         var myTbody = "";
 
-        firebase.database().ref('history/'+plant).once('value').then(function(historySnapshot){
+        firebase.database().ref('history/'+plant).once('value', function(historySnapshot){
             if(historySnapshot.val() == null){
 
                 myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
@@ -411,7 +413,7 @@
             }
         });
 
-        firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value').then(function(historySnapshot) {
+        firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value', function(historySnapshot) {
             historySnapshot.forEach(function(historyChildSnapshot){
 
                 var type = historyChildSnapshot.val().type_of_transaction;   //Example of value
