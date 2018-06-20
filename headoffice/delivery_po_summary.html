@@ -204,8 +204,6 @@
 			myTbody += "<td><strong>" + issued_dr_plant + "</strong></td>";
             myTbody += "<td><span class='label' style='background-color: #ffa000; font-size: 11px;'><strong>" + status + "</strong></span></td></tr>";
 
-			
-
 			document.getElementById('orderList').innerHTML = myTbody;
     	});
 
@@ -265,16 +263,29 @@
 
     	firebase.database().ref('purchase_order/'+po_no_key).once('value', function(orderSnapshot){
 			firebase.database().ref('purchase_order/'+po_no_key+'/project_detail').once('value', function(projectSnapshot){
-	    		console.log(projectSnapshot.key, projectSnapshot.val());
 	    		projectSnapshot.forEach(function(projectChildSnapshot){
+                    console.log(projectChildSnapshot.key, projectChildSnapshot.val());
+                    firebase.database().ref('project').on('value', function(projectClientSnapshot){
+                        projectClientSnapshot.forEach(function(projectClientChildSnapshot){
+                            projectClientChildSnapshot.forEach(function(projectClientChildChildSnapshot){
+                                if(projectClientChildChildSnapshot.key == projectChildSnapshot.key){
+                                    // console.log(projectClientChildSnapshot.key, projectClientChildChildSnapshot.key, projectClientChildChildSnapshot.val());
 
-	    			po_no = orderSnapshot.val().po_no;
-	    			project_name = projectChildSnapshot.val().project_name;
-	    			project_address = projectChildSnapshot.val().project_address;
+                                    firebase.database().ref('client/'+projectClientChildSnapshot.key).once('value', function(clientSnapshot){
 
-	    			document.getElementById('id_dr_detail').innerHTML = "Delivery Details for P.O. No. <strong>" + po_no + "</strong>";
-	    			document.getElementById('id_project_name').innerHTML = "Project Name: <strong>" + project_name + "</strong>";
-	    			document.getElementById('id_project_address').innerHTML = "Project Address: <strong>" + project_address + "</strong>";
+                                        po_no = orderSnapshot.val().po_no;
+                                        project_name = projectChildSnapshot.val().project_name;
+                                        project_address = projectChildSnapshot.val().project_address;
+                                        client_name = clientSnapshot.val().client_name;
+                                        client_address = clientSnapshot.val().client_address;
+
+    document.getElementById('id_dr_detail').innerHTML = "<div class='row'><div class='col-md-6'>Delivery Details for P.O. No. <strong>" + po_no + "</strong></div><div class='col-md-6'>Issued P.O. to Plant: <strong>" +plant + "</strong></div></div><br><div class='row'><div class='col-md-6'>Client Name: <strong>" + client_name + "</strong></div><div class='col-md-6'>Project Name: <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'>Client Address: <strong>" + client_address + "</strong></div><div class='col-md-6'>Project Address: <strong>" + project_address + "</strong></div></div>";
+
+                                    }); 
+                                }
+                            });
+                        });
+                    });
 	    		});
 	    	});
 		}); 
@@ -432,10 +443,7 @@
                 <!--overview start-->
                	<div class="row">
 	                <div class="col-md-12">
-	                    <!-- <h3 class="page-header"><i class="fa fa-laptop"></i> P.O. No. <?php echo $po_no_delivery; ?></h3> -->
-	                    <ol class="breadcrumb" id="id_breadcrumb">
-	                                                   
-	                    </ol>
+	                    <ol class="breadcrumb" id="id_breadcrumb"></ol>
 	                </div>
 	            </div>
 	            <div class="row">
@@ -443,28 +451,7 @@
                     	<div class="row">
                             <div class="col-md-12">
                                 <header class="panel-heading">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <span id="id_dr_detail"></span>                                            
-                                        </div>
-                                    </div>
-                                    <br>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            Client Name: <strong><?php echo $client_name; ?></strong>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <span id="id_project_name"></span>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            Client Address: <strong><?php echo $client_address; ?></strong>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <span id="id_project_address"></span>
-                                        </div>
-                                    </div>
+                                    <span id="id_dr_detail"></span>
                                 </header>
                                 <section class="panel">
                                     <div class="table-responsive filterable">
@@ -476,14 +463,10 @@
                                                     </th>
                                                 </tr>
                                                 <tr class="filters">
-                                                    <!-- <th class="col-md-1">#</th> -->
-                                                    <!-- <th class="col-md-1">P.O. No.</th> -->
+
                                                     <th class="col-md-1"><input type="text" class="form-control" placeholder="DR No." disabled></th>
                                                     <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
                                                     <th class="col-md-1">Quantity</th>
-                                                    <!-- <th class="col-md-2">Project Name</th> -->
-                                                    <!-- <th class="col-md-2">Address</th> -->
-                                                    <!-- <th class="col-md-1">Contact</th> -->
                                                     <th class="col-md-1">Date Transaction</th>
                                                     <th class="col-md-1">Plant</th>
                                                     <th class="col-md-2">Status</th>

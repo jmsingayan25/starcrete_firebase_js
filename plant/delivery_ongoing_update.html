@@ -83,6 +83,7 @@
 <script>
 	
 	var deliveryKey = getUrlParameter('key');
+    var itemKey = getUrlParameter('itemKey');
 
 	$(function() {
         
@@ -91,10 +92,10 @@
 
         // $input.on( "keyup", function( event ) {
 
-	 	var $form = $( "#form" );
-        var $input = $form.find( "#update_quantity" );
+	 	var $form = $( "#update_details" );
+        var $input = $form.find( "#new_issued_quantity" );
 
-        $form.on( "keyup", "#update_quantity", function( event ) {
+        $form.on( "keyup", "#new_issued_quantity", function( event ) {
             
             
             // When user select text in the document, also abort.
@@ -122,6 +123,9 @@
                     } );
         });
 
+        itemList();
+
+
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
 
@@ -137,7 +141,6 @@
                     
                     tableData(plant);
                     totalCountBadge(plant);
-                    itemList();
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
@@ -150,49 +153,88 @@
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);      
     });
 
+  //   function displayQuantityError(val){
+
+  //   	var balance = document.getElementById('hidden_balance').value;
+  //   	var quantity = document.getElementById('hidden_quantity').value;
+		// var button = document.getElementById('submit');
+  //   	// var div = document.getElementById('error');
+  //   	var input = document.getElementById('update_quantity');
+  //       var remaining = document.getElementById('balance');
+
+  //       balance = balance.replace(",","");
+  //       balance = Number(balance);
+  //       val = val.replace(",","");
+  //       val = Number(val);
+  //   	quantity = quantity.replace(",","");
+  //   	quantity = Number(quantity);
+
+  //   	new_quantity = val - quantity;
+  //   	new_value = balance - new_quantity;
+    	
+  //       if(val == ''){
+  //           new_value = balance;
+  //       }
+
+  //      	if(new_value < 0 && val != ''){
+  //           // div.style.display = 'block';
+  //           button.disabled = 'true';
+  //           input.style.borderColor = 'red';
+  //       }else if(new_value < 0 && val == ''){
+  //       	button.disabled = 'true';
+  //       	input.style.borderColor = 'red';
+  //       }else{
+  //           // div.style.display = 'none';
+  //           button.disabled = '';
+  //           input.style.borderColor = '';
+  //       }
+
+  //       string_new_value = new_value.toLocaleString('en') + " pcs";
+  //       if(new_value < 1350){
+  //           remaining.innerHTML = string_new_value.bold().fontcolor("red");
+                    
+  //       }else{
+  //           remaining.innerHTML = string_new_value.bold();
+  //       }
+  //   }
+
     function displayQuantityError(val){
 
-    	var balance = document.getElementById('hidden_balance').value;
-    	var quantity = document.getElementById('hidden_quantity').value;
-		var button = document.getElementById('submit');
-    	// var div = document.getElementById('error');
-    	var input = document.getElementById('update_quantity');
-        var remaining = document.getElementById('balance');
+        firebase.database().ref('delivery_ongoing_order/'+deliveryKey).once('value', function(drOngoingSnapshot){
+            firebase.database().ref('purchase_order/'+drOngoingSnapshot.val().po_no_key+'/item/'+itemKey).once('value', function(poSnapshot){
 
-        balance = balance.replace(",","");
-        balance = Number(balance);
-        val = val.replace(",","");
-        val = Number(val);
-    	quantity = quantity.replace(",","");
-    	quantity = Number(quantity);
+                console.log(poSnapshot.key, poSnapshot.val(), drOngoingSnapshot.key, drOngoingSnapshot.val());
+            
+                var remaining_balance = Number(poSnapshot.val().balance);
+                var ordered_quantity = Number(poSnapshot.val().quantity);
+                var issued_quantity = Number(drOngoingSnapshot.val().quantity);
+                var textbox = document.getElementById('new_issued_quantity');
+                var button = document.getElementById('submit');
 
-    	new_quantity = val - quantity;
-    	new_value = balance - new_quantity;
-    	
-        if(val == ''){
-            new_value = balance;
-        }
+                val = val.replace(',','');
+                val = Number(val);
 
-       	if(new_value < 0 && val != ''){
-            // div.style.display = 'block';
-            button.disabled = 'true';
-            input.style.borderColor = 'red';
-        }else if(new_value < 0 && val == ''){
-        	button.disabled = 'true';
-        	input.style.borderColor = 'red';
-        }else{
-            // div.style.display = 'none';
-            button.disabled = '';
-            input.style.borderColor = '';
-        }
+                if(val != remaining_balance && val != ""){
+                    diff_quantity = val - issued_quantity;
+                    current_bal = remaining_balance - diff_quantity;
+                }else if(val == remaining_balance){
+                    current_bal = remaining_balance;
+                }else{
+                    current_bal = remaining_balance;
+                }
 
-        string_new_value = new_value.toLocaleString('en') + " pcs";
-        if(new_value < 1350){
-            remaining.innerHTML = string_new_value.bold().fontcolor("red");
-                    
-        }else{
-            remaining.innerHTML = string_new_value.bold();
-        }
+                if(current_bal < 0){
+                    submit.disabled = true;
+                    textbox.style.borderColor = 'red';
+                }else{
+                    submit.disabled = false;
+                    textbox.style.borderColor = '';
+                }
+
+                document.getElementById('id_remaining_balance').innerHTML = "<strong>" + Number(current_bal).toLocaleString('en') + " pcs</strong>";
+
+            });
+        });
     }
 
     function tableData(plant){
@@ -201,7 +243,7 @@
     	var count = 1;
 
     	firebase.database().ref('delivery_ongoing_order/'+deliveryKey).once('value', function(deliverySnapshot){
-    		console.log(deliverySnapshot.key,deliverySnapshot.val());
+    		// console.log(deliverySnapshot.key,deliverySnapshot.val());
 
     		dr_no = deliverySnapshot.val().dr_no;
     		po_no = deliverySnapshot.val().po_no;
@@ -220,16 +262,12 @@
     		myTbody = "<div class='form-group'><label for='po_no' class='col-md-5 control-label'>P.O. No.</label><div class='col-md-7'><p class='help-block'><strong>" + po_no + "</strong></p></div></div><div class='form-group'><label for='update_delivery_receipt_no' class='col-md-5 control-label'>DR No.</label><div class='col-md-7'><p class='help-block'><strong>" + dr_no + "</strong></p></div></div><div class='form-group'><label for='update_gate_pass' class='col-md-5 control-label'>Gate Pass</label><div class='col-md-7'><p class='help-block'><strong>" + gate_pass + "</strong></p></div></div><div class='form-group'><label for='item_no' class='col-md-5 control-label'>Current Item</label><div class='col-md-7'><p class='help-block'><strong>" + item_no + psi_ext + "</strong></p></div></div><div class='form-group'><label for='update_quantity' class='col-md-5 control-label'>Issued Quantity</label><div class='col-md-7'><p class='help-block'><strong>" + quantity + " pcs</strong></p></div></div>";
     		document.getElementById('dr_details').innerHTML = myTbody;
 
-    		firebase.database().ref('purchase_order/'+deliverySnapshot.val().po_no_key+'/item/'+item_no).once('value', function(itemSnapshot){
-    			
-    			balance = Number(itemSnapshot.val().balance).toLocaleString('en');
+            firebase.database().ref('purchase_order/'+deliverySnapshot.val().po_no_key+'/item/'+itemKey).once('value', function(poSnapshot){
 
-    			document.getElementById('id_remaining_balance').innerHTML = "<strong>" + balance + " pcs</strong>";
-
-    		});
+                var remaining_balance = Number(poSnapshot.val().balance).toLocaleString('en');
+                displayQuantityError(remaining_balance);
+            });
     	});
-
-
 
     	if(plant == 'Bravo'){
             plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
@@ -243,22 +281,34 @@
     function totalCountBadge(plant){
 
         po_count = 0;
-        firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
-            firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
-                itemSnapshot.forEach(function(itemChildSnapshot){
-                    if(itemChildSnapshot.val().balance != 0){
-                        po_count++;
-                        document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
-                    }
+        firebase.database().ref('purchase_order').once('value', function(orderSnapshot){
+
+            if(orderSnapshot.val() != null){
+                firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
+                    itemSnapshot.forEach(function(itemChildSnapshot){
+                        if(itemChildSnapshot.val().balance != 0){
+                            po_count++;
+                            document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
+                        }
+                    });
                 });
-            });
+            }else{
+                document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
+            }
+            
         });
 
         do_count = 0;
-        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot) {
-            console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
-            do_count++;
-            document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).once('value', function(ongoingOrderSnapshot) {
+
+            if(ongoingOrderSnapshot.val() != null){
+                console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
+                do_count++;
+                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+            }else{
+                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+
+            }
         });
 
     }
@@ -277,56 +327,70 @@
 
     	event.preventDefault();
     	firebase.database().ref('delivery_ongoing_order/'+deliveryKey).once('value', function(ongoingOrderSnapshot){
+            firebase.database().ref('purchase_order/'+ongoingOrderSnapshot.val().po_no_key+'/item/'+itemKey).once('value', function(orderSnapshot){
 
-    		// var new_dr_no = document.getElementById('new_dr_no').value || "";
-	    	// var new_gate_pass = document.getElementById('new_gate_pass').value || "";
-	    	// var new_item_no = document.getElementById('new_item_no').value || "";
-	    	// var new_psi = document.getElementById('new_psi').value || "";
-	    	// var new_issued_quantity = document.getElementById('new_issued_quantity').value || "";
+                if(document.getElementById('new_dr_no').value){
+                    new_dr_no = document.getElementById('new_dr_no').value;
+                }else{
+                    new_dr_no = ongoingOrderSnapshot.val().dr_no;
+                }
 
-	    	if(document.getElementById('new_dr_no').value){
-	    		new_dr_no = document.getElementById('new_dr_no').value;
-	    	}else{
-	    		new_dr_no = ongoingOrderSnapshot.val().dr_no;
-	    	}
+                if(document.getElementById('new_gate_pass').value){
+                    new_gate_pass = document.getElementById('new_gate_pass').value;
+                }else{
+                    new_gate_pass = ongoingOrderSnapshot.val().gate_pass;
+                }
 
-	    	if(document.getElementById('new_gate_pass').value){
-	    		new_gate_pass = document.getElementById('new_gate_pass').value;
-	    	}else{
-	    		new_gate_pass = ongoingOrderSnapshot.val().gate_pass;
-	    	}
+                if(document.getElementById('new_item_no').value){
+                    new_item_no = document.getElementById('new_item_no').value;
+                }else{
+                    new_item_no = ongoingOrderSnapshot.val().item_no;
+                }
 
-	    	if(document.getElementById('new_item_no').value){
-	    		new_item_no = document.getElementById('new_item_no').value;
-	    	}else{
-	    		new_item_no = ongoingOrderSnapshot.val().item_no;
-	    	}
+                if(document.getElementById('new_psi').value && document.getElementById('new_psi').value != 0){
+                    new_psi = document.getElementById('new_psi').value;
+                }else if(document.getElementById('new_psi') == 0){
+                    new_psi = "";
+                }else{
+                    new_psi = ongoingOrderSnapshot.val().psi;
+                }
 
-	    	if(document.getElementById('new_psi').value){
-	    		new_psi = document.getElementById('new_psi').value;
-	    	}else{
-	    		new_psi = ongoingOrderSnapshot.val().psi;
-	    	}
+                if(document.getElementById('new_issued_quantity').value){
+                    new_issued_quantity = document.getElementById('new_issued_quantity').value;
+                }else{
+                    new_issued_quantity = ongoingOrderSnapshot.val().quantity;
+                }
 
-	    	if(document.getElementById('new_issued_quantity').value){
-	    		new_issued_quantity = document.getElementById('new_issued_quantity').value;
-	    	}else{
-	    		new_issued_quantity = ongoingOrderSnapshot.val().quantity;
-	    	}
+                var drData = {
+                    dr_no: new_dr_no,
+                    gate_pass: new_gate_pass,
+                    item_no: new_item_no,
+                    psi: new_psi,
+                    quantity: new_issued_quantity
+                }
 
-	    	var drData = {
-	    		dr_no: new_dr_no,
-	    		gate_pass: new_gate_pass,
-	    		item_no: new_item_no,
-	    		psi: new_psi,
-	    		quantity: new_issued_quantity
-	    	}
+                // console.log(drData);
+                firebase.database().ref('delivery_ongoing_order/'+deliveryKey).update(drData);
+                // if(firebase.database().ref('delivery_ongoing_order/'+deliveryKey).update(drData)){
+                //  alert("DR Details update success.");
+                //  window.location.href = 'delivery_ongoing_order.html';
+                // }
 
-	    	console.log(drData);
-	    	if(firebase.database().ref('delivery_ongoing_order/'+deliveryKey).update(drData)){
-	    		alert("DR Details update success.");
-	    		window.location.href = 'delivery_ongoing_order.html';
-	    	}
+                var remaining_balance = orderSnapshot.val().balance;
+                var issued_quantity = ongoingOrderSnapshot.val().quantity;
+
+                diff_quantity = new_issued_quantity - issued_quantity;
+                new_balance = remaining_balance - diff_quantity;
+
+                var updateBalance = {
+                    balance: new_balance
+                }
+                // console.log(updateBalance);
+                if(firebase.database().ref('purchase_order/'+ongoingOrderSnapshot.val().po_no_key+'/item/'+itemKey).update(updateBalance)){
+                    alert("DR Details update success.");
+                    window.location.href = 'delivery_ongoing_order.html';
+                }
+            });
     	});
     }
 
@@ -475,7 +539,7 @@
                                 	<div class="form-group">
                                 		<label for="new_issued_quantity" class="col-md-4 control-label">New Issued Quantity</label>
                                 		<div class="col-md-4">
-                                			<input type="text" id="new_issued_quantity" name="new_issued_quantity" class="form-control" autocomplete="off">
+                                			<input type="text" id="new_issued_quantity" name="new_issued_quantity" class="form-control" autocomplete="off" onkeyup="displayQuantityError(this.value);">
                                 		</div>
                                 	</div>
                                 	<div class="form-group">
@@ -487,7 +551,7 @@
                                 	<div class="form-group">
                                         <div class="col-md-offset-8 col-md-4">
                                             <input type="submit" name="submit" id="submit" value="Done" class="btn btn-primary" style="font-weight: bold;">
-                                            <a href="plant_delivery_order.php" class="btn btn-default"><strong>Cancel</strong></a>
+                                            <a href="delivery_ongoing_order.html" class="btn btn-default"><strong>Cancel</strong></a>
                                         </div>
                                     </div>
                                 </form>

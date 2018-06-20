@@ -116,11 +116,11 @@
 
         firebase.database().ref('client/'+clientKeyId).once('value').then(function(clientSnapshot){
             firebase.database().ref('project/'+clientKeyId+'/'+projectKeyId).once('value').then(function(projectSnapshot){
-                document.getElementById('breadcrumb').innerHTML = "<li><i class='fa fa-address-book'></i><a href='client.html'>Clients</a></li><li><i class='fa fa-building'></i><a href='project.html?key=" + clientKeyId + "'>" + clientSnapshot.val().client_name + "</a></li><li><i class='fa fa-building'></i><a href='project_update_info.html?clientKey=" + clientKeyId + "&projectKey=" + projectKeyId + "'>" + projectSnapshot.val().project_name + "</a></li><li><i class='fa fa-file-text'></i>Update Info</li>";
+                document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-address-book'></i><a href='client.html'>Clients</a></li><li><i class='fa fa-building'></i><a href='project.html?key=" + clientKeyId + "'>" + clientSnapshot.val().client_name + "</a></li><li><i class='fa fa-building'></i><a href='project_update_info.html?clientKey=" + clientKeyId + "&projectKey=" + projectKeyId + "'>" + projectSnapshot.val().project_name + "</a></li><li><i class='fa fa-file-text'></i>Update Info</li>";
 
                 document.getElementById('update_project_name').value = projectSnapshot.val().project_name;
                 document.getElementById('update_project_address').value = projectSnapshot.val().project_address;
-                document.getElementById('cancel_button').innerHTML = "<a href='project.html?key=" + clientKeyId + "' class='btn btn-default'><strong>Cancel</strong></a>";
+                
             });
         });
 
@@ -135,6 +135,8 @@
             // document.getElementById('update_client_name').value = childSnapshot.val().client_contact_name;
 
         });
+
+        document.getElementById('id_button').innerHTML = "<input type='submit' name='submit' id='submit' value='Save' class='btn btn-primary' style='font-weight: bold;'> <a href='project.html?key=" + clientKeyId + "' class='btn btn-default'><strong>Cancel</strong></a>";
     });
 
     function deleteContactNo(contactKey){
@@ -257,7 +259,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <!-- <h3 class="page-header"><i class="fa fa-laptop"></i> <?php echo $site_name; ?></h3> -->
-                        <ol class="breadcrumb" id="breadcrumb">                       
+                        <ol class="breadcrumb" id="id_breadcrumb">                       
                         </ol>
                     </div>
                 </div>
@@ -286,9 +288,7 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-offset-8 col-md-4">
-                                        <input type="submit" name="submit" id="submit" value="Save" class="btn btn-primary" style="font-weight: bold;">
-                                        <!-- <a href="project.html" class="btn btn-default"><strong>Cancel</strong></a> -->
-                                        <span id="cancel_button"></span>
+                                        <span id="id_button"></span>
                                         <!-- <input type="reset" name="reset" id="reset" value="Reset" class="btn btn-default" style="font-weight: bold;"> -->
                                     </div>
                                 </div>

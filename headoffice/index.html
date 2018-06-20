@@ -185,8 +185,10 @@
         $("input[name='plant']").change(function(event) {
             if ($(this).val() == "Bravo"){ 
                 tableData('Bravo');
+                searchHistory('Bravo');
             }else if ($(this).val() == "Delta"){
                 tableData('Delta');
+                searchHistory('Delta');
             }
         });
 
@@ -216,9 +218,198 @@
     //     alert(date_value);
 
     // }
+
+    // function searchHistory(){
+
+    //     event.preventDefault();
+
+    //     var myTbody = "";
+    //     var fromDate = document.getElementById('start_date').value;
+    //     var endDate = document.getElementById('end_date').value;
+    //     var plant = $('input[name="plant"]:checked').val();
+
+    //     firebase.database().ref('history/'+plant).orderByChild('reverseDate').on('value', function(historySnapshot){
+    //         historySnapshot.forEach(function(historyChildSnapshot){
+    //             var date = new Date(historyChildSnapshot.val().date);
+                
+    //             if(fromDate == ''){
+    //                 fromDate = '';
+    //             }else{
+    //                 fromDate = new Date(fromDate);
+    //             }
+
+    //             if(endDate == ''){
+    //                 endDate = '';
+    //             }else{
+    //                 endDate = new Date(endDate);
+    //             }
+
+    //             if(fromDate == '' && endDate == ''){
+    //                 condition = dateFormat(date) <= dateFormat(endDate);                    
+    //             }else if(fromDate != '' && endDate == ''){
+    //                 condition = dateFormat(date) >= dateFormat(fromDate);
+    //             }else if(fromDate == '' && endDate != ''){
+    //                 condition = dateFormat(date) <= dateFormat(endDate);                    
+    //             }else{
+    //                 condition = dateFormat(date) >= dateFormat(fromDate) && date <= dateFormat(endDate);
+    //             }
+
+    //             // console.log(condition);
+
+    //             if(condition){
+    //             console.log(condition);
+                   
+    //                 var type = historyChildSnapshot.val().type_of_transaction;   //Example of value
+    //                 var detail = historyChildSnapshot.val().history;   //Example of value
+    //                 var date = dateFormat(historyChildSnapshot.val().date);   //Example of value
+
+    //                 myTbody += "<tr><td><strong>" + type + "</strong></td>";
+    //                 myTbody += "<td><strong>" + detail + "</strong></td>";
+    //                 myTbody += "<td><strong>" + date + "</strong></td></tr>";
+
+    //             }
+
+    //             // if((fromDate <= date && endDate >= date) || (fromDate >= date && endDate <= date)){
+
+    //             //     // console.log(date);
+    //             //     var type = historyChildSnapshot.val().type_of_transaction;   //Example of value
+    //             //     var detail = historyChildSnapshot.val().history;   //Example of value
+    //             //     var date = dateFormat(historyChildSnapshot.val().date);   //Example of value
+
+    //             //     myTbody += "<tr><td><strong>" + type + "</strong></td>";
+    //             //     myTbody += "<td><strong>" + detail + "</strong></td>";
+    //             //     myTbody += "<td><strong>" + date + "</strong></td></tr>";
+
+    //             //     document.getElementById("historyList").innerHTML = myTbody;
+
+    //             // }else{
+    //             //     // console.log("No Data");
+
+    //             //     myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+    //             //     document.getElementById("historyList").innerHTML = myTbody;
+
+    //             // }
+    //         });
+    //     });
+
+    //     if(myTbody != ''){
+    //         document.getElementById("historyList").innerHTML = myTbody;
+    //     }else{
+    //         myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+    //         document.getElementById("historyList").innerHTML = myTbody;
+    //     }
+
+    // }
+
+    function searchHistory(){
+
+        event.preventDefault();
+
+        var myTbody = "";
+
+        var fromDate = document.getElementById('start_date').value;
+        var endDate = document.getElementById('end_date').value;
+        var plant = $('input[name="plant"]:checked').val();
+        var search_text = document.getElementById('search').value;
+
+
+        if(fromDate == '' && endDate == ''){
+
+            console.log(fromDate, endDate);
+
+            firebase.database().ref('history/'+plant).orderByChild('reverseDate').on('value', function(historySnapshot){
+                historySnapshot.forEach(function(historyChildSnapshot){
+                    console.log(historyChildSnapshot.key,historyChildSnapshot.val().date);
+
+                    text = historyChildSnapshot.val().history.toLowerCase();
+                    console.log(text.replace(",",""));
+                    search = text.search(search_text.toLowerCase());
+
+                    if(search != -1){
+                        
+                        var type = historyChildSnapshot.val().type_of_transaction;   //Example of value
+                        var detail = historyChildSnapshot.val().history;   //Example of value
+                        var date = historyChildSnapshot.val().date;   //Example of value
+
+                        myTbody += "<tr><td><strong>" + type + "</strong></td>";
+                        myTbody += "<td><strong>" + detail + "</strong></td>";
+                        myTbody += "<td><strong>" + date + "</strong></td></tr>";
+
+                    }
+                });
+
+                if(myTbody == ''){
+                    myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                    document.getElementById("historyList").innerHTML = myTbody;
+                }else{
+                    document.getElementById("historyList").innerHTML = myTbody;
+                }
+            });
+        }else{
+
+            if(fromDate == ''){
+                fromDate = new Date().toLocaleDateString('en');
+            }else{
+                fromDate = new Date(fromDate).toLocaleDateString('en');
+            }
+
+            if(endDate == ''){
+                endDate = new Date().toLocaleDateString('en');
+            }else{
+                endDate = new Date(endDate).toLocaleDateString('en');
+            }
+
+            console.log(fromDate, endDate);
+
+            firebase.database().ref('history/'+plant).orderByChild('date').startAt(fromDate).endAt(endDate).on('value', function(historySnapshot){
+                historySnapshot.forEach(function(historyChildSnapshot){
+
+                    console.log(historyChildSnapshot.key,historyChildSnapshot.val().date);
+
+                    text = historyChildSnapshot.val().history.toLowerCase();
+                    console.log(text.replace(",",""));
+                    search = text.search(search_text.toLowerCase());
+
+                    if(search != -1){
+                        
+                        var type = historyChildSnapshot.val().type_of_transaction;   //Example of value
+                        var detail = historyChildSnapshot.val().history;   //Example of value
+                        var date = historyChildSnapshot.val().date;   //Example of value
+
+                        myTbody += "<tr><td><strong>" + type + "</strong></td>";
+                        myTbody += "<td><strong>" + detail + "</strong></td>";
+                        myTbody += "<td><strong>" + date + "</strong></td></tr>";
+
+                    }
+
+                });
+
+                if(myTbody == ''){
+                            myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                    document.getElementById("historyList").innerHTML = myTbody;
+                }else{
+                    document.getElementById("historyList").innerHTML = myTbody;
+                }
+            });
+        }
+    }
+
     function tableData(plant){
 
         var myTbody = "";
+
+        firebase.database().ref('history/'+plant).once('value').then(function(historySnapshot){
+            if(historySnapshot.val() == null){
+
+                myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                document.getElementById("historyList").innerHTML = myTbody;
+            }
+        });
 
         firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value').then(function(historySnapshot) {
             historySnapshot.forEach(function(historyChildSnapshot){
@@ -233,12 +424,9 @@
 
                 document.getElementById("historyList").innerHTML = myTbody;
             });
-        }),function(){
+        });
 
-            myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-
-            document.getElementById("historyList").innerHTML = myTbody;
-        }
+        document.getElementById('id_plant').innerHTML = plant;
     }
 
     function startTime() {
@@ -436,17 +624,17 @@
                 <div class="row">
                     <div class="col-md-12">
                         <section class="panel">
-                            <div class="form-inline">
+                            <form class="form-inline" onsubmit="return searchHistory();">
                                 <header class="panel-heading">
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="search">Plant:</label>
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="plant" id="plant" onchange="plantView(this.value)" value="Bravo" checked><strong>Bravo</strong>
+                                                    <input type="radio" name="plant" id="plant" value="Bravo" checked><strong>Bravo</strong>
                                                 </label>
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="plant" id="plant" onchange="plantView(this.value)" value="Delta"><strong>Delta</strong>
+                                                    <input type="radio" name="plant" id="plant" value="Delta"><strong>Delta</strong>
                                                 </label>
                                             </div>
                                         </div>
@@ -456,7 +644,7 @@
                                             <div class="form-group">
                                                 <label for="start_date">From:</label>
                                                 <div class="tooltips" data-original-title="Start date of transaction" data-placement="top">
-                                                    <input type="date" id="start_date" onchange="dateValue(this.value)" name="start_date" class="form-control">
+                                                    <input type="date" id="start_date" name="start_date" class="form-control">
                                                 </div>
                                             </div>
                                         </div>
@@ -470,7 +658,7 @@
                                         </div>  
                                         <div class="input-group col-md-5" style="margin: 38px 0px 0px 0px;">
                                             <div class="tooltips" data-original-title="Search Transaction or Description" data-placement="top">
-                                                <input type="text" name="search" class="form-control" placeholder="Search...">
+                                                <input type="text" id="search" name="search" class="form-control" placeholder="Search...">
                                             </div>
                                             <span class="input-group-btn">
                                                 <button class="btn btn-info" type="submit" name="search_table">
@@ -493,30 +681,25 @@
                                         </div>
                                     </div>
                                 </header>
-                                <div class="table-responsive filterable">
-                                    <table class="table table-striped table-bordered" id="myTable">
-                                        <thead>
-                                            <tr class="filterable">
-                                                <th colspan="3">
-                                                    <p style="float: left;">Plant:</p>
-                                                    <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
-                                                </th>
-                                                <!-- <th colspan="3">
-                                                    <input type="text" id="myInput" onkeyup="filterTable()" class="form-control" placeholder="Search for names.." title="Type in a name">
-                                                </th> -->
-                                            </tr>
-                                            <tr class="filters">
-                                                <th class="col-md-1"><input type="text" class="form-control" placeholder="Transaction" disabled>
-                                                </th>
-                                                <th class="col-md-7"><input type="text" class="form-control" placeholder="Description" disabled></th>
-                                                <th class="col-md-1">Date</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="historyList">
-                                            
-                                        </tbody>
-                                    </table>
-                                </div>
+                            </form>
+                            <div class="table-responsive filterable">
+                                <table class="table table-striped table-bordered" id="myTable">
+                                    <thead>
+                                        <tr class="filterable">
+                                            <th colspan="3">
+                                                <p style="float: left;">Plant: <span id="id_plant"></span></p>
+                                                <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
+                                            </th>
+                                        </tr>
+                                        <tr class="filters">
+                                            <th class="col-md-1"><input type="text" class="form-control" placeholder="Transaction" disabled>
+                                            </th>
+                                            <th class="col-md-7"><input type="text" class="form-control" placeholder="Description" disabled></th>
+                                            <th class="col-md-1">Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="historyList"></tbody>
+                                </table>
                             </div>
                         </section>
                     </div>

@@ -122,6 +122,8 @@
             document.getElementById('block_project_address').innerHTML = "<strong>" + projectSnapshot.val().project_address + "</strong>";
             });
         });
+
+        document.getElementById('id_button').innerHTML = "<input type='submit' name='submit' id='submit' value='Save' class='btn btn-primary' style='font-weight: bold;'> <a href='project.html?key=" + clientKeyId + "' class='btn btn-default'><strong>Cancel</strong></a>";
     });
 
     function add_row(){
@@ -313,8 +315,9 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="col-md-offset-8 col-md-4">
-                                                    <input type="submit" name="submit" id="submit" value="Save" class="btn btn-primary" style="font-weight: bold;">
-                                                    <button class="btn btn-default" onclick="window.history.back();"><strong>Cancel</strong></button>
+                                                    <span id="id_button"></span>
+                                                    <!-- <input type="submit" name="submit" id="submit" value="Save" class="btn btn-primary" style="font-weight: bold;">
+                                                    <button class="btn btn-default" onclick="window.history.back();"><strong>Cancel</strong></button> -->
                                                     <!-- <a href="client_sites.php" class="btn btn-default"><strong>Cancel</strong></a> -->
                                                     <!-- <input type="reset" name="reset" id="reset" value="Reset" class="btn btn-default" style="font-weight: bold;"> -->
                                                 </div>
