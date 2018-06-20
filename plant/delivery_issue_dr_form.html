@@ -91,7 +91,6 @@
 	
 	var itemKey = getUrlParameter('itemKey');
 	var orderKey = getUrlParameter('key');
-	// var psi = getUrlParameter('psi');
 
 	$(function() {
 
@@ -158,7 +157,6 @@
 
 		firebase.database().ref('purchase_order/'+orderKey).once('value').then(function(orderSnapshot){
 				// console.log(orderChildSnapshot.key, orderChildSnapshot.val());
-				
 				po_no = orderSnapshot.val().po_no;
 
 				document.getElementById('block_po_no').innerHTML = "<strong>" + po_no + "</strong>";
@@ -272,7 +270,6 @@
 			                type_of_transaction: "Issued DR No.",
 			                history: "Issued DR No. " + dr_no + " with P.O. No. " + po_no + " and " + Number(quantity).toLocaleString('en') + " pcs of " + item_no + psi_ext + " to be deliver to " + project_name + " in " + project_address
 						}
-						// console.log(historyData);
 
 						var postHistoryData = firebase.database().ref('history/'+plant+'/');
 		                var newHistoryPostRef = postHistoryData.push();
@@ -305,8 +302,6 @@
 							contact_name: contact_name,
 							contact_no: contact_no
 						}
-
-						// console.log(contactData);
 
 						firebase.database().ref('delivery_ongoing_order/'+postId+'/contact/'+contactChildSnapshot.key).set(contactData);
 					});		
@@ -342,17 +337,14 @@
 			if((number > balance || number <= 0) && input != ''){
 				submit.disabled = true;
                 quantity_textbox.style.borderColor = 'red';
-				// a.style.display = "block";
             }else if(input == ''){
                 quantity_textbox.style.borderColor = '';
                 submit.disabled = false;
 			}else{
                 quantity_textbox.style.borderColor = '';
 				submit.disabled = false;
-				// a.style.display = "none";
 			}
 		}, 0);
-		// alert(ordered);
 	}
 
 	function totalCountBadge(plant){
@@ -371,9 +363,7 @@
                 });
             }else{
                 document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
-
-            }
-            
+            }   
         });
 
         do_count = 0;
@@ -388,6 +378,13 @@
             }
         });
     }
+
+    // function checkDrExist(val){
+
+    //     firebase.database().ref('').on('value', function(){
+            
+    //     });
+    // }
 </script>
 </head>
 <body onload="compareValues('');">
