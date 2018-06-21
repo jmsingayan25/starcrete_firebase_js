@@ -165,6 +165,7 @@
                     totalCountBadge(plant)
                     
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
+                    document.getElementById('id_hidden_plant').innerHTML = "<input type='hidden' id='hidden_plant' name='hidden_plant' value='" + plant + "'>";
                 },(error) => {
                     console.log(error);
                 });
@@ -175,6 +176,94 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
+
+    function submitForm(){
+
+        event.preventDefault();
+
+        var myTbody = "";
+        var fromDate = document.getElementById('start_date').value
+        var endDate = document.getElementById('end_date').value;
+        var search_text = document.getElementById('search').value;
+        var plant = document.getElementById('hidden_plant').value;
+
+        if(fromDate == '' && endDate == ''){
+
+            firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value', function(historySnapshot){
+                historySnapshot.forEach(function(historyChildSnapshot){
+
+                    var text = historyChildSnapshot.val().history.toLowerCase();
+
+                    search = searchMatch(search_text, text);
+
+                    if(search != null){
+                        console.log(historyChildSnapshot.key, historyChildSnapshot.val());
+                        var type = historyChildSnapshot.val().type_of_transaction;
+                        var history = historyChildSnapshot.val().history;
+                        var date = historyChildSnapshot.val().date;
+
+                        myTbody += "<tr><td><strong>" + type + "</strong></td>";
+                        myTbody += "<td><strong>" + history + "</strong></td>";
+                        myTbody += "<td><strong>" + date + "</strong></td></tr>";
+                    }
+                });
+            
+                if(myTbody == ''){
+                    
+                    myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                    document.getElementById("historyList").innerHTML = myTbody;
+                }else{
+                    document.getElementById("historyList").innerHTML = myTbody;
+                }
+            });
+
+        }else{
+
+            if(fromDate == ''){
+                fromDate = new Date().toLocaleDateString('en');
+            }else{
+                fromDate = new Date(fromDate).toLocaleDateString('en');
+            }
+
+            if(endDate == ''){
+                endDate = new Date().toLocaleDateString('en');
+            }else{
+                endDate = new Date(endDate).toLocaleDateString('en');
+            }
+
+            firebase.database().ref('history/'+plant).orderByChild('date').startAt(fromDate).endAt(endDate).once('value', function(historySnapshot){
+                historySnapshot.forEach(function(historyChildSnapshot){
+
+                    var text = historyChildSnapshot.val().history.toLowerCase();
+
+                    search = searchMatch(search_text, text);
+
+                    if(search != null){
+                        console.log(historyChildSnapshot.key, historyChildSnapshot.val());
+                        var type = historyChildSnapshot.val().type_of_transaction;
+                        var history = historyChildSnapshot.val().history;
+                        var date = historyChildSnapshot.val().date;
+
+                        myTbody += "<tr><td><strong>" + type + "</strong></td>";
+                        myTbody += "<td><strong>" + history + "</strong></td>";
+                        myTbody += "<td><strong>" + date + "</strong></td></tr>";
+                    }
+                });
+
+                if(myTbody == ''){
+                    
+                    myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                    document.getElementById("historyList").innerHTML = myTbody;
+                }else{
+                    document.getElementById("historyList").innerHTML = myTbody;
+                }
+            });    
+        }
+        
+
+    }
 
 	function tableData(plant){
 
@@ -283,6 +372,15 @@
                 document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
             }
         });
+    }
+
+    function searchMatch(searchWord, findWord){
+
+        parse_word = searchWord.replace(/\s+/g, '|').toLowerCase();
+        reg_word = new RegExp(parse_word, 'gi');
+        search = findWord.match(reg_word);
+
+        return search;
     }
 
 </script>
@@ -435,14 +533,15 @@ li.notif {
 	            <div class="row">
 	                <div class="col-md-12">
 	                    <section class="panel">
-	                        <form class="form-inline">
+	                        <form class="form-inline" onsubmit="return submitForm();">
 	                             <header class="panel-heading">
 	                                <div class="row" style="margin-bottom: 5px;">
+                                        <span id="id_hidden_plant"></span>
 	                                    <div class="col-md-2">
 	                                        <div class="form-group">
 	                                            <label for="start_date">From:</label>
 	                                            <div class="tooltips" data-original-title="Start date of transaction" data-placement="top">
-	                                                <input type="date" name="start_date" class="form-control">
+	                                                <input type="date" id="start_date" name="start_date" class="form-control">
 	                                            </div>
 	                                        </div>
 	                                    </div>
@@ -450,13 +549,13 @@ li.notif {
 	                                        <div class="form-group">
 	                                            <label for="end_date">To:</label>
 	                                            <div class="tooltips" data-original-title="End date of transaction" data-placement="top">
-	                                                <input type="date" name="end_date" class="form-control">
+	                                                <input type="date" id="end_date" name="end_date" class="form-control">
 	                                            </div>
 	                                        </div>
 	                                    </div>  
 	                                    <div class="input-group col-md-5" style="margin: 38px 0px 0px 0px;">
 	                                        <div class="tooltips" data-original-title="Search Transaction or Description" data-placement="top">
-	                                            <input type="text" name="search" class="form-control" placeholder="Search...">
+	                                            <input type="text" id="search" name="search" class="form-control" placeholder="Search...">
 	                                        </div>
 	                                        <span class="input-group-btn">
 	                                            <button class="btn btn-info" type="submit" name="search_table">
@@ -469,7 +568,7 @@ li.notif {
 	                                        <label for="view" class="col-md-8 control-label">Number of rows:</label>
 	                                        <div class="form-group">
 	                                            <div class="col-md-12">
-	                                                <select id="view" name="view" class="form-control" onchange="this.form.submit()">
+	                                                <select id="view" name="view" class="form-control">
 	                                                    <option value="25">25</option>
 	                                                    <option value="50">50</option>
 	                                                    <option value="75">75</option>
