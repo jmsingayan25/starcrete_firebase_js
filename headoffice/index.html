@@ -323,16 +323,12 @@
                 historySnapshot.forEach(function(historyChildSnapshot){
                     console.log(historyChildSnapshot.key,historyChildSnapshot.val().date);
 
-                    text = historyChildSnapshot.val().history.toLowerCase();
-                    // console.log(text.replace(",",""));
-                    // sample_text = search_text.replace(/\s+/g, '|').toLowerCase();
-                    // console.log(sample_text);
-                    // // search = text.search(search_text.toLowerCase());
-                    // sample = new RegExp(sample_text, 'gi');
-                    // search = text.match(sample);
-                    // console.log(search);
+                    text_history = historyChildSnapshot.val().history.toLowerCase();
+                    text_type = historyChildSnapshot.val().type_of_transaction.toLowerCase();
 
-                    search = searchMatch(search_text, text);
+                    all_text = text_history + " " + text_type;
+
+                    search = searchMatch(search_text, all_text);
 
                     if(search != null){
                         
@@ -376,11 +372,12 @@
 
                     console.log(historyChildSnapshot.key,historyChildSnapshot.val().date);
 
-                    text = historyChildSnapshot.val().history.toLowerCase();
-                    // console.log(text.replace(",",""));
-                    // search = text.search(search_text.toLowerCase());
+                    text_history = historyChildSnapshot.val().history.toLowerCase();
+                    text_type = historyChildSnapshot.val().type_of_transaction.toLowerCase();
 
-                    search = searchMatch(search_text, text);
+                    all_text = text_history + " " + text_type;
+
+                    search = searchMatch(search_text, all_text);
 
                     if(search != null){
                         
@@ -396,7 +393,7 @@
                 });
 
                 if(myTbody == ''){
-                    
+
                     myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                     document.getElementById("historyList").innerHTML = myTbody;

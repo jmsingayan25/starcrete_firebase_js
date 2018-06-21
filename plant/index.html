@@ -192,9 +192,12 @@
             firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value', function(historySnapshot){
                 historySnapshot.forEach(function(historyChildSnapshot){
 
-                    var text = historyChildSnapshot.val().history.toLowerCase();
+                    text_history = historyChildSnapshot.val().history.toLowerCase();
+                    text_type = historyChildSnapshot.val().type_of_transaction.toLowerCase();
 
-                    search = searchMatch(search_text, text);
+                    all_text = text_history + " " + text_type;
+
+                    search = searchMatch(search_text, all_text);
 
                     if(search != null){
                         console.log(historyChildSnapshot.key, historyChildSnapshot.val());
@@ -235,9 +238,12 @@
             firebase.database().ref('history/'+plant).orderByChild('date').startAt(fromDate).endAt(endDate).once('value', function(historySnapshot){
                 historySnapshot.forEach(function(historyChildSnapshot){
 
-                    var text = historyChildSnapshot.val().history.toLowerCase();
+                    text_history = historyChildSnapshot.val().history.toLowerCase();
+                    text_type = historyChildSnapshot.val().type_of_transaction.toLowerCase();
 
-                    search = searchMatch(search_text, text);
+                    all_text = text_history + " " + text_type;
+
+                    search = searchMatch(search_text, all_text);
 
                     if(search != null){
                         console.log(historyChildSnapshot.key, historyChildSnapshot.val());
