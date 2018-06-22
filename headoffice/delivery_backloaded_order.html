@@ -96,7 +96,8 @@
     function goAway() {
         clearTimeout(timer);
         timer = setTimeout(function() {
-            window.location.reload(true);
+            // window.location.reload(true);
+            tableData(plant);
         }, 60000);
     }
 
@@ -317,7 +318,7 @@
             } 
         });
     }
-    
+
 </script>
 <style>
 .table_page{
