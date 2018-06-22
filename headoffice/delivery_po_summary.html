@@ -97,7 +97,8 @@
     function goAway() {
         clearTimeout(timer);
         timer = setTimeout(function() {
-            window.location.reload(true);
+            // window.location.reload(true);
+            tableData(plant);
         }, 60000);
     }
 
@@ -174,6 +175,34 @@
 
         document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='delivery_ongoing_order.html?plant=" + plant + "'>Ongoing Delivery <span class='badge'><?php echo getDeliveryCountOnDeliveryOffice($db, $plant); ?></span></a></li><li><i class='fa fa-info-circle'></i><a href='delivery_pending_order.html?plant=" + plant + "'>Existing P.O. <span class='badge'><?php echo countPendingPo($db, $plant); ?></span></a></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i><a href='delivery_backloaded_order.html?plant=" + plant + "'>Backloaded</a></li>";
 
+        firebase.database().ref('purchase_order/'+po_no_key).once('value', function(orderSnapshot){
+            firebase.database().ref('purchase_order/'+po_no_key+'/project_detail').once('value', function(projectSnapshot){
+                projectSnapshot.forEach(function(projectChildSnapshot){
+                    console.log(projectChildSnapshot.key, projectChildSnapshot.val());
+                    firebase.database().ref('project').on('value', function(projectClientSnapshot){
+                        projectClientSnapshot.forEach(function(projectClientChildSnapshot){
+                            projectClientChildSnapshot.forEach(function(projectClientChildChildSnapshot){
+                                if(projectClientChildChildSnapshot.key == projectChildSnapshot.key){
+                                    // console.log(projectClientChildSnapshot.key, projectClientChildChildSnapshot.key, projectClientChildChildSnapshot.val());
+
+                                    firebase.database().ref('client/'+projectClientChildSnapshot.key).once('value', function(clientSnapshot){
+
+                                        po_no = orderSnapshot.val().po_no;
+                                        project_name = projectChildSnapshot.val().project_name;
+                                        project_address = projectChildSnapshot.val().project_address;
+                                        client_name = clientSnapshot.val().client_name;
+                                        client_address = clientSnapshot.val().client_address;
+
+        document.getElementById('id_dr_detail').innerHTML = "<div class='row'><div class='col-md-6'>Delivery Details for P.O. No. <strong>" + po_no + "</strong></div><div class='col-md-6'>Issued P.O. to Plant: <strong>" +plant + "</strong></div></div><br><div class='row'><div class='col-md-6'>Client Name: <strong>" + client_name + "</strong></div><div class='col-md-6'>Project Name: <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'>Client Address: <strong>" + client_address + "</strong></div><div class='col-md-6'>Project Address: <strong>" + project_address + "</strong></div></div>";
+
+                                    }); 
+                                }
+                            });
+                        });
+                    });
+                });
+            });
+        }); 
     });
 
     function tableData(po_no_key, plant){
@@ -260,35 +289,6 @@
 
 			document.getElementById('orderList').innerHTML = myTbody;
     	});
-
-    	firebase.database().ref('purchase_order/'+po_no_key).once('value', function(orderSnapshot){
-			firebase.database().ref('purchase_order/'+po_no_key+'/project_detail').once('value', function(projectSnapshot){
-	    		projectSnapshot.forEach(function(projectChildSnapshot){
-                    console.log(projectChildSnapshot.key, projectChildSnapshot.val());
-                    firebase.database().ref('project').on('value', function(projectClientSnapshot){
-                        projectClientSnapshot.forEach(function(projectClientChildSnapshot){
-                            projectClientChildSnapshot.forEach(function(projectClientChildChildSnapshot){
-                                if(projectClientChildChildSnapshot.key == projectChildSnapshot.key){
-                                    // console.log(projectClientChildSnapshot.key, projectClientChildChildSnapshot.key, projectClientChildChildSnapshot.val());
-
-                                    firebase.database().ref('client/'+projectClientChildSnapshot.key).once('value', function(clientSnapshot){
-
-                                        po_no = orderSnapshot.val().po_no;
-                                        project_name = projectChildSnapshot.val().project_name;
-                                        project_address = projectChildSnapshot.val().project_address;
-                                        client_name = clientSnapshot.val().client_name;
-                                        client_address = clientSnapshot.val().client_address;
-
-    document.getElementById('id_dr_detail').innerHTML = "<div class='row'><div class='col-md-6'>Delivery Details for P.O. No. <strong>" + po_no + "</strong></div><div class='col-md-6'>Issued P.O. to Plant: <strong>" +plant + "</strong></div></div><br><div class='row'><div class='col-md-6'>Client Name: <strong>" + client_name + "</strong></div><div class='col-md-6'>Project Name: <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'>Client Address: <strong>" + client_address + "</strong></div><div class='col-md-6'>Project Address: <strong>" + project_address + "</strong></div></div>";
-
-                                    }); 
-                                }
-                            });
-                        });
-                    });
-	    		});
-	    	});
-		}); 
 
 		var contactTbody = "";
 

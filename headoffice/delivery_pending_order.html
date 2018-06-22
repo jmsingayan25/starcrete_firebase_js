@@ -490,10 +490,10 @@
                 if(ongoingOrderSnapshot.val().issued_dr_plant == plant){
                     do_count++;
                     document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
-                }else{
-                    document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
                 }
-            } 
+            }else{
+                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+            }
         });
     }
 

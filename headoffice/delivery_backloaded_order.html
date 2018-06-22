@@ -180,6 +180,18 @@
 
     });
 
+    function submitForm(){
+
+        event.preventDefault();
+
+        var myTbody = "";
+        var count = 1;
+        var fromDate = document.getElementById('start_date').value;
+        var endDate = document.getElementById('end_date').value;
+        var search_text = document.getElementById('search').value;
+
+    }
+
     function tableData(plant){
 
     	var myTbody = "";
@@ -312,10 +324,10 @@
                 if(ongoingOrderSnapshot.val().issued_dr_plant == plant){
                     do_count++;
                     document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
-                }else{
-                    document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
                 }
-            } 
+            }else{
+                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+            }
         });
     }
 
@@ -478,14 +490,14 @@
 	            <div class="row">
 	                <div class="col-md-12">
 	                    <section class="panel">
-	                        <form class="form-inline">
+	                        <form class="form-inline" onsubmit="return submitForm();">
 	                            <header class="panel-heading">
 	                                <div class="row" style="margin-bottom: 5px;">
 	                                    <div class="col-md-2">
 	                                        <div class="form-group">
 	                                            <label for="start_date">From:</label>
 	                                            <div class="tooltips" data-original-title="Start date of transaction" data-placement="top">
-	                                                <input type="date" name="start_date" class="form-control">
+	                                                <input type="date" id="start_date" name="start_date" class="form-control">
 	                                            </div>
 	                                        </div>
 	                                    </div>
@@ -493,13 +505,13 @@
 	                                        <div class="form-group">
 	                                            <label for="end_date">To:</label>
 	                                            <div class="tooltips" data-original-title="End date of transaction" data-placement="top">
-	                                                <input type="date" name="end_date" class="form-control">
+	                                                <input type="date" id="end_date" name="end_date" class="form-control">
 	                                            </div>
 	                                        </div>
 	                                    </div>  
 	                                    <div class="input-group col-md-5" style="margin: 38px 0px 0px 0px;">
 	                                        <div class="tooltips" data-original-title="Search DR No., P.O. No., Item, Project Name, Address or Contact" data-placement="top">
-	                                            <input type="text" name="search" class="form-control" placeholder="Search...">
+	                                            <input type="text" id="search" name="search" class="form-control" placeholder="Search...">
 	                                        </div>
 	                                        <span class="input-group-btn">
 	                                            <button class="btn btn-info" type="submit" name="search_table">
