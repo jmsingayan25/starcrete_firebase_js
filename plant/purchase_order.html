@@ -89,24 +89,7 @@
 
 <script>
 	
-    var plant = localStorage.getItem("userOffice");
-    var timer = null;
-
-    function goAway() {
-        clearTimeout(timer);
-        timer = setTimeout(function() {
-            // window.location.reload(true);
-            tableData(plant);
-            totalCountBadge(plant);
-        }, 30000);
-    }
-
-    window.addEventListener('mousemove', goAway, true);
-    window.addEventListener('keypress', goAway, true);
-
-    goAway();
-
-	$(document).ready(function(){
+		$(document).ready(function(){
         $('.filterable .btn-filter').click(function(){
             var $panel = $(this).parents('.filterable'),
             $filters = $panel.find('.filters input'),
@@ -149,12 +132,6 @@
         });
 
         startTime();
-        tableData(plant);
-        totalCountBadge(plant);
-
-        if(plant == 'Head Office'){
-            window.location.href = '../headoffice/index.html';
-        }
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -163,8 +140,17 @@
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
 
-                    document.getElementById('username').innerHTML = snapshot.val().firstname; 
+                    plant = snapshot.val().office;
 
+                    if(plant == 'Head Office'){
+                        window.location.href = '../headoffice/index.html';
+                    }
+                    
+                    tableData(plant);
+                    totalCountBadge(plant);
+
+                    document.getElementById('username').innerHTML = snapshot.val().firstname; 
+                    document.getElementById('id_hidden_plant').innerHTML = "<input type='hidden' id='hidden_plant' value='" + plant + "'>";
                 },(error) => {
                     console.log(error);
                 });
@@ -174,14 +160,6 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
-
-        if(plant == 'Bravo'){
-            plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
-        }else{
-            plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
-        }
-
-        document.getElementById('id_plant_name').innerHTML = plant_name;
     });
 
     function submitForm(){
@@ -400,6 +378,14 @@
                 });
             });
         });
+
+        if(plant == 'Bravo'){
+            plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
+        }else{
+            plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
+        }
+
+        document.getElementById('id_plant_name').innerHTML = plant_name;
     }
 
     function startTime() {

@@ -89,20 +89,20 @@
 
 <script>
 	
-    var plant = localStorage.getItem("userOffice");
     var timer = null;
 
+<<<<<<< HEAD
     if(plant == 'Head Office'){
         window.location.href = '../headoffice/index.html';
     }
 
+=======
+>>>>>>> parent of edb789f... modify code on plant and displaying data. add a method localStorage.getItem for fetching the office data
     function goAway() {
         clearTimeout(timer);
         timer = setTimeout(function() {
-            // window.location.reload(true);
-            tableData(plant);
-            totalCountBadge(plant);
-        }, 30000);
+            window.location.reload(true);
+        }, 60000);
     }
 
     window.addEventListener('mousemove', goAway, true);
@@ -153,8 +153,6 @@
         });
 
         startTime();
-        tableData(plant);
-        totalCountBadge(plant);
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -162,6 +160,15 @@
                 var uid = user.uid;
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+
+                    plant = snapshot.val().office;
+
+                    if(plant == 'Head Office'){
+                        window.location.href = '../headoffice/index.html';
+                    }
+                    
+                    tableData(plant);
+                    totalCountBadge(plant);
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
@@ -173,14 +180,6 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
-
-        if(plant == 'Bravo'){
-            plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
-        }else{
-            plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
-        }
-
-        document.getElementById('id_plant_name').innerHTML = plant_name;
     });
 
     function tableData(plant){
@@ -251,6 +250,14 @@
                 });
             }
     	});
+
+        if(plant == 'Bravo'){
+            plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
+        }else{
+            plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
+        }
+
+        document.getElementById('id_plant_name').innerHTML = plant_name;
     }
 
     function startTime() {

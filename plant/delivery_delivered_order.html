@@ -89,21 +89,13 @@
 
 <script>
 	
-    var plant = localStorage.getItem("userOffice");
     var timer = null;
-
-    if(plant == 'Head Office'){
-        window.location.href = '../headoffice/index.html';
-    }
 
     function goAway() {
         clearTimeout(timer);
         timer = setTimeout(function() {
-            // window.location.reload(true);
-            tableData(plant);
-            totalCountBadge(plant);
-
-        }, 30000);
+            window.location.reload(true);
+        }, 60000);
     }
 
     window.addEventListener('mousemove', goAway, true);
@@ -154,8 +146,6 @@
         });
 
         startTime();
-        tableData(plant);
-        totalCountBadge(plant);
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -164,6 +154,15 @@
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
 
+                    plant = snapshot.val().office;
+
+                    if(plant == 'Head Office'){
+                        window.location.href = '../headoffice/index.html';
+                    }
+                    
+                    tableData(plant);
+                    totalCountBadge(plant);
+                    
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
@@ -174,15 +173,72 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
-
-        if(plant == 'Bravo'){
-            plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
-        }else{
-            plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
-        }
-
-        document.getElementById('id_plant_name').innerHTML = plant_name;
     });
+
+    // function tableData(plant){
+
+    // 	var myTbody = "";
+    // 	var count = 1;
+
+    // 	firebase.database().ref('delivery_delivered_order/'+plant).on('value', function(orderSnapshot){
+    // 		orderSnapshot.forEach(function(orderChildSnapshot){
+
+    // 			var date = dateFormat(orderChildSnapshot.val().date);
+    // 			var dr_no = orderChildSnapshot.val().dr_no;
+    // 			var gate_pass = orderChildSnapshot.val().gate_pass;
+    // 			var item_no = orderChildSnapshot.val().item_no;
+    // 			var po_no = orderChildSnapshot.val().po_no;
+    // 			var psi = orderChildSnapshot.val().psi || "";
+    // 			var key = orderChildSnapshot.key;
+
+    // 			if(psi != ""){
+    // 				psi_ext = "(" + psi + "psi)";
+    // 			}else{
+    // 				psi_ext = "";
+    // 			}
+    // 			var quantity = orderChildSnapshot.val().quantity;
+    // 			var status = orderChildSnapshot.val().status;
+
+    // 			myTbody += "<tr><td><strong>" + count + "</strong></td>";
+    // 			myTbody += "<td><strong>" + dr_no + "</strong></td>";
+    // 			myTbody += "<td><strong>" + po_no + "</strong></td>";
+    // 			myTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
+    // 			myTbody += "<td><strong>" + Number(quantity).toLocaleString('en') + "</strong></td>";
+
+    // 			firebase.database().ref('delivery_delivered_order/'+plant+'/'+key+'/project_detail').on('value', function(projectSnapshot){
+    // 				projectSnapshot.forEach(function(projectChildSnapshot){
+
+    // 					var project_name = projectChildSnapshot.val().project_name;
+    // 					var project_address = projectChildSnapshot.val().project_address;
+
+		  //   			myTbody += "<td><strong>" + project_name + "</strong></td>";
+		  //   			myTbody += "<td><strong>" + project_address + "</strong></td>";
+
+    // 				});
+    // 			});
+
+    // 			myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+
+    // 			firebase.database().ref('delivery_delivered_order/'+plant+'/'+key+'/contact').on('value', function(contactSnapshot){
+    // 				contactSnapshot.forEach(function(contactChildSnapshot){
+
+    // 					var contact_name = contactChildSnapshot.val().contact_name;
+    // 					var contact_no = contactChildSnapshot.val().contact_no;
+
+		  //   			myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+
+    // 				});
+    // 			});
+
+    // 			myTbody += "</td>";
+    // 			myTbody += "<td><strong>" + date + "</strong></td>";
+    // 			myTbody += "<td style='color: #388e3c;'><strong>" + status + "</strong></td></tr>";
+
+    // 			document.getElementById('orderList').innerHTML = myTbody;
+    // 			count++;
+    // 		});
+    // 	});
+    // }
 
     function tableData(plant){
 
@@ -253,6 +309,14 @@
                 });
             }
         });
+
+        if(plant == 'Bravo'){
+            plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
+        }else{
+            plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
+        }
+
+        document.getElementById('id_plant_name').innerHTML = plant_name;
     }
 
     function startTime() {
