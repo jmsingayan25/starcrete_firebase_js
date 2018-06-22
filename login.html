@@ -105,7 +105,6 @@
 						console.log("Position: " + snapshot.val().position);
 						console.log("Office: " + snapshot.val().office);
 
-						// localStorage.setItem("userOffice", snapshot.val().office);
 						window.location.href = "headoffice/index.html";
 						
 					}else if(snapshot.val().office == "Bravo" || snapshot.val().office == "Delta"){
@@ -116,7 +115,6 @@
 						console.log("Position: " + snapshot.val().position);
 						console.log("Office: " + snapshot.val().office);
 						
-						localStorage.setItem("userOffice", snapshot.val().office);
 						window.location.href = "plant/index.html";
 					}
 					
