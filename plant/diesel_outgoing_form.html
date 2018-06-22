@@ -134,6 +134,7 @@
                     }
                     
                     // tableData(plant);
+                    AvailableStock();
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
@@ -152,10 +153,9 @@
 
         firebase.database().ref().child("available_stock/" + plant).once('value',function(CheckSnapshot)
         {
-            if (CheckSnapshot.val() == null) 
-            {
-                alert("Fill Incoming Required");
-            }else
+            if (CheckSnapshot.val() == null) {
+                alert("Fill Incoming Required");}
+            else 
             {
              var quantity_out = document.getElementById('quantity_out').value;
              quantity_out = quantity_out.replace(",","");
@@ -181,9 +181,8 @@
                  reverseDate: firebase.database.ServerValue.TIMESTAMP,
                  date: date, 
                  time: time,
-                 currentstockCopy: currentStockCopy};
+                 currentstockCopy: currentStockCopy };
 
-            //firebase.database().ref().child("outcoming_diesel/" + plant).push(OutcomingData);
                 var postData = firebase.database().ref('outcoming_diesel/' + plant);
                 var newPostRef = postData.push();
                 newPostRef.set(OutcomingData);
@@ -198,47 +197,40 @@
                     firebase.database().ref().child("outcoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
                     console.log(StartReverseDate);
                 });
-            //
+            //end of else
             }
-            
         });
+    }
 
-        /*var quantity_out = document.getElementById('quantity_out').value;
-        var destination = document.getElementById('destination').value;
-        var truck_no = document.getElementById('truck_no').value;
-        var operator = document.getElementById('operator').value;
-        var date = new Date().toLocaleDateString('en');
-        var time = new Date().toLocaleTimeString('en');
-        
-        var OutcomingData = { 
-            quantity_out: quantity_out, 
-            destination: destination,
-            truck_no: truck_no, 
-            operator: operator,
-            reverseDate: firebase.database.ServerValue.TIMESTAMP,
-            date: date, 
-            time: time};
-
-        var PostDataBase = firebase.database().ref().child("outcoming_diesel/" + plant);
-        var newPostRef = PostDataBase.push();
-        newPostRef.set(OutcomingData);
-        //decrease liters
-       firebase.database().ref().child("available_stock/" + plant).once('value',function(CheckSnapshot)
+    function AvailableStock()
+    {
+         firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot)
         {
-            if (CheckSnapshot.val() == null) 
-            {
+            if (totalstockSnapshot.val() == null){ 
+                document.getElementById("stock").innerHTML = " 0 Liter(s)"}
+            else{
+                var get_totalStock = totalstockSnapshot.val().Liters;
+                document.getElementById("stock").innerHTML = get_totalStock + " Liter(s)";}
+        });
+    }
 
-            }else
+    function disableButtonDone(textvalue)
+    {
+          firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot)
+        {
+            var getTotalLiters = totalstockSnapshot.val().Liters;
+            var quantity_out = document.getElementById('quantity_out').value;
+            var getStringQuantityOut = textvalue.replace(",","");
+            if (Number(getTotalLiters) <= Number(getStringQuantityOut)) 
             {
-             var get_liters = CheckSnapshot.val().Liters;
-             var decrease_int_liters = Number(get_liters) - Number(quantity_out);
-             var decrease_string_liters = decrease_int_liters.toString();
-             var new_liters = decrease_string_liters;
-             var stock_available  ={Liters: new_liters};
-             firebase.database().ref().child("available_stock/" + plant).set(stock_available);  
+                document.getElementById("submit").disabled = true;
             }
-            
-        });*/
+            else
+            {
+               document.getElementById("submit").disabled = false; 
+            }
+
+        });
     }
 </script>    
 </head>
@@ -351,9 +343,9 @@
                                     <div class="form-group">
                                         <label for="quantity_out" class="col-md-4 control-label">Quantity (OUT)<span class="required" style="color: red;">*</span></label>
                                         <div class="col-md-5">
-                                            <input type="text" id="quantity_out" name="quantity_out" class="form-control" autocomplete="off" required>
-                                            <!-- <span class="help-block" id="stock_warning" style="color: red; display: none;"><strong>Warning!</strong> Available Stock: <?php echo number_format(getStock($db, 'Diesel', $search_plant)) . " liters"; ?></span>
-                                            <span class="help-block" id="stock_ok" style="display: none;">Available Stock: <?php echo number_format(getStock($db, 'Diesel', $search_plant)) . " liters"; ?></span> -->
+                                            <input type="text" id="quantity_out" name="quantity_out" class="form-control" onkeyup = "disableButtonDone(this.value)"autocomplete="off" required>
+                                            <!-- <span class="help-block" id="stock_warning" style="color: red; display: none;"><strong>Warning!</strong> Available Stock: <?php echo number_format(getStock($db, 'Diesel', $search_plant)) . " liters"; ?></span> -->
+                                            <span class="help-block" id="stock_ok">Available Stock: <span id="stock"></span></span> 
 
                                         </div>
 

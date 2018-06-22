@@ -176,7 +176,7 @@ function Go()
         firebase.database().ref('incoming_diesel/'+plant).orderByChild('reverseDate').once('value').then(function(DateSnapshotIn) {
             DateSnapshotIn.forEach(function(dieselChildSnapshotsIn){
             if (GetStringDate == dieselChildSnapshotsIn.val().date) 
-            {
+            {   
                  var truckno = dieselChildSnapshotsIn.val().truck_no;
                  var suppliername = dieselChildSnapshotsIn.val().supplier;
                  var quantityin = Number(dieselChildSnapshotsIn.val().quantity_in).toLocaleString("en");
@@ -191,7 +191,6 @@ function Go()
 
                 document.getElementById("DieselList").innerHTML = myTbody;
             }
-        
             });
         });
         firebase.database().ref('outcoming_diesel/'+plant).orderByChild('reverseDate').once('value').then(function(DateSnapshotOut) {
@@ -214,15 +213,15 @@ function Go()
 
                 document.getElementById("DieselList").innerHTML = myTbody;
             }
-        
             });
+
         });
 }
 
 function DisplayCurrentData()
 {
     var myTbody = "";
-
+    //start
     firebase.database().ref('incoming_diesel/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshot) {
         DieselSnapshot.forEach(function(dieselChildSnapshot){
                 var date = dieselChildSnapshot.val().date;
@@ -268,9 +267,11 @@ function DisplayCurrentData()
                  myTbody += "<td><strong>" + address + "</strong></td>";
                  myTbody += "<td><strong>" + time + "</strong></td>";
 
-                 document.getElementById("DieselList").innerHTML = myTbody;}
+                 document.getElementById("DieselList").innerHTML = myTbody;
+                }
          });
      });
+
      firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot)
      {var get_totalStock = totalstockSnapshot.val().Liters;
         document.getElementById("id_stock").innerHTML = get_totalStock + " Liter(s)";});
@@ -471,6 +472,10 @@ function DisplayCurrentData()
 										</tr>
                         			</thead>
                         			<tbody id = "DieselList">
+                                  <!--   <span id = "nodata"><tr>
+                                    <td colspan="7" style='height: 100%; background: white; text-align:center; 
+                                    vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>
+                                    </span> -->
                         			</tbody>
                         		</table>
                         	</div>
