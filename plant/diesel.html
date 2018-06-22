@@ -82,7 +82,6 @@
 
 <script>
 	
-    var plant = localStorage.getItem("userOffice");
 	var timer = null;
 
     function goAway() {
@@ -144,7 +143,13 @@
 
                 var uid = user.uid;
         
-                firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {                    
+                firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+
+                    plant = snapshot.val().office;
+
+                    if(plant == 'Head Office'){
+                        window.location.href = '../headoffice/index.html';
+                    }
                     
                     // tableData(plant);
                     DisplayCurrentData();
@@ -158,10 +163,6 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
-
-        if(plant == 'Head Office'){
-            window.location.href = '../headoffice/index.html';
-        }
     });
 
 function Go()
