@@ -89,14 +89,21 @@
 
 <script>
 
+    var plant = localStorage.getItem("userOffice");
 	var po_no_key = getUrlParameter('po_no_key');
 	var timer = null;
+
+    if(plant == 'Head Office'){
+        window.location.href = '../headoffice/index.html';
+    }
 
     function goAway() {
         clearTimeout(timer);
         timer = setTimeout(function() {
-            window.location.reload(true);
-        }, 60000);
+            // window.location.reload(true);
+            tableData(plant);
+            totalCountBadge(plant);
+        }, 30000);
     }
 
     window.addEventListener('mousemove', goAway, true);
@@ -146,22 +153,16 @@
             }
         });
 
+        tableData(plant);
+        totalCountBadge(plant);
+
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
 
                 var uid = user.uid;
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-
-                    plant = snapshot.val().office;
-
-                    if(plant == 'Head Office'){
-                        window.location.href = '../headoffice/index.html';
-                    }
-                    
-                    tableData(plant);
-                    totalCountBadge(plant);
-
+                
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);

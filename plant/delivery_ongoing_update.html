@@ -82,9 +82,14 @@
 
 <script>
 	
+    var plant = localStorage.getItem("userOffice");
 	var deliveryKey = getUrlParameter('key');
     var itemKey = getUrlParameter('itemKey');
 
+    if(plant == 'Head Office'){
+        window.location.href = '../headoffice/index.html';
+    }
+    
 	$(function() {
         
         // var $form = $( "#form" );
@@ -124,7 +129,8 @@
         });
 
         itemList();
-
+        tableData(plant);
+        totalCountBadge(plant);
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -132,15 +138,7 @@
                 var uid = user.uid;
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-
-                    plant = snapshot.val().office;
-
-                    if(plant == 'Head Office'){
-                        window.location.href = '../headoffice/index.html';
-                    }
                     
-                    tableData(plant);
-                    totalCountBadge(plant);
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
@@ -152,51 +150,6 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);      
     });
-
-  //   function displayQuantityError(val){
-
-  //   	var balance = document.getElementById('hidden_balance').value;
-  //   	var quantity = document.getElementById('hidden_quantity').value;
-		// var button = document.getElementById('submit');
-  //   	// var div = document.getElementById('error');
-  //   	var input = document.getElementById('update_quantity');
-  //       var remaining = document.getElementById('balance');
-
-  //       balance = balance.replace(",","");
-  //       balance = Number(balance);
-  //       val = val.replace(",","");
-  //       val = Number(val);
-  //   	quantity = quantity.replace(",","");
-  //   	quantity = Number(quantity);
-
-  //   	new_quantity = val - quantity;
-  //   	new_value = balance - new_quantity;
-    	
-  //       if(val == ''){
-  //           new_value = balance;
-  //       }
-
-  //      	if(new_value < 0 && val != ''){
-  //           // div.style.display = 'block';
-  //           button.disabled = 'true';
-  //           input.style.borderColor = 'red';
-  //       }else if(new_value < 0 && val == ''){
-  //       	button.disabled = 'true';
-  //       	input.style.borderColor = 'red';
-  //       }else{
-  //           // div.style.display = 'none';
-  //           button.disabled = '';
-  //           input.style.borderColor = '';
-  //       }
-
-  //       string_new_value = new_value.toLocaleString('en') + " pcs";
-  //       if(new_value < 1350){
-  //           remaining.innerHTML = string_new_value.bold().fontcolor("red");
-                    
-  //       }else{
-  //           remaining.innerHTML = string_new_value.bold();
-  //       }
-  //   }
 
     function displayQuantityError(val){
 

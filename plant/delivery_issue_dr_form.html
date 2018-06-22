@@ -89,8 +89,13 @@
 
 <script>
 	
+    var plant = localStorage.getItem("userOffice");
 	var itemKey = getUrlParameter('itemKey');
 	var orderKey = getUrlParameter('key');
+
+    if(plant == 'Head Office'){
+        window.location.href = '../headoffice/index.html';
+    }
 
 	$(function() {
 
@@ -123,21 +128,15 @@
                     } );
         });      
 
+        formData(plant);
+        totalCountBadge(plant);
+
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
 
                 var uid = user.uid;
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-
-                    plant = snapshot.val().office;
-
-                    if(plant == 'Head Office'){
-                        window.location.href = '../headoffice/index.html';
-                    }
-                    
-                    formData(plant);
-                    totalCountBadge(plant);
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
@@ -148,9 +147,17 @@
             }
         });
 
-        document.getElementById('id_button').innerHTML = "<input type='submit' name='submit' id='submit' value='Done' class='btn btn-primary' style='font-weight: bold;'> <a href='delivery_pending_order.html' class='btn btn-default'><strong>Cancel</strong></a>";
-
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+
+        if(plant == 'Bravo'){
+            plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
+        }else{
+            plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
+        }
+
+        document.getElementById('id_plant_name').innerHTML = plant_name;
+
+        document.getElementById('id_button').innerHTML = "<input type='submit' name='submit' id='submit' value='Done' class='btn btn-primary' style='font-weight: bold;'> <a href='delivery_pending_order.html' class='btn btn-default'><strong>Cancel</strong></a>";
     });
 
 	function formData(plant){
@@ -180,16 +187,7 @@
 			document.getElementById('hidden_balance').value = itemSnapshot.val().balance;
 			document.getElementById('block_ordered').innerHTML = "Ordered: <strong>" + quantity + " pcs / Balance: " + balance + " pcs</strong>";
 
-		});
-
-		if(plant == 'Bravo'){
-            plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
-        }else{
-            plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
-        }
-
-        document.getElementById('id_plant_name').innerHTML = plant_name;
-        
+		});        
 	}
 
 	function submitForm(){
