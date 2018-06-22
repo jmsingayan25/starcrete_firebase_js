@@ -284,34 +284,37 @@
     function totalCountBadge(plant){
 
         po_count = 0;
-        firebase.database().ref('purchase_order').orderByChild('issued_po_plant').equalTo(plant).once('child_added', function(orderSnapshot){
+        firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
             if(orderSnapshot.val() != null){
                 if(orderSnapshot.val().issued_po_plant == plant){
-                    firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
+                    firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').on('value', function(itemSnapshot){
                         itemSnapshot.forEach(function(itemChildSnapshot){
-                            if(itemChildSnapshot.val().balance != 0){
+                            if(Number(itemChildSnapshot.val().balance) != 0){
                                 po_count++;
                                 document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
                             }
                         });
                     });
                 }
+                // console.log(orderSnapshot.key, orderSnapshot.val()); 
+                
             }else{
                 document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
             }
         });
 
         do_count = 0;
-        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).once('value', function(ongoingOrderSnapshot) {
-            console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
+        firebase.database().ref('delivery_ongoing_order').on('child_added', function(ongoingOrderSnapshot) {
+            // console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
             if(ongoingOrderSnapshot.val() != null){
-                do_count++;
-                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
-            }else{
-                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>"
-            }
+                if(ongoingOrderSnapshot.val().issued_dr_plant == plant){
+                    do_count++;
+                    document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+                }else{
+                    document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+                }
+            } 
         });
-
     }
 
 </script>
