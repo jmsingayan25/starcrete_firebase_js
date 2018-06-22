@@ -95,7 +95,7 @@
     if(plant == 'Head Office'){
         window.location.href = '../headoffice/index.html';
     }
-    
+
     function goAway() {
         clearTimeout(timer);
         timer = setTimeout(function() {
@@ -309,11 +309,14 @@
         });
 
         do_count = 0;
-        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).once('value', function(ongoingOrderSnapshot) {
+        firebase.database().ref('delivery_ongoing_order').on('value', function(ongoingOrderSnapshot) {
             if(ongoingOrderSnapshot.val() != null){
-                console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
-                do_count++;
-                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+
+                if(ongoingOrderSnapshot.val().issued_dr_plant == plant){
+                    console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
+                    do_count++;
+                    document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+                }
             }else{
                 document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
             }
