@@ -365,7 +365,6 @@
 
         event.preventDefault();
 
-        var db = firebase.database();
         var po_no = document.getElementById('po_no').value;
         var plant = document.querySelector('input[name="plant"]:checked').value;
         var client_id = document.getElementById('client').value;
@@ -376,7 +375,7 @@
         var date = new Date().toLocaleDateString('en');
         var time = new Date().toLocaleTimeString('en');
 
-        db.ref('project/'+client_id+'/'+project_id).once('value').then(function(snapshot){
+        firebase.database().ref('project/'+client_id+'/'+project_id).once('value').then(function(snapshot){
             // console.log(snapshot.val());
 
             var poData = {
@@ -389,7 +388,7 @@
             }
             console.log(poData);
 
-            var postData = db.ref('purchase_order/');
+            var postData = firebase.database().ref('purchase_order');
             var newPostRef = postData.push();
             newPostRef.set(poData);
 
@@ -406,7 +405,7 @@
 
                 console.log(itemData);
 
-                db.ref('purchase_order/'+postId+'/item/').push(itemData);
+                firebase.database().ref('purchase_order/'+postId+'/item/').push(itemData);
                 count++;
 
                 if(psi[i] != ""){
@@ -424,14 +423,14 @@
                 }
             }
 
-            db.ref().child('purchase_order/'+postId).once('value', function(snapshot){
+            firebase.database().ref().child('purchase_order/'+postId).once('value', function(snapshot){
 
                 var timestamp = snapshot.val().reverseDate * -1;
                 var timeUpdate = {
                     reverseDate: timestamp
                 } 
 
-                db.ref('purchase_order/'+postId).update(timeUpdate);
+                firebase.database().ref('purchase_order/'+postId).update(timeUpdate);
             });
 
             var projectData = {
@@ -439,9 +438,9 @@
                 project_address: snapshot.val().project_address,
             }
 
-            db.ref('purchase_order/'+postId+'/project_detail/'+project_id).set(projectData);
+            firebase.database().ref('purchase_order/'+postId+'/project_detail/'+project_id).set(projectData);
 
-            db.ref('project/'+client_id+'/'+project_id+'/contact').on('value', function(snapshot){
+            firebase.database().ref('project/'+client_id+'/'+project_id+'/contact').on('value', function(snapshot){
                 snapshot.forEach(function(childSnapshot){
 
                     var contactData = {
@@ -450,7 +449,7 @@
                     }
 
                     // console.log(childSnapshot.key, contactData);
-                    db.ref('purchase_order/'+postId+'/contact/'+childSnapshot.key).set(contactData);
+                    firebase.database().ref('purchase_order/'+postId+'/contact/'+childSnapshot.key).set(contactData);
                     
                 });
             });
@@ -469,21 +468,21 @@
                     history: client_name + " ordered " + item_ext + " with P.O. No. " + po_no + " to be delivered to " + snapshot.val().project_name + " in " + snapshot.val().project_address
                 }
 
-                var postHistoryData = db.ref('history/'+plant+'/');
+                var postHistoryData = firebase.database().ref('history/'+plant+'/');
                 var newHistoryPostRef = postHistoryData.push();
                 newHistoryPostRef.set(historyData);
 
-                // db.ref('history/'+plant).push(historyData);
+                // firebase.database().ref('history/'+plant).push(historyData);
                 var postHistoryId = newHistoryPostRef.key;
                 
-                db.ref().child('history/'+plant+'/'+postHistoryId).once('value', function(snapshot){
+                firebase.database().ref().child('history/'+plant+'/'+postHistoryId).once('value', function(snapshot){
 
                     var timestamp = snapshot.val().reverseDate * -1;
                     var timeUpdate = {
                         reverseDate: timestamp
                     } 
 
-                    db.ref('history/'+plant+'/'+postHistoryId).update(timeUpdate);
+                    firebase.database().ref('history/'+plant+'/'+postHistoryId).update(timeUpdate);
                 });
             });
 
