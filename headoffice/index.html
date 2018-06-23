@@ -220,90 +220,6 @@
 
     // }
 
-    // function searchHistory(){
-
-    //     event.preventDefault();
-
-    //     var myTbody = "";
-    //     var fromDate = document.getElementById('start_date').value;
-    //     var endDate = document.getElementById('end_date').value;
-    //     var plant = $('input[name="plant"]:checked').val();
-
-    //     firebase.database().ref('history/'+plant).orderByChild('reverseDate').on('value', function(historySnapshot){
-    //         historySnapshot.forEach(function(historyChildSnapshot){
-    //             var date = new Date(historyChildSnapshot.val().date);
-                
-    //             if(fromDate == ''){
-    //                 fromDate = '';
-    //             }else{
-    //                 fromDate = new Date(fromDate);
-    //             }
-
-    //             if(endDate == ''){
-    //                 endDate = '';
-    //             }else{
-    //                 endDate = new Date(endDate);
-    //             }
-
-    //             if(fromDate == '' && endDate == ''){
-    //                 condition = dateFormat(date) <= dateFormat(endDate);                    
-    //             }else if(fromDate != '' && endDate == ''){
-    //                 condition = dateFormat(date) >= dateFormat(fromDate);
-    //             }else if(fromDate == '' && endDate != ''){
-    //                 condition = dateFormat(date) <= dateFormat(endDate);                    
-    //             }else{
-    //                 condition = dateFormat(date) >= dateFormat(fromDate) && date <= dateFormat(endDate);
-    //             }
-
-    //             // console.log(condition);
-
-    //             if(condition){
-    //             console.log(condition);
-                   
-    //                 var type = historyChildSnapshot.val().type_of_transaction;   //Example of value
-    //                 var detail = historyChildSnapshot.val().history;   //Example of value
-    //                 var date = dateFormat(historyChildSnapshot.val().date);   //Example of value
-
-    //                 myTbody += "<tr><td><strong>" + type + "</strong></td>";
-    //                 myTbody += "<td><strong>" + detail + "</strong></td>";
-    //                 myTbody += "<td><strong>" + date + "</strong></td></tr>";
-
-    //             }
-
-    //             // if((fromDate <= date && endDate >= date) || (fromDate >= date && endDate <= date)){
-
-    //             //     // console.log(date);
-    //             //     var type = historyChildSnapshot.val().type_of_transaction;   //Example of value
-    //             //     var detail = historyChildSnapshot.val().history;   //Example of value
-    //             //     var date = dateFormat(historyChildSnapshot.val().date);   //Example of value
-
-    //             //     myTbody += "<tr><td><strong>" + type + "</strong></td>";
-    //             //     myTbody += "<td><strong>" + detail + "</strong></td>";
-    //             //     myTbody += "<td><strong>" + date + "</strong></td></tr>";
-
-    //             //     document.getElementById("historyList").innerHTML = myTbody;
-
-    //             // }else{
-    //             //     // console.log("No Data");
-
-    //             //     myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-
-    //             //     document.getElementById("historyList").innerHTML = myTbody;
-
-    //             // }
-    //         });
-    //     });
-
-    //     if(myTbody != ''){
-    //         document.getElementById("historyList").innerHTML = myTbody;
-    //     }else{
-    //         myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-
-    //         document.getElementById("historyList").innerHTML = myTbody;
-    //     }
-
-    // }
-
     function searchHistory(){
 
         event.preventDefault();
@@ -508,19 +424,19 @@
 }
 
 .filterable .filters input[disabled]::-webkit-input-placeholder {
-    color: gray;
+    color: white;
     text-align: left;
     font-weight: bold;
 }
 
 .filterable .filters input[disabled]::-moz-placeholder {
-     color: gray;
+     color: white;
      text-align: left;
      font-weight: bold;
 }
 
 .filterable .filters input[disabled]:-ms-input-placeholder {
-     color: gray;
+     color: white;
      text-align: left;
      font-weight: bold;
 }
@@ -707,11 +623,11 @@
                                                 <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                             </th>
                                         </tr>
-                                        <tr class="filters">
+                                        <tr class="filters" style="background-color: #00a3cc;">
                                             <th class="col-md-1"><input type="text" class="form-control" placeholder="Transaction" disabled>
                                             </th>
                                             <th class="col-md-7"><input type="text" class="form-control" placeholder="Description" disabled></th>
-                                            <th class="col-md-1">Date</th>
+                                            <th class="col-md-1" style="color: white;">Date</th>
                                         </tr>
                                     </thead>
                                     <tbody id="historyList"></tbody>
