@@ -173,7 +173,7 @@
                     po_no: po_no, 
                     dr_no: dr_no, 
                     quantity_in: quantity_in,
-                    supplier: supplier, truck_no: truck_no,
+                    supplier: supplier.toUpperCase(), truck_no: truck_no.toUpperCase(),
                     reverseDate:firebase.database.ServerValue.TIMESTAMP,
                     date: date,time: time,
                     currentstockCopy: currentStockCopy,
@@ -189,8 +189,12 @@
                 {
                     var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
                     var UpdateReverseDate = {reverseDate: StartReverseDate};
-                    firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
-                    console.log(StartReverseDate);
+                    /*firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
+                    console.log(StartReverseDate);*/
+                     if(firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate)){
+                        alert("Incoming diesel complete.");
+                        window.location.href = "diesel.html";
+                    }
                 });
             });
             }
@@ -219,8 +223,8 @@
                     var currentStockHolder = {
                         po_no: po_no, dr_no: dr_no, 
                         quantity_in: quantity_in,
-                        supplier: supplier, 
-                        truck_no: truck_no,
+                        supplier: supplier.toUpperCase(), 
+                        truck_no: truck_no.toUpperCase(),
                         reverseDate: firebase.database.ServerValue.TIMESTAMP,
                         date: date,time: time,
                         currentstockCopy: currentStockCopy,
@@ -375,13 +379,13 @@
                                     <div class="form-group">
                                         <label for="supplier" class="col-md-4 control-label">Supplier<span class="required" style="color: red;">*</span></label>
                                         <div class="col-md-5">
-                                            <input type="text" name="supplier" id="supplier" class="form-control" autocomplete="off" required>
+                                            <input type="text" name="supplier" id="supplier" class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="truck_no" class="col-md-4 control-label">Truck No.<span class="required" style="color: red;">*</span></label>
                                         <div class="col-md-5">
-                                            <input type="text" name="truck_no" id="truck_no" class="form-control" autocomplete="off" required>
+                                            <input type="text" name="truck_no" id="truck_no" class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
