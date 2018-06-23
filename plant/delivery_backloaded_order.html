@@ -175,6 +175,15 @@
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
+    function submitForm(){
+
+        event.preventDefault();
+
+        var myTbody = "";
+        var count = 1;
+        var fromDate
+    }
+
     function tableData(plant){
 
     	myTbody = "";
@@ -198,7 +207,7 @@
 
                         var dr_no = orderSnapshot.val().dr_no;
                         var po_no = orderSnapshot.val().po_no;
-                        var item_no = orderSnapshot.val().item_no;
+                        var item_no = orderSnapshot.val().item_no || "";
                         var psi = orderSnapshot.val().psi || "";
 
                         if(psi != ""){

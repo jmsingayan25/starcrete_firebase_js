@@ -14,7 +14,6 @@
     function userSignOut(){
 
         firebase.auth().signOut().then(function() {
-            localStorage.removeItem(key);
             window.location.href = '../login.html';
         }, function(error) {
             console.error('Sign Out Error', error);
