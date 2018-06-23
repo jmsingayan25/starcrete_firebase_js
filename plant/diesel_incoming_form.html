@@ -168,6 +168,7 @@
                 firebase.database().ref().child("available_stock/" + plant).set(stock_available );
                 //
                 var currentStockCopy = liters_bravo;
+                transactionType = "In";
                 var currentStockHolder = {
                     po_no: po_no, 
                     dr_no: dr_no, 
@@ -175,7 +176,8 @@
                     supplier: supplier, truck_no: truck_no,
                     reverseDate:firebase.database.ServerValue.TIMESTAMP,
                     date: date,time: time,
-                    currentstockCopy: currentStockCopy};
+                    currentstockCopy: currentStockCopy,
+                    TransactionType: transactionType};
 
                 var postData = firebase.database().ref('incoming_diesel/' + plant);
                 var newPostRef = postData.push();
@@ -213,6 +215,7 @@
                     firebase.database().ref().child("available_stock/" + plant).set(stock_available );
                     //
                     var currentStockCopy = new_liters;
+                    transactionType = "In";
                     var currentStockHolder = {
                         po_no: po_no, dr_no: dr_no, 
                         quantity_in: quantity_in,
@@ -220,7 +223,8 @@
                         truck_no: truck_no,
                         reverseDate: firebase.database.ServerValue.TIMESTAMP,
                         date: date,time: time,
-                        currentstockCopy: currentStockCopy};
+                        currentstockCopy: currentStockCopy,
+                        TransactionType: transactionType};
 
                     var postData = firebase.database().ref('incoming_diesel/' + plant);
                     var newPostRef = postData.push();
