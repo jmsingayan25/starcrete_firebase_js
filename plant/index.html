@@ -413,17 +413,17 @@
     height: auto;
 }
 .filterable .filters input[disabled]::-webkit-input-placeholder {
-    color: gray;
+    color: white;
     text-align: left;
     font-weight: bold;
 }
 .filterable .filters input[disabled]::-moz-placeholder {
-     color: gray;
+     color: white;
      text-align: left;
      font-weight: bold;
 }
 .filterable .filters input[disabled]:-ms-input-placeholder {
-     color: gray;
+     color: white;
      text-align: left;
      font-weight: bold;
 }
@@ -486,6 +486,12 @@ li.notif {
 	                        <span>History</span>
 	                    </a>
 	                </li>
+                    <li class="">
+                        <a class="" href="diesel.html">
+                            <i class="fa fa-building"></i>
+                            <span>Diesel</span>
+                        </a>
+                    </li>
 	                <li class="sub-menu">
 	                    <a href="javascript:;" class="">
 	                        <i class="fa fa-building"></i>
@@ -593,10 +599,10 @@ li.notif {
 	                                            <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
 	                                        </th>
 	                                    </tr>
-	                                    <tr class="filters">
+	                                    <tr class="filters" style="background-color: #00a3cc;">
 	                                        <th class="col-md-1"><input type="text" class="form-control" placeholder="Transaction" disabled></th>
 	                                        <th class="col-md-5"><input type="text" class="form-control" placeholder="Description" disabled></th>
-	                                        <th class="col-md-1">Date</th>
+	                                        <th class="col-md-1" style="color: white;">Date</th>
 	                                      </tr>
 	                                </thead>
 	                                <tbody id="historyList">   

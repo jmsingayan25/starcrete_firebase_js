@@ -535,17 +535,17 @@
     height: auto;
 }
 .filterable .filters input[disabled]::-webkit-input-placeholder {
-    color: gray;
+    color: white;
     text-align: left;
     font-weight: bold;
 }
 .filterable .filters input[disabled]::-moz-placeholder {
-     color: gray;
+     color: white;
      text-align: left;
      font-weight: bold;
 }
 .filterable .filters input[disabled]:-ms-input-placeholder {
-     color: gray;
+     color: white;
      text-align: left;
      font-weight: bold;
 }
@@ -599,6 +599,12 @@
 	                        <span>History</span>
 	                    </a>
 	                </li>
+                    <li class="">
+                        <a class="" href="diesel.html">
+                            <i class="fa fa-building"></i>
+                            <span>Diesel</span>
+                        </a>
+                    </li>
 	                <li class="sub-menu">
 	                    <a href="javascript:;" class="">
 	                        <i class="fa fa-building"></i>
@@ -708,16 +714,16 @@
                                                 <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                             </th>
                                         </tr>
-                                        <tr class="filters">
-                                            <th>#</th>
+                                        <tr class="filters" style="background-color: #00a3cc;">
+                                            <th class="col-md-1" style="color: white;">#</th>
                                             <th class="col-md-1"><input type="text" class="form-control" placeholder="P.O. No." disabled></th>
                                             <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
-                                            <th class="col-md-2">Ordered / Remaining</th>
+                                            <th class="col-md-2" style="color: white;">Ordered / Remaining</th>
                                             <th class="col-md-2"><input type="text" class="form-control" placeholder="Project Name" disabled></th>
                                             <th class="col-md-2"><input type="text" class="form-control" placeholder="Address" disabled></th>
                                             <th class="col-md-1"><input type="text" class="form-control" placeholder="Contact" disabled></th>
-                                            <th class="col-md-1">Date Order</th>
-                                            <th class="col-md-1">Action</th>
+                                            <th class="col-md-1" style="color: white;">Date Order</th>
+                                            <th class="col-md-1" style="color: white;">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="orderList">
