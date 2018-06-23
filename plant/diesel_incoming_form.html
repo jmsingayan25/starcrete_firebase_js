@@ -235,8 +235,13 @@
                     {
                     var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
                     var UpdateReverseDate = {reverseDate: StartReverseDate};
-                    firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
+                    // firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
                     console.log(StartReverseDate);
+                    if(firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate)){
+                        alert("Incoming diesel complete.");
+                        window.location.href = "diesel.html";
+                    }
+
                     });
                 });
             }
