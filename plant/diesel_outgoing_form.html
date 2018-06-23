@@ -172,8 +172,9 @@
              var stock_available  = {Liters: new_liters};
              firebase.database().ref().child("available_stock/" + plant).set(stock_available); 
 
-               var currentStockCopy = new_liters;
-               var OutcomingData = { 
+                 var currentStockCopy = new_liters;
+                 transactionType = "Out";
+                 var OutcomingData = { 
                  quantity_out: quantity_out, 
                  destination: destination,
                  truck_no: truck_no, 
@@ -181,20 +182,21 @@
                  reverseDate: firebase.database.ServerValue.TIMESTAMP,
                  date: date, 
                  time: time,
-                 currentstockCopy: currentStockCopy };
+                 currentstockCopy: currentStockCopy,
+                 TransactionType: transactionType };
 
-                var postData = firebase.database().ref('outcoming_diesel/' + plant);
+                var postData = firebase.database().ref('incoming_diesel/' + plant);
                 var newPostRef = postData.push();
                 newPostRef.set(OutcomingData);
 
                 var postId = newPostRef.key;
                 
-                firebase.database().ref().child("outcoming_diesel/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot)
+                firebase.database().ref().child("incoming_diesel/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot)
                 {
                     var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
                     var UpdateReverseDate = {reverseDate: StartReverseDate};
                     
-                    firebase.database().ref().child("outcoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
+                    firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
                     console.log(StartReverseDate);
                 });
             //end of else
