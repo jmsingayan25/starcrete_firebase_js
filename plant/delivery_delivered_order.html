@@ -91,17 +91,19 @@
 	
     var timer = null;
 
-    function goAway() {
+    function goAway(plant) {
         clearTimeout(timer);
         timer = setTimeout(function() {
-            window.location.reload(true);
+            // window.location.reload(true);
+            tableData(plant);
+            totalCountBadge(plant);
         }, 60000);
     }
 
     window.addEventListener('mousemove', goAway, true);
     window.addEventListener('keypress', goAway, true);
 
-    goAway();
+    // goAway();
 
 	$(document).ready(function(){
         $('.filterable .btn-filter').click(function(){
@@ -162,6 +164,7 @@
                     
                     tableData(plant);
                     totalCountBadge(plant);
+                    goAway(plant);
                     
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                     document.getElementById('id_hidden_plant').innerHTML = "<input type='hidden' id='hidden_plant' value='" + plant + "'>";
