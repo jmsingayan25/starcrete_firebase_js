@@ -320,7 +320,7 @@
 
 					if(firebase.database().ref('purchase_order/'+orderKey+'/item/'+itemKey).update(itemData)){
 						alert("DR No. " + dr_no + " issued successfully. Transaction can be viewed on Delivery Report Page");
-	            		window.location.href = 'delivery_ongoing_order.html';
+	            		window.location.href = 'delivery_pending_order.html';
 					}
 				});
 			});
@@ -370,7 +370,7 @@
         });
 
         do_count = 0;
-        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).once('value', function(ongoingOrderSnapshot) {
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot) {
 
             if(ongoingOrderSnapshot.val() != null){
                 console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 

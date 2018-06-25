@@ -488,7 +488,7 @@
         });
 
         do_count = 0;
-        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).once('value', function(ongoingOrderSnapshot) {
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot) {
             console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val());
 
             if(ongoingOrderSnapshot.val() != null){

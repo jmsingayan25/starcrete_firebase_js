@@ -481,7 +481,7 @@
         });
 
         do_count = 0;
-        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).once('value', function(ongoingOrderSnapshot) {
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot) {
             if(ongoingOrderSnapshot.val() != null){
                 console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
                 do_count++;
@@ -591,7 +591,7 @@
 	                        <span>History</span>
 	                    </a>
 	                </li>
-                    <li class="active">
+                    <li class="">
                         <a class="" href="diesel.html">
                             <i class="fa fa-building"></i>
                             <span>Diesel</span>
