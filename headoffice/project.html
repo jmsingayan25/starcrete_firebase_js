@@ -213,6 +213,17 @@
 
         var myTbody = "";
 
+        firebase.database().ref('project/'+clientKeyId).orderByChild('project_name').once('value', function(projectSnapshot){
+            // console.log(projectSnapshot.val());
+
+            if(projectSnapshot.val() == null){
+
+                myTbody = "<tr><td colspan='4' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                document.getElementById("projectList").innerHTML = myTbody;
+            }
+        });
+
         firebase.database().ref('project/'+clientKeyId).orderByChild('project_name').on('child_added', function(projectSnapshot){
             console.log(projectSnapshot.key, projectSnapshot.val());
 
