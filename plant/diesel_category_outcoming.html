@@ -135,6 +135,7 @@
                     
                     // tableData(plant);
                     //AvailableStock();
+                    DisplayCategory();
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
@@ -147,6 +148,14 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);     
     });
+     function DisplayCategory()
+    {
+        firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
+        {
+             document.getElementById("category_name").innerHTML = Snapshot.val().CurrentCategory;
+
+        });
+    }
     // function submitForm()
     // {
     //     event.preventDefault();
@@ -352,6 +361,13 @@
                                 </header>
                                 <div class="panel-body">
                                     <!-- <input type="hidden" id="stock" name="stock" value="<?php echo getStock($db, 'Diesel', $search_plant); ?>"> -->
+                                    <div class="form-group">
+                                        <label for="category_name" class="col-md-4 control-label">Category Name</label>
+                                        <div class="col-md-5">
+                                            <strong><p class ="help-block" id ="category_name"></p></strong>
+                                            <!-- <input type="text" name="category_name" id="category_name" class="form-control" autocomplete="off" style="text-transform: uppercase;" required> -->
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <label for="quantity_out" class="col-md-4 control-label">Quantity (OUT)<span class="required" style="color: red;">*</span></label>
                                         <div class="col-md-5">

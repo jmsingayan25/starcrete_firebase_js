@@ -133,7 +133,7 @@
                         window.location.href = '../headoffice/index.html';
                     }
                     // tableData(plant);
-
+                    DisplayCategory();
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
@@ -146,6 +146,14 @@
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);  
     });
 
+    function DisplayCategory()
+    {
+        firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
+        {
+             document.getElementById("category_name").innerHTML = Snapshot.val().CurrentCategory;
+
+        });
+    }
     // function submitForm()
     // {
     //     event.preventDefault();
@@ -360,9 +368,10 @@
                                 </header>
                                 <div class="panel-body">
                                     <div class="form-group">
-                                        <label for="category_name" class="col-md-4 control-label">Category Name<span class="required" style="color: red;">*</span></label>
+                                        <label for="category_name" class="col-md-4 control-label">Category Name</label>
                                         <div class="col-md-5">
-                                            <input type="text" name="category_name" id="category_name" class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+                                            <strong><p class ="help-block" id ="category_name"></p></strong>
+                                            <!-- <input type="text" name="category_name" id="category_name" class="form-control" autocomplete="off" style="text-transform: uppercase;" required> -->
                                         </div>
                                     </div>
                                     <div class="form-group">

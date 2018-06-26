@@ -184,7 +184,7 @@ function submitcategory()
           clearText.value = "";
           alert("Add Category complete.");
           window.location.reload();
-    });
+    });    
 }
  function clearclose()
  {
@@ -199,7 +199,7 @@ function DropdownCategory()
     {
         Snapshot.forEach(function(ChildSnapshot){
 
-            dd_category += "<option value ='" + ChildSnapshot.key + "'>" + ChildSnapshot.val().CategoryName +"</option>";
+            dd_category += "<option value ='" + ChildSnapshot.val().CategoryName  + "'>" + ChildSnapshot.val().CategoryName +"</option>";
             document.getElementById("selectsys").innerHTML = dd_category;
         })
         
@@ -207,18 +207,44 @@ function DropdownCategory()
 
 }
 
-// function categincomingbutton()
-// {
-//     event.preventDefault();
+function categincomingbutton()
+{
+    event.preventDefault();
+    firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
+    {  
+             var get_category_id = document.getElementById('selectsys').value;
+             if (get_category_id == "") 
+             {
+                alert("Choose Category");
+             }else
+             {
+                var text_category  = {CurrentCategory:get_category_id};
+                firebase.database().ref().child("diesel_current_category/" + plant).set(text_category);
 
-//     firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
-//     {
-//             var get_category_id = document.getElementById("selectsys").value;
+                window.location.href ="diesel_category_incoming.html";
+             }   
+    }); 
+}
 
-//             var text_category  = {CurrentCategory:get_category_id.toUpperCase()};
-//     });
-     
-// }
+function categoutcomingbutton()
+{
+    event.preventDefault();
+    firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
+    {  
+             var get_category_id = document.getElementById('selectsys').value;
+             if (get_category_id == "") 
+             {
+                alert("Choose Category");
+             }else
+             {
+                var text_category  = {CurrentCategory:get_category_id};
+                firebase.database().ref().child("diesel_current_category/" + plant).set(text_category);
+
+                window.location.href ="diesel_category_outcoming.html";
+             }   
+    }); 
+}
+
 
 </script>
 <style>
@@ -372,8 +398,8 @@ function DropdownCategory()
                                             <div class="row">
                                                 <div class="col-md-8 col-md-offset-4">
                                                     <div class="form-group">
-                                                        <button type="button" class="btn btn-info btn-md" onclick="location.href='diesel_category_incoming.html';categincomingbutton()"><span class="fa fa-plus"></span> <strong>Add Incoming Diesel</strong></button>
-                                                        <button type="button" class="btn btn-info btn-md" onclick="location.href='diesel_category_outcoming.html'"><span class="fa fa-plus"></span> <strong>Add Outgoing Diesel</strong></button>
+                                                        <button type="button" class="btn btn-info btn-md" onclick="categincomingbutton()"><span class="fa fa-plus"></span> <strong>Add Incoming Diesel</strong></button>
+                                                        <button type="button" class="btn btn-info btn-md" onclick="categoutcomingbutton()"><span class="fa fa-plus"></span> <strong>Add Outgoing Diesel</strong></button>
                                                     </div>
                                                 </div>    
                                             </div>
