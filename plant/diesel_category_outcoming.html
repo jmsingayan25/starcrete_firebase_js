@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+    <link rel="shortcut icon" href="img/favicon.png">
+
+	<title>Outgoing Diesel Form - Diesel</title>
+	
+	<!-- Firebase App is always required and must be first -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+
+	<!-- Add additional services you want to use -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+	<script src="../js_config/firebase_config.js"></script>
+
+	<!-- Bootstrap CSS -->    
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="../css/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="../css/elegant-icons-style.css" rel="stylesheet" />
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
+    <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="../css/fullcalendar.css">
+    <link href="../css/widgets.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/style-responsive.css" rel="stylesheet" />
+    <link href="../css/xcharts.min.css" rel=" stylesheet">	
+    <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+
+    <!-- javascripts -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery-ui-1.10.4.min.js"></script>
+    <script src="../js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+    <!-- bootstrap -->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- nice scroll -->
+    <script src="../js/jquery.scrollTo.min.js"></script>
+    <script src="../js/jquery.nicescroll.js" type="text/javascript"></script>
+    <!-- charts scripts -->
+    <script src="../assets/jquery-knob/js/jquery.knob.js"></script>
+    <script src="../js/jquery.sparkline.js" type="text/javascript"></script>
+    <script src="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+    <script src="../js/owl.carousel.js" ></script>
+    <!-- jQuery full calendar -->
+    <script src="../js/fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
+    <script src="../assets/fullcalendar/fullcalendar/fullcalendar.js"></script>
+    <!--script for this page only-->
+    <script src="../js/calendar-custom.js"></script>
+    <script src="../js/jquery.rateit.min.js"></script>
+    <!-- custom select -->
+    <script src="../js/jquery.customSelect.min.js" ></script>
+    <script src="../assets/chart-master/Chart.js"></script>
+
+    <!--custome script for all page-->
+    <script src="../js/scripts.js"></script>
+    <!-- custom script for this page-->
+    <script src="../js/sparkline-chart.js"></script>
+    <script src="../js/easy-pie-chart.js"></script>
+    <script src="../js/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="../js/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="../js/xcharts.min.js"></script>
+    <script src="../js/jquery.autosize.min.js"></script>
+    <script src="../js/jquery.placeholder.min.js"></script>
+    <script src="../js/gdp-data.js"></script>  
+    <script src="../js/morris.min.js"></script>
+    <script src="../js/sparklines.js"></script>    
+    <script src="../js/charts.js"></script>
+    <script src="../js/jquery.slimscroll.min.js"></script>
+    <script src="../js_config/function.js"></script>
+
+<script>
+	
+	$(function() {
+        
+        // var $form = $( "#form" );
+        // var $input = $form.find( "#quantity" );
+
+        // $input.on( "keyup", function( event ) {
+
+        var $form = $( "#form" );
+        var $input = $form.find( "#quantity_out" );
+
+        $form.on( "keyup", "#quantity_out", function( event ) {
+            
+            
+            // When user select text in the document, also abort.
+            var selection = window.getSelection().toString();
+            if ( selection !== '' ) {
+                return;
+            }
+            
+            // When the arrow keys are pressed, abort.
+            if ( $.inArray( event.keyCode, [38,40,37,39] ) !== -1 ) {
+                return;
+            }
+            
+            
+            var $this = $( this );
+            
+            // Get the value.
+            var input = $this.val();
+            
+            var input = input.replace(/[\D\s\._\-]+/g, "");
+                    input = input ? parseInt( input, 10 ) : 0;
+
+                    $this.val( function() {
+                        return ( input === 0 ) ? "" : input.toLocaleString( "en-US" );
+                    } );
+        } ); 
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user != null) {
+
+                var uid = user.uid;
+        
+                firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+
+                    plant = snapshot.val().office;
+
+                    if(plant == 'Head Office'){
+                        window.location.href = '../headoffice/index.html';
+                    }
+                    
+                    // tableData(plant);
+                    //AvailableStock();
+
+                    document.getElementById('username').innerHTML = snapshot.val().firstname; 
+                },(error) => {
+                    console.log(error);
+                });
+            } else {
+                window.location.href = '../login.html';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);     
+    });
+    // function submitForm()
+    // {
+    //     event.preventDefault();
+
+    //     firebase.database().ref().child("available_stock/" + plant).once('value',function(CheckSnapshot)
+    //     {
+    //         if (CheckSnapshot.val() == null) {
+    //             alert("Fill Incoming Required");}
+    //         else 
+    //         {
+    //          var quantity_out = document.getElementById('quantity_out').value;
+    //          quantity_out = quantity_out.replace(",","");
+    //          var destination = document.getElementById('destination').value;
+    //          var truck_no = document.getElementById('truck_no').value;
+    //          var operator = document.getElementById('operator').value;
+    //          var date = new Date().toLocaleDateString('en');
+    //          var time = new Date().toLocaleTimeString('en');
+
+    //          var get_liters = CheckSnapshot.val().Liters;
+    //          var decrease_int_liters = Number(get_liters) - Number(quantity_out);
+    //          var decrease_string_liters = decrease_int_liters.toString();
+    //          var new_liters = decrease_string_liters;
+    //          var stock_available  = {Liters: new_liters};
+    //          firebase.database().ref().child("available_stock/" + plant).set(stock_available); 
+
+    //              var currentStockCopy = new_liters;
+    //              transactionType = "Out";
+    //              var OutcomingData = { 
+    //              quantity_out: quantity_out, 
+    //              destination: destination.toUpperCase(),
+    //              truck_no: truck_no.toUpperCase(), 
+    //              operator: operator.toUpperCase(),
+    //              reverseDate: firebase.database.ServerValue.TIMESTAMP,
+    //              date: date, 
+    //              time: time,
+    //              currentstockCopy: currentStockCopy,
+    //              TransactionType: transactionType };
+
+    //             var postData = firebase.database().ref('incoming_diesel/' + plant);
+    //             var newPostRef = postData.push();
+    //             newPostRef.set(OutcomingData);
+
+    //             var postId = newPostRef.key;
+                
+    //             firebase.database().ref().child("incoming_diesel/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot)
+    //             {
+    //                 var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
+    //                 var UpdateReverseDate = {reverseDate: StartReverseDate};
+                    
+    //                 // firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
+    //                 console.log(StartReverseDate);
+
+    //                 if(firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate)){
+    //                     alert("Outgoing diesel complete.");
+    //                     window.location.href = "diesel.html";
+    //                 }
+    //             });
+    //         //lastdelivered
+    //         //end of else
+    //         }
+    //     });
+    // }
+
+    // function AvailableStock()
+    // {
+    //      firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot)
+    //     {
+    //         if (totalstockSnapshot.val() == null){ 
+    //             document.getElementById("stock").innerHTML = " 0 Liter(s)"}
+    //         else{
+    //             var get_totalStock = totalstockSnapshot.val().Liters;
+    //             document.getElementById("stock").innerHTML = get_totalStock + " Liter(s)";}
+    //         if(get_totalStock <= 3500)
+    //             {
+    //         document.getElementById("stock").style.color ="red";
+    //             }
+    //     });
+    // }
+
+    // function disableButtonDone(textvalue)
+    // {
+    //       firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot)
+    //     {
+    //         var getTotalLiters = totalstockSnapshot.val().Liters;
+    //         var quantity_out = document.getElementById('quantity_out').value;
+    //         var getStringQuantityOut = textvalue.replace(",","");
+    //         if (Number(getTotalLiters) <= Number(getStringQuantityOut)) 
+    //         {
+    //             document.getElementById("submit").disabled = true;
+    //         }
+    //         else
+    //         {
+    //            document.getElementById("submit").disabled = false; 
+    //         }
+
+    //     });
+    // }
+</script>    
+</head>
+<body>
+    <!-- container section start -->
+    <section id="container" class="">
+        <header class="header dark-bg">
+            <div class="toggle-nav">
+            <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
+            </div>
+
+            <!--logo start-->
+
+            <!--logo end-->
+            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+            <div class="top-nav notification-row">                
+                <!-- notificatoin dropdown start-->
+                <ul class="nav pull-right top-menu">
+                    <!-- user login dropdown start-->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <!--  <span class="profile-ava">
+                        <img alt="" src="img/avatar1_small.jpg">
+                        </span> -->
+                            <span class="username" id="username"></span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <div class="log-arrow-up"></div>
+                            <li>
+                                <a href="" id="logoutBtn"><i class="icon_key_alt"></i> Log Out</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->
+                </ul>
+                <!-- notificatoin dropdown end-->
+            </div>
+        </header>  
+
+        <!--sidebar start-->
+        <aside>
+            <div id="sidebar"  class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu">                
+                    <li class="">
+                        <a class="" href="index.html">
+                            <i class="icon_house"></i>
+                            <span>History</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a class="" href="diesel.html">
+                            <i class="fa fa-building"></i>
+                            <span>Diesel</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Purchase Order</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order.html">Pending P.O.</a></li>
+                            <!-- <li><a class="" href="purchase_closed_order.html">Closed P.O.</a></li> -->
+                        </ul>
+                    </li>  
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Delivery Order</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="delivery_pending_order.html">Existing P.O. <span class='badge'><?html echo getCountPlantPo($db, $office); ?></span></a></li>    
+                            <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span class="badge"><?html echo getDeliveryCountOnDeliveryOffice($db, $office); ?></span></a></li>                          
+                            <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
+                            <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
+                        </ul>
+                    </li>  
+                </ul>
+                <!-- sidebar menu end-->
+            </div>
+        </aside>
+        <!--sidebar end-->
+
+        <section id="main-content">
+            <section class="wrapper">            
+                <!--overview start-->
+                <div class="row">
+                    <div class="col-md-12">
+                        <!-- <h3 class="page-header"><i class="fa fa-home"></i> History</h3> -->
+                        <ol class="breadcrumb">
+                            <!-- <li><i class="fa fa-building"></i><?php echo $plant; ?></li> -->
+                            <li><i class="icon_document"></i><a href="diesel.html">Diesel</a></li>             
+                            <li><i class="icon_document"></i>Outgoing Diesel Form</li>             
+                        </ol>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 col-md-offset-3">
+                        <form id="form" name="form" class="form-horizontal" onsubmit="if(confirm('Proceed?')){submitForm();}else{ event.preventDefault();}">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                    Details
+                                </header>
+                                <div class="panel-body">
+                                    <!-- <input type="hidden" id="stock" name="stock" value="<?php echo getStock($db, 'Diesel', $search_plant); ?>"> -->
+                                    <div class="form-group">
+                                        <label for="quantity_out" class="col-md-4 control-label">Quantity (OUT)<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-5">
+                                            <input type="text" id="quantity_out" name="quantity_out" class="form-control" onkeyup = "disableButtonDone(this.value)"autocomplete="off" required>
+                                            <!-- <span class="help-block" id="stock_warning" style="color: red; display: none;"><strong>Warning!</strong> Available Stock: <?php echo number_format(getStock($db, 'Diesel', $search_plant)) . " liters"; ?></span> -->
+                                            <span class="help-block" id="stock_ok">Available Stock: <span id="stock"></span></span> 
+
+                                        </div>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="destination" class="col-md-4 control-label">Destination<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-5">
+                                            <input type="text" name="destination" id="destination"class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="truck_no" class="col-md-4 control-label">Truck No.<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-5">
+                                            <input type="text" name="truck_no" id="truck_no" class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="operator" class="col-md-4 control-label">Operator / Driver<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-5">
+                                            <input type="text" name="operator" id="operator"class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-offset-8 col-md-4">
+                                            <input type="submit" name="submit" id="submit" value="Done" class="btn btn-primary" style="font-weight: bold;">
+                                            <a href="diesel_category.html" class="btn btn-default"><strong>Cancel</strong></a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <footer class="panel-footer">
+                                    <p class="help-block"><span class="required" style="color: red;">*</span> - required</p>
+                                    <p class="help-block">Note: <strong>N/A</strong> for not available.</p>
+                                </footer>
+                            </section>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </section>
+</body>
+</html>

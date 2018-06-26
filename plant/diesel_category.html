@@ -182,6 +182,8 @@ function submitcategory()
 
           var clearText = document.getElementById("textcategory");
           clearText.value = "";
+          alert("Add Category complete.");
+          window.location.reload();
     });
 }
  function clearclose()
@@ -199,13 +201,24 @@ function DropdownCategory()
 
             dd_category += "<option value ='" + ChildSnapshot.key + "'>" + ChildSnapshot.val().CategoryName +"</option>";
             document.getElementById("selectsys").innerHTML = dd_category;
-
-
         })
         
     });
 
 }
+
+// function categincomingbutton()
+// {
+//     event.preventDefault();
+
+//     firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
+//     {
+//             var get_category_id = document.getElementById("selectsys").value;
+
+//             var text_category  = {CurrentCategory:get_category_id.toUpperCase()};
+//     });
+     
+// }
 
 </script>
 <style>
@@ -359,8 +372,8 @@ function DropdownCategory()
                                             <div class="row">
                                                 <div class="col-md-8 col-md-offset-4">
                                                     <div class="form-group">
-                                                        <button type="button" class="btn btn-info btn-md" onclick="location.href='diesel_incoming_form.html'"><span class="fa fa-plus"></span> <strong>Add Incoming Diesel</strong></button>
-                                                        <button type="button" class="btn btn-info btn-md" onclick="location.href='diesel_outgoing_form.html'"><span class="fa fa-plus"></span> <strong>Add Outgoing Diesel</strong></button>
+                                                        <button type="button" class="btn btn-info btn-md" onclick="location.href='diesel_category_incoming.html';categincomingbutton()"><span class="fa fa-plus"></span> <strong>Add Incoming Diesel</strong></button>
+                                                        <button type="button" class="btn btn-info btn-md" onclick="location.href='diesel_category_outcoming.html'"><span class="fa fa-plus"></span> <strong>Add Outgoing Diesel</strong></button>
                                                     </div>
                                                 </div>    
                                             </div>
@@ -411,7 +424,7 @@ function DropdownCategory()
                                                     </div>
                                                         </div>
                                             <div class="col-md-1">
-                                                 <button type="addcateg" id = "addcateg" class="btn btn-md btn-info" style=""  data-toggle="modal" data-target="#myModal"><strong>Add Category</strong></button>
+                                                 <button type="addcateg" id = "addcateg" class="btn btn-md btn-info" style=""  data-toggle="modal" data-target="#myModal"><span class="fa fa-plus"></span><strong> Add New Category</strong></button>
                                                  <form class="form-inline" onsubmit="if(confirm('Proceed?')){submitcategory();}else{ event.preventDefault();}">
                                                  <div id="myModal" class="modal fade" role="dialog">
                                                   <div class="modal-dialog">
@@ -449,7 +462,7 @@ function DropdownCategory()
 											<th class="col-md-1" style="text-align:center; color:white">Quantity (IN)</th>
 											<th class="col-md-1" style="text-align:center; color:white">Quantity (OUT)</th>
 											<th class="col-md-1" style="text-align:center; color:white">Current Stock</th>
-											<th class="col-md-2"><input type="text" class="form-control" placeholder="Address" disabled ></th>
+											<!-- <th class="col-md-2"><input type="text" class="form-control" placeholder="Address" disabled ></th> -->
 											<th class="col-md-1" style="text-align:center; color:white">Time</th>
                                             <th class="col-md-1" style="text-align:center; color:white">DR No.</th>
 										</tr>
