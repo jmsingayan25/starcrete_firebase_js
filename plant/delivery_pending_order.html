@@ -92,19 +92,19 @@
 
     var timer = null;
 
-    function goAway(plant) {
+    function goAway() {
         clearTimeout(timer);
         timer = setTimeout(function() {
-            // window.location.reload(true);
-            tableData(plant);
-            totalCountBadge(plant);
+            window.location.reload(true);
+            // tableData(plant);
+            // totalCountBadge(plant);
         }, 60000);
     }
 
     window.addEventListener('mousemove', goAway, true);
     window.addEventListener('keypress', goAway, true);
 
-    // goAway();
+    goAway();
 
 	$(document).ready(function(){
         $('.filterable .btn-filter').click(function(){
@@ -165,7 +165,7 @@
                     
                     tableData(plant);
                     totalCountBadge(plant);
-                    goAway();
+                    // goAway();
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                     document.getElementById('id_hidden_plant').innerHTML = "<input type='hidden' id='hidden_plant' value='" + plant + "'>";
@@ -357,7 +357,7 @@
         var myTbody = "";
         var count = 1;
         
-        firebase.database().ref('purchase_order').once('value').then(function(drSnapshot){
+        firebase.database().ref('purchase_order').once('value', function(drSnapshot){
             if(drSnapshot.val() == null){
 
                 myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";

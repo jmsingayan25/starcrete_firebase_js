@@ -202,7 +202,7 @@
 		var date = new Date().toLocaleDateString('en');
         var time = new Date().toLocaleTimeString('en');
 
-		firebase.database().ref('purchase_order/'+orderKey).once('value').then(function(orderSnapshot){
+		firebase.database().ref('purchase_order/'+orderKey).once('value', function(orderSnapshot){
 			firebase.database().ref('purchase_order/'+orderKey+'/item/'+itemKey).once('value', function(itemSnapshot){
 
 				var po_no = orderSnapshot.val().po_no;
@@ -247,7 +247,7 @@
 	            });
 
 				// insert data for child node: project detail
-				firebase.database().ref('purchase_order/'+orderKey+'/project_detail').once('value').then(function(projectSnapshot){
+				firebase.database().ref('purchase_order/'+orderKey+'/project_detail').once('value', function(projectSnapshot){
 					projectSnapshot.forEach(function(projectChildSnapshot){
 
 						var projectData = {
@@ -310,7 +310,7 @@
 					});		
 				});
 
-				firebase.database().ref('purchase_order/'+orderKey+'/item/'+itemKey).once('value').then(function(itemSnapshot){
+				firebase.database().ref('purchase_order/'+orderKey+'/item/'+itemKey).once('value', function(itemSnapshot){
 
 					var new_balance = itemSnapshot.val().balance - quantity;
 					var itemData = {

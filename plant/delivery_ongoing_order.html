@@ -91,19 +91,19 @@
 	
     var timer = null;
 
-    function goAway(plant) {
+    function goAway() {
         clearTimeout(timer);
         timer = setTimeout(function() {
-            // window.location.reload(true);
-            tableData(plant);
-            totalCountBadge(plant);
+            window.location.reload(true);
+            // tableData(plant);
+            // totalCountBadge(plant);
         }, 60000);
     }
 
     window.addEventListener('mousemove', goAway, true);
     window.addEventListener('keypress', goAway, true);
 
-    // goAway();
+    goAway();
 
 	$(document).ready(function(){
         $('.filterable .btn-filter').click(function(){
@@ -164,7 +164,7 @@
                     
                     tableData(plant);
                     totalCountBadge(plant);
-                    goAway(plant);
+                    // goAway(plant);
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                     document.getElementById('id_hidden_plant').innerHTML = "<input type='hidden' id='hidden_plant' value='" + plant + "'>"
@@ -366,7 +366,7 @@
         var myTbody = "";
         var count = 1;
 
-        firebase.database().ref('delivery_ongoing_order/').orderByChild('issued_dr_plant').equalTo(plant).once('value').then(function(drSnapshot){
+        firebase.database().ref('delivery_ongoing_order/').orderByChild('issued_dr_plant').equalTo(plant).once('value', function(drSnapshot){
             if(drSnapshot.val() == null){
 
                 myTbody = "<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
@@ -456,7 +456,7 @@
 
         // var currentDateTime = formatDate(date_value);
 
-    	firebase.database().ref().child('delivery_ongoing_order/'+orderKey).once('value').then(function(orderSnapshot){
+    	firebase.database().ref().child('delivery_ongoing_order/'+orderKey).once('value', function(orderSnapshot){
 
    //          var key = orderSnapshot.key;
    //          var time = new Date().toLocaleTimeString('en');
@@ -477,7 +477,7 @@
    //          }
 
    //          var quantity = orderSnapshot.val().quantity;
-   //          var po_no_key = orderSnapshot.val().po_no_key;
+            var po_no_key = orderSnapshot.val().po_no_key;
    //          var status = "DELIVERED";
    //          var issued_po_plant = orderSnapshot.val().issued_po_plant;
    //          var delivered_plant = orderSnapshot.val().issued_dr_plant
@@ -627,14 +627,14 @@
 			// 	alert("DR No. " + dr_no + " has been delivered successfully.");
    //      		window.location.href = 'delivery_ongoing_order.html';
 			// }
-
+            var total = 0;
             firebase.database().ref('purchase_order/'+po_no_key+'/item').once('value', function(itemSnapshot){
                 itemSnapshot.forEach(function(itemChildSnapshot){
 
-                    console.log(itemChildSnapshot.val());
-
-
-
+                    // console.log(itemChildSnapshot.val());
+                    balance = itemChildSnapshot.val().balance;
+                    total = Number(total) + Number(balance);
+                    console.log(total);
                 });
             });
 		});
@@ -700,8 +700,6 @@
 
                     firebase.database().ref('delivery_backloaded_order/'+postId+'/project_detail/'+projectChildSnapshot.key).set(projectData);
                 });
-            }, function(error){
-                console.log(error);
             });
 
             firebase.database().ref('delivery_ongoing_order/'+orderKey+'/contact').once('value', function(contactSnapshot){
@@ -714,8 +712,6 @@
 
                     firebase.database().ref('delivery_backloaded_order/'+postId+'/contact/'+contactChildSnapshot.key).set(contactData);
                 });
-            }, function(error){
-                console.log(error);
             });
 
             //update on child node: reverseDate
@@ -727,8 +723,6 @@
                 } 
 
                 firebase.database().ref('delivery_backloaded_order/'+postId).update(timeUpdate);
-            }, function(error){
-                console.log(error);
             });
 
             firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
@@ -739,8 +733,6 @@
                 }
 
                 firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).update(updateBalance);
-            }, function(error){
-                console.log(error);
             });
 
             var historyData = {
@@ -834,7 +826,6 @@
         do_count = 0;
         firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot) {
             if(ongoingOrderSnapshot.val() != null){
-                console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
                 do_count++;
                 document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
                 document.getElementById('id_count_ongoing_order1').innerHTML = "<span class='badge'>" + do_count + "</span>";

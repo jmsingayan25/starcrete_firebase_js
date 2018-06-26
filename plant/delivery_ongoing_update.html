@@ -235,7 +235,7 @@
 
     function itemList(){
 
-        firebase.database().ref('item').once('value').then(function(snapshot){
+        firebase.database().ref('item').once('value', function(snapshot){
             snapshot.forEach(function(childSnapshot){
                 $('[name="new_item_no"]').append("<option value='" + childSnapshot.val().item + "'>" + childSnapshot.val().item + "</option>");
             });

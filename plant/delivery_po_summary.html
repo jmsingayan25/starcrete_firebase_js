@@ -92,18 +92,18 @@
 	var po_no_key = getUrlParameter('po_no_key');
 	var timer = null;
 
-    function goAway(plant) {
+    function goAway() {
         clearTimeout(timer);
         timer = setTimeout(function() {
-            // window.location.reload(true);
-            tableData(plant);
+            window.location.reload(true);
+            // tableData(plant);
         }, 60000);
     }
 
     window.addEventListener('mousemove', goAway, true);
     window.addEventListener('keypress', goAway, true);
 
-    // goAway();
+    goAway();
 
     $(document).ready(function(){
         $('.filterable .btn-filter').click(function(){
@@ -162,7 +162,7 @@
                     
                     tableData(plant);
                     totalCountBadge(plant);
-                    goAway(plant);
+                    // goAway(plant);
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
@@ -182,9 +182,9 @@
 
     	var myTbody = "";
 
-        firebase.database().ref('delivery_ongoing_order/').orderByChild('po_no_key').equalTo(po_no_key).once('value').then(function(drOngoingSnapshot){
-            firebase.database().ref('delivery_delivered_order/').orderByChild('po_no_key').equalTo(po_no_key).once('value').then(function(drDeliveredSnapshot){   
-                 firebase.database().ref('delivery_backloaded_order/').orderByChild('po_no_key').equalTo(po_no_key).once('value').then(function(drBackloadedSnapshot){    
+        firebase.database().ref('delivery_ongoing_order/').orderByChild('po_no_key').equalTo(po_no_key).once('value', function(drOngoingSnapshot){
+            firebase.database().ref('delivery_delivered_order/').orderByChild('po_no_key').equalTo(po_no_key).once('value', function(drDeliveredSnapshot){   
+                 firebase.database().ref('delivery_backloaded_order/').orderByChild('po_no_key').equalTo(po_no_key).once('value', function(drBackloadedSnapshot){    
                     if(drOngoingSnapshot.val() == null && drDeliveredSnapshot.val() == null && drBackloadedSnapshot.val() == null){
 
                         myTbody = "<tr><td colspan='7' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
