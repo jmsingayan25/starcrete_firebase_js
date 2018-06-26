@@ -153,6 +153,7 @@
                     
                     // tableData(plant);
                     //DisplayCurrentData();
+                    DropdownCategory();
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
@@ -182,6 +183,28 @@ function submitcategory()
           var clearText = document.getElementById("textcategory");
           clearText.value = "";
     });
+}
+ function clearclose()
+ {
+     event.preventDefault();
+     var clearText = document.getElementById("textcategory");
+     clearText.value = "";
+ }
+function DropdownCategory()
+{
+    var dd_category = "<option value=''>Select</option>"
+    firebase.database().ref().child("diesel_category/" + plant).once('value',function(Snapshot)
+    {
+        Snapshot.forEach(function(ChildSnapshot){
+
+            dd_category += "<option value ='" + ChildSnapshot.key + "'>" + ChildSnapshot.val().CategoryName +"</option>";
+            document.getElementById("selectsys").innerHTML = dd_category;
+
+
+        })
+        
+    });
+
 }
 
 </script>
@@ -380,9 +403,9 @@ function submitcategory()
                                                 <div class = "col-md-9">
 
                                                 <select  id="selectsys" class ="form-control">
-                                                <option value="" disabled="" selected="" style="display:none">Choose Category</option>
-                                                <option data-ng-repeat="d in data" data-ng-model="systems">
-                                                <option>
+                                                <!-- <option value="" disabled="" selected="" style="display:none">Choose Category</option> -->
+                                              <!--   <option data-ng-repeat="d in data" data-ng-model="systems">
+                                                <option> -->
                                                 </select>
 
                                                     </div>
@@ -409,7 +432,7 @@ function submitcategory()
                                                                     </div>
                                                       <div class="modal-footer">
                                                          <button type="submit" id = "submitcateg" class="btn btn-md btn-info" style=""><strong>Add</strong></button>
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                        <button type="button" onclick ="clearclose()" class="btn btn-default" data-dismiss="modal">Close</button>
                                                       </div>
                                                     </div>
                                                   </div>
