@@ -207,7 +207,7 @@
                     console.log(StartReverseDate);*/
                      if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
                         alert("Incoming diesel complete.");
-                        window.location.href = "diesel_category.html";
+                        window.location.reload();
                         }
                     });
             });
@@ -262,7 +262,7 @@
                     console.log(StartReverseDate);
                     if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
                         alert("Incoming diesel complete.");
-                        window.location.href = "diesel_category.html";
+                        window.location.reload();
                     }
 
                         });

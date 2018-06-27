@@ -201,7 +201,7 @@
 
                     if(firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate)){
                         alert("Outgoing diesel complete.");
-                        window.location.href = "diesel.html";
+                         window.location.reload();
                     }
                 });
             //lastdelivered

@@ -154,6 +154,7 @@
                     // tableData(plant);
                     //DisplayCurrentData();
                     DropdownCategory();
+                    displaycurrentCategory()
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
@@ -245,6 +246,134 @@ function categoutcomingbutton()
     }); 
 }
 
+function displaycurrentCategory(getCurrentCategory)
+{
+    var myTbody = "";
+
+      firebase.database().ref('incoming_diesel_category/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
+        DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
+
+                var getdataCurrentCategory = dieselChildSnapshot.val().PickCategoryName;
+                var date = dieselChildSnapshot.val().date;
+                var CurrentDate = new Date();
+
+                if(dateFormat(CurrentDate) == date)
+                {
+                if (getCurrentCategory ==  getdataCurrentCategory) 
+                {
+                var truckno = dieselChildSnapshot.val().truck_no;
+                var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
+                var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
+                var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
+                var time = dieselChildSnapshot.val().time;
+                var drno = dieselChildSnapshot.val().dr_no || "";
+                console.log(quantityin);
+
+                var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
+                //var address = dieselChildSnapshot.val().destination || "";
+                
+                if (quantityin == "NaN"){quantityholder = "";}
+                else{quantityholder = quantityin + " liter(s)" ;}
+                if (quantityout == "NaN"){quantityoutholder = "";}
+                else{quantityoutholder = quantityout + " liter(s)";}
+                
+                myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+                myTbody += "<td><strong>" + suppliername + "</strong></td>";
+                myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+                myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
+                myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                //myTbody += "<td><strong>" + address + "</strong></td>";
+                myTbody += "<td><strong>" + time + "</strong></td>";
+                myTbody += "<td><strong>" + drno + "</strong></td></tr>";  
+                } 
+                }
+               });
+               if (myTbody == "") 
+               {
+                    myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+                    document.getElementById("DieselList").innerHTML = myTbody; 
+                }else{document.getElementById("DieselList").innerHTML = myTbody; }   
+      });
+
+        firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(totalstockSnapshot)
+     {
+        var get_totalStock = totalstockSnapshot.val().Liters;
+        document.getElementById("id_stock").innerHTML = get_totalStock + " Liter(s)";
+
+        if(get_totalStock <= 3500)
+        {
+            document.getElementById("id_stock").style.color ="red";
+        }
+    });
+  
+        firebase.database().ref().child("incoming_diesel_category/" + plant).orderByChild("date").limitToLast(1).on('child_added',function(lastDaySnapshot)
+     {
+        var options = { year: "numeric", month: "long", day: "numeric" };
+        var LastDayHolder = new Date (lastDaySnapshot.val().date).toLocaleDateString("en",options); 
+        document.getElementById("last_day").innerHTML = LastDayHolder;
+
+     });
+}
+
+function Go()
+{
+    event.preventDefault();
+    var myTbody = "";
+
+    firebase.database().ref('incoming_diesel_category/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
+    DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
+
+            var getdataCurrentCategory = dieselChildSnapshot.val().PickCategoryName;
+            var getCurrentCategory = document.getElementById("selectsys").value;
+             if (document.getElementById('date_view').value != "") 
+            {
+            date = dateFormat(document.getElementById('date_view').value);
+            }else
+            {
+            date = new Date().toLocaleDateString("en");
+            }
+            var GetStringDate = date.toString();
+
+           
+                if(GetStringDate == dieselChildSnapshot.val().date)
+                {
+                if (getCurrentCategory ==  getdataCurrentCategory) 
+                {
+                var truckno = dieselChildSnapshot.val().truck_no;
+                var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
+                var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
+                var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
+                var time = dieselChildSnapshot.val().time;
+                var drno = dieselChildSnapshot.val().dr_no || "";
+                console.log(quantityin);
+
+                var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
+                //var address = dieselChildSnapshot.val().destination || "";
+                
+                if (quantityin == "NaN"){quantityholder = "";}
+                else{quantityholder = quantityin + " liter(s)" ;}
+                if (quantityout == "NaN"){quantityoutholder = "";}
+                else{quantityoutholder = quantityout + " liter(s)";}
+                
+                myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+                myTbody += "<td><strong>" + suppliername + "</strong></td>";
+                myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+                myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
+                myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                //myTbody += "<td><strong>" + address + "</strong></td>";
+                myTbody += "<td><strong>" + time + "</strong></td>";
+                myTbody += "<td><strong>" + drno + "</strong></td></tr>"; 
+                }
+                }
+        });
+         if (myTbody == "") 
+               {
+                    myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+                    document.getElementById("DieselList").innerHTML = myTbody; 
+                }else{document.getElementById("DieselList").innerHTML = myTbody; } 
+                 document.getElementById("Search_day").innerHTML = dateFormat(date);
+    });
+}
 
 </script>
 <style>
@@ -441,7 +570,7 @@ function categoutcomingbutton()
                                                 <label class = "col-md-3 control-label" style="margin-top: 5px"><strong>Category:</strong></label>
                                                 <div class = "col-md-9">
 
-                                                <select  id="selectsys" class ="form-control">
+                                                <select  onchange="displaycurrentCategory(this.value)" id="selectsys" class ="form-control">
                                                 <!-- <option value="" disabled="" selected="" style="display:none">Choose Category</option> -->
                                               <!--   <option data-ng-repeat="d in data" data-ng-model="systems">
                                                 <option> -->
