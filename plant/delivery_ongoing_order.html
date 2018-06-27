@@ -574,82 +574,69 @@
 				});
 			});	
 
-            var closedPoData = {
-                item_no: item_no,
-                psi: psi,
-                quantity: quantity,
-                date: date,
-                time: time,
-                issued_po_plant: issued_po_plant,
-                delivered_plant: delivered_plant,
-                po_no: po_no,
-                po_no_key: po_no_key,
-                reverseDate: firebase.database.ServerValue.TIMESTAMP,
-                status: '',
-                reason: 'DELIVERED'
-            }
+            firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
+                console.log(itemSnapshot.val());
+                balance = itemSnapshot.val().balance;
+                quantity_order = itemSnapshot.val().quantity;
 
-            var closedPoRef = firebase.database().ref('purchase_order_closed');
-            var closedPoPush = closedPoRef.push();
-            closedPoPush.set(closedPoData);
+                if(balance == 0){
 
-            var closedPoKey = closedPoPush.key;
-            firebase.database().ref('purchase_order/'+po_no_key+'/contact').on('value', function(contactSnapshot){
-                contactSnapshot.forEach(function(contactChildSnapshot){
-
-                    var contact_name = contactChildSnapshot.val().contact_name;
-                    var contact_no = contactChildSnapshot.val().contact_no;
-
-                    var contactData = {
-                        contact_name: contact_name,
-                        contact_no: contact_no
+                    var closedPoData = {
+                        item_no: item_no,
+                        psi: psi,
+                        quantity: quantity_order,
+                        date: date,
+                        time: time,
+                        issued_po_plant: issued_po_plant,
+                        delivered_plant: delivered_plant,
+                        po_no: po_no,
+                        po_no_key: po_no_key,
+                        reverseDate: firebase.database.ServerValue.TIMESTAMP,
+                        status: 'CLOSED',
+                        reason: 'DELIVERED'
                     }
 
-                    firebase.database().ref('purchase_order_closed/'+closedPoKey+'/contact/'+contactChildSnapshot.key).set(contactData);
-                });
+                    var closedPoRef = firebase.database().ref('purchase_order_closed');
+                    var closedPoPush = closedPoRef.push();
+                    closedPoPush.set(closedPoData);
+
+                    var closedPoKey = closedPoPush.key;
+                    firebase.database().ref('purchase_order/'+po_no_key+'/contact').on('value', function(contactSnapshot){
+                        contactSnapshot.forEach(function(contactChildSnapshot){
+
+                            var contact_name = contactChildSnapshot.val().contact_name;
+                            var contact_no = contactChildSnapshot.val().contact_no;
+
+                            var contactData = {
+                                contact_name: contact_name,
+                                contact_no: contact_no
+                            }
+
+                            firebase.database().ref('purchase_order_closed/'+closedPoKey+'/contact/'+contactChildSnapshot.key).set(contactData);
+                        });
+                    });
+
+                    firebase.database().ref('purchase_order/'+po_no_key+'/project_detail').once('value', function(projectSnapshot){
+                        projectSnapshot.forEach(function(projectChildSnapshot){
+
+                            var project_name = projectChildSnapshot.val().project_name;
+                            var project_address = projectChildSnapshot.val().project_address;
+                        
+                            var projectData = {
+                                project_name: project_name,
+                                project_address: project_address
+                            }
+
+                            firebase.database().ref('purchase_order_closed/'+closedPoKey+'/project_detail/'+projectChildSnapshot.key).set(projectData);
+                        });
+                    });
+                }
+
+                if(firebase.database().ref('delivery_ongoing_order/'+orderKey).remove()){
+                    alert("DR No. " + dr_no + " has been delivered successfully.");
+                    window.location.href = 'delivery_ongoing_order.html';
+                }
             });
-
-            firebase.database().ref('purchase_order/'+po_no_key+'/project_detail').once('value', function(projectSnapshot){
-                projectSnapshot.forEach(function(projectChildSnapshot){
-
-                    var project_name = projectChildSnapshot.val().project_name;
-                    var project_address = projectChildSnapshot.val().project_address;
-                
-                    var projectData = {
-                        project_name: project_name,
-                        project_address: project_address
-                    }
-
-                    firebase.database().ref('purchase_order_closed/'+closedPoKey+'/project_detail/'+projectChildSnapshot.key).set(projectData);
-                });
-            });
-
-			if(firebase.database().ref('delivery_ongoing_order/'+orderKey).remove()){
-				alert("DR No. " + dr_no + " has been delivered successfully.");
-        		window.location.href = 'delivery_ongoing_order.html';
-			}
-
-            var total = 0;
-            firebase.database().ref('purchase_order/'+po_no_key+'/item').once('value', function(itemSnapshot){
-                itemSnapshot.forEach(function(itemChildSnapshot){
-
-                    balance = itemChildSnapshot.val().balance;
-                    total = Number(total) + Number(balance);
-            
-                });
-            });
-
-            if(total == 0){
-                firebase.database().ref('purchase_order_closed').orderByChild('po_no_key').equalTo(po_no_key).once('value', function(closedSnapshot){
-                    console.log(closedSnapshot.val());
-
-                    var updateStatus = {
-                        status: 'CLOSED'
-                    }
-
-                    firebase.database().ref('purchase_order_closed/'+closedSnapshot.key).update(updateStatus);
-                })
-            }
 		});
     }
 
