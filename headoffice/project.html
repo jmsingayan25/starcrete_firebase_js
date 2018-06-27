@@ -209,6 +209,55 @@
  //        });
  //    }
 
+    function submitForm(){
+
+        event.preventDefault();
+
+        var myTbody = "";
+        var search_text = document.getElementById('search').value;
+
+        firebase.database().ref('project/'+clientKeyId).orderByChild('project_name').on('child_added', function(projectSnapshot){
+
+            var text_project_name = projectSnapshot.val().project_name;
+            var text_project_address = projectSnapshot.val().project_address;
+
+            all_text = text_project_name + " " + text_project_address;
+
+            search = searchMatch(search_text, all_text);
+
+            if(search != null){
+
+                var project_name = projectSnapshot.val().project_name;
+                var project_address = projectSnapshot.val().project_address;
+
+                myTbody += "<tr><td><strong>" + project_name + "</strong></td>";
+                myTbody += "<td><strong>" + project_address + "</strong></td>";
+                myTbody += "<td>";
+
+                firebase.database().ref('project/'+clientKeyId+'/'+projectSnapshot.key+'/contact').orderByChild('project_contact_name').once('value', function(contactSnapshot){
+                    contactSnapshot.forEach(function(contactChildSnapshot){
+
+                        // console.log(childSnapshot.val());
+                        myTbody += "<div class='form-group'><div class='row' style=margin-bottom: 2px;><div class='col-md-6'><strong>" + contactChildSnapshot.val().project_contact_name + "</strong></div><div class='col-md-1'>-</div><div class='col-md-5'><strong>" + contactChildSnapshot.val().project_contact_no + "</strong></div></div></div>";
+                    });
+                });
+
+                myTbody += "</td>";
+                myTbody += "<td><div class='row' style='margin-bottom: 2px;'> <div class='col-md-12'> <a href='add_project_contact.html?projectKey=" + projectSnapshot.key + "&clientKey=" + clientKeyId + "'><button class='btn btn-sm btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='project_update_info.html?projectKey=" + projectSnapshot.key + "&clientKey=" + clientKeyId + "'><button class='btn btn-sm btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'> <a href='project_list_po.html?projectKey=" + projectSnapshot.key + "&clientKey=" + clientKeyId + "'> <button class='btn btn-sm btn-block' style='background-color: #388e3c; color: white;'><span class='fa fa-info-circle'></span> <strong>List of P.O.</strong></button> </a></div></div></td></tr>";
+
+            }
+        });
+
+        if(myTbody == ""){
+
+            myTbody = "<tr><td colspan='4' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+            document.getElementById("projectList").innerHTML = myTbody;
+        }else{
+            document.getElementById("projectList").innerHTML = myTbody;
+        }
+    }
+
     function tableData(){
 
         var myTbody = "";
@@ -243,11 +292,21 @@
             });
 
             myTbody += "</td>";
-            myTbody += "<td><div class='row' style='margin-bottom: 2px;'> <div class='col-md-12'> <a href='add_project_contact.html?projectKey=" + projectSnapshot.key + "&clientKey=" + clientKeyId + "'><button class='btn btn-sm btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='project_update_info.html?projectKey=" + projectSnapshot.key + "&clientKey=" + clientKeyId + "'><button class='btn btn-sm btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'> <a href='project_list_of_po.html?projectKey=" + projectSnapshot.key + "&clientKey=" + clientKeyId + "'> <button class='btn btn-sm btn-block' style='background-color: #388e3c; color: white;'><span class='fa fa-info-circle'></span> <strong>List of P.O.</strong></button> </a></div></div></td></tr>";
+            myTbody += "<td><div class='row' style='margin-bottom: 2px;'> <div class='col-md-12'> <a href='add_project_contact.html?projectKey=" + projectSnapshot.key + "&clientKey=" + clientKeyId + "'><button class='btn btn-sm btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='project_update_info.html?projectKey=" + projectSnapshot.key + "&clientKey=" + clientKeyId + "'><button class='btn btn-sm btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'> <a href='project_list_po.html?projectKey=" + projectSnapshot.key + "&clientKey=" + clientKeyId + "'> <button class='btn btn-sm btn-block' style='background-color: #388e3c; color: white;'><span class='fa fa-info-circle'></span> <strong>List of P.O.</strong></button> </a></div></div></td></tr>";
 
             document.getElementById('projectList').innerHTML = myTbody;
         });
     }
+
+    function searchMatch(searchWord, findWord){
+
+        parse_word = searchWord.replace(/\s+/g, '|').toLowerCase();
+        reg_word = new RegExp(parse_word, 'gi');
+        search = findWord.match(reg_word);
+
+        return search;
+    }
+
 </script>
 <style>
 .table_page{
@@ -399,48 +458,51 @@
 	                </div>
 	            </div>
 	            <div class="row">
-                <div class="col-md-12">
-                    <section class="panel">
-                         <header class="panel-heading">
-                            <div class="row">
-                                <form action="project.html">
-                                    <div class="input-group col-md-8" style="margin: 5px 0px 5px 0px;">
-                                        <div class="tooltips" data-original-title="Search Project Name or Address" data-placement="top">
-                                            <input type="text" name="search" class="form-control" placeholder="Search...">
+                    <div class="col-md-12">
+                        <form class="form-inline" onsubmit="return submitForm();">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                    <div class="row">
+                                        <form action="project.html">
+                                            <div class="input-group col-md-8" style="margin: 5px 0px 5px 0px;">
+                                                <div class="tooltips" data-original-title="Search Project Name or Address" data-placement="top">
+                                                    <input type="text" name="search" id="search" class="form-control" placeholder="Search...">
+                                                </div>
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-info" type="submit" name="search_site">
+                                                        <i class="fa fa-search"></i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </form>
+                                        <div class="pull-right" style="margin-top: 5px; margin-right: 5px;">
+                                            
+                                            <div id="link_add_project"></div>
                                         </div>
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-info" type="submit" name="search_site">
-                                                <i class="fa fa-search"></i>
-                                            </button>
-                                        </span>
                                     </div>
-                                </form>
-                                <div class="pull-right" style="margin-top: 5px; margin-right: 5px;">
-                                    
-                                    <div id="link_add_project"></div>
+                                </header>
+                                <div class="table-responsive filterable">
+                                    <table class="table table-striped table-bordered" id="myTable">
+                                        <thead>
+                                            <tr class="filterable">
+                                                <th colspan="4">
+                                                    <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
+                                                </th>
+                                            </tr>
+                                            <tr class="filters" style="background-color: #00a3cc;">
+                                                <th class="col-md-3"><input type="text" class="form-control" placeholder="Project Name" disabled></th>
+                                                <th class="col-md-4"><input type="text" class="form-control" placeholder="Address" disabled></th>
+                                                <th class="col-md-4"><input type="text" class="form-control" placeholder="Contact" disabled></th>
+                                                <th class="col-md-1" style="color: white;">Option</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="projectList">
+                                        </tbody>
+                                    </table>
                                 </div>
-                            </div>
-                        </header>
-                        <div class="table-responsive filterable">
-                            <table class="table table-striped table-bordered" id="myTable">
-                                <thead>
-                                    <tr class="filterable">
-                                        <th colspan="4">
-                                            <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
-                                        </th>
-                                    </tr>
-                                    <tr class="filters" style="background-color: #00a3cc;">
-                                        <th class="col-md-3"><input type="text" class="form-control" placeholder="Project Name" disabled></th>
-                                        <th class="col-md-4"><input type="text" class="form-control" placeholder="Address" disabled></th>
-                                        <th class="col-md-4"><input type="text" class="form-control" placeholder="Contact" disabled></th>
-                                        <th class="col-md-1" style="color: white;">Option</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="projectList">
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>
+                            </section>
+                        </form>
+                    </div>
                 </div>
 	        </section>
 	    </section>

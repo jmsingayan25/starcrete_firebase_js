@@ -154,47 +154,59 @@
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
-    // function tableData(){
+    function submitForm(){
 
-    //     var myTbody = "";
-    //     firebase.database().ref('client').orderByChild('client_name').on('value', function(snapshot){
-    //         snapshot.forEach(function(childSnapshot){
+        event.preventDefault();
 
-    //             var clientName = childSnapshot.val().client_name;
-    //             var clientAddress = childSnapshot.val().client_address;
-    //             var key = childSnapshot.key;
+        var myTbody = "";
+        var search_text = document.getElementById('search').value;
 
-    //             myTbody += "<tr><td><strong>" + clientName + "</strong></td>";
-    //             myTbody += "<td><strong>" + clientAddress + "</strong></td>";
-    //             myTbody += "<td>";
-    //             firebase.database().ref('client/'+childSnapshot.key+'/contact').orderByChild('client_contact_name').on('value',function(contactSnapshot){
-    //                 contactSnapshot.forEach(function(contactChildSnapshot){
-    //                     console.log(contactChildSnapshot.val());
-    //                     myTbody += "<div class='form-group'><div class='row' style=margin-bottom: 2px;><div class='col-md-6'><strong>" + contactChildSnapshot.val().client_contact_name + "</strong></div><div class='col-md-1'>-</div><div class='col-md-5'><strong>" + contactChildSnapshot.val().client_contact_no + "</strong></div></div></div>";
-    //                 });
-    //             });
+        firebase.database().ref('client').orderByChild('client_name').on('child_added', function(clientSnapshot){
 
-    //             myTbody += "</td>";
-    //             myTbody += "<td><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='add_client_contact.html?key=" + key + "'><button class='btn btn-sm btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='update_client_info.html?key=" + key + "'><button class='btn btn-sm btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='project.html?key=" + key + "' class='btn btn-sm btn-block' style='background-color: #388e3c; color: white;'><span class='fa fa-info-circle'></span> <strong>Projects</strong></a></div></div></td></tr>";
+            var text_client_name = clientSnapshot.val().client_name;
+            var text_client_address = clientSnapshot.val().client_address;
 
-    //             // console.log(JSON.stringify(childSnapshot));
-    //             document.getElementById("clientList").innerHTML = myTbody;
-    //         });
+            all_text = text_client_name + " " + text_client_address;
 
-    //         if(myTbody == ""){
+            search = searchMatch(search_text, all_text);
 
-    //             myTbody = "<tr><td colspan='4' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+            if(search != null){
 
-    //             document.getElementById("clientList").innerHTML = myTbody;
-    //         }
-    //     });
-    // }
+                var client_name = clientSnapshot.val().client_name;
+                var client_address = clientSnapshot.val().client_address;
+                var clientKey = clientSnapshot.key;
+
+                myTbody += "<tr><td><strong>" + client_name + "</strong></td>";
+                myTbody += "<td><strong>" + client_address + "</strong></td>";
+                myTbody += "<td>";
+
+                firebase.database().ref('client/'+clientKey+'/contact').orderByChild('client_contact_name').once('value',function(contactSnapshot){
+                    contactSnapshot.forEach(function(contactChildSnapshot){
+                            // console.log(contactChildSnapshot.val());
+
+                        myTbody += "<div class='form-group'><div class='row' style=margin-bottom: 2px;><div class='col-md-6'><strong>" + contactChildSnapshot.val().client_contact_name + "</strong></div><div class='col-md-1'>-</div><div class='col-md-5'><strong>" + contactChildSnapshot.val().client_contact_no + "</strong></div></div></div>";
+                    });
+                });
+
+                myTbody += "</td>";
+                myTbody += "<td><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='add_client_contact.html?key=" + clientKey + "'><button class='btn btn-sm btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='client_update_info.html?key=" + clientKey + "'><button class='btn btn-sm btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='project.html?key=" + clientKey + "' class='btn btn-sm btn-block' style='background-color: #388e3c; color: white;'><span class='fa fa-info-circle'></span> <strong>Projects</strong></a></div></div></td></tr>";
+            }
+        });
+
+        if(myTbody == ""){
+
+            myTbody = "<tr><td colspan='4' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+            document.getElementById("clientList").innerHTML = myTbody;
+        }else{
+            document.getElementById("clientList").innerHTML = myTbody;
+        }
+    }
 
     function tableData(){
 
         var myTbody = "";
         firebase.database().ref('client').orderByChild('client_name').on('child_added', function(clientSnapshot){
-            // console.log(clientSnapshot.key, clientSnapshot.val());
 
             var client_name = clientSnapshot.val().client_name;
             var client_address = clientSnapshot.val().client_address;
@@ -206,7 +218,6 @@
 
             firebase.database().ref('client/'+clientKey+'/contact').orderByChild('client_contact_name').once('value',function(contactSnapshot){
                 contactSnapshot.forEach(function(contactChildSnapshot){
-                        // console.log(contactChildSnapshot.val());
 
                     myTbody += "<div class='form-group'><div class='row' style=margin-bottom: 2px;><div class='col-md-6'><strong>" + contactChildSnapshot.val().client_contact_name + "</strong></div><div class='col-md-1'>-</div><div class='col-md-5'><strong>" + contactChildSnapshot.val().client_contact_no + "</strong></div></div></div>";
                 });
@@ -217,6 +228,15 @@
 
             document.getElementById("clientList").innerHTML = myTbody;
         });
+    }
+
+    function searchMatch(searchWord, findWord){
+
+        parse_word = searchWord.replace(/\s+/g, '|').toLowerCase();
+        reg_word = new RegExp(parse_word, 'gi');
+        search = findWord.match(reg_word);
+
+        return search;
     }
     
 </script>
@@ -372,44 +392,46 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <section class="panel">
-                            <header class="panel-heading">
-                                <div class="row">
-                                    <div class="input-group col-md-8" style="margin: 5px 0px 5px 0px;">
-                                        <div class="tooltips" data-original-title="Search Client or Address" data-placement="top">
-                                            <input type="text" name="search" id="search" class="form-control" placeholder="Search..." autocomplete="off">
+                        <form class="form-inline" onsubmit="return submitForm();">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                    <div class="row">
+                                        <div class="input-group col-md-8" style="margin: 5px 0px 5px 0px;">
+                                            <div class="tooltips" data-original-title="Search Client or Address" data-placement="top">
+                                                <input type="text" name="search" id="search" class="form-control" placeholder="Search..." autocomplete="off">
+                                            </div>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-info" type="submit" id="search_client" name="search_client">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </span>
                                         </div>
-                                        <span class="input-group-btn">
-                                            <button class="btn btn-info" type="submit" name="search_client">
-                                                <i class="fa fa-search"></i>
-                                            </button>
-                                        </span>
+                                        <div class="pull-right" style="margin-top: 5px; margin-right: 5px;">
+                                             <a href="add_client.html" class="btn btn-info"><span class="fa fa-plus"></span> <strong>Add Client</strong></a>
+                                        </div>
                                     </div>
-                                    <div class="pull-right" style="margin-top: 5px; margin-right: 5px;">
-                                         <a href="add_client.html" class="btn btn-info"><span class="fa fa-plus"></span> <strong>Add Client</strong></a>
-                                    </div>
+                                </header>
+                                <div class="table-responsive filterable">
+                                    <table class="table table-striped table-bordered" id="myTable">
+                                        <thead>
+                                            <tr class="filterable">
+                                                <th colspan="4">
+                                                    <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
+                                                </th>
+                                            </tr>
+                                            <tr class="filters" style="background-color: #00a3cc;">
+                                                <th class="col-md-4"><input type="text" class="form-control" placeholder="Client" disabled></th>
+                                                <th class="col-md-4"><input type="text" class="form-control" placeholder="Address" disabled></th>
+                                                <th class="col-md-4"><input type="text" class="form-control" placeholder="Contact" disabled></th>
+                                                <th class="col-md-1" style="color: white;">Option</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="clientList">        
+                                        </tbody>
+                                    </table>
                                 </div>
-                            </header>
-                            <div class="table-responsive filterable">
-                                <table class="table table-striped table-bordered" id="myTable">
-                                    <thead>
-                                        <tr class="filterable">
-                                            <th colspan="4">
-                                                <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
-                                            </th>
-                                        </tr>
-                                        <tr class="filters" style="background-color: #00a3cc;">
-                                            <th class="col-md-4"><input type="text" class="form-control" placeholder="Client" disabled></th>
-                                            <th class="col-md-4"><input type="text" class="form-control" placeholder="Address" disabled></th>
-                                            <th class="col-md-4"><input type="text" class="form-control" placeholder="Contact" disabled></th>
-                                            <th class="col-md-1" style="color: white;">Option</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="clientList">        
-                                    </tbody>
-                                </table>
-                            </div>
-                        </section>
+                            </section>
+                        </form>
                     </div>
                 </div>
             </section>
