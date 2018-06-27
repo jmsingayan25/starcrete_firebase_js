@@ -201,7 +201,7 @@
 
                 quantity = Number(itemChildsnapshot.val().quantity).toLocaleString('en');
                 balance = Number(itemChildsnapshot.val().balance).toLocaleString('en');
-
+                
                 itemTbody += "<tr><td><strong>" + count + "</strong></td>";
                 itemTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
                 itemTbody += "<td><strong>" + quantity + " pcs / " + balance + " pcs</strong></td>";
@@ -210,6 +210,7 @@
 
                 document.getElementById('itemList').innerHTML = itemTbody;
                 count++;
+
             });
         });
 
@@ -448,21 +449,37 @@
                     var time = new Date().toLocaleTimeString();
                     var item_no = itemChildsnapshot.val().item_no;
                     var balance = itemChildsnapshot.val().balance;
+                    var quantity = itemChildsnapshot.val().quantity;
                     var psi = itemChildsnapshot.val().psi || "";
 
+                    // var poData = {
+                    //     issued_po_plant: plant,
+                    //     delivered_plant: plant,
+                    //     po_no: po_no,
+                    //     item_no: item_no,
+                    //     psi: psi,
+                    //     balance: balance,
+                    //     date: date,
+                    //     time: time,
+                    //     po_no_key: po_no_key,
+                    //     reverseDate: firebase.database.ServerValue.TIMESTAMP,
+                    //     status: 'CLOSED',
+                    //     reason: input_reason
+                    // }
+
                     var poData = {
-                        issued_po_plant: plant,
-                        delivered_plant: plant,
-                        po_no: po_no,
-                        item_no: item_no,
-                        psi: psi,
-                        balance: balance,
                         date: date,
-                        time: time,
+                        delivered_plant: plant,
+                        issued_po_plant: plant,
+                        item_no: item_no,
+                        po_no: po_no,
                         po_no_key: po_no_key,
+                        psi: psi,
+                        quantity: balance,
+                        reason: input_reason,
                         reverseDate: firebase.database.ServerValue.TIMESTAMP,
                         status: 'CLOSED',
-                        reason: input_reason
+                        time: time
                     }
                     // console.log(poData);
                     var postData = firebase.database().ref('purchase_order_closed');
