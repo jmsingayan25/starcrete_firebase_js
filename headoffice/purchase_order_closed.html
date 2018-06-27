@@ -268,75 +268,79 @@
                 endDate = new Date(endDate).toLocaleDateString('en');
             }
 
-            firebase.database().ref('purchase_order_closed').orderByChild('date').startAt(fromDate).endAt(endDate).on('child_added', function(poCloseSnapshot){
+            // firebase.database().ref('purchase_order_closed').orderByChild('date').startAt(fromDate).endAt(endDate).on('child_added', function(poCloseSnapshot){
+            firebase.database().ref('purchase_order_closed').orderByChild('reverseDate').on('child_added', function(poCloseSnapshot){
 
-                if(poCloseSnapshot.val().delivered_plant == plant){
+                if(poCloseSnapshot.val().date >= fromDate && poCloseSnapshot.val().date <= endDate){
 
-                    firebase.database().ref('purchase_order_closed/'+poCloseSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
-                        projectSnapshot.forEach(function(projectChildSnapshot){
+                    if(poCloseSnapshot.val().delivered_plant == plant){
 
-                            text_po_no = poCloseSnapshot.val().po_no.toLowerCase();
-                            text_item_no = poCloseSnapshot.val().item_no.toLowerCase();
-                            text_project_name = projectChildSnapshot.val().project_name.toLowerCase();
-                            text_project_address = projectChildSnapshot.val().project_address.toLowerCase();
+                        firebase.database().ref('purchase_order_closed/'+poCloseSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
+                            projectSnapshot.forEach(function(projectChildSnapshot){
 
-                            all_text = text_po_no + " " + text_item_no + " " + text_project_name + " " + text_project_address;
+                                text_po_no = poCloseSnapshot.val().po_no.toLowerCase();
+                                text_item_no = poCloseSnapshot.val().item_no.toLowerCase();
+                                text_project_name = projectChildSnapshot.val().project_name.toLowerCase();
+                                text_project_address = projectChildSnapshot.val().project_address.toLowerCase();
 
-                            search = searchMatch(search_text, all_text);
+                                all_text = text_po_no + " " + text_item_no + " " + text_project_name + " " + text_project_address;
 
-                            if(search != null){
+                                search = searchMatch(search_text, all_text);
 
-                                po_no = poCloseSnapshot.val().po_no;
-                                item_no = poCloseSnapshot.val().item_no;
-                                psi = poCloseSnapshot.val().psi;
+                                if(search != null){
 
-                                if(psi != ""){
-                                    psi_ext = " (" + psi + " PSI)";
-                                }else{
-                                    psi_ext = "";
+                                    po_no = poCloseSnapshot.val().po_no;
+                                    item_no = poCloseSnapshot.val().item_no;
+                                    psi = poCloseSnapshot.val().psi;
+
+                                    if(psi != ""){
+                                        psi_ext = " (" + psi + " PSI)";
+                                    }else{
+                                        psi_ext = "";
+                                    }
+
+                                    quantity = poCloseSnapshot.val().quantity || "";
+                                    balance = poCloseSnapshot.val().balance || "";
+                                    project_name = projectChildSnapshot.val().project_name;
+                                    project_address = projectChildSnapshot.val().project_address;
+                                    date = dateFormat(poCloseSnapshot.val().date);
+                                    status = poCloseSnapshot.val().status;
+                                    reason = poCloseSnapshot.val().reason;
+
+                                    if(quantity != ""){
+                                        closed_quantity = Number(quantity).toLocaleString('en');
+                                    }else{
+                                        closed_quantity = Number(balance).toLocaleString('en');
+                                    }
+
+                                    myTbody += "<tr><td><strong>" + count + "</strong></td>";
+                                    myTbody += "<td><strong>" + po_no + "</strong></td>";
+                                    myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+                                    myTbody += "<td><strong>" + closed_quantity + " pcs</strong></td>";
+                                    myTbody += "<td><strong>" + project_name + "</strong></td>";
+                                    myTbody += "<td><strong>" + project_address + "</strong></td>";
+                                    myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+
+                                    firebase.database().ref('purchase_order_closed/'+poCloseSnapshot.key+'/contact').once('value', function(contactSnapshot){
+                                        contactSnapshot.forEach(function(contactChildSnapshot){
+
+                                            contact_name = contactChildSnapshot.val().contact_name;
+                                            contact_no = contactChildSnapshot.val().contact_no;
+                                            myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+                                        }); 
+                                    });
+
+                                    myTbody += "</td>";
+                                    myTbody += "<td><strong>" + date + "</strong></td>";
+                                    myTbody += "<td><strong>" + status + "</strong></td>";
+                                    myTbody += "<td><strong>" + reason + "</strong></td></tr>";
+
+                                    // document.getElementById('orderList').innerHTML = myTbody;
+                                    count++;
                                 }
-
-                                quantity = poCloseSnapshot.val().quantity || "";
-                                balance = poCloseSnapshot.val().balance || "";
-                                project_name = projectChildSnapshot.val().project_name;
-                                project_address = projectChildSnapshot.val().project_address;
-                                date = dateFormat(poCloseSnapshot.val().date);
-                                status = poCloseSnapshot.val().status;
-                                reason = poCloseSnapshot.val().reason;
-
-                                if(quantity != ""){
-                                    closed_quantity = Number(quantity).toLocaleString('en');
-                                }else{
-                                    closed_quantity = Number(balance).toLocaleString('en');
-                                }
-
-                                myTbody += "<tr><td><strong>" + count + "</strong></td>";
-                                myTbody += "<td><strong>" + po_no + "</strong></td>";
-                                myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
-                                myTbody += "<td><strong>" + closed_quantity + " pcs</strong></td>";
-                                myTbody += "<td><strong>" + project_name + "</strong></td>";
-                                myTbody += "<td><strong>" + project_address + "</strong></td>";
-                                myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
-
-                                firebase.database().ref('purchase_order_closed/'+poCloseSnapshot.key+'/contact').once('value', function(contactSnapshot){
-                                    contactSnapshot.forEach(function(contactChildSnapshot){
-
-                                        contact_name = contactChildSnapshot.val().contact_name;
-                                        contact_no = contactChildSnapshot.val().contact_no;
-                                        myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
-                                    }); 
-                                });
-
-                                myTbody += "</td>";
-                                myTbody += "<td><strong>" + date + "</strong></td>";
-                                myTbody += "<td><strong>" + status + "</strong></td>";
-                                myTbody += "<td><strong>" + reason + "</strong></td></tr>";
-
-                                // document.getElementById('orderList').innerHTML = myTbody;
-                                count++;
-                            }
+                            });
                         });
-                    });
+                    }
                 }
             });
         }
