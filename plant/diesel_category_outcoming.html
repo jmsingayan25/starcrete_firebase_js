@@ -134,7 +134,7 @@
                     }
                     
                     // tableData(plant);
-                    //AvailableStock();
+                    AvailableStock();
                     DisplayCategory();
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
@@ -219,21 +219,21 @@
     //     });
     // }
 
-    // function AvailableStock()
-    // {
-    //      firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot)
-    //     {
-    //         if (totalstockSnapshot.val() == null){ 
-    //             document.getElementById("stock").innerHTML = " 0 Liter(s)"}
-    //         else{
-    //             var get_totalStock = totalstockSnapshot.val().Liters;
-    //             document.getElementById("stock").innerHTML = get_totalStock + " Liter(s)";}
-    //         if(get_totalStock <= 3500)
-    //             {
-    //         document.getElementById("stock").style.color ="red";
-    //             }
-    //     });
-    // }
+    function AvailableStock()
+    {
+         firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(totalstockSnapshot)
+        {
+            if (totalstockSnapshot.val() == null){ 
+                document.getElementById("stock").innerHTML = " 0 Liter(s)"}
+            else{
+                var get_totalStock = totalstockSnapshot.val().Liters;
+                document.getElementById("stock").innerHTML = get_totalStock + " Liter(s)";}
+            if(get_totalStock <= 3500)
+                {
+            document.getElementById("stock").style.color ="red";
+                }
+        });
+    }
 
     // function disableButtonDone(textvalue)
     // {
