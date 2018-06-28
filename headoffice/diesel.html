@@ -149,6 +149,7 @@
         });
 
         // availableStock(plant);
+        tableData(plant);
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -310,8 +311,11 @@
 
         firebase.database().ref('available_stock/'+plant).on('value', function(stockSnapshot){
             console.log(stockSnapshot.val());
-
-            available_stock = Number(stockSnapshot.val().Liters).toLocaleString('en');
+            if(stockSnapshot.val().Liters == 0){
+                available_stock = 0;
+            }else{
+                available_stock = Number(stockSnapshot.val().Liters).toLocaleString('en');
+            }
             document.getElementById('id_stock').innerHTML = available_stock + " liter(s)";    
         });
 
@@ -406,7 +410,7 @@
             <div id="sidebar"  class="nav-collapse ">
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu">                
-                    <li class="active">
+                    <li class="">
                         <a class="" href="index.html">
                             <i class="icon_house"></i>
                             <span>History</span>

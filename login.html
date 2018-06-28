@@ -64,13 +64,15 @@
 					var uid = user.uid;
 					var uemail = user.email;
 
-					firebase.database().ref().child("users/"+uid).set({
+					var userInfo = {
 						firstname: "Lhizel",
 						lastname: "Romulo",
 						email: uemail,
 						position: "secretary",
 						office: "Delta"
-					});
+					}
+
+					firebase.database().ref("users/"+uid).set(userInfo);
 				});
 			}).catch(function(error) {
 				// Handle Errors here.
@@ -98,27 +100,9 @@
 
 					if(snapshot.val().office == "Head Office"){
 
-						localStorage.setItem("userUID", uid);
-						localStorage.setItem("userName", snapshot.val().firstname);
-						localStorage.setItem("userPosition", snapshot.val().position);
-						localStorage.setItem("userOffice", snapshot.val().office);
-						// console.log("UID: " + uid);
-						// console.log("First Name: " + snapshot.val().firstname);
-						// console.log("Last Name: " + snapshot.val().lastname);
-						// console.log("Email: " + snapshot.val().email);
-						// console.log("Position: " + snapshot.val().position);
-						// console.log("Office: " + snapshot.val().office);
-
 						window.location.href = "headoffice/index.html";
 						
 					}else if(snapshot.val().office == "Bravo" || snapshot.val().office == "Delta"){
-
-						// console.log("UID: " + uid);
-						// console.log("First Name: " + snapshot.val().firstname);
-						// console.log("Last Name: " + snapshot.val().lastname);
-						// console.log("Email: " + snapshot.val().email);
-						// console.log("Position: " + snapshot.val().position);
-						// console.log("Office: " + snapshot.val().office);
 						
 						window.location.href = "plant/index.html";
 					}
@@ -164,21 +148,8 @@
 
 						if(snapshot.val().office == "Head Office"){
 
-							console.log("UID: " + uid);
-							console.log("First Name: " + snapshot.val().firstname);
-							console.log("Last Name: " + snapshot.val().lastname);
-							console.log("Email: " + snapshot.val().email);
-							console.log("Position: " + snapshot.val().position);
-							console.log("Office: " + snapshot.val().office);
-
 							window.location.href = "headoffice/index.html";
 						}else{
-							console.log("UID: " + uid);
-							console.log("First Name: " + snapshot.val().firstname);
-							console.log("Last Name: " + snapshot.val().lastname);
-							console.log("Email: " + snapshot.val().email);
-							console.log("Position: " + snapshot.val().position);
-							console.log("Office: " + snapshot.val().office);
 							
 							window.location.href = "plant/index.html";
 						}
@@ -209,6 +180,14 @@
 		
 		initState();
     	document.getElementById('login-submit').addEventListener('click', signIn, false);
+
+    	var input_pass = document.getElementById('loginPassword');
+    	input_pass.addEventListener('keyup', function(event){
+    		event.preventDefault();
+    		if(event.keyCode === 13){
+    			signIn();
+    		}
+    	});
 		
     };
 

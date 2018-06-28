@@ -284,28 +284,32 @@
 
             console.log(fromDate, endDate);
 
-            firebase.database().ref('history/'+plant).orderByChild('date').startAt(fromDate).endAt(endDate).once('value', function(historySnapshot){
+            // firebase.database().ref('history/'+plant).orderByChild('date').startAt(fromDate).endAt(endDate).once('value', function(historySnapshot){
+            firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value', function(historySnapshot){
                 historySnapshot.forEach(function(historyChildSnapshot){
 
-                    console.log(historyChildSnapshot.key,historyChildSnapshot.val().date);
+                    if(historyChildSnapshot.val().date >= fromDate && historyChildSnapshot.val().date <= endDate){
 
-                    text_history = historyChildSnapshot.val().history.toLowerCase();
-                    text_type = historyChildSnapshot.val().type_of_transaction.toLowerCase();
+                        console.log(historyChildSnapshot.key,historyChildSnapshot.val().date);
 
-                    all_text = text_history + " " + text_type;
+                        text_history = historyChildSnapshot.val().history.toLowerCase();
+                        text_type = historyChildSnapshot.val().type_of_transaction.toLowerCase();
 
-                    search = searchMatch(search_text, all_text);
+                        all_text = text_history + " " + text_type;
 
-                    if(search != null){
-                        
-                        var type = historyChildSnapshot.val().type_of_transaction;   //Example of value
-                        var detail = historyChildSnapshot.val().history;   //Example of value
-                        var date = historyChildSnapshot.val().date;   //Example of value
+                        search = searchMatch(search_text, all_text);
 
-                        myTbody += "<tr><td><strong>" + type + "</strong></td>";
-                        myTbody += "<td><strong>" + detail + "</strong></td>";
-                        myTbody += "<td><strong>" + date + "</strong></td></tr>";
+                        if(search != null){
+                            
+                            var type = historyChildSnapshot.val().type_of_transaction;   //Example of value
+                            var detail = historyChildSnapshot.val().history;   //Example of value
+                            var date = historyChildSnapshot.val().date;   //Example of value
 
+                            myTbody += "<tr><td><strong>" + type + "</strong></td>";
+                            myTbody += "<td><strong>" + detail + "</strong></td>";
+                            myTbody += "<td><strong>" + date + "</strong></td></tr>";
+
+                        }
                     }
                 });
 
@@ -504,6 +508,7 @@
                         <ul class="sub">
                             <li><a class="" href="purchase_order.html?plant=Bravo">Purchase Order</a></li>                          
                             <li><a class="" href="delivery_ongoing_order.html?plant=Bravo">Delivery Page</a></li>
+                            <li><a class="" href="diesel.html?plant=Bravo">Diesel</a></li>
                         </ul>
                     </li>  
                     <li class="sub-menu">
@@ -515,6 +520,7 @@
                         <ul class="sub">
                             <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>                          
                             <li><a class="" href="delivery_ongoing_order.html?plant=Delta">Delivery Page</a></li>
+                            <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
                         </ul>
                     </li>  
                     <li class="sub-menu">

@@ -236,25 +236,29 @@
                 endDate = new Date(endDate).toLocaleDateString('en');
             }
 
-            firebase.database().ref('history/'+plant).orderByChild('date').startAt(fromDate).endAt(endDate).once('value', function(historySnapshot){
+            // firebase.database().ref('history/'+plant).orderByChild('date').startAt(fromDate).endAt(endDate).once('value', function(historySnapshot){
+            firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value', function(historySnapshot){
                 historySnapshot.forEach(function(historyChildSnapshot){
 
-                    text_history = historyChildSnapshot.val().history.toLowerCase();
-                    text_type = historyChildSnapshot.val().type_of_transaction.toLowerCase();
+                    if(historyChildSnapshot.val().date >= fromDate && historyChildSnapshot.val().date <= endDate){
 
-                    all_text = text_history + " " + text_type;
+                        text_history = historyChildSnapshot.val().history.toLowerCase();
+                        text_type = historyChildSnapshot.val().type_of_transaction.toLowerCase();
 
-                    search = searchMatch(search_text, all_text);
+                        all_text = text_history + " " + text_type;
 
-                    if(search != null){
-                        console.log(historyChildSnapshot.key, historyChildSnapshot.val());
-                        var type = historyChildSnapshot.val().type_of_transaction;
-                        var history = historyChildSnapshot.val().history;
-                        var date = historyChildSnapshot.val().date;
+                        search = searchMatch(search_text, all_text);
 
-                        myTbody += "<tr><td><strong>" + type + "</strong></td>";
-                        myTbody += "<td><strong>" + history + "</strong></td>";
-                        myTbody += "<td><strong>" + date + "</strong></td></tr>";
+                        if(search != null){
+                            console.log(historyChildSnapshot.key, historyChildSnapshot.val());
+                            var type = historyChildSnapshot.val().type_of_transaction;
+                            var history = historyChildSnapshot.val().history;
+                            var date = historyChildSnapshot.val().date;
+
+                            myTbody += "<tr><td><strong>" + type + "</strong></td>";
+                            myTbody += "<td><strong>" + history + "</strong></td>";
+                            myTbody += "<td><strong>" + date + "</strong></td></tr>";
+                        }
                     }
                 });
 
