@@ -8,8 +8,8 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="img/favicon.png">
 
-	<title>Incoming Diesel Form - Diesel</title>
-
+	<title>Outgoing Diesel Form - Diesel</title>
+	
 	<!-- Firebase App is always required and must be first -->
 	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
 
@@ -90,9 +90,9 @@
         // $input.on( "keyup", function( event ) {
 
         var $form = $( "#form" );
-        var $input = $form.find( "#quantity_in" );
+        var $input = $form.find( "#quantity_out" );
 
-        $form.on( "keyup", "#quantity_in", function( event ) {
+        $form.on( "keyup", "#quantity_out", function( event ) {
             
             
             // When user select text in the document, also abort.
@@ -118,7 +118,7 @@
                     $this.val( function() {
                         return ( input === 0 ) ? "" : input.toLocaleString( "en-US" );
                     } );
-        } );    
+        } ); 
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -132,7 +132,10 @@
                     if(plant == 'Head Office'){
                         window.location.href = '../headoffice/index.html';
                     }
+                    
                     // tableData(plant);
+                    AvailableStock();
+                    DisplayCategory();
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
@@ -143,119 +146,121 @@
             }
         });
 
-        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);  
+        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);     
     });
+     function DisplayCategory()
+    {
+        firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
+        {
+             document.getElementById("category_name").innerHTML = Snapshot.val().CurrentCategory;
 
+        });
+    }
     function submitForm()
     {
         event.preventDefault();
-        firebase.database().ref().child("available_stock/" + plant).once('value',function(CheckSnapshots)
+
+        firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(CheckSnapshot)
         {
-            if(CheckSnapshots.val() == null){
+            if (CheckSnapshot.val() == null) {
+                alert("Fill Incoming Required");}
+            else 
+            {
+            firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
+            {  
+             var quantity_out = document.getElementById('quantity_out').value;
+             quantity_out = quantity_out.replace(",","");
+             var truck_no = document.getElementById('truck_no').value;
+             var operator = document.getElementById('operator').value;
+             var date = new Date().toLocaleDateString('en');
+             var time = new Date().toLocaleTimeString('en');
 
-                firebase.database().ref().child("incoming_diesel/" + plant).once('value',function(CheckSnapshot)
-                {
-                var po_no = document.getElementById('po_no').value;
-                var dr_no = document.getElementById('dr_no').value;
-                var quantity_in = document.getElementById('quantity_in').value;
-                quantity_in = quantity_in.replace(",","");
-                var supplier = document.getElementById('supplier').value;
-                var truck_no = document.getElementById('truck_no').value;
-                var date = new Date().toLocaleDateString('en');
-                var time = new Date().toLocaleTimeString('en');
-                //
-                var liters_bravo = quantity_in;
-                var stock_available = {Liters: liters_bravo};
-                firebase.database().ref().child("available_stock/" + plant).set(stock_available );
-                //
-                var currentStockCopy = liters_bravo;
-                transactionType = "In";
-                var currentStockHolder = {
-                    po_no: po_no, 
-                    dr_no: dr_no, 
-                    quantity_in: quantity_in,
-                    supplier: supplier.toUpperCase(), truck_no: truck_no.toUpperCase(),
-                    reverseDate:firebase.database.ServerValue.TIMESTAMP,
-                    date: date,time: time,
-                    currentstockCopy: currentStockCopy,
-                    TransactionType: transactionType};
+             var get_liters = CheckSnapshot.val().Liters;
+             var decrease_int_liters = Number(get_liters) - Number(quantity_out);
+             var decrease_string_liters = decrease_int_liters.toString();
+             var new_liters = decrease_string_liters;
+             var stock_available  = {Liters: new_liters};
+             firebase.database().ref().child("available_diesel_category/" + plant).set(stock_available); 
 
-                var postData = firebase.database().ref('incoming_diesel/' + plant);
+                 var currentStockCopy = new_liters;
+                 pickcategory =Snapshot.val().CurrentCategory;
+                 transactionType = "Out";
+                 var OutcomingData = { 
+                 quantity_out: quantity_out, 
+                 truck_no: truck_no.toUpperCase(), 
+                 operator: operator.toUpperCase(),
+                 reverseDate: firebase.database.ServerValue.TIMESTAMP,
+                 date: date, 
+                 time: time,
+                 currentstockCopy: currentStockCopy,
+                 TransactionType: transactionType,
+                 PickCategoryName: pickcategory };
+
+                var postData = firebase.database().ref('incoming_diesel_category/' + plant);
                 var newPostRef = postData.push();
-                newPostRef.set(currentStockHolder);
+                newPostRef.set(OutcomingData);
 
                 var postId = newPostRef.key;
                 
-                firebase.database().ref().child("incoming_diesel/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot)
+                firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot)
                 {
                     var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
                     var UpdateReverseDate = {reverseDate: StartReverseDate};
-                    /*firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
-                    console.log(StartReverseDate);*/
-                     if(firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate)){
-                        alert("Incoming diesel complete.");
-                         window.location.reload();
-                    }
-                });
-            });
-            }
-            else{
-                 firebase.database().ref().child("incoming_diesel/" + plant).once('value',function(CheckSnapshot)
-                {
-                    //
-                    var po_no = document.getElementById('po_no').value;
-                    var dr_no = document.getElementById('dr_no').value;
-                    var quantity_in = document.getElementById('quantity_in').value;
-                    quantity_in = quantity_in.replace(",","");
-                    var supplier = document.getElementById('supplier').value;
-                    var truck_no = document.getElementById('truck_no').value;
-                    var date = new Date().toLocaleDateString('en');
-                    var time = new Date().toLocaleTimeString('en');
-                    //
-                    var get_liters = CheckSnapshots.val().Liters;
-                    var total_int_liters = Number(quantity_in) + Number(get_liters);
-                    var total_string_liters = total_int_liters.toString();
-                    var new_liters = total_string_liters;
-                    var stock_available  ={Liters: new_liters};
-                    firebase.database().ref().child("available_stock/" + plant).set(stock_available );
-                    //
-                    var currentStockCopy = new_liters;
-                    transactionType = "In";
-                    var currentStockHolder = {
-                        po_no: po_no, dr_no: dr_no, 
-                        quantity_in: quantity_in,
-                        supplier: supplier.toUpperCase(), 
-                        truck_no: truck_no.toUpperCase(),
-                        reverseDate: firebase.database.ServerValue.TIMESTAMP,
-                        date: date,time: time,
-                        currentstockCopy: currentStockCopy,
-                        TransactionType: transactionType};
-
-                    var postData = firebase.database().ref('incoming_diesel/' + plant);
-                    var newPostRef = postData.push();
-                    newPostRef.set(currentStockHolder);
-                    var postId = newPostRef.key;
-                
-                    firebase.database().ref().child("incoming_diesel/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot)
-                    {
-                    var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
-                    var UpdateReverseDate = {reverseDate: StartReverseDate};
+                    
                     // firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
                     console.log(StartReverseDate);
-                    if(firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate)){
-                        alert("Incoming diesel complete.");
+
+                    if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
+                        alert("Outgoing diesel complete.");
                         window.location.reload();
                     }
-
-                    });
+                });
+            //lastdelivered
+            //end of else
                 });
             }
+
         });
     }
-</script>
+
+    function AvailableStock()
+    {
+         firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(totalstockSnapshot)
+        {
+            if (totalstockSnapshot.val() == null){ 
+                document.getElementById("stock").innerHTML = " 0 Liter(s)"}
+            else{
+                var get_totalStock = totalstockSnapshot.val().Liters;
+                document.getElementById("stock").innerHTML = get_totalStock + " Liter(s)";}
+            if(get_totalStock <= 3500)
+                {
+            document.getElementById("stock").style.color ="red";
+                }
+        });
+    }
+
+    function disableButtonDone(textvalue)
+    {
+          firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(totalstockSnapshot)
+        {
+            var getTotalLiters = totalstockSnapshot.val().Liters;
+            var quantity_out = document.getElementById('quantity_out').value;
+            var getStringQuantityOut = textvalue.replace(",","");
+            if (Number(getTotalLiters) <= Number(getStringQuantityOut)) 
+            {
+                document.getElementById("submit").disabled = true;
+            }
+            else
+            {
+               document.getElementById("submit").disabled = false; 
+            }
+
+        });
+    }
+</script>    
 </head>
 <body>
-	<!-- container section start -->
+    <!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -292,62 +297,62 @@
         </header>  
 
         <!--sidebar start-->
-	    <aside>
-	        <div id="sidebar"  class="nav-collapse ">
-	            <!-- sidebar menu start-->
-	            <ul class="sidebar-menu">                
-	                <li class="">
-	                    <a class="" href="index.html">
-	                        <i class="icon_house"></i>
-	                        <span>History</span>
-	                    </a>
-	                </li>
-	                <li class="active">
+        <aside>
+            <div id="sidebar"  class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu">                
+                    <li class="">
+                        <a class="" href="index.html">
+                            <i class="icon_house"></i>
+                            <span>History</span>
+                        </a>
+                    </li>
+                    <li class="active">
                         <a class="" href="diesel.html">
                             <i class="fa fa-building"></i>
                             <span>Diesel</span>
                         </a>
                     </li>
-	                <li class="sub-menu">
-	                    <a href="javascript:;" class="">
-	                        <i class="fa fa-building"></i>
-	                        <span>Purchase Order</span>
-	                        <span class="menu-arrow arrow_carrot-down"></span>
-	                    </a>
-	                    <ul class="sub">
-	                        <li><a class="" href="purchase_order.html">Pending P.O.</a></li>
-	                        <!-- <li><a class="" href="purchase_closed_order.html">Closed P.O.</a></li> -->
-	                    </ul>
-	                </li>  
-	                <li class="sub-menu">
-	                    <a href="javascript:;" class="">
-	                        <i class="fa fa-building"></i>
-	                        <span>Delivery Order</span>
-	                        <span class="menu-arrow arrow_carrot-down"></span>
-	                    </a>
-	                    <ul class="sub">
-	                        <li><a class="" href="delivery_pending_order.html">Existing P.O. <span class='badge'><?html echo getCountPlantPo($db, $office); ?></span></a></li>    
-	                        <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span class="badge"><?html echo getDeliveryCountOnDeliveryOffice($db, $office); ?></span></a></li>                          
-	                        <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
-	                        <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
-	                    </ul>
-	                </li>  
-	            </ul>
-	            <!-- sidebar menu end-->
-	        </div>
-	    </aside>
-	    <!--sidebar end-->
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Purchase Order</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order.html">Pending P.O.</a></li>
+                            <!-- <li><a class="" href="purchase_closed_order.html">Closed P.O.</a></li> -->
+                        </ul>
+                    </li>  
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Delivery Order</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="delivery_pending_order.html">Existing P.O. <span class='badge'><?html echo getCountPlantPo($db, $office); ?></span></a></li>    
+                            <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span class="badge"><?html echo getDeliveryCountOnDeliveryOffice($db, $office); ?></span></a></li>                          
+                            <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
+                            <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
+                        </ul>
+                    </li>  
+                </ul>
+                <!-- sidebar menu end-->
+            </div>
+        </aside>
+        <!--sidebar end-->
 
-	    <section id="main-content">
+        <section id="main-content">
             <section class="wrapper">            
                 <!--overview start-->
                 <div class="row">
-                    <div class="col-md-12 page_links">
+                    <div class="col-md-12">
                         <!-- <h3 class="page-header"><i class="fa fa-home"></i> History</h3> -->
                         <ol class="breadcrumb">
                             <!-- <li><i class="fa fa-building"></i><?php echo $plant; ?></li> -->
                             <li><i class="icon_document"></i><a href="diesel.html">Diesel</a></li>             
-                            <li><i class="icon_document"></i>Incoming Diesel Form</li>             
+                            <li><i class="icon_document"></i>Outgoing Diesel Form</li>             
                         </ol>
                     </div>
                 </div>
@@ -359,28 +364,28 @@
                                     Details
                                 </header>
                                 <div class="panel-body">
+                                    <!-- <input type="hidden" id="stock" name="stock" value="<?php echo getStock($db, 'Diesel', $search_plant); ?>"> -->
                                     <div class="form-group">
-                                        <label for="po_no" class="col-md-4 control-label">P.O. No.<span class="required" style="color: red;">*</span></label>
+                                        <label for="category_name" class="col-md-4 control-label">Category Name</label>
                                         <div class="col-md-5">
-                                            <input type="text" name="po_no" id="po_no" class="form-control" autocomplete="off" required>
+                                            <strong><p class ="help-block" id ="category_name"></p></strong>
+                                            <!-- <input type="text" name="category_name" id="category_name" class="form-control" autocomplete="off" style="text-transform: uppercase;" required> -->
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="dr_no" class="col-md-4 control-label">DR No. <span class="required" style="color: red;">*</span></label>
+                                        <label for="quantity_out" class="col-md-4 control-label">Quantity (OUT)<span class="required" style="color: red;">*</span></label>
                                         <div class="col-md-5">
-                                            <input type="text" name="dr_no" id="dr_no" class="form-control" autocomplete="off" required>
+                                            <input type="text" id="quantity_out" name="quantity_out" class="form-control" onkeyup = "disableButtonDone(this.value)"autocomplete="off" required>
+                                            <!-- <span class="help-block" id="stock_warning" style="color: red; display: none;"><strong>Warning!</strong> Available Stock: <?php echo number_format(getStock($db, 'Diesel', $search_plant)) . " liters"; ?></span> -->
+                                            <span class="help-block" id="stock_ok">Available Stock: <span id="stock"></span></span> 
+
                                         </div>
+
                                     </div>
                                     <div class="form-group">
-                                        <label for="quantity_in" class="col-md-4 control-label">Quantity (IN)<span class="required" style="color: red;">*</span></label>
+                                        <label for="destination" class="col-md-4 control-label">Destination<span class="required" style="color: red;">*</span></label>
                                         <div class="col-md-5">
-                                            <input type="text" name="quantity_in" id="quantity_in" class="form-control" autocomplete="off" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="supplier" class="col-md-4 control-label">Supplier<span class="required" style="color: red;">*</span></label>
-                                        <div class="col-md-5">
-                                            <input type="text" name="supplier" id="supplier" class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+                                            <input type="text" name="destination" id="destination"class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -390,9 +395,15 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
+                                        <label for="operator" class="col-md-4 control-label">Operator / Driver<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-5">
+                                            <input type="text" name="operator" id="operator"class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <div class="col-md-offset-8 col-md-4">
                                             <input type="submit" name="submit" id="submit" value="Done" class="btn btn-primary" style="font-weight: bold;">
-                                            <a href="diesel.html" class="btn btn-default"><strong>Cancel</strong></a>
+                                            <a href="diesel_category.html" class="btn btn-default"><strong>Cancel</strong></a>
                                         </div>
                                     </div>
                                 </div>

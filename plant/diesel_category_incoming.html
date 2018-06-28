@@ -133,7 +133,7 @@
                         window.location.href = '../headoffice/index.html';
                     }
                     // tableData(plant);
-
+                    DisplayCategory();
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
@@ -146,15 +146,25 @@
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);  
     });
 
+    function DisplayCategory()
+    {
+        firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
+        {
+             document.getElementById("category_name").innerHTML = Snapshot.val().CurrentCategory;
+
+        });
+    }
     function submitForm()
     {
         event.preventDefault();
-        firebase.database().ref().child("available_stock/" + plant).once('value',function(CheckSnapshots)
+        firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(CheckSnapshots)
         {
             if(CheckSnapshots.val() == null){
 
-                firebase.database().ref().child("incoming_diesel/" + plant).once('value',function(CheckSnapshot)
+                firebase.database().ref().child("incoming_diesel_category/" + plant).once('value',function(CheckSnapshot)
                 {
+                firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
+                {          
                 var po_no = document.getElementById('po_no').value;
                 var dr_no = document.getElementById('dr_no').value;
                 var quantity_in = document.getElementById('quantity_in').value;
@@ -163,12 +173,14 @@
                 var truck_no = document.getElementById('truck_no').value;
                 var date = new Date().toLocaleDateString('en');
                 var time = new Date().toLocaleTimeString('en');
+                
                 //
                 var liters_bravo = quantity_in;
                 var stock_available = {Liters: liters_bravo};
-                firebase.database().ref().child("available_stock/" + plant).set(stock_available );
+                firebase.database().ref().child("available_diesel_category/" + plant).set(stock_available );
                 //
                 var currentStockCopy = liters_bravo;
+                pickcategory =Snapshot.val().CurrentCategory;
                 transactionType = "In";
                 var currentStockHolder = {
                     po_no: po_no, 
@@ -178,30 +190,34 @@
                     reverseDate:firebase.database.ServerValue.TIMESTAMP,
                     date: date,time: time,
                     currentstockCopy: currentStockCopy,
-                    TransactionType: transactionType};
+                    TransactionType: transactionType,
+                    PickCategoryName: pickcategory};
 
-                var postData = firebase.database().ref('incoming_diesel/' + plant);
+                var postData = firebase.database().ref('incoming_diesel_category/' + plant);
                 var newPostRef = postData.push();
                 newPostRef.set(currentStockHolder);
 
                 var postId = newPostRef.key;
                 
-                firebase.database().ref().child("incoming_diesel/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot)
-                {
+                firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot)
+                    {
                     var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
                     var UpdateReverseDate = {reverseDate: StartReverseDate};
                     /*firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
                     console.log(StartReverseDate);*/
-                     if(firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate)){
+                     if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
                         alert("Incoming diesel complete.");
-                         window.location.reload();
-                    }
-                });
+                        window.location.reload();
+                        }
+                    });
+            });
             });
             }
             else{
-                 firebase.database().ref().child("incoming_diesel/" + plant).once('value',function(CheckSnapshot)
+                firebase.database().ref().child("incoming_diesel_category/" + plant).once('value',function(CheckSnapshot)
                 {
+                firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
+                {  
                     //
                     var po_no = document.getElementById('po_no').value;
                     var dr_no = document.getElementById('dr_no').value;
@@ -217,9 +233,11 @@
                     var total_string_liters = total_int_liters.toString();
                     var new_liters = total_string_liters;
                     var stock_available  ={Liters: new_liters};
-                    firebase.database().ref().child("available_stock/" + plant).set(stock_available );
+                    firebase.database().ref().child("available_diesel_category/" + plant).set(stock_available );
+                    //
                     //
                     var currentStockCopy = new_liters;
+                    pickcategory = Snapshot.val().CurrentCategory;
                     transactionType = "In";
                     var currentStockHolder = {
                         po_no: po_no, dr_no: dr_no, 
@@ -229,25 +247,33 @@
                         reverseDate: firebase.database.ServerValue.TIMESTAMP,
                         date: date,time: time,
                         currentstockCopy: currentStockCopy,
-                        TransactionType: transactionType};
+                        TransactionType: transactionType,
+                        PickCategoryName: pickcategory};
 
-                    var postData = firebase.database().ref('incoming_diesel/' + plant);
+                    var postData = firebase.database().ref('incoming_diesel_category/' + plant);
                     var newPostRef = postData.push();
                     newPostRef.set(currentStockHolder);
                     var postId = newPostRef.key;
                 
-                    firebase.database().ref().child("incoming_diesel/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot)
-                    {
-                    var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
-                    var UpdateReverseDate = {reverseDate: StartReverseDate};
-                    // firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
-                    console.log(StartReverseDate);
-                    if(firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate)){
-                        alert("Incoming diesel complete.");
-                        window.location.reload();
-                    }
+                    firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot){
+                        var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
+                        var UpdateReverseDate = {reverseDate: StartReverseDate};;
 
-                    });
+                        if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
+                        alert("Incoming diesel complete.");
+                        window.location.reload();}
+                        });
+                    //separate total
+                     // var getdataCurrentCategory = CheckSnapshot.val().PickCategoryName;
+                     // var getCurrentCategory = document.getElementById("category_name").value;
+
+                     // if (true) 
+                     // {
+                        
+                     // }
+                 //end of seperate
+
+                });
                 });
             }
         });
@@ -360,6 +386,13 @@
                                 </header>
                                 <div class="panel-body">
                                     <div class="form-group">
+                                        <label for="category_name" class="col-md-4 control-label">Category Name</label>
+                                        <div class="col-md-5">
+                                            <strong><p class ="help-block" id ="category_name"></p></strong>
+                                            <!-- <input type="text" name="category_name" id="category_name" class="form-control" autocomplete="off" style="text-transform: uppercase;" required> -->
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="po_no" class="col-md-4 control-label">P.O. No.<span class="required" style="color: red;">*</span></label>
                                         <div class="col-md-5">
                                             <input type="text" name="po_no" id="po_no" class="form-control" autocomplete="off" required>
@@ -392,7 +425,7 @@
                                     <div class="form-group">
                                         <div class="col-md-offset-8 col-md-4">
                                             <input type="submit" name="submit" id="submit" value="Done" class="btn btn-primary" style="font-weight: bold;">
-                                            <a href="diesel.html" class="btn btn-default"><strong>Cancel</strong></a>
+                                            <a href="diesel_category.html" class="btn btn-default"><strong>Cancel</strong></a>
                                         </div>
                                     </div>
                                 </div>
