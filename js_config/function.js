@@ -28,4 +28,13 @@
         return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
     }
 
+    function searchMatch(searchWord, findWord){
+
+        parse_word = searchWord.replace(/\s+/g, '|').toLowerCase();
+        reg_word = new RegExp(parse_word, 'gi');
+        search = findWord.match(reg_word);
+
+        return search;
+    }
+
     

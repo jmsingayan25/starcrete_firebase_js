@@ -230,7 +230,7 @@
 
                                 myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                 myTbody += "<td><strong>" + dr_no + "</strong></td>";
-                                myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + plant + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
+                                myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
                                 myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
                                 myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
                                 myTbody += "<td><strong>" + project_name + "</strong></td>";
@@ -313,7 +313,7 @@
 
                                     myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                     myTbody += "<td><strong>" + dr_no + "</strong></td>";
-                                    myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + plant + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
+                                    myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
                                     myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
                                     myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
                                     myTbody += "<td><strong>" + project_name + "</strong></td>";
@@ -395,7 +395,7 @@
 
                         myTbody += "<tr><td><strong>" + count + "</strong></td>";
                         myTbody += "<td><strong>" + dr_no + "</strong></td>";
-                        myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + plant + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
+                        myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
                         myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
                         myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
                         myTbody += "<td><strong>" + project_name + "</strong></td>";
@@ -493,15 +493,6 @@
                 document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
             }
         });
-    }
-
-    function searchMatch(searchWord, findWord){
-
-        parse_word = searchWord.replace(/\s+/g, '|').toLowerCase();
-        reg_word = new RegExp(parse_word, 'gi');
-        search = findWord.match(reg_word);
-
-        return search;
     }
 
 </script>

@@ -95,7 +95,9 @@
     function goAway() {
         clearTimeout(timer);
         timer = setTimeout(function() {
-            window.location.reload(true);
+            // window.location.reload(true);
+            tableData();
+            totalCountBadge();
         }, 60000);
     }
 
@@ -155,14 +157,14 @@
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
 
-                    var plant = snapshot.val().office;
+                    plant = snapshot.val().office;
 
                     if(plant == 'Head Office'){
                         window.location.href = '../headoffice/index.html';
                     }
                     
-                    tableData(plant);
-                    totalCountBadge(plant);
+                    tableData();
+                    totalCountBadge();
                     // goAway(plant);
                     
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
@@ -274,7 +276,7 @@
         }
     }
 
-	function tableData(plant){
+	function tableData(){
 
         var myTbody = "";
 
@@ -287,19 +289,19 @@
             }
         });
 
-        firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value', function(historySnapshot) {
-            historySnapshot.forEach(function(historyChildSnapshot){
+        firebase.database().ref('history/'+plant).orderByChild('reverseDate').on('child_added', function(historySnapshot) {
+            // historySnapshot.forEach(function(historyChildSnapshot){
 
-                var type = historyChildSnapshot.val().type_of_transaction;   //Example of value
-                var detail = historyChildSnapshot.val().history;   //Example of value
-                var date = dateFormat(historyChildSnapshot.val().date);   //Example of value
+                var type = historySnapshot.val().type_of_transaction;   //Example of value
+                var detail = historySnapshot.val().history;   //Example of value
+                var date = dateFormat(historySnapshot.val().date);   //Example of value
 
                 myTbody += "<tr><td><strong>" + type + "</strong></td>";
                 myTbody += "<td><strong>" + detail + "</strong></td>";
                 myTbody += "<td><strong>" + date + "</strong></td></tr>";
 
                 document.getElementById("historyList").innerHTML = myTbody;
-            });
+            // });
         });
 
         if(plant == 'Bravo'){
@@ -346,7 +348,7 @@
         return i;
     }
 
-    function totalCountBadge(plant){
+    function totalCountBadge(){
 
         po_count = 0;
         firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){

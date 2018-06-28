@@ -95,8 +95,9 @@
     function goAway() {
         clearTimeout(timer);
         timer = setTimeout(function() {
-            window.location.reload(true);
-            // tableData(plant);
+            // window.location.reload(true);
+            tableData();
+            totalCountBadge()
         }, 60000);
     }
 
@@ -160,8 +161,8 @@
                         window.location.href = '../headoffice/index.html';
                     }
                     
-                    tableData(plant);
-                    totalCountBadge(plant);
+                    tableData();
+                    totalCountBadge();
                     // goAway(plant);
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
@@ -354,7 +355,7 @@
         document.getElementById('id_plant_name').innerHTML = plant_name;
     }
 
-    function totalCountBadge(plant){
+    function totalCountBadge(){
 
         po_count = 0;
         firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){

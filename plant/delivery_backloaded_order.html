@@ -94,9 +94,9 @@
     function goAway() {
         clearTimeout(timer);
         timer = setTimeout(function() {
-            window.location.reload(true);
-            // tableData(plant);
-            // totalCountBadge(plant);
+            // window.location.reload(true);
+            tableData();
+            totalCountBadge();
         }, 60000);
     }
 
@@ -162,8 +162,8 @@
                         window.location.href = '../headoffice/index.html';
                     }
                     
-                    tableData(plant);
-                    totalCountBadge(plant);
+                    tableData();
+                    totalCountBadge();
                     // goAway(plant);
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
@@ -354,7 +354,7 @@
         }
     }
 
-    function tableData(plant){
+    function tableData(){
 
     	myTbody = "";
     	count = 1;
@@ -467,7 +467,7 @@
         return i;
     }
 
-    function totalCountBadge(plant){
+    function totalCountBadge(){
 
         po_count = 0;
         firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
@@ -498,15 +498,6 @@
         if(do_count == 0){
             document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
         }
-    }
-
-    function searchMatch(searchWord, findWord){
-
-        parse_word = searchWord.replace(/\s+/g, '|').toLowerCase();
-        reg_word = new RegExp(parse_word, 'gi');
-        search = findWord.match(reg_word);
-
-        return search;
     }
 
 </script>

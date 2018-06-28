@@ -195,7 +195,7 @@
         firebase.database().ref('incoming_diesel/'+plant).orderByChild('reverseDate').on('child_added', function(dieselSnapshot){
             // console.log(dieselSnapshot.val(), dateFormat(selectedDate));
 
-            if(dieselSnapshot.val().date == dateFormat(selectedDate)){
+            if(dieselSnapshot.val().Date_Input == dateFormat(selectedDate)){
 
                 currentstockCopy = Number(dieselSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
                 date = dieselSnapshot.val().date;
@@ -254,7 +254,7 @@
 
         // document.getElementById('search_date').innerHTML = currentDate;
 
-        firebase.database().ref('incoming_diesel/'+plant).orderByChild('date').equalTo(currentDate).once('value', function(dieselSnapshot){
+        firebase.database().ref('incoming_diesel/'+plant).orderByChild('Date_Input').equalTo(currentDate).once('value', function(dieselSnapshot){
 
             // console.log(dieselSnapshot.val(), dateFormat(currentDate));
             if(dieselSnapshot.val() == null){
@@ -269,7 +269,7 @@
         firebase.database().ref('incoming_diesel/'+plant).orderByChild('reverseDate').on('child_added', function(dieselSnapshot){
 
             // console.log(dieselSnapshot.val().date, dateFormat(currentDate));
-            if(dieselSnapshot.val().date == dateFormat(currentDate)){
+            if(dieselSnapshot.val().Date_Input == dateFormat(currentDate)){
 
                 currentstockCopy = Number(dieselSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
                 date = dieselSnapshot.val().date;
