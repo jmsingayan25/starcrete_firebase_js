@@ -87,8 +87,7 @@
     function goAway() {
         clearTimeout(timer);
         timer = setTimeout(function() {
-            // window.location.reload(true);
-            DisplayCurrentData();
+            window.location.reload(true);
         }, 60000);
     }
 
@@ -166,84 +165,86 @@
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
-function Go()
-{
-   event.preventDefault();
-   var myTbody = "";
+// function Go()
+// {
+//    event.preventDefault();
+//    var myTbody = "";
 
-        if (document.getElementById('date_view').value != "") 
-        {
-            date = dateFormat(document.getElementById('date_view').value);
-        }else
-        {
-            date = new Date().toLocaleDateString("en");
-        }
-        var GetStringDate = date.toString();
+//         if (document.getElementById('date_view').value != "") 
+//         {
+//             date = dateFormat(document.getElementById('date_view').value);
+//         }else
+//         {
+//             date = new Date().toLocaleDateString("en");
+//         }
+//         var GetStringDate = date.toString();
 
-        firebase.database().ref('incoming_diesel/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
-        DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
+//         firebase.database().ref('incoming_diesel/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
+//         DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
-                 if(GetStringDate == dieselChildSnapshot.val().Date_Input)
-                {
-                var truckno = dieselChildSnapshot.val().truck_no;
-                var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
-                var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
-                var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
-                var time = dieselChildSnapshot.val().time_input;
-                var drno = dieselChildSnapshot.val().dr_no || "";
-                console.log(quantityin);
-                //var operator =  || "";
-                var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
-                var address = dieselChildSnapshot.val().destination || "";
-                if (quantityin == "NaN") 
-                {
-                    quantityholder = "";
-                }
-                else
-                {
-                    quantityholder = quantityin + " liter(s)" ;
-                }
-                if (quantityout == "NaN") 
-                {
-                    quantityoutholder = "";
-                }
-                else
-                {
-                    quantityoutholder = quantityout + " liter(s)";
-                }
-                myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
-                myTbody += "<td><strong>" + suppliername + "</strong></td>";
-                myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
-                myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
-                myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
-                myTbody += "<td><strong>" + address + "</strong></td>";
-                myTbody += "<td><strong>" + time + "</strong></td>";
-                myTbody += "<td><strong>" + drno + "</strong></td></tr>"; 
-                document.getElementById("DieselList").innerHTML = myTbody; 
-                }
-        });
-        if (myTbody == ""){
-            myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-            document.getElementById("DieselList").innerHTML = myTbody;
-        }else{
-            document.getElementById("DieselList").innerHTML = myTbody;
-        }
-            document.getElementById("Search_day").innerHTML = dateFormat(date);
-    });
+//                  if(GetStringDate == dieselChildSnapshot.val().Date_Input)
+//                 {
+//                 var truckno = dieselChildSnapshot.val().truck_no;
+//                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
+//                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
+//                 var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
+//                 var time = dieselChildSnapshot.val().time_input;
+//                 var drno = dieselChildSnapshot.val().dr_no || "";
+//                 console.log(quantityin);
+//                 //var operator =  || "";
+//                 var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
+//                 var address = dieselChildSnapshot.val().destination || "";
+//                 if (quantityin == "NaN") 
+//                 {
+//                     quantityholder = "";
+//                 }
+//                 else
+//                 {
+//                     quantityholder = quantityin + " liter(s)" ;
+//                 }
+//                 if (quantityout == "NaN") 
+//                 {
+//                     quantityoutholder = "";
+//                 }
+//                 else
+//                 {
+//                     quantityoutholder = quantityout + " liter(s)";
+//                 }
+//                 myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+//                 myTbody += "<td><strong>" + suppliername + "</strong></td>";
+//                 myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+//                 myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
+//                 myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
+//                 myTbody += "<td><strong>" + address + "</strong></td>";
+//                 myTbody += "<td><strong>" + time + "</strong></td>";
+//                 myTbody += "<td><strong>" + drno + "</strong></td></tr>"; 
+//                 document.getElementById("DieselList").innerHTML = myTbody; 
+//                 }
+//         });
+//         if (myTbody == ""){
+//             myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+//             document.getElementById("DieselList").innerHTML = myTbody;
+//         }else{
+//             document.getElementById("DieselList").innerHTML = myTbody;
+//         }
+//             document.getElementById("Search_day").innerHTML = dateFormat(date);
+//     });
         
-}
+// }
  
 function DisplayCurrentData()
 {
     var myTbody = "";
     //start
+    firebase.database().ref('diesel_current_date_print/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselPrintransaction) {
     firebase.database().ref('incoming_diesel/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
         DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
+                document.getElementById("stateDate").innerHTML = DieselPrintransaction.val().printCurrentDate;
                 var date = dieselChildSnapshot.val().Date_Input;
                 var CurrentDate = new Date();
 
-                 if(dateFormat(CurrentDate) == date)
+                 if(document.getElementById("stateDate").innerHTML == date)
                 {
                 var truckno = dieselChildSnapshot.val().truck_no;
                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
@@ -278,6 +279,8 @@ function DisplayCurrentData()
             myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
             document.getElementById("DieselList").innerHTML = myTbody; 
         }else{document.getElementById("DieselList").innerHTML = myTbody; }
+          window.print();
+    });
     });
     //end
      firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot)
@@ -296,196 +299,61 @@ function DisplayCurrentData()
         var options = { year: "numeric", month: "long", day: "numeric" };
         var LastDayHolder = new Date (lastDaySnapshot.val().date).toLocaleDateString("en",options); 
         document.getElementById("last_day").innerHTML = LastDayHolder;
-
      });
+
 }
 
-function datePrint()
-{
-      event.preventDefault();
-      var date = dateFormat(document.getElementById('date_view').value);
-      var GetStringDate = date.toString();
-
-      firebase.database().ref().child("diesel_current_date_print/" + plant).once('value',function(Snapshot)
-        {
-                var text_date = {printCurrentDate:GetStringDate};
-                firebase.database().ref().child("diesel_current_date_print/" + plant).set(text_date);
-
-                //window.location.href ="diesel_transaction_print.html";
-                window.open("diesel_transaction_print.html","_blank");
-        });
-}
 </script>
 <style>
 
-.filterable .panel-heading .pull-right {
-    margin-top: -20px;
-}
-.filterable .filters input[disabled] {
-    background-color: transparent;
-    text-align: center;
-    border: none;
-    cursor: auto;
-    box-shadow: none;
-    padding: 0;
-    height: auto;
-}
-.filterable .filters input[disabled]::-webkit-input-placeholder {
-    color: white;
-    text-align: center;
-    font-weight: bold;
-}
-.filterable .filters input[disabled]::-moz-placeholder {
-     color: white;
-     text-align: center;
-     font-weight: bold;
-}
-.filterable .filters input[disabled]:-ms-input-placeholder {
-     color: white;
-     text-align: center;
-     font-weight: bold;
-}
+
 </style>
 </head>
 <body>
 	<!-- container section start -->
     <section id="container" class="">
-        <header class="header dark-bg">
-            <div class="toggle-nav">
-            <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
-            </div>
 
-            <!--logo start-->
-
-            <!--logo end-->
-            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
-            <div class="top-nav notification-row">                
-                <!-- notificatoin dropdown start-->
-                <ul class="nav pull-right top-menu">
-                    <!-- user login dropdown start-->
-                    <li class="dropdown">
-                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
-                        <!--  <span class="profile-ava">
-                        <img alt="" src="img/avatar1_small.jpg">
-                        </span> -->
-                            <span class="username" id="username"></span>
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu extended logout">
-                            <div class="log-arrow-up"></div>
-                            <li>
-                                <a href="" id="logoutBtn"><i class="icon_key_alt"></i> Log Out</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <!-- user login dropdown end -->
-                </ul>
-                <!-- notificatoin dropdown end-->
-            </div>
-        </header>  
-
-        <!--sidebar start-->
-	    <aside>
-	        <div id="sidebar"  class="nav-collapse ">
-	            <!-- sidebar menu start-->
-	            <ul class="sidebar-menu">                
-	                <li class="">
-	                    <a class="" href="index.html">
-	                        <i class="icon_house"></i>
-	                        <span>History</span>
-	                    </a>
-	                </li>
-	                <li class="active">
-                        <a class="" href="diesel.html">
-                            <i class="fa fa-building"></i>
-                            <span>Diesel</span>
-                        </a>
-                    </li>
-	                <li class="sub-menu">
-	                    <a href="javascript:;" class="">
-	                        <i class="fa fa-building"></i>
-	                        <span>Purchase Order</span>
-	                        <span class="menu-arrow arrow_carrot-down"></span>
-	                    </a>
-	                    <ul class="sub">
-	                        <li><a class="" href="purchase_order.html">Pending P.O.</a></li>
-	                        <!-- <li><a class="" href="purchase_closed_order.html">Closed P.O.</a></li> -->
-	                    </ul>
-	                </li>  
-	                <li class="sub-menu">
-	                    <a href="javascript:;" class="">
-	                        <i class="fa fa-building"></i>
-	                        <span>Delivery Order</span>
-	                        <span class="menu-arrow arrow_carrot-down"></span>
-	                    </a>
-	                    <ul class="sub">
-	                        <li><a class="" href="delivery_pending_order.html">Existing P.O. <span class='badge'><?html echo getCountPlantPo($db, $office); ?></span></a></li>    
-	                        <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span class="badge"><?html echo getDeliveryCountOnDeliveryOffice($db, $office); ?></span></a></li>                          
-	                        <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
-	                        <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
-	                    </ul>
-	                </li>  
-	            </ul>
-	            <!-- sidebar menu end-->
-	        </div>
-	    </aside>
-	    <!--sidebar end-->
-
+           
 	    <section id="main-content">
-            <section class="wrapper">            
+            <section class="wrapper">  
+            <div class = "row">
+             <a class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+             </div>          
                 <!--overview start-->
                 <div class="row">
-                    <div class="col-md-12">
-                        <!-- <h3 class="page-header"><i class="fa fa-home"></i> History</h3> -->
-                        <ol class="breadcrumb">
-                            <!-- <li><i class="fa fa-building"></i><?php echo $plant; ?></li> -->
-                            <li><i class="icon_document"></i>Diesel</li>             
-                        </ol>
-                    </div>
-                </div>	
-
-                <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-11">
                         <section class="panel">
                         	<form class="form-inline" onsubmit="return Go()">
-                                <header class="panel-heading">
+                                <header>
                                     <div class="row" style="margin-bottom: 5px;">
                                         <div class="col-md-6" style="margin: 5px 0px 0px 0px;">
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col-md-12" style=" white-space: nowrap;">
-                                                        <label for="date_view" class="col-md-3 control-label" style="white-space: nowrap;"><strong>Select Date:</strong></label>
-                                                        <div class="col-md-7">
-                                                            <input type="date" id = "date_view" name="date_view" class="form-control">   
-                                                            <button type="submit" id = "submitGo" class="btn btn-md btn-info" style=""><strong>Go</strong></button>                      
+                                                        <label for="date_view" class="col-md-3 control-label" style="white-space: nowrap;" ><strong>Date:</strong></label>
+                                                        <div class="col-md-8">
+                                                            <span id = stateDate></span>  
+                                                                            
                                                         </div> 
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-md-6" style="margin: 5px 0px 0px 0px;">
-                                            <div class="row">
-                                                <div class="col-md-8 col-md-offset-4">
-                                                    <div class="form-group">
-                                                        <button type="button" class="btn btn-info btn-md" onclick="location.href='diesel_incoming_form.html'"><span class="fa fa-plus"></span> <strong>Add Incoming Diesel</strong></button>
-                                                        <button type="button" class="btn btn-info btn-md" onclick="location.href='diesel_outgoing_form.html'"><span class="fa fa-plus"></span> <strong>Add Outgoing Diesel</strong></button>
-                                                    </div>
-                                                </div>    
-                                            </div>
+                                           
                                         </div>
                                     </div>
                                 </header>
                             </form>
-                            <div class="table-responsive filterable">
-                        		<table class="table table-striped table-bordered table-hover">
+                            <div class="table-responsive">
+                        		<table class="table table-bordered">
                         			<thead>
-                        				<tr class="filterable">
+                        				<tr >
                         					<th colspan="8">
                                                 <span>Available stock as of today: <span id="id_stock">
                                                 </span></span>
                                                 <br><span>Last Delivery: <span id ="last_day"></span></span><br>
-                                                <span>Search Date: <span id="Search_day"></span></span><br>
-                                                <button type="button" class="btn btn-info btn-md" onclick= "datePrint()"><strong>Print</strong></button>    
+                                                <span>Search Date: <span id="Search_day"></span></span>
                                                 <!-- <input type="hidden" id="hidden_stock" value="<?php echo getDieselStock($db, $search_plant); ?>">
                         						<?php 
                             						$date_view = date_create($_GET['date_view']); 
@@ -500,18 +368,18 @@ function datePrint()
                                                     ?>
                                                 </span><br>
                                                 <span>Search Date: <?php echo date_format($date_view,"F d, Y"); ?> -->
-                                                	<button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button></span>
+                                                	<!-- <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button></span> -->
                         					</th>
                         				</tr>
-                        				<tr class="filters" style="background-color: #00a3cc;">
-											<th class="col-md-1"><input type="text" class="form-control" placeholder="Truck No." disabled></th>
-											<th class="col-md-2"><input type="text" class="form-control" placeholder="Driver / Operator / Supplier" disabled></th>
-											<th class="col-md-1" style="text-align:center; color:white">Quantity (IN)</th>
-											<th class="col-md-1" style="text-align:center; color:white">Quantity (OUT)</th>
-											<th class="col-md-1" style="text-align:center; color:white">Current Stock</th>
-											<th class="col-md-2"><input type="text" class="form-control" placeholder="Address" disabled ></th>
-											<th class="col-md-1" style="text-align:center; color:white">Time</th>
-                                            <th class="col-md-1" style="text-align:center; color:white">DR No.</th>
+                        				<tr>
+											<th class="col-md-1" style="text-align:center;">Truck No.</th>
+											<th class="col-md-2" style="text-align:center;">Driver/Operator/Supplier</th>
+											<th class="col-md-1" style="text-align:center;">Quantity (IN)</th>
+											<th class="col-md-1" style="text-align:center;">Quantity (OUT)</th>
+											<th class="col-md-1" style="text-align:center;">Current Stock</th>
+											<th class="col-md-2" style="text-align:center;">Address</th>
+											<th class="col-md-1" style="text-align:center;">Time</th>
+                                            <th class="col-md-1" style="text-align:center;">DR No.</th>
 										</tr>
                         			</thead>
                         			<tbody id = "DieselList">
