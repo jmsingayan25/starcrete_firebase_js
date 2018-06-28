@@ -235,6 +235,7 @@
                     var stock_available  ={Liters: new_liters};
                     firebase.database().ref().child("available_diesel_category/" + plant).set(stock_available );
                     //
+                    //
                     var currentStockCopy = new_liters;
                     pickcategory = Snapshot.val().CurrentCategory;
                     transactionType = "In";
@@ -254,18 +255,24 @@
                     newPostRef.set(currentStockHolder);
                     var postId = newPostRef.key;
                 
-                    firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot)
-                    {
-                    var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
-                    var UpdateReverseDate = {reverseDate: StartReverseDate};
-                    // firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
-                    console.log(StartReverseDate);
-                    if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
-                        alert("Incoming diesel complete.");
-                        window.location.reload();
-                    }
+                    firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot){
+                        var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
+                        var UpdateReverseDate = {reverseDate: StartReverseDate};;
 
+                        if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
+                        alert("Incoming diesel complete.");
+                        window.location.reload();}
                         });
+                    //separate total
+                     // var getdataCurrentCategory = CheckSnapshot.val().PickCategoryName;
+                     // var getCurrentCategory = document.getElementById("category_name").value;
+
+                     // if (true) 
+                     // {
+                        
+                     // }
+                 //end of seperate
+
                 });
                 });
             }
