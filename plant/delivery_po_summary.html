@@ -96,6 +96,7 @@
         clearTimeout(timer);
         timer = setTimeout(function() {
             window.location.reload(true);
+            // tableData(plant);
         }, 60000);
     }
 
@@ -161,6 +162,7 @@
                     
                     tableData(plant);
                     totalCountBadge(plant);
+                    // goAway(plant);
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
@@ -180,9 +182,9 @@
 
     	var myTbody = "";
 
-        firebase.database().ref('delivery_ongoing_order/').orderByChild('po_no_key').equalTo(po_no_key).once('value').then(function(drOngoingSnapshot){
-            firebase.database().ref('delivery_delivered_order/').orderByChild('po_no_key').equalTo(po_no_key).once('value').then(function(drDeliveredSnapshot){   
-                 firebase.database().ref('delivery_backloaded_order/').orderByChild('po_no_key').equalTo(po_no_key).once('value').then(function(drBackloadedSnapshot){    
+        firebase.database().ref('delivery_ongoing_order/').orderByChild('po_no_key').equalTo(po_no_key).once('value', function(drOngoingSnapshot){
+            firebase.database().ref('delivery_delivered_order/').orderByChild('po_no_key').equalTo(po_no_key).once('value', function(drDeliveredSnapshot){   
+                 firebase.database().ref('delivery_backloaded_order/').orderByChild('po_no_key').equalTo(po_no_key).once('value', function(drBackloadedSnapshot){    
                     if(drOngoingSnapshot.val() == null && drDeliveredSnapshot.val() == null && drBackloadedSnapshot.val() == null){
 
                         myTbody = "<tr><td colspan='7' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
@@ -366,13 +368,21 @@
             });
         });
 
+        if(po_count == 0){
+            document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
+        }
+
         do_count = 0;
         firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot) {
-            console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
-            do_count++;
-            document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+            if(ongoingOrderSnapshot.val() != null){
+                do_count++;
+                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+            }
         });
 
+        if(do_count == 0){
+            document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+        }
     }
     
 </script>
@@ -397,17 +407,17 @@
     height: auto;
 }
 .filterable .filters input[disabled]::-webkit-input-placeholder {
-    color: gray;
+    color: white;
     text-align: left;
     font-weight: bold;
 }
 .filterable .filters input[disabled]::-moz-placeholder {
-     color: gray;
+     color: white;
      text-align: left;
      font-weight: bold;
 }
 .filterable .filters input[disabled]:-ms-input-placeholder {
-     color: gray;
+     color: white;
      text-align: left;
      font-weight: bold;
 }
@@ -462,6 +472,12 @@
 	                        <span>History</span>
 	                    </a>
 	                </li>
+                    <li class="">
+                        <a class="" href="diesel.html">
+                            <i class="fa fa-building"></i>
+                            <span>Diesel</span>
+                        </a>
+                    </li>
 	                <li class="sub-menu">
 	                    <a href="javascript:;" class="">
 	                        <i class="fa fa-building"></i>
@@ -551,18 +567,18 @@
 	                                                    <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
 	                                                </th>
 	                                            </tr>
-	                                            <tr class="filters">
+	                                            <tr class="filters" style="background-color: #00a3cc;">
 	                                                <!-- <th class="col-md-1">#</th> -->
 	                                                <!-- <th class="col-md-1">P.O. No.</th> -->
 	                                                <th class="col-md-1"><input type="text" class="form-control" placeholder="DR No." disabled></th>
 	                                                <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
-                                                    <th class="col-md-1">Quantity</th>
-	                                                <th class="col-md-1">Gate Pass</th>
+                                                    <th class="col-md-1" style="color: white">Quantity</th>
+	                                                <th class="col-md-1" style="color: white">Gate Pass</th>
 	                                                <!-- <th class="col-md-2"><input type="text" class="form-control" placeholder="Project Name" disabled></th> -->
 	                                                <!-- <th class="col-md-2"><input type="text" class="form-control" placeholder="Address" disabled></th> -->
-                                                    <th class="col-md-1">Date Transaction</th>
-	                                                <th class="col-md-1">Plant</th>
-	                                                <th class="col-md-2">Status</th>
+                                                    <th class="col-md-1" style="color: white">Date Transaction</th>
+	                                                <th class="col-md-1" style="color: white">Plant</th>
+	                                                <th class="col-md-2" style="color: white">Status</th>
 	                                            </tr>
 	                                        </thead>
 	                                        <tbody id="orderList">
@@ -578,9 +594,9 @@
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered">
                                     <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Contact No.</th>
+                                        <tr style="background-color: #00a3cc;">
+                                            <th style="color: white;">Name</th>
+                                            <th style="color: white;">Contact No.</th>
                                         </tr>
                                     </thead>
                                     <tbody id="contactList">

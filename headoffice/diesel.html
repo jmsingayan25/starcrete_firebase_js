@@ -90,13 +90,14 @@
 
 <script>
 	
-	var value_plant = null;
+	var plant = getUrlParameter("plant");
     var timer = null;
 
     function goAway() {
         clearTimeout(timer);
         timer = setTimeout(function() {
-            window.location.reload(true);
+            // window.location.reload(true);
+            tableData(plant);
         }, 60000);
     }
 
@@ -147,6 +148,8 @@
             }
         });
 
+        // availableStock(plant);
+
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
 
@@ -168,7 +171,170 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
+        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='diesel.html?plant=" + plant + "'>Diesel</a></li>";
+
 	});
+
+    function submitForm(){
+        
+        event.preventDefault();
+
+        var myTbody = "";
+        var selectedDate = document.getElementById('date_view').value;
+
+        if(selectedDate == ""){
+            selectedDate = new Date().toLocaleDateString();
+        }
+
+        var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+        var searchDate = new Date(selectedDate).toLocaleDateString('en', options);
+
+        document.getElementById('search_date').innerHTML = searchDate;
+
+        firebase.database().ref('incoming_diesel/'+plant).orderByChild('reverseDate').on('child_added', function(dieselSnapshot){
+            // console.log(dieselSnapshot.val(), dateFormat(selectedDate));
+
+            if(dieselSnapshot.val().date == dateFormat(selectedDate)){
+
+                currentstockCopy = Number(dieselSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
+                date = dieselSnapshot.val().date;
+                dr_no = dieselSnapshot.val().dr_no || "";
+                po_no = dieselSnapshot.val().po_no;
+                quantity_in = dieselSnapshot.val().quantity_in || "";
+                supplier = dieselSnapshot.val().supplier || "";
+                time = dieselSnapshot.val().time;
+                truck_no = dieselSnapshot.val().truck_no;
+
+                quantity_out = dieselSnapshot.val().quantity_out || "";
+                address = dieselSnapshot.val().destination || "";
+                operator = dieselSnapshot.val().operator || "";
+
+                if(quantity_in != ""){
+                    quantity_in_string = Number(quantity_in).toLocaleString('en') +  " liter(s)";
+                }else{
+                    quantity_in_string = "";
+                }
+
+                if(quantity_out != ""){
+                    quantity_out_string = Number(quantity_out).toLocaleString('en') + " liter(s)";
+                }else{
+                    quantity_out_string = "";
+                }
+
+                myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
+                myTbody += "<td><strong>" + supplier + "</strong></td>";
+                myTbody += "<td><strong>" + quantity_in_string + "</strong></td>";
+                myTbody += "<td><strong>" + quantity_out_string + "</strong></td>";
+                myTbody += "<td><strong>" + currentstockCopy + "</strong></td>";
+                myTbody += "<td><strong>" + address + "</strong></td>";
+                myTbody += "<td><strong>" + time + "</strong></td>";
+                myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
+
+                document.getElementById('dieselList').innerHTML = myTbody;
+
+            }
+        });
+
+        if(myTbody == ""){
+
+            myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+            document.getElementById('dieselList').innerHTML = myTbody;
+        }else{
+            document.getElementById('dieselList').innerHTML = myTbody;
+        }
+    }
+
+    function tableData(plant){
+
+        var myTbody = "";
+        var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+        var currentDate = new Date().toLocaleDateString('en');
+
+        // document.getElementById('search_date').innerHTML = currentDate;
+
+        firebase.database().ref('incoming_diesel/'+plant).orderByChild('date').equalTo(currentDate).once('value', function(dieselSnapshot){
+
+            // console.log(dieselSnapshot.val(), dateFormat(currentDate));
+            if(dieselSnapshot.val() == null){
+
+                myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                document.getElementById('dieselList').innerHTML = myTbody;
+
+            }
+        });
+
+        firebase.database().ref('incoming_diesel/'+plant).orderByChild('reverseDate').on('child_added', function(dieselSnapshot){
+
+            // console.log(dieselSnapshot.val().date, dateFormat(currentDate));
+            if(dieselSnapshot.val().date == dateFormat(currentDate)){
+
+                currentstockCopy = Number(dieselSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
+                date = dieselSnapshot.val().date;
+                dr_no = dieselSnapshot.val().dr_no || "";
+                po_no = dieselSnapshot.val().po_no;
+                quantity_in = dieselSnapshot.val().quantity_in || "";
+                supplier = dieselSnapshot.val().supplier || "";
+                time = dieselSnapshot.val().time;
+                truck_no = dieselSnapshot.val().truck_no;
+
+                quantity_out = dieselSnapshot.val().quantity_out || "";
+                address = dieselSnapshot.val().destination || "";
+                operator = dieselSnapshot.val().operator || "";
+
+                if(quantity_in != ""){
+                    quantity_in_string = Number(quantity_in).toLocaleString('en') +  " liter(s)";
+                }else{
+                    quantity_in_string = "";
+                }
+
+                if(quantity_out != ""){
+                    quantity_out_string = Number(quantity_out).toLocaleString('en') + " liter(s)";
+                }else{
+                    quantity_out_string = "";
+                }
+
+                myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
+                myTbody += "<td><strong>" + supplier + "</strong></td>";
+                myTbody += "<td><strong>" + quantity_in_string + "</strong></td>";
+                myTbody += "<td><strong>" + quantity_out_string + "</strong></td>";
+                myTbody += "<td><strong>" + currentstockCopy + "</strong></td>";
+                myTbody += "<td><strong>" + address + "</strong></td>";
+                myTbody += "<td><strong>" + time + "</strong></td>";
+                myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
+
+                document.getElementById('dieselList').innerHTML = myTbody;
+            }
+        });
+
+        firebase.database().ref('available_stock/'+plant).on('value', function(stockSnapshot){
+            console.log(stockSnapshot.val());
+
+            available_stock = Number(stockSnapshot.val().Liters).toLocaleString('en');
+            document.getElementById('id_stock').innerHTML = available_stock + " liter(s)";    
+        });
+
+        firebase.database().ref('incoming_diesel/'+plant).orderByChild('date').limitToLast(1).on('child_added', function(deliverySnapshot){
+            var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+
+            date = new Date(deliverySnapshot.val().date).toLocaleDateString('en', options);
+            document.getElementById('id_last_delivery').innerHTML = date;
+        });
+    }
+
+    // function availableStock(plant){
+
+    //     var currentDate = new Date().toLocaleDateString();
+
+    //     firebase.database().ref('available_stock/'+plant).on('value', function(stockSnapshot){
+    //         console.log(stockSnapshot.val());
+
+    //         available_stock = Number(stockSnapshot.val().Liters).toLocaleString('en');
+    //         document.getElementById('id_today_stock').innerHTML = "Available stock as of today, " + currentDate + ": " + available_stock;    
+    //     });
+    // }
+
 </script>
 <style>
 .filterable .panel-heading .pull-right {
@@ -184,17 +350,17 @@
     height: auto;
 }
 .filterable .filters input[disabled]::-webkit-input-placeholder {
-    color: gray;
+    color: white;
     text-align: left;
     font-weight: bold;
 }
 .filterable .filters input[disabled]::-moz-placeholder {
-     color: gray;
+     color: white;
      text-align: left;
      font-weight: bold;
 }
 .filterable .filters input[disabled]:-ms-input-placeholder {
-     color: gray;
+     color: white;
      text-align: left;
      font-weight: bold;
 }
@@ -299,47 +465,23 @@
                 <div class="row">
                     <div class="col-md-12">
                         <!-- <h3 class="page-header"><i class="fa fa-home"></i> History</h3> -->
-                        <ol class="breadcrumb">
-                            <li><i class="fa fa-building"></i><?php echo $plant; ?></li>
-                            <li><i class="icon_document"></i><a href="diesel.php?office=<?php echo $search_plant; ?>">Diesel</a></li>             
-                        </ol>
+                        <ol class="breadcrumb" id="id_breadcrumb"></ol>
                     </div>
                 </div>	
                 <div class="row">
                     <div class="col-lg-12">
                         <section class="panel">
-                        	<form action="diesel.php" method="get" class="form-inline">
+                        	<form class="form-inline" onsubmit="return submitForm();">
 	                            <header class="panel-heading">
 	                                <div class="row" style="margin-bottom: 5px;">
-	                                	<!-- <div class="col-md-12" style="margin-bottom: 5px;">
-											<div class="col-md-2">
-												Select Date:
-	                                			<input type="date" name="date_view" class="form-control" value="<?php if(isset($_GET['date_view'])) { echo htmlentities ($_GET['date_view']); }?>">	
-											</div>
-                                            <div class="col-md-1">
-                                                <button type="submit" class="btn btn-md btn-info" style="margin-top: 35px; margin-left: -20px;"><strong>Go</strong></button>    
-                                            </div>
-	                                	</div> -->
-                                        <!-- <div class="form-group">
-                                            <div class="col-md-12" style="margin-top: 5px;">
-                                                <label for="date_view" class="col-md-3 control-label" style="white-space: nowrap;"><strong>Select Date:</strong></label>
-                                                <div class="col-md-6">
-                                                    <input type="date" name="date_view" class="form-control" value="<?php if(isset($_GET['date_view'])) { echo htmlentities ($_GET['date_view']); }?>">                        
-                                                </div>
-                                                <div class="col-md-1">
-                                                    <input type="submit" name="submit" id="submit" value="Go" class="btn btn-info" style="font-weight: bold;">
-                                                </div>
-                                            </div>
-                                        </div> -->
                                         <div class="col-md-6" style="margin: 5px 0px 0px 0px;">
                                             <div class="form-group">
                                                 <div class="row">
                                                     <div class="col-md-12" style=" white-space: nowrap;">
                                                         <label for="date_view" class="col-md-3 control-label" style="white-space: nowrap;"><strong>Select Date:</strong></label>
                                                         <div class="col-md-7">
-                                                            <input type="date" name="date_view" class="form-control">   
-                                                            <button type="submit" class="btn btn-md btn-info" style=""><strong>Go</strong></button> 
-                                                            <!-- <button class="btn btn-md btn-info" onclick="window.location.reload();"><strong><span class="fa fa-refresh fa-lg"></span></strong></button>   -->                    
+                                                            <input type="date" id="date_view" name="date_view" class="form-control">   
+                                                            <button type="submit" class="btn btn-md btn-info" style=""><strong>Go</strong></button>               
                                                         </div> 
                                                     </div>
                                                 </div>
@@ -352,27 +494,28 @@
                         		<table class="table table-striped table-bordered">
                         			<thead>
                         				<tr class="filterable">
-                        					<th colspan="7">
+                        					<th colspan="8">
                                                 <input type="hidden" id="hidden_stock">
                         						
-                                                <span>Available stock as of today, : <span id="warning_stock"> liters <span id="triangle" class="fa fa-exclamation-triangle" style="display: none;"></span></span></span><br>
-                                                <span>Last Delivery: 
+                                                <span>Available stock as of today: <span id="id_stock"></span></span><br>
+                                                <span>Last Delivery: <span id="id_last_delivery"></span>
                                                     
                                                 </span><br>
-                                                <span>Search Date:<button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button></span>
+                                                <span>Search Date: <span id="search_date"></span> <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button></span>
                         					</th>
                         				</tr>
-                        				<tr class="filters">
+                        				<tr class="filters" style="background-color: #00a3cc;">
 											<th class="col-md-1"><input type="text" class="form-control" placeholder="Truck No." disabled></th>
-											<th class="col-md-1"><input type="text" class="form-control" placeholder="Driver / Optr." disabled></th>
-											<th class="col-md-1">Quantity (IN)</th>
-											<th class="col-md-1">Quantity (OUT)</th>
-											<th class="col-md-1">Current Stock</th>
-											<th class="col-md-1"><input type="text" class="form-control" placeholder="Address" disabled></th>
-											<th class="col-md-1">Time</th>
+											<th class="col-md-2"><input type="text" class="form-control" placeholder="Driver / Optr. / Supplier" disabled></th>
+											<th class="col-md-1" style="color: white;">Quantity (IN)</th>
+											<th class="col-md-1" style="color: white;">Quantity (OUT)</th>
+											<th class="col-md-1" style="color: white;">Current Stock</th>
+											<th class="col-md-2"><input type="text" class="form-control" placeholder="Address" disabled></th>
+                                            <th class="col-md-1" style="color: white;">Time</th>
+											<th class="col-md-1" style="color: white;">Dr No.</th>
 										</tr>
                         			</thead>
-                        			<tbody>
+                        			<tbody id="dieselList">
                         			</tbody>
                         		</table>
                         	</div>

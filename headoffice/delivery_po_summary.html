@@ -327,17 +327,17 @@
     height: auto;
 }
 .filterable .filters input[disabled]::-webkit-input-placeholder {
-    color: gray;
+    color: white;
     text-align: left;
     font-weight: bold;
 }
 .filterable .filters input[disabled]::-moz-placeholder {
-     color: gray;
+     color: white;
      text-align: left;
      font-weight: bold;
 }
 .filterable .filters input[disabled]:-ms-input-placeholder {
-     color: gray;
+     color: white;
      text-align: left;
      font-weight: bold;
 }
@@ -462,14 +462,13 @@
                                                         <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                                     </th>
                                                 </tr>
-                                                <tr class="filters">
-
+                                                <tr class="filters" style="background-color: #00a3cc;">
                                                     <th class="col-md-1"><input type="text" class="form-control" placeholder="DR No." disabled></th>
                                                     <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
-                                                    <th class="col-md-1">Quantity</th>
-                                                    <th class="col-md-1">Date Transaction</th>
-                                                    <th class="col-md-1">Plant</th>
-                                                    <th class="col-md-2">Status</th>
+                                                    <th class="col-md-1" style="color: white;">Quantity</th>
+                                                    <th class="col-md-1" style="color: white;">Date Transaction</th>
+                                                    <th class="col-md-1" style="color: white;">Plant</th>
+                                                    <th class="col-md-2" style="color: white;">Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody id="orderList">
@@ -485,9 +484,9 @@
                             <div class="table-responsive">
                                 <table class="table table-striped table-bordered">
                                     <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Contact No.</th>
+                                        <tr style="background-color: #00a3cc;">
+                                            <th style="color: white;">Name</th>
+                                            <th style="color: white;">Contact No.</th>
                                         </tr>
                                     </thead>
                                     <tbody id="contactList">

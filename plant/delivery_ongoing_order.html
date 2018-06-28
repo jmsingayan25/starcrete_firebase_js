@@ -95,6 +95,8 @@
         clearTimeout(timer);
         timer = setTimeout(function() {
             window.location.reload(true);
+            // tableData(plant);
+            // totalCountBadge(plant);
         }, 60000);
     }
 
@@ -162,8 +164,10 @@
                     
                     tableData(plant);
                     totalCountBadge(plant);
+                    // goAway(plant);
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
+                    document.getElementById('id_hidden_plant').innerHTML = "<input type='hidden' id='hidden_plant' value='" + plant + "'>"
                 },(error) => {
                     console.log(error);
                 });
@@ -176,12 +180,193 @@
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
+    function submitForm(){
+
+        event.preventDefault();
+
+        var myTbody = "";
+        var count = 1;
+        var fromDate = document.getElementById('start_date').value;
+        var endDate = document.getElementById('end_date').value;
+        var search_text = document.getElementById('search').value;
+        var plant = document.getElementById('hidden_plant').value;
+
+        if(fromDate == '' && endDate == ''){
+
+            firebase.database().ref('delivery_ongoing_order').orderByChild('reverseDate').on('child_added', function(orderSnapshot){
+
+                if(orderSnapshot.val().issued_dr_plant == plant){
+
+                    firebase.database().ref('delivery_ongoing_order/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
+                        projectSnapshot.forEach(function(projectChildSnapshot){
+
+                            text_dr_no = orderSnapshot.val().dr_no.toLowerCase();
+                            text_po_no = orderSnapshot.val().po_no.toLowerCase();
+                            text_item_no = orderSnapshot.val().item_no.toLowerCase();
+                            text_project_name = projectChildSnapshot.val().project_name.toLowerCase();
+                            text_project_address = projectChildSnapshot.val().project_address.toLowerCase();
+
+                            all_text = text_dr_no + " " + text_po_no + " " + text_item_no + " " + text_project_name + " " + text_project_address;
+
+                            search = searchMatch(search_text, all_text);
+
+                            if(search != null){
+
+                                var key = orderSnapshot.key;
+                                var dr_no = orderSnapshot.val().dr_no;
+                                var po_no = orderSnapshot.val().po_no;
+                                var item_no = orderSnapshot.val().item_no;
+                                var item_key = orderSnapshot.val().item_key;
+                                var psi = orderSnapshot.val().psi || "";
+
+                                if(psi != ""){
+                                    psi_ext = " (" + psi + " psi)";
+                                }else{
+                                    psi_ext = "";
+                                }
+
+                                var quantity = Number(orderSnapshot.val().quantity).toLocaleString('en');
+                                var project_name = projectChildSnapshot.val().project_name;
+                                var project_address = projectChildSnapshot.val().project_address;
+                                // var client_name = clientSnapshot2.val().client_name;
+                                var gate_pass = orderSnapshot.val().gate_pass;
+                                var date = dateFormat(orderSnapshot.val().date);
+
+                                myTbody += "<tr><td><strong>" + count + "</strong></td>";
+                                myTbody += "<td><strong>" + dr_no + "</strong></td>";
+                                myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "'\"><strong>" + po_no + "</strong></div></td>";
+                                myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+                                myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+                                myTbody += "<td><strong>" + project_name + "</strong></td>";
+                                myTbody += "<td><strong>" + project_address + "</strong></td>";
+                                myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+
+                                firebase.database().ref('delivery_ongoing_order/'+key+'/contact').once('value', function(contactSnapshot){
+                                    contactSnapshot.forEach(function(contactChildSnapshot){
+
+                                        contact_name = contactChildSnapshot.val().contact_name;
+                                        contact_no = contactChildSnapshot.val().contact_no;
+                                        
+                                        myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+                                    });
+                                });
+
+                                myTbody += "</td>";
+                                myTbody += "<td><strong>" + gate_pass + "</strong></td>";
+                                myTbody += "<td><strong>" + date + "</strong></td>";
+                                myTbody += "<td><a href='delivery_ongoing_update.html?key=" + key + "&itemKey=" + item_key + "' class='btn btn-sm btn-block' style='background-color: #ffa000; color: white; margin-bottom: 3px;'><span class='fa fa-edit'></span> <strong>Update</strong></a><button type='submit' class='btn btn-sm btn-block' style='margin-bottom: 3px; width: 85px; background-color: #388e3c; color: white;' data-toggle='modal' data-target='#deliveryModal" + count + "'><span class='fa fa-check'></span> <strong>Delivered</strong></button><form onsubmit=\"if(confirm('Proceed?')){deliveredForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><div class='modal fade' id='deliveryModal" + count + "' role='dialog'><div class='modal-dialog modal-md'><div class='modal-content'><div class='modal-header'><h4 class='modal-title'>Delivery Details</h4></div><div class='modal-body' style='text-align: left;'><input type='hidden' id='hidden_key' name='hidden_key' value='" + key + "'><div class='row'><div class='col-md-6'><label>DR No.:</label> <strong>" + dr_no + "</strong></div><div class='col-md-6'><label>Date Issued:</label> <strong>" + date + "</strong></div></div><div class='row'><div class='col-md-6'><label>P.O. No.:</label> <strong>" + po_no + "</strong></div><div class='col-md-6'><label>Date Delivered:</label> <input type='date' name='option_delivered' id='option_delivered' onchange='dateChange(this.value);' required></div></div><div class='row'><div class='col-md-6'><label>Gate Pass:</label> <strong>" + gate_pass + "</strong></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Item Information</strong></div></div><div class='row'><div class='col-md-6'><label>Item</label></div><div class='col-md-6'> <strong>" + item_no + " " + psi_ext + "</strong></div></div><div class='row'><div class='col-md-6'><label>Quantity</label></div><div class='col-md-6'> <strong>" + quantity + " pcs</strong></div></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Project Information</strong></div></div><div class='row'><div class='col-md-6'><label>Project Name</label></div><div class='col-md-6'> <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'><label>Project Address</label></div><div class='col-md-6'> <strong>" + project_address + "</strong></div></div></div></div><div class='modal-footer'><input type='submit' name='submit' id='submit' value='Confirm' class='btn btn-primary' style='font-weight: bold;'><button type='button' class='btn btn-default' data-dismiss='modal'><strong>Close</strong></button></div></div></div></div></form></strong><form onsubmit=\"if(confirm('Proceed?')){backloadForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' id='returned' name='returned' value='' class='btn btn-sm btn-block' style='background-color: #d32f2f; color: white; width: 85px;' ><span class='fa fa-close'></span> <strong>Backload</strong></button></form></td></tr>";
+
+                                document.getElementById('orderList').innerHTML = myTbody;
+                                count++;
+                            }
+                        });
+                    });
+                }
+            });
+        }else{
+
+            if(fromDate == ''){
+                fromDate = new Date().toLocaleDateString('en');
+            }else{
+                fromDate = new Date(fromDate).toLocaleDateString('en');
+            }
+
+            if(endDate == ''){
+                endDate = new Date().toLocaleDateString('en');
+            }else{
+                endDate = new Date(endDate).toLocaleDateString('en');
+            }
+
+            firebase.database().ref('delivery_ongoing_order').orderByChild('date').startAt(fromDate).endAt(endDate).on('child_added', function(orderSnapshot){
+
+                if(orderSnapshot.val().issued_dr_plant == plant){
+
+                    firebase.database().ref('delivery_ongoing_order/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
+                        projectSnapshot.forEach(function(projectChildSnapshot){
+
+                            text_dr_no = orderSnapshot.val().dr_no.toLowerCase();
+                            text_po_no = orderSnapshot.val().po_no.toLowerCase();
+                            text_item_no = orderSnapshot.val().item_no.toLowerCase();
+                            text_project_name = projectChildSnapshot.val().project_name.toLowerCase();
+                            text_project_address = projectChildSnapshot.val().project_address.toLowerCase();
+
+                            all_text = text_dr_no + " " + text_po_no + " " + text_item_no + " " + text_project_name + " " + text_project_address;
+
+                            search = searchMatch(search_text, all_text);
+
+                            if(search != null){
+
+                                var key = orderSnapshot.key;
+                                var dr_no = orderSnapshot.val().dr_no;
+                                var po_no = orderSnapshot.val().po_no;
+                                var item_no = orderSnapshot.val().item_no;
+                                var item_key = orderSnapshot.val().item_key;
+                                var psi = orderSnapshot.val().psi || "";
+
+                                if(psi != ""){
+                                    psi_ext = " (" + psi + " psi)";
+                                }else{
+                                    psi_ext = "";
+                                }
+
+                                var quantity = Number(orderSnapshot.val().quantity).toLocaleString('en');
+                                var project_name = projectChildSnapshot.val().project_name;
+                                var project_address = projectChildSnapshot.val().project_address;
+                                // var client_name = clientSnapshot2.val().client_name;
+                                var gate_pass = orderSnapshot.val().gate_pass;
+                                var date = dateFormat(orderSnapshot.val().date);
+
+                                myTbody += "<tr><td><strong>" + count + "</strong></td>";
+                                myTbody += "<td><strong>" + dr_no + "</strong></td>";
+                                myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "'\"><strong>" + po_no + "</strong></div></td>";
+                                myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+                                myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+                                myTbody += "<td><strong>" + project_name + "</strong></td>";
+                                myTbody += "<td><strong>" + project_address + "</strong></td>";
+                                myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+
+                                firebase.database().ref('delivery_ongoing_order/'+key+'/contact').once('value', function(contactSnapshot){
+                                    contactSnapshot.forEach(function(contactChildSnapshot){
+
+                                        contact_name = contactChildSnapshot.val().contact_name;
+                                        contact_no = contactChildSnapshot.val().contact_no;
+                                        
+                                        myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+                                    });
+                                });
+
+                                myTbody += "</td>";
+                                myTbody += "<td><strong>" + gate_pass + "</strong></td>";
+                                myTbody += "<td><strong>" + date + "</strong></td>";
+                                myTbody += "<td><a href='delivery_ongoing_update.html?key=" + key + "&itemKey=" + item_key + "' class='btn btn-sm btn-block' style='background-color: #ffa000; color: white; margin-bottom: 3px;'><span class='fa fa-edit'></span> <strong>Update</strong></a><button type='submit' class='btn btn-sm btn-block' style='margin-bottom: 3px; width: 85px; background-color: #388e3c; color: white;' data-toggle='modal' data-target='#deliveryModal" + count + "'><span class='fa fa-check'></span> <strong>Delivered</strong></button><form onsubmit=\"if(confirm('Proceed?')){deliveredForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><div class='modal fade' id='deliveryModal" + count + "' role='dialog'><div class='modal-dialog modal-md'><div class='modal-content'><div class='modal-header'><h4 class='modal-title'>Delivery Details</h4></div><div class='modal-body' style='text-align: left;'><input type='hidden' id='hidden_key' name='hidden_key' value='" + key + "'><div class='row'><div class='col-md-6'><label>DR No.:</label> <strong>" + dr_no + "</strong></div><div class='col-md-6'><label>Date Issued:</label> <strong>" + date + "</strong></div></div><div class='row'><div class='col-md-6'><label>P.O. No.:</label> <strong>" + po_no + "</strong></div><div class='col-md-6'><label>Date Delivered:</label> <input type='date' name='option_delivered' id='option_delivered' onchange='dateChange(this.value);' required></div></div><div class='row'><div class='col-md-6'><label>Gate Pass:</label> <strong>" + gate_pass + "</strong></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Item Information</strong></div></div><div class='row'><div class='col-md-6'><label>Item</label></div><div class='col-md-6'> <strong>" + item_no + " " + psi_ext + "</strong></div></div><div class='row'><div class='col-md-6'><label>Quantity</label></div><div class='col-md-6'> <strong>" + quantity + " pcs</strong></div></div></div><div style='margin: 5px 0px 5px 0px; background-color: #f2f2f2; padding: 0px 15px 0px 15px; border: 1px solid #0884e4;'><div class='row' style='padding-bottom: 5px;'><div class='col-md-12' style='text-align: center; background-color: #0884e4; color: white; padding: 5px;'><strong>Project Information</strong></div></div><div class='row'><div class='col-md-6'><label>Project Name</label></div><div class='col-md-6'> <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'><label>Project Address</label></div><div class='col-md-6'> <strong>" + project_address + "</strong></div></div></div></div><div class='modal-footer'><input type='submit' name='submit' id='submit' value='Confirm' class='btn btn-primary' style='font-weight: bold;'><button type='button' class='btn btn-default' data-dismiss='modal'><strong>Close</strong></button></div></div></div></div></form></strong><form onsubmit=\"if(confirm('Proceed?')){backloadForm(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' id='returned' name='returned' value='' class='btn btn-sm btn-block' style='background-color: #d32f2f; color: white; width: 85px;' ><span class='fa fa-close'></span> <strong>Backload</strong></button></form></td></tr>";
+
+                                document.getElementById('orderList').innerHTML = myTbody;
+                                count++;
+                            }
+                        });
+                    });
+                }
+            });
+        }
+
+        if(myTbody == ""){
+
+            myTbody = "<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+            document.getElementById("orderList").innerHTML = myTbody;
+
+        }else{
+            document.getElementById("orderList").innerHTML = myTbody;
+
+        }
+    }
+
     function tableData(plant){
 
         var myTbody = "";
         var count = 1;
 
-        firebase.database().ref('delivery_ongoing_order/').orderByChild('issued_dr_plant').equalTo(plant).once('value').then(function(drSnapshot){
+        firebase.database().ref('delivery_ongoing_order/').orderByChild('issued_dr_plant').equalTo(plant).once('value', function(drSnapshot){
             if(drSnapshot.val() == null){
 
                 myTbody = "<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
@@ -197,7 +382,7 @@
 
                 console.log(orderSnapshot.key, orderSnapshot.val());
                 firebase.database().ref('delivery_ongoing_order/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
-                    projectSnapshot.forEach(function(dOprojectChildSnapshot){
+                    projectSnapshot.forEach(function(projectChildSnapshot){
 
                         var key = orderSnapshot.key;
                         var dr_no = orderSnapshot.val().dr_no;
@@ -213,8 +398,8 @@
                         }
 
                         var quantity = Number(orderSnapshot.val().quantity).toLocaleString('en');
-                        var project_name = dOprojectChildSnapshot.val().project_name;
-                        var project_address = dOprojectChildSnapshot.val().project_address;
+                        var project_name = projectChildSnapshot.val().project_name;
+                        var project_address = projectChildSnapshot.val().project_address;
                         // var client_name = clientSnapshot2.val().client_name;
                         var gate_pass = orderSnapshot.val().gate_pass;
                         var date = dateFormat(orderSnapshot.val().date);
@@ -271,7 +456,7 @@
 
         // var currentDateTime = formatDate(date_value);
 
-    	firebase.database().ref().child('delivery_ongoing_order/'+orderKey).once('value').then(function(orderSnapshot){
+    	firebase.database().ref().child('delivery_ongoing_order/'+orderKey).once('value', function(orderSnapshot){
 
             var key = orderSnapshot.key;
             var time = new Date().toLocaleTimeString('en');
@@ -398,8 +583,9 @@
                 issued_po_plant: issued_po_plant,
                 delivered_plant: delivered_plant,
                 po_no: po_no,
+                po_no_key: po_no_key,
                 reverseDate: firebase.database.ServerValue.TIMESTAMP,
-                status: 'CLOSED',
+                status: '',
                 reason: 'DELIVERED'
             }
 
@@ -442,6 +628,28 @@
 				alert("DR No. " + dr_no + " has been delivered successfully.");
         		window.location.href = 'delivery_ongoing_order.html';
 			}
+
+            var total = 0;
+            firebase.database().ref('purchase_order/'+po_no_key+'/item').once('value', function(itemSnapshot){
+                itemSnapshot.forEach(function(itemChildSnapshot){
+
+                    balance = itemChildSnapshot.val().balance;
+                    total = Number(total) + Number(balance);
+            
+                });
+            });
+
+            if(total == 0){
+                firebase.database().ref('purchase_order_closed').orderByChild('po_no_key').equalTo(po_no_key).once('value', function(closedSnapshot){
+                    console.log(closedSnapshot.val());
+
+                    var updateStatus = {
+                        status: 'CLOSED'
+                    }
+
+                    firebase.database().ref('purchase_order_closed/'+closedSnapshot.key).update(updateStatus);
+                })
+            }
 		});
     }
 
@@ -505,8 +713,6 @@
 
                     firebase.database().ref('delivery_backloaded_order/'+postId+'/project_detail/'+projectChildSnapshot.key).set(projectData);
                 });
-            }, function(error){
-                console.log(error);
             });
 
             firebase.database().ref('delivery_ongoing_order/'+orderKey+'/contact').once('value', function(contactSnapshot){
@@ -519,8 +725,6 @@
 
                     firebase.database().ref('delivery_backloaded_order/'+postId+'/contact/'+contactChildSnapshot.key).set(contactData);
                 });
-            }, function(error){
-                console.log(error);
             });
 
             //update on child node: reverseDate
@@ -532,8 +736,6 @@
                 } 
 
                 firebase.database().ref('delivery_backloaded_order/'+postId).update(timeUpdate);
-            }, function(error){
-                console.log(error);
             });
 
             firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
@@ -544,8 +746,6 @@
                 }
 
                 firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).update(updateBalance);
-            }, function(error){
-                console.log(error);
             });
 
             var historyData = {
@@ -620,7 +820,6 @@
 
         po_count = 0;
         firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
-
             if(orderSnapshot.val() != null){
                 firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
                     itemSnapshot.forEach(function(itemChildSnapshot){
@@ -630,33 +829,36 @@
                         }
                     });
                 });
-            }else{
-                document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
-
             }
         });
 
-        do_count = 0;
-        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).once('value', function(ongoingOrderSnapshot) {
+        if(po_count == 0){
+            document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
+        }
 
+        do_count = 0;
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot) {
             if(ongoingOrderSnapshot.val() != null){
-                console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
                 do_count++;
                 document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
                 document.getElementById('id_count_ongoing_order1').innerHTML = "<span class='badge'>" + do_count + "</span>";
-            }else{
-                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
-                document.getElementById('id_count_ongoing_order1').innerHTML = "<span class='badge'>" + do_count + "</span>";
             }
         });
+
+        if(do_count == 0){
+            document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+            document.getElementById('id_count_ongoing_order1').innerHTML = "<span class='badge'>" + do_count + "</span>";
+        }
     }
 
-    // function formatDate(date) {
+    function searchMatch(searchWord, findWord){
 
-    //     var today = new Date(date);
+        parse_word = searchWord.replace(/\s+/g, '|').toLowerCase();
+        reg_word = new RegExp(parse_word, 'gi');
+        search = findWord.match(reg_word);
 
-    //     return today.getMonth()+1 + "/" + today.getDate() + "/" + today.getFullYear();
-    // }
+        return search;
+    }
 
 </script>
 <style>
@@ -684,17 +886,17 @@
     height: auto;
 }
 .filterable .filters input[disabled]::-webkit-input-placeholder {
-    color: gray;
+    color: white;
     text-align: left;
     font-weight: bold;
 }
 .filterable .filters input[disabled]::-moz-placeholder {
-     color: gray;
+     color: white;
      text-align: left;
      font-weight: bold;
 }
 .filterable .filters input[disabled]:-ms-input-placeholder {
-     color: gray;
+     color: white;
      text-align: left;
      font-weight: bold;
 }
@@ -748,6 +950,12 @@
 	                        <span>History</span>
 	                    </a>
 	                </li>
+                    <li class="">
+                        <a class="" href="diesel.html">
+                            <i class="fa fa-building"></i>
+                            <span>Diesel</span>
+                        </a>
+                    </li>
 	                <li class="sub-menu">
 	                    <a href="javascript:;" class="">
 	                        <i class="fa fa-building"></i>
@@ -803,14 +1011,15 @@
 	            <div class="row">
 	            	<div class="col-md-12">
 	                    <section class="panel">
-	                        <form class="form-inline">
+	                        <form class="form-inline" onsubmit="return submitForm();">
 	                        	<header class="panel-heading">
 	                                <div class="row" style="margin-bottom: 5px;">
+                                        <span id="id_hidden_plant"></span>
                                         <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="start_date">From:</label>
                                                 <div class="tooltips" data-original-title="Start date of transaction" data-placement="top">
-                                                    <input type="date" name="start_date" class="form-control">
+                                                    <input type="date" id="start_date" name="start_date" class="form-control">
                                                 </div>
                                             </div>
                                         </div>
@@ -818,13 +1027,13 @@
                                             <div class="form-group">
                                                 <label for="end_date">To:</label>
                                                 <div class="tooltips" data-original-title="End date of transaction" data-placement="top">
-                                                    <input type="date" name="end_date" class="form-control">
+                                                    <input type="date" id="end_date" name="end_date" class="form-control">
                                                 </div>
                                             </div>
                                         </div>  
                                         <div class="input-group col-md-5" style="margin: 38px 0px 0px 0px;">
                                             <div class="tooltips" data-original-title="Search DR No., P.O. No., Item, Project Name, Address or Contact" data-placement="top">
-                                                <input type="text" name="search" class="form-control" placeholder="Search...">
+                                                <input type="text" id="search" name="search" class="form-control" placeholder="Search...">
                                             </div>
                                             <span class="input-group-btn">
                                                 <button class="btn btn-info" type="submit" name="search_table">
@@ -856,18 +1065,18 @@
                                                 <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                             </th>
                                         </tr>
-                                        <tr class="filters">
-                                            <th class="col-md-1">#</th>
+                                        <tr class="filters" style="background-color: #00a3cc;">
+                                            <th class="col-md-1" style="color: white;">#</th>
                                             <th class="col-md-1"><input type="text" class="form-control" placeholder="DR No." disabled></th>
                                             <th class="col-md-1"><input type="text" class="form-control" placeholder="P.O. No." disabled></th>
                                             <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
-                                            <th class="col-md-1">Quantity</th>
+                                            <th class="col-md-1" style="color: white;">Quantity</th>
                                             <th class="col-md-2"><input type="text" class="form-control" placeholder="Project Name" disabled></th>
                                             <th class="col-md-2"><input type="text" class="form-control" placeholder="Address" disabled></th>
                                             <th class="col-md-1"><input type="text" class="form-control" placeholder="Contact" disabled></th>
-                                            <th class="col-md-1">Gate Pass</th>
-                                            <th class="col-md-1">Date Issued</th>
-                                            <th class="col-md-1">Action</th>
+                                            <th class="col-md-1" style="color: white;">Gate Pass</th>
+                                            <th class="col-md-1" style="color: white;">Date Issued</th>
+                                            <th class="col-md-1" style="color: white;">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="orderList">

@@ -233,44 +233,9 @@
         document.getElementById('id_plant_name').innerHTML = plant_name;
     }
 
-    function totalCountBadge(plant){
-
-        po_count = 0;
-        firebase.database().ref('purchase_order').once('value', function(orderSnapshot){
-
-            if(orderSnapshot.val() != null){
-                firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
-                    itemSnapshot.forEach(function(itemChildSnapshot){
-                        if(itemChildSnapshot.val().balance != 0){
-                            po_count++;
-                            document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
-                        }
-                    });
-                });
-            }else{
-                document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
-            }
-            
-        });
-
-        do_count = 0;
-        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).once('value', function(ongoingOrderSnapshot) {
-
-            if(ongoingOrderSnapshot.val() != null){
-                console.log(ongoingOrderSnapshot.key, ongoingOrderSnapshot.val()); 
-                do_count++;
-                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
-            }else{
-                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
-
-            }
-        });
-
-    }
-
     function itemList(){
 
-        firebase.database().ref('item').once('value').then(function(snapshot){
+        firebase.database().ref('item').once('value', function(snapshot){
             snapshot.forEach(function(childSnapshot){
                 $('[name="new_item_no"]').append("<option value='" + childSnapshot.val().item + "'>" + childSnapshot.val().item + "</option>");
             });
@@ -349,6 +314,39 @@
     	});
     }
 
+    function totalCountBadge(plant){
+
+        po_count = 0;
+        firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
+            if(orderSnapshot.val() != null){
+                firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
+                    itemSnapshot.forEach(function(itemChildSnapshot){
+                        if(itemChildSnapshot.val().balance != 0){
+                            po_count++;
+                            document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
+                        }
+                    });
+                });
+            }
+        });
+
+        if(po_count == 0){
+            document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
+        }
+
+        do_count = 0;
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot) {
+            if(ongoingOrderSnapshot.val() != null){
+                do_count++;
+                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+            }
+        });
+
+        if(do_count == 0){
+            document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+        }
+    }
+
 </script>
 </head>
 <body>
@@ -399,6 +397,12 @@
 	                        <span>History</span>
 	                    </a>
 	                </li>
+                    <li class="">
+                        <a class="" href="diesel.html">
+                            <i class="fa fa-building"></i>
+                            <span>Diesel</span>
+                        </a>
+                    </li>
 	                <li class="sub-menu">
 	                    <a href="javascript:;" class="">
 	                        <i class="fa fa-building"></i>
@@ -417,8 +421,8 @@
 	                        <span class="menu-arrow arrow_carrot-down"></span>
 	                    </a>
 	                    <ul class="sub">
-	                    	<li><a class="" href="delivery_pending_order.html">Existing P.O. <span id="id_count_existing_po"></span></a></li>       
-	                        <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span id="id_count_ongoing_order"></span></a></li>         
+	                    	<li><a class="" href="delivery_pending_order.html">Existing P.O. <span id="id_count_existing_po"></span></a></li>    
+                            <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span id="id_count_ongoing_order"></span></a></li>                             
 	                        <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
 	                        <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
 	                    </ul>
