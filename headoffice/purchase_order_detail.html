@@ -403,8 +403,12 @@
                 }
             }
 
-           firebase.database().ref('purchase_order/'+purchaseOrderKey+'/project_detail/').once('value', function(poProjectSnapshot){
+            firebase.database().ref('purchase_order/'+purchaseOrderKey+'/project_detail/').once('value', function(poProjectSnapshot){
                 poProjectSnapshot.forEach(function(poProjectChildSnapshot){
+
+                    var date = new Date().toLocaleDateString();
+                    var time = new Date().toLocaleTimeString();
+                    
 
                     var historyData = {
                         date: date,
@@ -431,13 +435,13 @@
 
                         firebase.database().ref('history/'+plant+'/'+postHistoryId).update(timestampData);
                     });
-
-                    if(firebase.database().ref('purchase_order/'+purchaseOrderKey).remove()){
-                        alert("P.O. has been closed.");
-                        window.location.href = 'purchase_order_closed.html?plant=' + plant;
-                    }
                 });
             });
+
+            // if(firebase.database().ref('purchase_order/'+purchaseOrderKey).remove()){
+            //     alert("P.O. has been closed.");
+            //     window.location.href = 'purchase_order_closed.html?plant=' + plant;
+            // }
         });
     }
     
