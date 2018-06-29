@@ -294,7 +294,7 @@ function DisplayCurrentData()
       firebase.database().ref().child("incoming_diesel/" + plant).orderByChild("date").limitToLast(1).on('child_added',function(lastDaySnapshot)
      {
         var options = { year: "numeric", month: "long", day: "numeric" };
-        var LastDayHolder = new Date (lastDaySnapshot.val().date).toLocaleDateString("en",options); 
+        var LastDayHolder = new Date (lastDaySnapshot.val().Date_Input).toLocaleDateString("en",options); 
         document.getElementById("last_day").innerHTML = LastDayHolder;
 
      });
@@ -303,18 +303,26 @@ function DisplayCurrentData()
 function datePrint()
 {
       event.preventDefault();
-      var date = dateFormat(document.getElementById('date_view').value);
-      var GetStringDate = date.toString();
 
-      firebase.database().ref().child("diesel_current_date_print/" + plant).once('value',function(Snapshot)
-        {
-                var text_date = {printCurrentDate:GetStringDate};
-                firebase.database().ref().child("diesel_current_date_print/" + plant).set(text_date);
+      if (document.getElementById('date_view').value != "") 
+      {
+           var date = dateFormat(document.getElementById('date_view').value);
+           var GetStringDate = date.toString();
+          firebase.database().ref().child("diesel_current_date_print/" + plant).once('value',function(Snapshot)
+      {
+            var text_date = {printCurrentDate:GetStringDate};
+            firebase.database().ref().child("diesel_current_date_print/" + plant).set(text_date);
 
-                //window.location.href ="diesel_transaction_print.html";
-                window.open("diesel_transaction_print.html","_blank");
-        });
+            window.location.href ="diesel_transaction_print.html";
+            //window.open("diesel_transaction_print.html","_blank");
+      });
+      }
+      else
+      {
+       alert("Choose Date");
+      }  
 }
+
 </script>
 <style>
 
