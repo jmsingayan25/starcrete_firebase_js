@@ -153,6 +153,8 @@
                     
                     // tableData(plant);
                     DisplayCurrentData();
+                    //NegtiveToZero();
+
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
@@ -281,7 +283,7 @@ function DisplayCurrentData()
      firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot)
      {
         var get_totalStock = totalstockSnapshot.val().Liters;
-        document.getElementById("id_stock").innerHTML = get_totalStock + " Liter(s)";
+        document.getElementById("id_stock").innerHTML = Number(get_totalStock).toLocaleString("en") + " Liter(s)"; 
 
         if(get_totalStock <= 3500)
         {
@@ -325,11 +327,22 @@ function datePrint()
             firebase.database().ref().child("diesel_current_date_print/" + plant).set(text_date);
 
             window.location.href ="diesel_transaction_print.html";
-            //window.open("diesel_transaction_print.html","_blank");
+            //window.open("diesel_transaction_print.html","_blank","","","width=200,height=100");
       });
       }  
 }
 
+function NegtiveToZero()
+{
+    firebase.database().ref().child("available_stock/" + plant).once('value',function(negativestockSnapshot)
+     {
+        var getLiters = Number(negativestockSnapshot.val().Liters);
+        getLiters = Math.max(0,getLiters);
+
+        var stock_available  = {Liters: getLiters};
+        firebase.database().ref().child("available_stock/" + plant).set(stock_available );
+     });
+}
 </script>
 <style>
 
