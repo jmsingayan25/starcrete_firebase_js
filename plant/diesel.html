@@ -241,7 +241,6 @@ function DisplayCurrentData()
 
                 var date = dieselChildSnapshot.val().Date_Input;
                 var CurrentDate = new Date();
-
                  if(dateFormat(CurrentDate) == date)
                 {
                 var truckno = dieselChildSnapshot.val().truck_no;
@@ -318,7 +317,16 @@ function datePrint()
       }
       else
       {
-       alert("Choose Date");
+        var date = new Date().toLocaleDateString('en');
+        var GetStringDate = date.toString();
+             firebase.database().ref().child("diesel_current_date_print/" + plant).once('value',function(Snapshot)
+      {
+            var text_date = {printCurrentDate:GetStringDate};
+            firebase.database().ref().child("diesel_current_date_print/" + plant).set(text_date);
+
+            window.location.href ="diesel_transaction_print.html";
+            //window.open("diesel_transaction_print.html","_blank");
+      });
       }  
 }
 
@@ -463,7 +471,7 @@ function datePrint()
                                                     <div class="col-md-12" style=" white-space: nowrap;">
                                                         <label for="date_view" class="col-md-3 control-label" style="white-space: nowrap;"><strong>Select Date:</strong></label>
                                                         <div class="col-md-7">
-                                                            <input type="date" id = "date_view" name="date_view" class="form-control">   
+                                                            <input type="date" id = "date_view" name="date_view" class="form-control" >   
                                                             <button type="submit" id = "submitGo" class="btn btn-md btn-info" style=""><strong>Go</strong></button>                      
                                                         </div> 
                                                     </div>
