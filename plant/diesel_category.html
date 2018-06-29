@@ -254,7 +254,7 @@ function displaycurrentCategory(getCurrentCategory)
         DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
                 var getdataCurrentCategory = dieselChildSnapshot.val().PickCategoryName;
-                var date = dieselChildSnapshot.val().date;
+                var date = dieselChildSnapshot.val().Date_Input;
                 var CurrentDate = new Date();
 
                 if(dateFormat(CurrentDate) == date)
@@ -265,7 +265,7 @@ function displaycurrentCategory(getCurrentCategory)
                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
                 var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
-                var time = dieselChildSnapshot.val().time;
+                var time = dieselChildSnapshot.val().time_input;
                 var drno = dieselChildSnapshot.val().dr_no || "";
                 console.log(quantityin);
 
@@ -309,7 +309,7 @@ function displaycurrentCategory(getCurrentCategory)
         firebase.database().ref().child("incoming_diesel_category/" + plant).orderByChild("date").limitToLast(1).on('child_added',function(lastDaySnapshot)
      {
         var options = { year: "numeric", month: "long", day: "numeric" };
-        var LastDayHolder = new Date (lastDaySnapshot.val().date).toLocaleDateString("en",options); 
+        var LastDayHolder = new Date (lastDaySnapshot.val().Date_Input).toLocaleDateString("en",options); 
         document.getElementById("last_day").innerHTML = LastDayHolder;
 
      });
@@ -335,7 +335,7 @@ function Go()
             var GetStringDate = date.toString();
 
            
-                if(GetStringDate == dieselChildSnapshot.val().date)
+                if(GetStringDate == dieselChildSnapshot.val().Date_Input)
                 {
                 if (getCurrentCategory ==  getdataCurrentCategory) 
                 {
@@ -343,7 +343,7 @@ function Go()
                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
                 var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
-                var time = dieselChildSnapshot.val().time;
+                var time = dieselChildSnapshot.val().time_input;
                 var drno = dieselChildSnapshot.val().dr_no || "";
                 console.log(quantityin);
 

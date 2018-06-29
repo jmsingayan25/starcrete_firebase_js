@@ -208,6 +208,19 @@
                          window.location.reload();
                     }
                 });
+
+                    firebase.database().ref().child("available_stock/" + plant).once('value',function(negativestockSnapshot)
+                    {
+                        var getLiters = Number(negativestockSnapshot.val().Liters);
+                        if (getLiters <= 0) 
+                        {
+                        getLiters = Math.max(0,getLiters);
+
+                        var stock_available  = {Liters: getLiters};
+                        firebase.database().ref().child("available_stock/" + plant).set(stock_available );
+                        }
+                       
+                    });
             //lastdelivered
             //end of else
             }
@@ -232,21 +245,21 @@
 
     function disableButtonDone(textvalue)
     {
-          firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot)
-        {
-            var getTotalLiters = totalstockSnapshot.val().Liters;
-            var quantity_out = document.getElementById('quantity_out').value;
-            var getStringQuantityOut = textvalue.replace(",","");
-            if (Number(getTotalLiters) <= Number(getStringQuantityOut)) 
-            {
-                document.getElementById("submit").disabled = true;
-            }
-            else
-            {
-               document.getElementById("submit").disabled = false; 
-            }
+    //       firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot)
+    //     {
+    //         var getTotalLiters = totalstockSnapshot.val().Liters;
+    //         var quantity_out = document.getElementById('quantity_out').value;
+    //         var getStringQuantityOut = textvalue.replace(",","");
+    //         if (Number(getTotalLiters) <= Number(getStringQuantityOut)) 
+    //         {
+    //             document.getElementById("submit").disabled = true;
+    //         }
+    //         else
+    //         {
+    //            document.getElementById("submit").disabled = false; 
+    //         }
 
-        });
+    //     });
     }
 </script>    
 </head>

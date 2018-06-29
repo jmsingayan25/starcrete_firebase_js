@@ -174,6 +174,8 @@
              var operator = document.getElementById('operator').value;
              var date = new Date().toLocaleDateString('en');
              var time = new Date().toLocaleTimeString('en');
+             var date_input = dateFormat(document.getElementById('date_input').value);
+             var time_input = startTime(document.getElementById('time_input').value);
 
              var get_liters = CheckSnapshot.val().Liters;
              var decrease_int_liters = Number(get_liters) - Number(quantity_out);
@@ -194,7 +196,9 @@
                  time: time,
                  currentstockCopy: currentStockCopy,
                  TransactionType: transactionType,
-                 PickCategoryName: pickcategory };
+                 PickCategoryName: pickcategory,
+                 Date_Input: date_input,
+                 time_input: time_input};
 
                 var postData = firebase.database().ref('incoming_diesel_category/' + plant);
                 var newPostRef = postData.push();
@@ -358,7 +362,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-md-offset-3">
-                        <form id="form" name="form" class="form-horizontal" onsubmit="if(confirm('Proceed?')){submitForm();}else{ event.preventDefault();}">
+                        <form id="form" name="form" class="form-horizontal" onsubmit="return submitForm()">
                             <section class="panel">
                                 <header class="panel-heading">
                                     Details
@@ -398,6 +402,18 @@
                                         <label for="operator" class="col-md-4 control-label">Operator / Driver<span class="required" style="color: red;">*</span></label>
                                         <div class="col-md-5">
                                             <input type="text" name="operator" id="operator"class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+                                        </div>
+                                    </div>
+                                       <div class="form-group">
+                                        <label for="date_input" class="col-md-4 control-label">Date<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-5">
+                                            <input type="date" name="date_input" id="date_input" class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+                                        </div>
+                                    </div>
+                                       <div class="form-group">
+                                        <label for="time_input" class="col-md-4 control-label">Time<span class="required" style="color: red;">*</span></label>
+                                        <div class="col-md-5">
+                                            <input type="time" name="time_input" id="time_input" class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
                                         </div>
                                     </div>
                                     <div class="form-group">
