@@ -154,7 +154,8 @@
         firebase.database().ref().child("available_stock/" + plant).once('value',function(CheckSnapshot)
         {
             if (CheckSnapshot.val() == null) {
-                alert("Fill Incoming Required");}
+                alert("Fill Incoming Required");
+            }
             else 
             {
              var quantity_out = document.getElementById('quantity_out').value;
