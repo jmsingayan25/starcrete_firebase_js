@@ -184,7 +184,7 @@
                     contactSnapshot.forEach(function(contactChildSnapshot){
                             // console.log(contactChildSnapshot.val());
 
-                        myTbody += "<div class='form-group'><div class='row' style=margin-bottom: 2px;><div class='col-md-6'><strong>" + contactChildSnapshot.val().client_contact_name + "</strong></div><div class='col-md-1'>-</div><div class='col-md-5'><strong>" + contactChildSnapshot.val().client_contact_no + "</strong></div></div></div>";
+                        myTbody += "<div class='row' style=margin-bottom: 2px;><div class='col-md-6'><strong>" + contactChildSnapshot.val().client_contact_name + "</strong></div><div class='col-md-1'>-</div><div class='col-md-5'><strong>" + contactChildSnapshot.val().client_contact_no + "</strong></div></div>";
                     });
                 });
 
@@ -219,7 +219,7 @@
             firebase.database().ref('client/'+clientKey+'/contact').orderByChild('client_contact_name').once('value',function(contactSnapshot){
                 contactSnapshot.forEach(function(contactChildSnapshot){
 
-                    myTbody += "<div class='form-group'><div class='row' style=margin-bottom: 2px;><div class='col-md-6'><strong>" + contactChildSnapshot.val().client_contact_name + "</strong></div><div class='col-md-1'>-</div><div class='col-md-5'><strong>" + contactChildSnapshot.val().client_contact_no + "</strong></div></div></div>";
+                    myTbody += "<div class='row' style=margin-bottom: 2px;><div class='col-md-6'><strong>" + contactChildSnapshot.val().client_contact_name + "</strong></div><div class='col-md-1'>-</div><div class='col-md-5'><strong>" + contactChildSnapshot.val().client_contact_no + "</strong></div></div>";
                 });
             });
 

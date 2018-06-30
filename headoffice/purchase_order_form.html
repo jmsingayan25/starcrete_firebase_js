@@ -164,7 +164,7 @@
 
     function issueFormDetails(){
 
-        firebase.database().ref('client').once('value').then(function(snapshot){
+        firebase.database().ref('client').orderByChild('client_name').once('value').then(function(snapshot){
             snapshot.forEach(function(childSnapshot){
 
                 $("#client").append("<option value='" + childSnapshot.key + "'>" + childSnapshot.val().client_name + "</option>");
@@ -180,7 +180,7 @@
 
                 // var siteList = "<select id='project_id' name='project_id' class='form-control' required><option value =''>Select</option>";
                 var div_project_list = "<option value=''>Select</option>";
-                firebase.database().ref('project/'+clientKey).once('value').then(function(snapshot){
+                firebase.database().ref('project/'+clientKey).orderByChild('project_name').once('value').then(function(snapshot){
                     snapshot.forEach(function(childSnapshot){
 
                         // $("#project_id").append("<option value='" + childSnapshot.key + "'>" + childSnapshot.val().project_name + " / " + childSnapshot.val().project_address + "</option>");
