@@ -153,7 +153,6 @@
                     
                     // tableData(plant);
                     DisplayCurrentData();
-                    //NegtiveToZero();
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
@@ -339,66 +338,70 @@ function datePrint()
       }  
 }
 
-function NegtiveToZero()
-{
-    firebase.database().ref().child("available_stock/" + plant).once('value',function(negativestockSnapshot)
-     {
-        var getLiters = Number(negativestockSnapshot.val().Liters);
-        getLiters = Math.max(0,getLiters);
-
-        var stock_available  = {Liters: getLiters};
-        firebase.database().ref().child("available_stock/" + plant).set(stock_available );
-     });
-}
-
 function DeleteRowData(key,plant)
 {
     event.preventDefault();
+       firebase.database().ref().child("incoming_diesel/" + plant + "/" + key).remove();
+       window.location.reload();
 
-   firebase.database().ref().child("incoming_diesel/" + plant + "/" + key).once('value',function(DeleteSnapshot)
-    {
-        firebase.database().ref().child("available_stock/" + plant).once('value',function(stockSnapshot)
-     {
-            if (DeleteSnapshot.val().TransactionType == "In") 
-            {
-                 if (stockSnapshot.val().Liters == 0) 
-                {
+   // firebase.database().ref().child("incoming_diesel/" + plant + "/" + key).once('value',function(DeleteSnapshot)
+   //  {
+   //      firebase.database().ref().child("available_stock/" + plant).once('value',function(stockSnapshot)
+   //   {
+   //          if (DeleteSnapshot.val().TransactionType == "In") 
+   //          {
+   //               if (stockSnapshot.val().Liters == 0) 
+   //              {
 
-                    firebase.database().ref().child("incoming_diesel/" + plant + "/" + key).remove();
-                    window.location.reload();
-                }
-                else
-                {
-                    var getDeleteInStock = Number(stockSnapshot.val().Liters) - Number(DeleteSnapshot.val().quantity_in);
+   //                  firebase.database().ref().child("incoming_diesel/" + plant + "/" + key).remove();
+   //                  window.location.reload();
+   //              }
+   //              else
+   //              {
+   //                  var getDeleteInStock = Number(stockSnapshot.val().Liters) - Number(DeleteSnapshot.val().quantity_in);
 
-                    var stock_available  = {Liters: getDeleteInStock};
-                    firebase.database().ref().child("available_stock/" + plant).set(stock_available);
+   //                  var stock_available  = {Liters: getDeleteInStock};
+   //                  firebase.database().ref().child("available_stock/" + plant).set(stock_available);
 
-                    firebase.database().ref().child("incoming_diesel/" + plant + "/" + key).remove();
-                    window.location.reload();
-                }
+   //                  firebase.database().ref().child("incoming_diesel/" + plant + "/" + key).remove();
+   //                  window.location.reload();
+   //              }
 
-            }else if(DeleteSnapshot.val().TransactionType == "Out")
-            {   
-                if (stockSnapshot.val().Liters == 0) 
-                {
-                    firebase.database().ref().child("incoming_diesel/" + plant + "/" + key).remove();
-                    window.location.reload(); 
-                }
-                else
-                {
-                    var getDeleteInStock = Number(stockSnapshot.val().Liters) + Number(DeleteSnapshot.val().quantity_out);
+   //          }else if(DeleteSnapshot.val().TransactionType == "Out")
+   //          {   
+   //              if (stockSnapshot.val().Liters == 0) 
+   //              {
+   //                  firebase.database().ref().child("incoming_diesel/" + plant + "/" + key).once('value',function(ComputeSnapshot)
+   //                  {
+   //                      firebase.database().ref().child("available_stock/" + plant).once('value',function(RetrieveSnapshot)
+   //                      {
+   //                          var RetrieveStock = Number(ComputeSnapshot.val().currentstockCopy) + Number(ComputeSnapshot.val().quantity_out);
+   //                          var AddStock = Number(RetrieveStock) + Number(RetrieveSnapshot.val().Liters);
 
-                    var stock_available  = {Liters: getDeleteInStock};
-                    firebase.database().ref().child("available_stock/" + plant).set(stock_available);
+   //                          var stock_available  = {Liters: AddStock};
+   //                          firebase.database().ref().child("available_stock/" + plant).set(stock_available);
 
-                    firebase.database().ref().child("incoming_diesel/" + plant + "/" + key).remove();
-                    window.location.reload();  
-                }
+   //                           firebase.database().ref().child("incoming_diesel/" + plant + "/" + key).remove();
+   //                           window.location.reload();
+
+   //                      });        
+   //                  });
+                    
+   //              }
+   //              else
+   //              {
+   //                  var getDeleteInStock = Number(stockSnapshot.val().Liters) + Number(DeleteSnapshot.val().quantity_out);
+
+   //                  var stock_available  = {Liters: getDeleteInStock};
+   //                  firebase.database().ref().child("available_stock/" + plant).set(stock_available);
+
+   //                  firebase.database().ref().child("incoming_diesel/" + plant + "/" + key).remove();
+   //                  window.location.reload();  
+   //              }
                 
-            }
-      });      
-    }); 
+   //          }
+   //    });      
+   //  }); 
 }
 
 </script>
