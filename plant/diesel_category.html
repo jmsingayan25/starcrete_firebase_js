@@ -284,7 +284,19 @@ function displaycurrentCategory(getCurrentCategory)
                 myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
                 //myTbody += "<td><strong>" + address + "</strong></td>";
                 myTbody += "<td><strong>" + time + "</strong></td>";
-                myTbody += "<td><strong>" + drno + "</strong></td></tr>";  
+                myTbody += "<td><strong>" + drno + "</strong></td></tr>";
+
+            firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(DisplayStockSnapshots)
+            {
+                DisplayStockSnapshots.forEach(function(SeperateChildSnapshot){
+
+            if (dieselChildSnapshot.val().PickCategoryName == SeperateChildSnapshot.val().CategoryName) 
+            {
+                document.getElementById("id_Categorystock").innerHTML = SeperateChildSnapshot.val().Liters + " Liter(s)"; 
+            }
+
+            });
+            });  
                 } 
                 }
                });
@@ -313,6 +325,7 @@ function displaycurrentCategory(getCurrentCategory)
         document.getElementById("last_day").innerHTML = LastDayHolder;
 
      });
+
 }
 
 function Go()
@@ -375,6 +388,37 @@ function Go()
     });
 }
 
+function datePrint()
+{
+      event.preventDefault();
+
+      if (document.getElementById('date_view').value != "") 
+      {
+           var date = dateFormat(document.getElementById('date_view').value);
+           var GetStringDate = date.toString();
+           var getCategoryName = document.getElementById("selectsys").value;
+          firebase.database().ref().child("diesel_category_print/" + plant).once('value',function(Snapshot)
+        {
+            var text_date = {printCurrentDate:GetStringDate,printCurrentCatagory: getCategoryName};
+          firebase.database().ref().child("diesel_category_print/" + plant).set(text_date);
+
+            window.location.href ="oil_currrent_print.html";
+        });
+      }
+      else
+      {
+           var date = new Date().toLocaleDateString('en');
+           var GetStringDate = date.toString();
+           var getCategoryName = document.getElementById("selectsys").value;
+          firebase.database().ref().child("diesel_category_print/" + plant).once('value',function(Snapshot)
+        {
+            var text_date = {printCurrentDate:GetStringDate,printCurrentCatagory: getCategoryName};
+           firebase.database().ref().child("diesel_category_print/" + plant).set(text_date);
+
+            window.location.href ="oil_currrent_print.html";
+        });
+      }
+}
 </script>
 <style>
 
@@ -542,9 +586,12 @@ function Go()
                         				<tr class="filterable">
                         					<th colspan="8">
                                                 <span>Available stock as of today: <span id="id_stock">
+                                                </span></span><br>
+                                                <span>Category stock as of today: <span id="id_Categorystock">
                                                 </span></span>
                                                 <br><span>Last Delivery: <span id ="last_day"></span></span><br>
-                                                <span>Search Date: <span id="Search_day"></span></span>
+                                                <span>Search Date: <span id="Search_day"></span></span><br>
+                                                 <button type="button" class="btn btn-info btn-md" onclick= "datePrint()"><strong><span class="fa fa-print"></span> Print</strong></button> 
                                                 <!-- <input type="hidden" id="hidden_stock" value="<?php echo getDieselStock($db, $search_plant); ?>">
                         						<?php 
                             						$date_view = date_create($_GET['date_view']); 

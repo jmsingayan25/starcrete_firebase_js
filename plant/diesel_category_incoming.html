@@ -211,11 +211,29 @@
                     console.log(StartReverseDate);*/
                      if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
                         alert("Incoming diesel complete.");
-                        window.location.reload();
+                        //window.location.reload();
                         }
                     });
+                    firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(SeperateSnapshots)
+                    {
+                            var get_textCategory = pickcategory;
+                            var get_quantityIn = quantity_in;
+
+        
+                            var stock_seperate_available  ={CategoryName: get_textCategory,Liters: get_quantityIn};
+
+                             var postData = firebase.database().ref("available_seperate_category/" + plant);
+                             var newPostRef = postData.push();
+                             newPostRef.set(stock_seperate_available);
+
+                             var postId = newPostRef.key;
+                             window.location.reload();
+    
+                    });
+                 
+                });
             });
-            });
+                 
             }
             else{
                 firebase.database().ref().child("incoming_diesel_category/" + plant).once('value',function(CheckSnapshot)
@@ -269,25 +287,54 @@
 
                         if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
                         alert("Incoming diesel complete.");
-                        window.location.reload();}
+                        // window.location.reload();
+                    }
                         });
                     //separate total
-                    // firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(SeperateSnapshots)
-                    // {
-                    //     firebase.database().ref().child("incoming_diesel_category/" + plant).once('value',function(SeperateCheckSnapshot)
-                    // {
-                    //     var textcategory_sep = document.getElementById('category_name').value;
-                    //     var seperatetotalavailable = 
+                
+                     firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(SeperateSnapshots)
+                    {
+                            SeperateSnapshots.forEach(function(SeperateChildSnapshot){
 
-                    // });    
-                    // });
-                     // var getdataCurrentCategory = CheckSnapshot.val().PickCategoryName;
-                     // var getCurrentCategory = document.getElementById("category_name").value;
+                                var get_categorySeperate = SeperateChildSnapshot.val().CategoryName;
 
-                     // if (getdataCurrentCategory == getCurrentCategory) 
-                     // {
+        
+                                if (get_categorySeperate == pickcategory) 
+                                {
+                                    var get_textCategory = pickcategory;
+                                    var get_ValueSeperate = SeperateChildSnapshot.val().Liters;
+                                    var get_quantityInSeperate = quantity_in;
+                                    var NewTotalSeperate = Number(get_ValueSeperate) + Number(get_quantityInSeperate);
+                                    var NewStringTotal = NewTotalSeperate.toString();
 
-                     // }
+                                    var stock_seperate_available  = {CategoryName: get_textCategory,
+                                                                    Liters: NewStringTotal};
+                                     firebase.database().ref().child("available_seperate_category/" + plant + "/" + SeperateChildSnapshot.key).set(stock_seperate_available);
+
+
+                                    window.location.reload();
+                                }else
+                                {
+                                    firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(NewSeperateSnapshots)
+                                    {
+                                        var get_textCategory = pickcategory;
+                                        var get_quantityIn = quantity_in;
+
+                        
+                                        var stock_seperate_available  ={CategoryName: get_textCategory,Liters: get_quantityIn};
+
+                                        var postData = firebase.database().ref("available_seperate_category/" + plant);
+                                        var newPostRef = postData.push();
+                                        newPostRef.set(stock_seperate_available);
+
+                                        var postId = newPostRef.key;
+                                        window.location.reload();
+                    
+                                    });  
+                                }
+                        });
+                    });
+                                   
                  //end of seperate
 
                 });
