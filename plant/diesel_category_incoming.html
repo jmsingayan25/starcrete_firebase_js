@@ -164,7 +164,9 @@
                 firebase.database().ref().child("incoming_diesel_category/" + plant).once('value',function(CheckSnapshot)
                 {
                 firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
-                {          
+                {
+                firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(SeperateSnapshots)
+                {            
                 var po_no = document.getElementById('po_no').value;
                 var dr_no = document.getElementById('dr_no').value;
                 var quantity_in = document.getElementById('quantity_in').value;
@@ -184,6 +186,20 @@
                 var currentStockCopy = liters_bravo;
                 pickcategory =Snapshot.val().CurrentCategory;
                 transactionType = "In";
+                //sep
+                            var get_textCategory = pickcategory;
+                            var get_quantityIn = quantity_in;
+
+        
+                            var stock_seperate_available  ={CategoryName: get_textCategory,Liters: get_quantityIn};
+
+                             var postData = firebase.database().ref("available_seperate_category/" + plant);
+                             var newPostRef = postData.push();
+                             newPostRef.set(stock_seperate_available);
+
+                             var postId = newPostRef.key;
+                             //window.location.reload();
+                //endsep
                 var currentStockHolder = {
                     po_no: po_no, 
                     dr_no: dr_no, 
@@ -195,7 +211,8 @@
                     TransactionType: transactionType,
                     PickCategoryName: pickcategory,
                     Date_Input: date_input,
-                    time_input: time_input};
+                    time_input: time_input,
+                    seperateCurrentStock: get_quantityIn};
 
                 var postData = firebase.database().ref('incoming_diesel_category/' + plant);
                 var newPostRef = postData.push();
@@ -211,24 +228,9 @@
                     console.log(StartReverseDate);*/
                      if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
                         alert("Incoming diesel complete.");
-                        //window.location.reload();
+                        window.location.reload();
                         }
                     });
-                    firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(SeperateSnapshots)
-                    {
-                            var get_textCategory = pickcategory;
-                            var get_quantityIn = quantity_in;
-
-        
-                            var stock_seperate_available  ={CategoryName: get_textCategory,Liters: get_quantityIn};
-
-                             var postData = firebase.database().ref("available_seperate_category/" + plant);
-                             var newPostRef = postData.push();
-                             newPostRef.set(stock_seperate_available);
-
-                             var postId = newPostRef.key;
-                             window.location.reload();
-    
                     });
                  
                 });
@@ -239,7 +241,10 @@
                 firebase.database().ref().child("incoming_diesel_category/" + plant).once('value',function(CheckSnapshot)
                 {
                 firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
-                {  
+                {
+                firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(SeperateSnapshots)
+                {
+                    SeperateSnapshots.forEach(function(SeperateChildSnapshot){  
                     //
                     var po_no = document.getElementById('po_no').value;
                     var dr_no = document.getElementById('dr_no').value;
@@ -263,39 +268,7 @@
                     var currentStockCopy = new_liters;
                     pickcategory = Snapshot.val().CurrentCategory;
                     transactionType = "In";
-                    var currentStockHolder = {
-                        po_no: po_no, dr_no: dr_no, 
-                        quantity_in: quantity_in,
-                        supplier: supplier.toUpperCase(), 
-                        truck_no: truck_no.toUpperCase(),
-                        reverseDate: firebase.database.ServerValue.TIMESTAMP,
-                        date: date,time: time,
-                        currentstockCopy: currentStockCopy,
-                        TransactionType: transactionType,
-                        PickCategoryName: pickcategory,
-                        Date_Input: date_input,
-                        time_input: time_input};
-
-                    var postData = firebase.database().ref('incoming_diesel_category/' + plant);
-                    var newPostRef = postData.push();
-                    newPostRef.set(currentStockHolder);
-                    var postId = newPostRef.key;
-                
-                    firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot){
-                        var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
-                        var UpdateReverseDate = {reverseDate: StartReverseDate};;
-
-                        if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
-                        alert("Incoming diesel complete.");
-                        // window.location.reload();
-                    }
-                        });
-                    //separate total
-                
-                     firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(SeperateSnapshots)
-                    {
-                            SeperateSnapshots.forEach(function(SeperateChildSnapshot){
-
+                     //sep
                                 var get_categorySeperate = SeperateChildSnapshot.val().CategoryName;
 
         
@@ -310,6 +283,25 @@
                                     var stock_seperate_available  = {CategoryName: get_textCategory,
                                                                     Liters: NewStringTotal};
                                      firebase.database().ref().child("available_seperate_category/" + plant + "/" + SeperateChildSnapshot.key).set(stock_seperate_available);
+
+                                     var currentStockHolder = {
+                                     po_no: po_no, dr_no: dr_no, 
+                                     quantity_in: quantity_in,
+                                     supplier: supplier.toUpperCase(), 
+                                     truck_no: truck_no.toUpperCase(),
+                                     reverseDate: firebase.database.ServerValue.TIMESTAMP,
+                                     date: date,time: time,
+                                     currentstockCopy: currentStockCopy,
+                                     TransactionType: transactionType,
+                                     PickCategoryName: pickcategory,
+                                     Date_Input: date_input,
+                                     time_input: time_input,
+                                     seperateCurrentStock: NewStringTotal};
+
+                                     var postData = firebase.database().ref('incoming_diesel_category/' + plant);
+                                     var newPostRef = postData.push();
+                                     newPostRef.set(currentStockHolder);
+                                     var postId = newPostRef.key;
                                     window.location.reload();
                                 }else
                                 {
@@ -326,10 +318,43 @@
                                         newPostRef.set(stock_seperate_available);
 
                                         var postId = newPostRef.key;
+
+                                        var currentStockHolder = {
+                                        po_no: po_no, dr_no: dr_no, 
+                                        quantity_in: quantity_in,
+                                        supplier: supplier.toUpperCase(), 
+                                        truck_no: truck_no.toUpperCase(),
+                                        reverseDate: firebase.database.ServerValue.TIMESTAMP,
+                                        date: date,time: time,
+                                        currentstockCopy: currentStockCopy,
+                                        TransactionType: transactionType,
+                                        PickCategoryName: pickcategory,
+                                        Date_Input: date_input,
+                                        time_input: time_input,
+                                        seperateCurrentStock: get_quantityIn};
+
+                                        var postData = firebase.database().ref('incoming_diesel_category/' + plant);
+                                        var newPostRef = postData.push();
+                                        newPostRef.set(currentStockHolder);
+                                        var postId = newPostRef.key;
                                         window.location.reload();
                     
                                     });  
                                 }
+                                //endsep
+                    
+                
+                    firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot){
+                        var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
+                        var UpdateReverseDate = {reverseDate: StartReverseDate};;
+
+                        if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
+                        alert("Incoming diesel complete.");
+                        // window.location.reload();
+                    }
+                        });
+                    //separate total
+                               
                         });
                     });
                                    

@@ -234,7 +234,7 @@
             firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(SeperateSnapshots)
                     {
                             SeperateSnapshots.forEach(function(SeperateChildSnapshot){
-
+                                //sep
                                 var get_categorySeperate = SeperateChildSnapshot.val().CategoryName;
 
         
@@ -263,6 +263,7 @@
                                     }
                                     window.location.reload();
                                 }
+                                //endsep
                         });
                     });
             //
