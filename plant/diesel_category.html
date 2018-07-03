@@ -313,7 +313,7 @@ function displaycurrentCategory(getCurrentCategory)
                if (myTbody == "") 
                {
                 document.getElementById("id_Categorystock").innerHTML = "";
-                document.getElementById("category_current").innerHTML = "";
+                document.getElementById("category_current").innerHTML = getCurrentCategory;
                     myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
                     document.getElementById("DieselList").innerHTML = myTbody; 
                 }else{document.getElementById("DieselList").innerHTML = myTbody; }   
@@ -621,7 +621,7 @@ function DeleteRowData(key,plant)
                         					<th colspan="8">
                                                 <span>Available stock as of today: <span id="id_stock">
                                                 </span></span><br>
-                                                <span id = "category_current"></span><span> Available stock as of today: <span id="id_Categorystock">
+                                                <span id = "category_current">Category</span><span> Available stock as of today: <span id="id_Categorystock">
                                                 </span></span>
                                                 <br><span>Last Delivery: <span id ="last_day"></span></span><br>
                                                 <span>Search Date: <span id="Search_day"></span></span><br>
