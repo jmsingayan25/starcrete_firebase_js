@@ -475,6 +475,15 @@
         return i;
     }
 
+    function printPo(){
+
+        var fromDate = document.getElementById('start_date').value;
+        var endDate = document.getElementById('end_date').value;
+        var search_text = document.getElementById('search').value;
+
+        window.open('purchase_order_closed_print.html?plant='+plant+'&fromDate='+fromDate+'&endDate='+endDate+'&search_text='+search_text,'_blank');
+    }
+
 </script>
 <style>
 .table_page{
@@ -686,10 +695,10 @@
                                 <table class="table table-striped table-bordered">
                                     <thead>
                                         <tr class="filterable">
-                                            <th colspan="10"><button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button></th>
-                                            <!-- <th colspan="2" style="text-align: center;">
-                                                <p>Date</p>
-                                            </th> -->
+                                            <th colspan="10">
+                                                <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button>
+                                                <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
+                                            </th>
                                         </tr>
                                         <tr class="filters" style="background-color: #00a3cc;">
                                             <th class="col-md-1" style="color: white">#</th>

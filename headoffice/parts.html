@@ -194,7 +194,7 @@
             var all_text = text_supplier + " " + text_item + " " + text_po_no;
 
             supplier = partsSnapshot.val().supplier;
-            quantity = partsSnapshot.val().quantity;
+            quantity = Number(partsSnapshot.val().quantity).toLocaleString('en') + " pcs";
             item = partsSnapshot.val().item;
             price = Number(partsSnapshot.val().price).toLocaleString('en');
             total = Number(partsSnapshot.val().total).toLocaleString('en');
@@ -335,7 +335,7 @@
             // partsSnapshot.forEach(function(partsChildSnapshot){
                 // console.log(partsSnapshot.key, partsSnapshot.val());
                 supplier = partsSnapshot.val().supplier;
-                quantity = partsSnapshot.val().quantity;
+                quantity = Number(partsSnapshot.val().quantity).toLocaleString('en') + " pcs";
                 item = partsSnapshot.val().item;
                 price = Number(partsSnapshot.val().price).toLocaleString('en');
                 total = Number(partsSnapshot.val().total).toLocaleString('en');
@@ -390,6 +390,14 @@
         return i;
     }
 
+    function printPo(){
+
+        var search_text = document.getElementById('search').value;
+        var search_date = document.getElementById('search_date').value;
+        var search_option = document.getElementById('search_option').value;
+
+        window.open('parts_print.html?search_date='+search_date+'&search_option='+search_option+'&search_text='+search_text+'&plant='+plant, '_blank');
+    }
 
 </script>
 <style>
@@ -597,6 +605,7 @@
                                     <thead>
                                         <tr class="filterable">
                                             <th colspan="10">
+                                                <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button>
                                                 <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                             </th>
                                         </tr>

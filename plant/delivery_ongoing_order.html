@@ -1044,6 +1044,15 @@
         }
     }
 
+    function printPo(){
+
+        var fromDate = document.getElementById('start_date').value;
+        var endDate = document.getElementById('end_date').value;
+        var search_text = document.getElementById('search').value;
+
+        window.open('delivery_ongoing_order_print.html?plant='+plant+'&fromDate='+fromDate+'&endDate='+endDate+'&search_text='+search_text,'_blank');
+    }
+
 </script>
 <style>
 .table_page{
@@ -1246,6 +1255,7 @@
                                     <thead>
                                         <tr class="filterable">
                                             <th colspan="11">
+                                                <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button>
                                                 <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                             </th>
                                         </tr>

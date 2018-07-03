@@ -385,6 +385,12 @@
             document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
         }
     }
+
+    function printPo(){
+
+        window.open('delivery_po_summary_print.html?po_no_key='+po_no_key+'&plant='+plant,'_blank');
+
+    }
     
 </script>
 <style>
@@ -565,6 +571,7 @@
 	                                        <thead>
 	                                            <tr class="filterable">
 	                                                <th colspan="9">
+                                                        <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button>
 	                                                    <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
 	                                                </th>
 	                                            </tr>

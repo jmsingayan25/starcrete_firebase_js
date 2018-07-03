@@ -174,7 +174,7 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
-        document.getElementById('id_page_header').innerHTML = "<a href='delivery_backloaded_order.html?plant=" + plant + "' style='color: inherit;'>" + plant + " Delivery Order</a>";
+        document.getElementById('id_page_header').innerHTML = "<a href='delivery_backloaded_order.html?plant=" + plant + "' style='color: inherit;'>" + plant + " Backloaded Order</a>";
 
         document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='delivery_ongoing_order.html?plant=" + plant + "'>Ongoing Delivery <span id='id_count_ongoing_order'></span></a></li><li><i class='fa fa-info-circle'></i><a href='delivery_pending_order.html?plant=" + plant + "'>Existing P.O. <span id='id_count_existing_po'></span></a></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i>Backloaded</li>";
 
@@ -495,6 +495,15 @@
         });
     }
 
+    function printPo(){
+
+        var fromDate = document.getElementById('start_date').value;
+        var endDate = document.getElementById('end_date').value;
+        var search_text = document.getElementById('search').value;
+
+        window.open('delivery_backloaded_order_print.html?plant='+plant+'&fromDate='+fromDate+'&endDate='+endDate+'&search_text='+search_text,'_blank');
+    }
+
 </script>
 <style>
 .table_page{
@@ -708,6 +717,7 @@
 	                                <thead>
 	                                    <tr class="filterable">
 	                                        <th colspan="10">
+                                                <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button>
 	                                            <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
 	                                        </th>
 	                                    </tr>

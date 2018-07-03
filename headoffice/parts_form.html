@@ -144,6 +144,8 @@
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
         document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='parts.html?plant=" + plant + "'>Parts</a></li><li><i class='fa fa-building'></i>Incoming Parts Form</li>";
+
+        document.getElementById('id_button').innerHTML = "<input type='submit' name='submit' id='submit' value='Done' class='btn btn btn-md btn-primary' style='font-weight: bold;'> <a href='parts.html?plant=" + plant + "' class='btn btn-default'><strong>Cancel</strong></a>";
     });  
 
 	function submitForm(){
@@ -352,8 +354,8 @@
 										</div>
 									</div>
 									<div class="form-group">
-                                        <div class="col-md-offset-8 col-md-4">
-                                            <input type="submit" name="submit" id="submit" value="Done" class="btn btn btn-md btn-primary" style="font-weight: bold;">
+                                        <div class="col-md-offset-7 col-md-4">
+                                            <span id="id_button"></span>
                                         </div>
                                     </div>
 								</form>

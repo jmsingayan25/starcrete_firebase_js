@@ -391,6 +391,16 @@
         return i;
     }
 
+    function printPo(){
+
+        var fromDate = document.getElementById('start_date').value;
+        var endDate = document.getElementById('end_date').value;
+        var search_text = document.getElementById('search').value;
+        var plant = $('input[name="plant"]:checked').val();
+
+        window.open('index_print.html?plant='+plant+'&fromDate='+fromDate+'&endDate='+endDate+'&search_text='+search_text,'_blank');
+    }
+
 </script>
 <style>
 .table_page{
@@ -567,6 +577,11 @@
                                                 <label class="radio-inline">
                                                     <input type="radio" name="plant" id="plant" value="Delta"><strong>Delta</strong>
                                                 </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-offset-5 col-md-1">
+                                            <div class="form-group">
+                                                <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button>
                                             </div>
                                         </div>
                                     </div>
