@@ -317,6 +317,10 @@ function displaycurrentCategory(getCurrentCategory)
                     myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
                     document.getElementById("DieselList").innerHTML = myTbody; 
                 }else{document.getElementById("DieselList").innerHTML = myTbody; }   
+
+                 if (document.getElementById("category_current").innerHTML == "undefined") {document.getElementById("category_current").innerHTML = "Category"}
+                    else if(document.getElementById("category_current").innerHTML == ""){document.getElementById("category_current").innerHTML = "Category"}
+
       });
 
         firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(totalstockSnapshot)
