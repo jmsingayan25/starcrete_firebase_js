@@ -344,6 +344,7 @@ function DeleteRowData(key,plant)
        firebase.database().ref().child("incoming_diesel/" + plant + "/" + key).remove();
        window.location.reload();
 
+
    // firebase.database().ref().child("incoming_diesel/" + plant + "/" + key).once('value',function(DeleteSnapshot)
    //  {
    //      firebase.database().ref().child("available_stock/" + plant).once('value',function(stockSnapshot)
@@ -488,6 +489,12 @@ function DeleteRowData(key,plant)
                         <a class="" href="diesel.html">
                             <i class="fa fa-building"></i>
                             <span>Diesel</span>
+                        </a>
+                    </li>
+                     <li>
+                        <a class="" href="diesel_category.html">
+                            <i class="fa fa-building"></i>
+                            <span>Oil</span>
                         </a>
                     </li>
 	                <li class="sub-menu">

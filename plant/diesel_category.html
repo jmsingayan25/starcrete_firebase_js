@@ -267,6 +267,7 @@ function displaycurrentCategory(getCurrentCategory)
                 var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
                 var time = dieselChildSnapshot.val().time_input;
                 var drno = dieselChildSnapshot.val().dr_no || "";
+                var key = dieselChildSnapshot.key;
                 console.log(quantityin);
 
                 var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
@@ -284,24 +285,33 @@ function displaycurrentCategory(getCurrentCategory)
                 myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
                 //myTbody += "<td><strong>" + address + "</strong></td>";
                 myTbody += "<td><strong>" + time + "</strong></td>";
-                myTbody += "<td><strong>" + drno + "</strong></td></tr>";
+                myTbody += "<td><strong>" + drno + "</strong></td>";
+                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md'><strong> Delete</strong></button></form></td></tr>"
+
 
             firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(DisplayStockSnapshots)
             {
                 DisplayStockSnapshots.forEach(function(SeperateChildSnapshot){
 
             if (dieselChildSnapshot.val().PickCategoryName == SeperateChildSnapshot.val().CategoryName) 
-            {
-                document.getElementById("id_Categorystock").innerHTML = SeperateChildSnapshot.val().Liters + " Liter(s)"; 
+            {                   
+                document.getElementById("id_Categorystock").innerHTML = SeperateChildSnapshot.val().Liters + " Liter(s)";
+                 if (SeperateChildSnapshot.val().Liters <= 3500) 
+                {
+                document.getElementById("id_Categorystock").style.color = "red";
+                }else
+                {
+                  document.getElementById("id_Categorystock").style.color = "gray";  
+                }
             }
-
             });
             });  
                 } 
-                }
-               });
+            }
+            });
                if (myTbody == "") 
                {
+                document.getElementById("id_Categorystock").innerHTML = "";
                     myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
                     document.getElementById("DieselList").innerHTML = myTbody; 
                 }else{document.getElementById("DieselList").innerHTML = myTbody; }   
@@ -358,6 +368,7 @@ function Go()
                 var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
                 var time = dieselChildSnapshot.val().time_input;
                 var drno = dieselChildSnapshot.val().dr_no || "";
+                var key = dieselChildSnapshot.key;
                 console.log(quantityin);
 
                 var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
@@ -375,7 +386,20 @@ function Go()
                 myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
                 //myTbody += "<td><strong>" + address + "</strong></td>";
                 myTbody += "<td><strong>" + time + "</strong></td>";
-                myTbody += "<td><strong>" + drno + "</strong></td></tr>"; 
+                myTbody += "<td><strong>" + drno + "</strong></td>";
+                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md'><strong> Delete</strong></button></form></td></tr>"  
+
+                firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(DisplayStockSnapshots)
+            {
+                DisplayStockSnapshots.forEach(function(SeperateChildSnapshot){
+
+            if (dieselChildSnapshot.val().PickCategoryName == SeperateChildSnapshot.val().CategoryName) 
+            {
+                document.getElementById("id_Categorystock").innerHTML = SeperateChildSnapshot.val().Liters + " Liter(s)"; 
+            }
+
+            });
+            }); 
                 }
                 }
         });
@@ -419,6 +443,14 @@ function datePrint()
         });
       }
 }
+
+function DeleteRowData(key,plant)
+{
+    event.preventDefault();
+       firebase.database().ref().child("incoming_diesel_category//" + plant + "/" + key).remove();
+       window.location.reload();
+}
+
 </script>
 <style>
 
@@ -499,7 +531,7 @@ function datePrint()
 	                        <span>History</span>
 	                    </a>
 	                </li>
-	                <li class="active">
+	                <li>
                         <a class="" href="diesel.html">
                             <i class="fa fa-building"></i>
                             <span>Diesel</span>
@@ -543,7 +575,7 @@ function datePrint()
                         <!-- <h3 class="page-header"><i class="fa fa-home"></i> History</h3> -->
                         <ol class="breadcrumb">
                             <!-- <li><i class="fa fa-building"></i><?php echo $plant; ?></li> -->
-                            <li><i class="icon_document"></i>Diesel</li>             
+                            <li><i class="icon_document"></i>Oil</li>             
                         </ol>
                     </div>
                 </div>	
@@ -571,8 +603,8 @@ function datePrint()
                                             <div class="row">
                                                 <div class="col-md-8 col-md-offset-4">
                                                     <div class="form-group">
-                                                        <button type="button" class="btn btn-info btn-md" onclick="categincomingbutton()"><span class="fa fa-plus"></span> <strong>Add Incoming Diesel</strong></button>
-                                                        <button type="button" class="btn btn-info btn-md" onclick="categoutcomingbutton()"><span class="fa fa-plus"></span> <strong>Add Outgoing Diesel</strong></button>
+                                                        <button type="button" class="btn btn-info btn-md" onclick="categincomingbutton()"><span class="fa fa-plus"></span> <strong>Add Incoming Oil</strong></button>
+                                                        <button type="button" class="btn btn-info btn-md" onclick="categoutcomingbutton()"><span class="fa fa-plus"></span> <strong>Add Outgoing Oil</strong></button>
                                                     </div>
                                                 </div>    
                                             </div>
@@ -667,6 +699,7 @@ function datePrint()
 											<!-- <th class="col-md-2"><input type="text" class="form-control" placeholder="Address" disabled ></th> -->
 											<th class="col-md-1" style="text-align:center; color:white">Time</th>
                                             <th class="col-md-1" style="text-align:center; color:white">DR No.</th>
+                                            <th class="col-md-1" style="text-align:center; color:white">Action</th>
 										</tr>
                         			</thead>
                         			<tbody id = "DieselList">
