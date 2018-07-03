@@ -128,10 +128,12 @@
                     myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
                     myTbody += "<td><strong>" + item + "</strong></td>";
                     myTbody += "<td><strong>" + quantity + "</strong></td>";
-                    myTbody += "<td><strong>" + price + "</strong></td>";
-                    myTbody += "<td><strong>" + total + "</strong></td>";
+                    myTbody += "<td><strong>P" + price + "</strong></td>";
+                    myTbody += "<td><strong>P" + total + "</strong></td>";
                     myTbody += "<td><strong>" + po_no + "</strong></td>";
                     myTbody += "<td><strong>" + date + "</strong></td></tr>";
+
+                    document.getElementById("partsList").innerHTML = myTbody;
                 }
 
             }else if(search_text != "" && search_option != "" && search_date == ""){
@@ -150,10 +152,12 @@
                     myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
                     myTbody += "<td><strong>" + item + "</strong></td>";
                     myTbody += "<td><strong>" + quantity + "</strong></td>";
-                    myTbody += "<td><strong>" + price + "</strong></td>";
-                    myTbody += "<td><strong>" + total + "</strong></td>";
+                    myTbody += "<td><strong>P" + price + "</strong></td>";
+                    myTbody += "<td><strong>P" + total + "</strong></td>";
                     myTbody += "<td><strong>" + po_no + "</strong></td>";
                     myTbody += "<td><strong>" + date + "</strong></td></tr>";
+
+                    document.getElementById("partsList").innerHTML = myTbody;
                 }
 
             }else if(search_text != "" && search_option != "" && search_date != ""){
@@ -175,10 +179,12 @@
                         myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
                         myTbody += "<td><strong>" + item + "</strong></td>";
                         myTbody += "<td><strong>" + quantity + "</strong></td>";
-                        myTbody += "<td><strong>" + price + "</strong></td>";
-                        myTbody += "<td><strong>" + total + "</strong></td>";
+                        myTbody += "<td><strong>P" + price + "</strong></td>";
+                        myTbody += "<td><strong>P" + total + "</strong></td>";
                         myTbody += "<td><strong>" + po_no + "</strong></td>";
                         myTbody += "<td><strong>" + date + "</strong></td></tr>";
+
+                        document.getElementById("partsList").innerHTML = myTbody;
                     }
                 }
 
@@ -193,10 +199,12 @@
                         myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
                         myTbody += "<td><strong>" + item + "</strong></td>";
                         myTbody += "<td><strong>" + quantity + "</strong></td>";
-                        myTbody += "<td><strong>" + price + "</strong></td>";
-                        myTbody += "<td><strong>" + total + "</strong></td>";
+                        myTbody += "<td><strong>P" + price + "</strong></td>";
+                        myTbody += "<td><strong>P" + total + "</strong></td>";
                         myTbody += "<td><strong>" + po_no + "</strong></td>";
                         myTbody += "<td><strong>" + date + "</strong></td></tr>";
+
+                        document.getElementById("partsList").innerHTML = myTbody;
                     }
                 }
 
@@ -208,36 +216,50 @@
                     myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
                     myTbody += "<td><strong>" + item + "</strong></td>";
                     myTbody += "<td><strong>" + quantity + "</strong></td>";
-                    myTbody += "<td><strong>" + price + "</strong></td>";
-                    myTbody += "<td><strong>" + total + "</strong></td>";
+                    myTbody += "<td><strong>P" + price + "</strong></td>";
+                    myTbody += "<td><strong>P" + total + "</strong></td>";
                     myTbody += "<td><strong>" + po_no + "</strong></td>";
                     myTbody += "<td><strong>" + date + "</strong></td></tr>";
+
+                    document.getElementById("partsList").innerHTML = myTbody;
                 }
             }else{
               
                 myTbody += "<tr><td><strong>" + supplier + "</strong></td>";
                 myTbody += "<td><strong>" + item + "</strong></td>";
                 myTbody += "<td><strong>" + quantity + "</strong></td>";
-                myTbody += "<td><strong>" + price + "</strong></td>";
-                myTbody += "<td><strong>" + total + "</strong></td>";
+                myTbody += "<td><strong>P" + price + "</strong></td>";
+                myTbody += "<td><strong>P" + total + "</strong></td>";
                 myTbody += "<td><strong>" + po_no + "</strong></td>";
                 myTbody += "<td><strong>" + date + "</strong></td></tr>";
+
+                document.getElementById("partsList").innerHTML = myTbody;
             }
 
-            if(myTbody == ""){
+            // if(myTbody == ""){
                 
-            myTbody = "<tr><td colspan='7' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-            document.getElementById("partsList").innerHTML = myTbody;
+            //     myTbody = "<tr><td colspan='7' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+            //     document.getElementById("partsList").innerHTML = myTbody;
 
-        }else{
-            document.getElementById("partsList").innerHTML = myTbody;
-        }
+            // }else{
+            //     document.getElementById("partsList").innerHTML = myTbody;
+            // }
         });
 
         
 	}
 
 </script>
+<style>
+@media print {
+  table{
+    font-size: 11px;
+  }
+  #printPageButton{
+    display: none;
+  }
+}
+</style>
 </head>
 <body>
 	<div class="container" id="container">
@@ -263,8 +285,8 @@
                                     	<th class="col-md-1" style="color: white;">Supplier</th>
                                     	<th class="col-md-1" style="color: white;">Item</th>
                                     	<th class="col-md-1" style="color: white;">Quantity</th>
-                                    	<th class="col-md-1" style="color: white;">Price / pc</th>
-                                    	<th class="col-md-1" style="color: white;">Total Price</th>
+                                    	<th class="col-md-1" style="color: white;">Price (in peso) / pc</th>
+                                    	<th class="col-md-1" style="color: white;">Total Price (in peso)</th>
                                     	<th class="col-md-1" style="color: white;">P.O. No.</th>
                                     	<th class="col-md-1" style="color: white;">Date Ordered</th>
                                     </tr>

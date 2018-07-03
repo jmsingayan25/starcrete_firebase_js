@@ -199,7 +199,7 @@
                                 myTbody += "<td><span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
                                 // myTbody += "<td style='color: #d32f2f;'><strong>" + status + "</strong></td></tr>";
 
-                                // document.getElementById('orderList').innerHTML = myTbody;
+                                document.getElementById('orderList').innerHTML = myTbody;
                                 count++;
                             }
                         });
@@ -278,7 +278,7 @@
                                     myTbody += "<td><span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
                                     // myTbody += "<td style='color: #d32f2f;'><strong>" + status + "</strong></td></tr>";
 
-                                    // document.getElementById('orderList').innerHTML = myTbody;
+                                    document.getElementById('orderList').innerHTML = myTbody;
                                     count++;
                                 }
                             });
@@ -287,16 +287,16 @@
                 }
             }
 
-            if(myTbody == ""){
+            // if(myTbody == ""){
 
-                myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+            //     myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
-                document.getElementById("orderList").innerHTML = myTbody;
+            //     document.getElementById("orderList").innerHTML = myTbody;
 
-            }else{
-                document.getElementById("orderList").innerHTML = myTbody;
+            // }else{
+            //     document.getElementById("orderList").innerHTML = myTbody;
 
-            }
+            // }
         });
 	}
 </script>

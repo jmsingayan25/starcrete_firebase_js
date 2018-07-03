@@ -198,6 +198,7 @@
                                 myTbody += "<td><strong>" + date + "</strong></td>";
                                 myTbody += "<td><span class='label' style='background-color: #ffa000; font-size: 11px;'><strong>" + status + "</strong></span></td></tr>";
                                 // myTbody += "<td style='background-color: #ffa000; color: white;'><strong>" + status + "</strong></td></tr>";
+                                document.getElementById("orderList").innerHTML = myTbody;
                                 count++;
                             }
                         });
@@ -278,6 +279,7 @@
 	                                myTbody += "<td><strong>" + date + "</strong></td>";
 	                                myTbody += "<td><span class='label' style='background-color: #ffa000; font-size: 11px;'><strong>" + status + "</strong></span></td></tr>";
 	                                // myTbody += "<td style='background-color: #ffa000; color: white;'><strong>" + status + "</strong></td></tr>";
+                                    document.getElementById("orderList").innerHTML = myTbody;
 	                                count++;
 	                            }
 	                        });
@@ -286,14 +288,14 @@
                 }
 			}
 
-			if(myTbody == ''){
-	            myTbody = "<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+			// if(myTbody == ''){
+	  //           myTbody = "<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
-	            document.getElementById("orderList").innerHTML = myTbody;
-	        }else{
-	            document.getElementById("orderList").innerHTML = myTbody;
+	  //           document.getElementById("orderList").innerHTML = myTbody;
+	  //       }else{
+	  //           document.getElementById("orderList").innerHTML = myTbody;
 
-	        } 
+	  //       } 
 		});
 	}
 </script>

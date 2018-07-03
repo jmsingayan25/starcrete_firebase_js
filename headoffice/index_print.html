@@ -156,6 +156,7 @@
                     myTbody += "<td><strong>" + detail + "</strong></td>";
                     myTbody += "<td><strong>" + date + "</strong></td></tr>";
 
+                    document.getElementById("historyList").innerHTML = myTbody;
                 }
 			}else{
 
@@ -192,18 +193,19 @@
                         myTbody += "<td><strong>" + detail + "</strong></td>";
                         myTbody += "<td><strong>" + date + "</strong></td></tr>";
 
+                        document.getElementById("historyList").innerHTML = myTbody;
                     }
                 }
 			}
 
-			if(myTbody == ''){
+			// if(myTbody == ''){
 
-                myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+   //              myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
-                document.getElementById("historyList").innerHTML = myTbody;
-            }else{
-                document.getElementById("historyList").innerHTML = myTbody;
-            }
+   //              document.getElementById("historyList").innerHTML = myTbody;
+   //          }else{
+   //              document.getElementById("historyList").innerHTML = myTbody;
+   //          }
 		});
 	}
 
