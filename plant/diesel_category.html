@@ -261,6 +261,7 @@ function displaycurrentCategory(getCurrentCategory)
                 {
                 if (getCurrentCategory ==  getdataCurrentCategory) 
                 {
+                document.getElementById("category_current").innerHTML = getCurrentCategory;
                 var truckno = dieselChildSnapshot.val().truck_no;
                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
@@ -619,7 +620,7 @@ function DeleteRowData(key,plant)
                         					<th colspan="8">
                                                 <span>Available stock as of today: <span id="id_stock">
                                                 </span></span><br>
-                                                <span>Category stock as of today: <span id="id_Categorystock">
+                                                <span id = "category_current"></span><span> Available stock as of today: <span id="id_Categorystock">
                                                 </span></span>
                                                 <br><span>Last Delivery: <span id ="last_day"></span></span><br>
                                                 <span>Search Date: <span id="Search_day"></span></span><br>
