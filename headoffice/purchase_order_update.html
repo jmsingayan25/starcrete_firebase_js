@@ -282,7 +282,9 @@
 				var poData = {
 					po_no: new_po_no,
 				}
-				// firebase.database().ref('purchase_order/'+po_no_key).update(poData);
+
+				firebase.database().ref('purchase_order/'+po_no_key).update(poData);
+
 				quantity = itemSnapshot.val().quantity;
 				balance = itemSnapshot.val().balance;
 				difference = Number(new_ordered_quantity) - Number(quantity);
@@ -306,6 +308,13 @@
 						window.location.href = "purchase_order_detail.html?key=" + po_no_key + "&plant=" + plant 
 					}
 				});
+
+                // firebase.database().ref().on('value', function(orderSnapshot){
+                //     orderSnapshot.forEach(function(orderChildSnapshot){
+                        
+
+                //     });
+                // });
 
 				console.log(itemData);
 			});	
@@ -375,6 +384,7 @@
                             <li><a class="" href="purchase_order.html?plant=Bravo">Purchase Order</a></li>                          
                             <li><a class="" href="delivery_ongoing_order.html?plant=Bravo">Delivery Page</a></li>
                             <li><a class="" href="diesel.html?plant=Bravo">Diesel</a></li>
+                            <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
                         </ul>
                     </li>  
                     <li class="sub-menu">
@@ -387,6 +397,7 @@
                             <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>                          
                             <li><a class="" href="delivery_ongoing_order.html?plant=Delta">Delivery Page</a></li>
                             <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
+                            <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
                         </ul>
                     </li>  
                     <li class="sub-menu">

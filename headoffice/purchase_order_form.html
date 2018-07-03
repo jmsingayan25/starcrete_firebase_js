@@ -89,7 +89,7 @@
 
 <script>
     
-        $(document).ready(function() {
+    $(document).ready(function() {
         
         var $form = $( "#form" );
         var $input = $form.find( "input[name='quantity[]'], input[name='psi[]']" );
@@ -149,7 +149,7 @@
                      
         $rowno=$("#item_table tr").length;
         $rowno=$rowno+1;
-        $("#item_table tr:last").after("<tr id='row"+$rowno+"' style='text-align: center;'><td class='col-md-1'><div class='form-group'><select name='item_no[]' class='form-control' required><option value=''>Select</option></select></div></td><td class='col-md-1'><div class='form-group'><input type='text' name='psi[]' class='form-control' autocomplete='off' placeholder='PSI'></div></td><td class='col-md-1'><div class='form-group'><input type='text'  name='quantity[]' class='form-control' placeholder='Quantity' required></div></td><td class='col-md-1'><div class='form-group'><input type='button' value='Remove' class='btn btn-danger btn-md' onclick=delete_row('row"+$rowno+"') style='font-weight: bold;'></div></td></tr>");
+        $("#item_table tr:last").after("<tr id='row"+$rowno+"' style='text-align: center;'><td class='col-md-1'><div class='form-group'><select name='item_no[]' class='form-control' required><option value=''>Select</option></select></div></td><td class='col-md-1'><div class='form-group'><input type='text' name='psi[]' class='form-control' autocomplete='off' placeholder='PSI'></div></td><td class='col-md-1'><div class='form-group'><input type='text'  name='quantity[]' class='form-control' placeholder='Quantity' required></div></td><td class='col-md-1'><div class='form-group'><button type='button' class='btn btn-danger btn-md' onclick=delete_row('row"+$rowno+"') style='font-weight: bold;'><span class='fa fa-minus'></span></button></div></td></tr>");
 
         firebase.database().ref('item').once('value').then(function(snapshot){
             snapshot.forEach(function(childSnapshot){
@@ -164,7 +164,7 @@
 
     function issueFormDetails(){
 
-        firebase.database().ref('client').once('value').then(function(snapshot){
+        firebase.database().ref('client').orderByChild('client_name').once('value').then(function(snapshot){
             snapshot.forEach(function(childSnapshot){
 
                 $("#client").append("<option value='" + childSnapshot.key + "'>" + childSnapshot.val().client_name + "</option>");
@@ -180,7 +180,7 @@
 
                 // var siteList = "<select id='project_id' name='project_id' class='form-control' required><option value =''>Select</option>";
                 var div_project_list = "<option value=''>Select</option>";
-                firebase.database().ref('project/'+clientKey).once('value').then(function(snapshot){
+                firebase.database().ref('project/'+clientKey).orderByChild('project_name').once('value').then(function(snapshot){
                     snapshot.forEach(function(childSnapshot){
 
                         // $("#project_id").append("<option value='" + childSnapshot.key + "'>" + childSnapshot.val().project_name + " / " + childSnapshot.val().project_address + "</option>");
@@ -560,6 +560,7 @@
                             <li><a class="" href="purchase_order.html?plant=Bravo">Purchase Order</a></li>                          
                             <li><a class="" href="delivery_ongoing_order.html?plant=Bravo">Delivery Page</a></li>
                             <li><a class="" href="diesel.html?plant=Bravo">Diesel</a></li>
+                            <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
                         </ul>
                     </li>  
                     <li class="sub-menu">
@@ -572,6 +573,7 @@
                             <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>                          
                             <li><a class="" href="delivery_ongoing_order.html?plant=Delta">Delivery Page</a></li>
                             <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
+                            <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
                         </ul>
                     </li>  
                     <li class="sub-menu">
@@ -714,7 +716,7 @@
                                                 </td>
                                                 <td class="col-md-1">
                                                     <div class="form-group">
-                                                        <input type="button" onclick="add_row();" class='btn btn-primary btn-md' autocomplete="off" value="Add" style="font-weight: bold;">
+                                                        <button type="button" onclick="add_row();" class='btn btn-primary btn-md' autocomplete="off" style="font-weight: bold;"><span class="fa fa-plus"></span></button> 
                                                     </div>
                                                 </td>
                                             </tr>

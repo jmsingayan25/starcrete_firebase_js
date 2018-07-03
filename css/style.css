@@ -14,7 +14,7 @@
 
 body {
 
-    color: #797979;
+    color: #666666;
 
     background: #eeeeee;
 
@@ -1592,7 +1592,7 @@ div[data-role="editor-toolbar"] {
 
 .dropdown-menu > li > a{
 
-    color: #797979;
+    color: black;
 
 }
 
@@ -3970,7 +3970,7 @@ div[data-role="editor-toolbar"] {
 
 .badge.bg-inverse {
 
-    background: #797979;
+    background: black;
 
 }
 
@@ -4220,7 +4220,7 @@ div[data-role="editor-toolbar"] {
 
     border-right: 1px solid #d5d8df;
 
-    color: #797979;
+    color: black;
 
 }
 
@@ -7566,7 +7566,7 @@ ul.amounts li {
 
 .dataTables_paginate.paging_bootstrap.pagination li a{
 
-    color: #797979;
+    color: black;
 
     padding: 5px 10px;
 
@@ -7578,7 +7578,7 @@ ul.amounts li {
 
 .dataTables_paginate.paging_bootstrap.pagination li:hover a, .dataTables_paginate.paging_bootstrap.pagination li.active a{
 
-    color: #797979;
+    color: black;
 
     background: #eee;
 
@@ -7672,7 +7672,7 @@ ul.amounts li {
 
     border-color: #f1f2f7;
 
-    color: #797979;
+    color: black;
 
 }
 

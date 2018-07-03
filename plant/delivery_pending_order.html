@@ -95,9 +95,9 @@
     function goAway() {
         clearTimeout(timer);
         timer = setTimeout(function() {
-            window.location.reload(true);
-            // tableData(plant);
-            // totalCountBadge(plant);
+            // window.location.reload(true);
+            tableData();
+            totalCountBadge();
         }, 60000);
     }
 
@@ -163,8 +163,8 @@
                         window.location.href = '../headoffice/index.html';
                     }
                     
-                    tableData(plant);
-                    totalCountBadge(plant);
+                    tableData();
+                    totalCountBadge();
                     // goAway();
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
@@ -357,7 +357,7 @@
         }
     }
 
-    function tableData(plant){
+    function tableData(){
 
         var myTbody = "";
         var count = 1;
@@ -426,15 +426,15 @@
                 }); 
             });
 
-             if(myTbody == ""){
+        //      if(myTbody == ""){
 
-            myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+        //     myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
-            document.getElementById("orderList").innerHTML = myTbody;
-        }else{
-            document.getElementById("orderList").innerHTML = myTbody;
+        //     document.getElementById("orderList").innerHTML = myTbody;
+        // }else{
+        //     document.getElementById("orderList").innerHTML = myTbody;
             
-        }
+        // }
         });
 
 
@@ -485,7 +485,7 @@
         return i;
     }
 
-    function totalCountBadge(plant){
+    function totalCountBadge(){
 
         po_count = 0;
         firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
@@ -520,13 +520,13 @@
         }
     }
 
-    function searchMatch(searchWord, findWord){
+    function printPo(){
 
-        parse_word = searchWord.replace(/\s+/g, '|').toLowerCase();
-        reg_word = new RegExp(parse_word, 'gi');
-        search = findWord.match(reg_word);
+        var fromDate = document.getElementById('start_date').value;
+        var endDate = document.getElementById('end_date').value;
+        var search_text = document.getElementById('search').value;
 
-        return search;
+        window.open('delivery_pending_order_print.html?plant='+plant+'&fromDate='+fromDate+'&endDate='+endDate+'&search_text='+search_text,'_blank');
     }
 
 </script>    
@@ -731,6 +731,7 @@
                                     <thead>
                                         <tr class="filterable">
                                             <th colspan="10">
+                                                <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button>
                                                 <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                             </th>
                                         </tr>

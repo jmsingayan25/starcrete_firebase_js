@@ -195,7 +195,7 @@
         firebase.database().ref('incoming_diesel/'+plant).orderByChild('reverseDate').on('child_added', function(dieselSnapshot){
             // console.log(dieselSnapshot.val(), dateFormat(selectedDate));
 
-            if(dieselSnapshot.val().date == dateFormat(selectedDate)){
+            if(dieselSnapshot.val().Date_Input == dateFormat(selectedDate)){
 
                 currentstockCopy = Number(dieselSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
                 date = dieselSnapshot.val().date;
@@ -254,7 +254,7 @@
 
         // document.getElementById('search_date').innerHTML = currentDate;
 
-        firebase.database().ref('incoming_diesel/'+plant).orderByChild('date').equalTo(currentDate).once('value', function(dieselSnapshot){
+        firebase.database().ref('incoming_diesel/'+plant).orderByChild('Date_Input').equalTo(currentDate).once('value', function(dieselSnapshot){
 
             // console.log(dieselSnapshot.val(), dateFormat(currentDate));
             if(dieselSnapshot.val() == null){
@@ -269,7 +269,7 @@
         firebase.database().ref('incoming_diesel/'+plant).orderByChild('reverseDate').on('child_added', function(dieselSnapshot){
 
             // console.log(dieselSnapshot.val().date, dateFormat(currentDate));
-            if(dieselSnapshot.val().date == dateFormat(currentDate)){
+            if(dieselSnapshot.val().Date_Input == dateFormat(currentDate)){
 
                 currentstockCopy = Number(dieselSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
                 date = dieselSnapshot.val().date;
@@ -338,6 +338,40 @@
     //         document.getElementById('id_today_stock').innerHTML = "Available stock as of today, " + currentDate + ": " + available_stock;    
     //     });
     // }
+
+function datePrint(){
+
+    event.preventDefault();
+
+    if (document.getElementById('date_view').value != "") {
+
+        var date = dateFormat(document.getElementById('date_view').value);
+        var GetStringDate = date.toString();
+
+        firebase.database().ref().child("diesel_current_date_print/" + plant).once('value',function(Snapshot){
+            var text_date = {printCurrentDate:GetStringDate};
+            firebase.database().ref().child("diesel_current_date_print/" + plant).set(text_date);
+
+            // window.location.href = "diesel_print.html?plant=" + plant;
+            window.open('diesel_print.html?plant=' + plant, '_blank');
+        });
+
+    }else{
+
+        var date = new Date().toLocaleDateString('en');
+        var GetStringDate = date.toString();
+        
+        firebase.database().ref().child("diesel_current_date_print/" + plant).once('value',function(Snapshot){
+            
+            var text_date = {printCurrentDate:GetStringDate};
+            firebase.database().ref().child("diesel_current_date_print/" + plant).set(text_date);
+
+            // window.location.href = "diesel_print.html?plant=" + plant;
+            window.open('diesel_print.html?plant=' + plant, '_blank');
+            //window.open("diesel_transaction_print.html","_blank","","","width=200,height=100");
+        });
+    }  
+}
 
 </script>
 <style>
@@ -432,6 +466,7 @@
                             <li><a class="" href="purchase_order.html?plant=Bravo">Purchase Order</a></li>                          
                             <li><a class="" href="delivery_ongoing_order.html?plant=Bravo">Delivery Page</a></li>
                             <li><a class="" href="diesel.html?plant=Bravo">Diesel</a></li>
+                            <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
                         </ul>
                     </li>  
                     <li class="sub-menu">
@@ -444,6 +479,7 @@
                             <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>                          
                             <li><a class="" href="delivery_ongoing_order.html?plant=Delta">Delivery Page</a></li>
                             <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
+                            <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
                         </ul>
                     </li>  
                     <li class="sub-menu">
@@ -505,7 +541,8 @@
                                                 <span>Last Delivery: <span id="id_last_delivery"></span>
                                                     
                                                 </span><br>
-                                                <span>Search Date: <span id="search_date"></span> <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button></span>
+                                                <span>Search Date: <span id="search_date"></span> <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button></span><br>
+                                                <button type="button" class="btn btn-info btn-md" onclick= "datePrint()"><strong>Print</strong></button>
                         					</th>
                         				</tr>
                         				<tr class="filters" style="background-color: #00a3cc;">

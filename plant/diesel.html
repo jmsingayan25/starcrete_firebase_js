@@ -87,7 +87,8 @@
     function goAway() {
         clearTimeout(timer);
         timer = setTimeout(function() {
-            window.location.reload(true);
+            // window.location.reload(true);
+            DisplayCurrentData();
         }, 60000);
     }
 

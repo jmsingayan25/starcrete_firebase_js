@@ -226,10 +226,12 @@
 			date = dateFormat(ongoingOrderSnapshot.val().date);
 			status = ongoingOrderSnapshot.val().status;
             issued_dr_plant = ongoingOrderSnapshot.val().issued_dr_plant;
+            gate_pass = ongoingOrderSnapshot.val().gate_pass;
 
 			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
 			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
-			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+            myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+			myTbody += "<td><strong>" + gate_pass + "</strong></td>";
             myTbody += "<td><strong>" + date + "</strong></td>";
 			myTbody += "<td><strong>" + issued_dr_plant + "</strong></td>";
             myTbody += "<td><span class='label' style='background-color: #ffa000; font-size: 11px;'><strong>" + status + "</strong></span></td></tr>";
@@ -253,10 +255,12 @@
 			date = dateFormat(ongoingOrderSnapshot.val().date);
 			status = ongoingOrderSnapshot.val().status;
             delivered_plant = ongoingOrderSnapshot.val().delivered_plant;
+            gate_pass = ongoingOrderSnapshot.val().gate_pass;
 
 			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
 			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
-			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+            myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+			myTbody += "<td><strong>" + gate_pass + "</strong></td>";
             myTbody += "<td><strong>" + date + "</strong></td>";
 			myTbody += "<td><strong>" + delivered_plant + "</strong></td>";
 			myTbody += "<td><span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
@@ -280,10 +284,12 @@
 			date = dateFormat(ongoingOrderSnapshot.val().date);
 			status = ongoingOrderSnapshot.val().status;
             backloaded_plant = ongoingOrderSnapshot.val().backloaded_plant;
+            gate_pass = ongoingOrderSnapshot.val().gate_pass;
 
 			myTbody += "<tr><td><strong>" + dr_no + "</strong></td>";
 			myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
 			myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+            myTbody += "<td><strong>" + gate_pass + "</strong></td>";
             myTbody += "<td><strong>" + date + "</strong></td>";
 			myTbody += "<td><strong>" + backloaded_plant + "</strong></td>";
 			myTbody += "<td><span class='label' style='background-color: #d32f2f; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
@@ -305,6 +311,12 @@
 				document.getElementById('contactList').innerHTML = contactTbody;
 			});
 		});
+    }
+
+    function printPo(){
+
+        window.open('delivery_po_summary_print.html?po_no_key='+po_no_key+'&plant='+plant,'_blank');
+
     }
 </script>
 <style>
@@ -409,7 +421,8 @@
 	                    <ul class="sub">
 	                        <li><a class="" href="purchase_order.html?plant=Bravo">Purchase Order</a></li>                          
                             <li><a class="" href="delivery_ongoing_order.html?plant=Bravo">Delivery Page</a></li>
-	                        <li><a class="" href="diesel.html?plant=Bravo">Diesel</a></li>
+                            <li><a class="" href="diesel.html?plant=Bravo">Diesel</a></li>
+	                        <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
 	                    </ul>
 	                </li>  
 	                <li class="sub-menu">
@@ -421,7 +434,8 @@
 	                    <ul class="sub">
 	                        <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>                          
                             <li><a class="" href="delivery_ongoing_order.html?plant=Delta">Delivery Page</a></li>
-	                        <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
+                            <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
+	                        <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
 	                    </ul>
 	                </li>  
 	                <li class="sub-menu">
@@ -462,6 +476,7 @@
                                             <thead>
                                                 <tr class="filterable">
                                                     <th colspan="9">
+                                                        <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button>
                                                         <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                                     </th>
                                                 </tr>
@@ -469,6 +484,7 @@
                                                     <th class="col-md-1"><input type="text" class="form-control" placeholder="DR No." disabled></th>
                                                     <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
                                                     <th class="col-md-1" style="color: white;">Quantity</th>
+                                                    <th class="col-md-1" style="color: white;">Gate Pass</th>
                                                     <th class="col-md-1" style="color: white;">Date Transaction</th>
                                                     <th class="col-md-1" style="color: white;">Plant</th>
                                                     <th class="col-md-2" style="color: white;">Status</th>

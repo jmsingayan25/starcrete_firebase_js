@@ -7,10 +7,9 @@
     <meta name="author" content="GeeksLabs">
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="img/favicon.png">
+	<title>Parts Form</title>
 
-    <title>Update Details</title>
-
-    <!-- Firebase App is always required and must be first -->
+	<!-- Firebase App is always required and must be first -->
 	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
 
 	<!-- Add additional services you want to use -->
@@ -43,6 +42,7 @@
     <script src="../js/jquery-ui-1.10.4.min.js"></script>
     <script src="../js/jquery-1.8.3.min.js"></script>
     <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+
     <!-- bootstrap -->
     <script src="../js/bootstrap.min.js"></script>
     <!-- nice scroll -->
@@ -79,7 +79,7 @@
     <script src="../js/charts.js"></script>
     <script src="../js/jquery.slimscroll.min.js"></script>
     <script src="../js_config/function.js"></script>
-    
+
     <!-- =======================================================
     Theme Name: NiceAdmin
     Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -88,11 +88,40 @@
     ======================================================= -->
 
 <script>
-	
-	var clientKeyId = getUrlParameter('key');
 
-    $(document).ready(function(){
+	var plant = "Bravo";
 
+	$(document).ready(function() {
+        
+        var $form = $( "#form" );
+        var $input = $form.find( "input[name='quantity'], input[name='price']" );
+
+        $form.on( "keyup", "input[name='quantity'], input[name='price']", function( event ) {
+            
+            // When user select text in the document, also abort.
+            var selection = window.getSelection().toString();
+            if ( selection !== '' ) {
+                return;
+            }
+            
+            // When the arrow keys are pressed, abort.
+            if ( $.inArray( event.keyCode, [38,40,37,39] ) !== -1 ) {
+                return;
+            }
+            
+            var $this = $( this );
+            
+            // Get the value.
+            var input = $this.val();
+            
+            var input = input.replace(/[\D\s\._\-]+/g, "");
+                    input = input ? parseInt( input, 10 ) : 0;
+
+                    $this.val( function() {
+                        return ( input === 0 ) ? "" : input.toLocaleString( "en-US" );
+                    } );
+        });   
+        
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
 
@@ -102,6 +131,7 @@
                     if(snapshot.val().office != 'Head Office'){
                         window.location.href = '../plant/index.html';
                     }
+                   
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
@@ -110,109 +140,81 @@
                 window.location.href = '../login.html';
             }
         });
+
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
-        firebase.database().ref("client/"+clientKeyId).once('value').then(function(childSnapshot){
+        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='parts.html?plant=" + plant + "'>Parts</a></li><li><i class='fa fa-building'></i>Incoming Parts Form</li>";
 
-            document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-address-book'></i><a href='client.html'>Clients</a></li><li><i class='fa fa-building'></i> " + childSnapshot.val().client_name + "</li><li><i class='icon_document'></i>Update Info</li>";
-            // document.getElementById('div_client_name').innerHTML = "<i class='fa fa-building'></i><a href='client_update_info.html?key=" + clientKeyId + "'</a>"+childSnapshot.val().client_name;
-            document.getElementById('update_client_name').value = childSnapshot.val().client_name;
-            document.getElementById('update_client_address').value = childSnapshot.val().client_address;
+        document.getElementById('id_button').innerHTML = "<input type='submit' name='submit' id='submit' value='Done' class='btn btn btn-md btn-primary' style='font-weight: bold;'> <a href='parts.html?plant=" + plant + "' class='btn btn-default'><strong>Cancel</strong></a>";
+    });  
 
-        }).catch(function(error){
-            window.location.href = 'client.html';
+	function submitForm(){
+
+		event.preventDefault();
+
+		var supplier = document.getElementById('supplier').value;
+		var item = document.getElementById('item').value;
+		var quantity = document.getElementById('quantity').value;
+		var price = document.getElementById('price').value;
+		var po_no = document.getElementById('po_no').value;
+		var date = document.getElementById('date').value;
+
+		quantity = quantity.replace(",","");
+		price = price.replace(",","");
+		date = new Date(date).toLocaleDateString('en');
+
+		var total = Number(price) * Number(quantity);
+
+		var partsData = {
+			supplier: supplier,
+			item: item,
+			quantity: quantity,
+			price: price,
+			total: total,
+			po_no: po_no,
+			date: date,
+			reverseDate: firebase.database.ServerValue.TIMESTAMP
+		}
+
+
+		var postData = firebase.database().ref('parts/'+plant);
+		var newPostRef = postData.push();
+        newPostRef.set(partsData);
+
+        var postId = newPostRef.key;
+
+        firebase.database().ref('parts/'+plant+'/'+postId).once('value', function(partsSnapshot){
+
+        	var timestamp = partsSnapshot.val().reverseDate * -1;
+
+        	var updateTimestamp = {
+        		reverseDate: timestamp
+        	}
+
+        	if(firebase.database().ref('parts/'+plant+'/'+postId).update(updateTimestamp)){
+        		alert("Info successfully added..");
+        		window.location.reload();
+        	}
         });
 
-        firebase.database().ref('client/'+clientKeyId+'/contact').once('value').then(function(snapshot){
-
-            snapshot.forEach(function(childSnapshot){
-                console.log(childSnapshot.val().client_contact_name);
-
-                $("#item_table").append("<tr style='text-align: center; vertical-align: top;'><td class='col-md-5'><div class='row'><div class='col-md-12' style='margin-bottom: 5px;'><input type='text' name='update_contact_name[]' id='update_contact_name[]' class='form-control' value='" + childSnapshot.val().client_contact_name + "' autocomplete='off' style='text-transform: uppercase' required></div></div></td><td class='col-md-7'><div class='row' style='margin-bottom: 5px;'><div class='col-md-7'><textarea name='update_contact_no[]' id='update_contact_no[]' class='form-control' autocomplete='off' style='resize: none;' required>" + childSnapshot.val().client_contact_no + "</textarea></div><div class='col-md-5'><button type='submit' name='delete_id' id='delete_id' class='btn btn-danger btn-sm btn-block' autocomplete='off' value='" + childSnapshot.key + "' style='font-weight: bold;' onclick='deleteContactNo(this.value);'>Remove</button></div></div></td></tr>");
-
-            });
-
-            // document.getElementById('update_client_name').value = childSnapshot.val().client_contact_name;
-
-        });
-    });
-
-    function updateClientInfo(){
-
-        event.preventDefault();
-
-        var input_client_name = document.getElementById('update_client_name').value;
-        var input_client_address = document.getElementById('update_client_address').value;
-        var input_client_contact_name = $("input[name='update_contact_name[]']").map(function(){return $(this).val();}).get();
-        var input_client_contact_no = $("textarea[name='update_contact_no[]']").map(function(){return $(this).val();}).get();
-
-        var clientData = {
-            client_name: input_client_name.toUpperCase(),
-            client_address: input_client_address.toUpperCase()
-        };
-
-        // var postContact = firebase.database().ref("client_contact/"+clientKeyId+"/"+);
-        firebase.database().ref().child('client/'+clientKeyId+'/contact').once('value').then(function(snapshot){
-
-            var count = 0;
-            snapshot.forEach(function(childSnapshot){
-
-                var postUpdateContactData = {
-                    client_contact_name: input_client_contact_name[count].toUpperCase(),
-                    client_contact_no: input_client_contact_no[count],
-                }
-
-                firebase.database().ref('client/'+clientKeyId+'/contact/'+childSnapshot.key).update(postUpdateContactData);
-                count++;
-            });
-        });
-
-        if(firebase.database().ref().child('client/'+clientKeyId).update(clientData)){
-            alert("Client info successfully update.");
-            window.location.href = 'client.html';
-        }else{
-            alert("Update Failed. Try again.");
-            window.location.reload();
-        }
-    }
-
-    function deleteContactNo(contactKey){
-
-        event.preventDefault();
-        // console.log("DELETE");
-        if(confirm("Proceed?")){
-            if(firebase.database().ref('client/'+clientKeyId+'/contact/'+contactKey).remove()){
-                alert("Contact successfully deleted.");
-                window.location.href = 'client_update_info.html?key=' + clientKeyId;
-            }else{
-                alert("Delete Failed. Try again.");
-                window.location.reload();
-            }
-        }else{
-            event.preventDefault();
-            alert("CANCEL");
-        }
-    }
+	}
 
 </script>
 </head>
 <body>
-    <section id="container" class="">
+	<section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
-                <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
+            <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
             </div>
 
             <!--logo start-->
 
             <!--logo end-->
-
             <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
-
             <div class="top-nav notification-row">                
                 <!-- notificatoin dropdown start-->
                 <ul class="nav pull-right top-menu">
-
                     <!-- user login dropdown start-->
                     <li class="dropdown">
                         <a data-toggle="dropdown" class="dropdown-toggle" href="#">
@@ -233,19 +235,18 @@
                 </ul>
                 <!-- notificatoin dropdown end-->
             </div>
-        </header>      
-        <!--header end-->
-
+        </header>  
+        <!--sidebar start-->
         <aside>
             <div id="sidebar"  class="nav-collapse ">
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu">                
-                    <li>
+                    <li class="">
                         <a class="" href="index.html">
                             <i class="icon_house"></i>
                             <span>History</span>
                         </a>
-                    </li>
+                    </li> 
                     <li>
                         <a class="" href="client.html">
                             <i class="fa fa-address-book"></i>
@@ -277,7 +278,7 @@
                             <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
                             <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
                         </ul>
-                    </li>   
+                    </li>  
                     <li class="sub-menu">
                         <a href="javascript:;" class="">
                             <i class="fa fa-file"></i>
@@ -286,8 +287,9 @@
                         </a>
                         <ul class="sub">
                             <li><a class="" href="purchase_order_form.html">Add New P.O.</a></li>
+                            <!-- <li><a class="" href="purchase_aggregates_order_form.php">P.O. Aggregates Form</a></li>                           -->
                         </ul>
-                    </li>      
+                    </li>
                 </ul>
                 <!-- sidebar menu end-->
             </div>
@@ -299,67 +301,70 @@
             <section class="wrapper">            
                 <!--overview start-->
                 <div class="row">
-                    <div class="col-md-12 page_links">
-                        <!-- <h3 class="page-header">Client Update Details</h3> -->
-                        <ol class="breadcrumb" id="id_breadcrumb">
-                            <!-- <li><i class="fa fa-home"></i>Home</li> -->
-                            <!-- <li><i class="fa fa-address-book"></i><a href="client.html">Clients</a></li>
-                            <li><i class="fa fa-building"></i></li>
-                            <li><i class="icon_document"></i>Update Info</li> -->
-                            <!-- <li><i class="fa fa-file-text"></i><a href="clients_update_info.php" style="color: inherit;">Update Info</a></li>                             -->
-                        </ol>
+                    <div class="col-md-12">
+                        <!-- <h3 class="page-header"><i class="fa fa-building"></i> Purchase Order Update</h3> -->
+                        <ol class="breadcrumb" id="id_breadcrumb"></ol>
                     </div>
                 </div>
-                <form class="form-horizontal" role="form" id="form" onsubmit="if(confirm('Proceed?')){updateClientInfo();}else{ event.preventDefault();}">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <section class="panel">
-                                <header class="panel-heading">
-                                Client Info
-                                </header>
-                                <div class="panel-body">
-                                    <div class="form-group">
-                                        <label for="update_client_name" class="col-md-4 control-label">Client Name</label>
-                                        <div class="col-md-8">
-                                            <!-- <input type="text" id="update_client_name" name="update_client_name" class="form-control" autocomplete="off" value="<?php echo $client_name; ?>" required> -->
-                                            <textarea name="update_client_name" id="update_client_name" class="form-control" style="resize: none; text-transform: uppercase;" required></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="update_client_address" class="col-md-4 control-label">Client Address</label>
-                                        <div class="col-md-8">
-                                            <!-- <input type="text" id="update_client_address" name="update_client_address" class="form-control" autocomplete="off" value="<?php echo $client_address; ?>" required> -->
-                                            <textarea name="update_client_address" id="update_client_address" class="form-control" rows="5" style="resize: none; text-transform: uppercase;" required></textarea>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-offset-8 col-md-4">
-                                            <input type="submit" name="submit" id="submit" value="Save" class="btn btn-primary" style="font-weight: bold;">
-                                            <a href="client.html" class="btn btn-default"><strong>Cancel</strong></a>
-                                            <!-- <input type="reset" name="reset" id="reset" value="Reset" class="btn btn-default" style="font-weight: bold;"> -->
-                                        </div>
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-                        <div class="col-md-6">
-                            <section class="panel">
-                                <header class="panel-heading">
-                                Contact
-                                </header>
-                                <div class="panel-body">
-                                    <div class="row">
-                                        <table id="item_table" align="center">
 
-                                        </table>
+                <!-- Basic Forms & Horizontal Forms-->
+              
+				<div class="row">
+					<div class="col-md-offset-3 col-md-6">
+						<section class="panel">
+							<header class="panel-heading">
+							Incoming Parts Form
+							</header>
+							<div class="panel-body">
+								<form class="form-horizontal" role="form" id="form" onsubmit="return submitForm();">
+									<div class="form-group">
+										<label for="po_no" class="col-md-3 control-label">P.O. No.</label>
+										<div class="col-md-7">
+											<input type="text" name="po_no" id="po_no" class="form-control" required>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="supplier" class="col-md-3 control-label">Supplier</label>
+										<div class="col-md-7">
+											<input type="text" name="supplier" id="supplier" class="form-control" required>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="item" class="col-md-3 control-label">Item</label>
+										<div class="col-md-7">
+											<input type="text" name="item" id="item" class="form-control" required>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="quantity" class="col-md-3 control-label">Quantity</label>
+										<div class="col-md-7">
+											<input type="text" name="quantity" id="quantity" class="form-control" required>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="price" class="col-md-3 control-label">Price / pc</label>
+										<div class="col-md-7">
+											<input type="text" name="price" id="price" class="form-control" required>
+										</div>
+									</div>
+									<div class="form-group">
+										<label for="price" class="col-md-3 control-label">Date</label>
+										<div class="col-md-7">
+											<input type="date" name="date" id="date" class="form-control" required>
+										</div>
+									</div>
+									<div class="form-group">
+                                        <div class="col-md-offset-7 col-md-4">
+                                            <span id="id_button"></span>
+                                        </div>
                                     </div>
-                                </div>
-                            </section>
-                        </div>
-                    </div>
-                </form>
-            </section>
-        </section>
+								</form>
+							</div>
+						</section>
+					</div>
+				</div>
+			</section>
+		</section>
     </section>
 </body>
 </html>

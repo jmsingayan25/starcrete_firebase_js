@@ -174,7 +174,7 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
-        document.getElementById('id_page_header').innerHTML = "<a href='delivery_backloaded_order.html?plant=" + plant + "' style='color: inherit;'>" + plant + " Delivery Order</a>";
+        document.getElementById('id_page_header').innerHTML = "<a href='delivery_backloaded_order.html?plant=" + plant + "' style='color: inherit;'>" + plant + " Backloaded Order</a>";
 
         document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='delivery_ongoing_order.html?plant=" + plant + "'>Ongoing Delivery <span id='id_count_ongoing_order'></span></a></li><li><i class='fa fa-info-circle'></i><a href='delivery_pending_order.html?plant=" + plant + "'>Existing P.O. <span id='id_count_existing_po'></span></a></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i>Backloaded</li>";
 
@@ -230,7 +230,7 @@
 
                                 myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                 myTbody += "<td><strong>" + dr_no + "</strong></td>";
-                                myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + plant + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
+                                myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
                                 myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
                                 myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
                                 myTbody += "<td><strong>" + project_name + "</strong></td>";
@@ -313,7 +313,7 @@
 
                                     myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                     myTbody += "<td><strong>" + dr_no + "</strong></td>";
-                                    myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + plant + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
+                                    myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
                                     myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
                                     myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
                                     myTbody += "<td><strong>" + project_name + "</strong></td>";
@@ -395,7 +395,7 @@
 
                         myTbody += "<tr><td><strong>" + count + "</strong></td>";
                         myTbody += "<td><strong>" + dr_no + "</strong></td>";
-                        myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + plant + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
+                        myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
                         myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
                         myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
                         myTbody += "<td><strong>" + project_name + "</strong></td>";
@@ -495,13 +495,13 @@
         });
     }
 
-    function searchMatch(searchWord, findWord){
+    function printPo(){
 
-        parse_word = searchWord.replace(/\s+/g, '|').toLowerCase();
-        reg_word = new RegExp(parse_word, 'gi');
-        search = findWord.match(reg_word);
+        var fromDate = document.getElementById('start_date').value;
+        var endDate = document.getElementById('end_date').value;
+        var search_text = document.getElementById('search').value;
 
-        return search;
+        window.open('delivery_backloaded_order_print.html?plant='+plant+'&fromDate='+fromDate+'&endDate='+endDate+'&search_text='+search_text,'_blank');
     }
 
 </script>
@@ -610,7 +610,8 @@
 	                    <ul class="sub">
 	                        <li><a class="" href="purchase_order.html?plant=Bravo">Purchase Order</a></li>                          
                             <li><a class="" href="delivery_ongoing_order.html?plant=Bravo">Delivery Page</a></li>
-	                        <li><a class="" href="diesel.html?plant=Bravo">Diesel</a></li>
+                            <li><a class="" href="diesel.html?plant=Bravo">Diesel</a></li>
+	                        <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
 	                    </ul>
 	                </li>  
 	                <li class="sub-menu">
@@ -622,7 +623,8 @@
 	                    <ul class="sub">
 	                        <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>                          
                             <li><a class="" href="delivery_ongoing_order.html?plant=Delta">Delivery Page</a></li>
-	                        <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
+                            <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
+	                        <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
 	                    </ul>
 	                </li>  
 	                <li class="sub-menu">
@@ -715,6 +717,7 @@
 	                                <thead>
 	                                    <tr class="filterable">
 	                                        <th colspan="10">
+                                                <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button>
 	                                            <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
 	                                        </th>
 	                                    </tr>
