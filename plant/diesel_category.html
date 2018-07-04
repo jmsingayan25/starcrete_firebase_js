@@ -265,7 +265,7 @@ function displaycurrentCategory(getCurrentCategory)
                 var truckno = dieselChildSnapshot.val().truck_no;
                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
-                var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
+                var availablestock = Number(dieselChildSnapshot.val().seperateCurrentStock).toLocaleString("en");
                 var time = dieselChildSnapshot.val().time_input;
                 var drno = dieselChildSnapshot.val().dr_no || "";
                 var key = dieselChildSnapshot.key;
@@ -371,7 +371,7 @@ function Go()
                 var truckno = dieselChildSnapshot.val().truck_no;
                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
-                var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
+                var availablestock = Number(dieselChildSnapshot.val().seperateCurrentStock).toLocaleString("en");
                 var time = dieselChildSnapshot.val().time_input;
                 var drno = dieselChildSnapshot.val().dr_no || "";
                 var key = dieselChildSnapshot.key;
