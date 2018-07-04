@@ -297,7 +297,17 @@
                                      var newPostRef = postData.push();
                                      newPostRef.set(currentStockHolder);
                                      var postId = newPostRef.key;
-                                     window.location.reload();}     
+                                     window.location.reload();
+                                 }
+                                      firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot){
+                        var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
+                        var UpdateReverseDate = {reverseDate: StartReverseDate};;
+
+                        if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
+                        alert("Incoming diesel complete.");
+                        // window.location.reload();
+                    }
+                        });     
 
                    });
                         firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(NewSeperateSnapshots)
@@ -318,6 +328,10 @@
                         var new_liters = total_string_liters;
                         var stock_available  ={Liters: new_liters};
                         firebase.database().ref().child("available_diesel_category/" + plant).set(stock_available );
+
+                          var currentStockCopy = new_liters;
+                        pickcategory = Snapshot.val().CurrentCategory;
+                        transactionType = "In"
                                         //
                                         pickcategory = Snapshot.val().CurrentCategory;
                                         var get_categorySeperate = NewSeperateSnapshots.val().CategoryName;
@@ -356,7 +370,17 @@
                                         window.location.reload();
                         }
                             });  
-                    
+                    //
+                    firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot){
+                        var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
+                        var UpdateReverseDate = {reverseDate: StartReverseDate};;
+
+                        if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
+                        alert("Incoming diesel complete.");
+                        // window.location.reload();
+                    }
+                        });
+                    //separate total      
                    //endloop     
                 });    
               });  
