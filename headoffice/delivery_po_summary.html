@@ -172,6 +172,7 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+        document.getElementById('page_header').innerHTML = "Summary of Deliveries";
 
         document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i><a href='delivery_ongoing_order.html?plant=" + plant + "'>Ongoing Delivery <span class='badge'><?php echo getDeliveryCountOnDeliveryOffice($db, $plant); ?></span></a></li><li><i class='fa fa-info-circle'></i><a href='delivery_pending_order.html?plant=" + plant + "'>Existing P.O. <span class='badge'><?php echo countPendingPo($db, $plant); ?></span></a></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i><a href='delivery_backloaded_order.html?plant=" + plant + "'>Backloaded</a></li>";
 
@@ -458,6 +459,11 @@
         <section id="main-content">
             <section class="wrapper">            
                 <!--overview start-->
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="page-header" id="page_header"></h3>
+                    </div>
+                </div>
                	<div class="row">
 	                <div class="col-md-12">
 	                    <ol class="breadcrumb" id="id_breadcrumb"></ol>
