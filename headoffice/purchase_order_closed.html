@@ -186,7 +186,7 @@
         if(fromDate == '' && endDate == ''){
 
             firebase.database().ref('purchase_order_closed').orderByChild('reverseDate').on('child_added', function(poCloseSnapshot){
-                if(poCloseSnapshot.val().delivered_plant == plant){
+                if(poCloseSnapshot.val().issued_po_plant == plant){
 
                     firebase.database().ref('purchase_order_closed/'+poCloseSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
                         projectSnapshot.forEach(function(projectChildSnapshot){
@@ -277,7 +277,7 @@
 
                 if(poCloseSnapshot.val().date >= fromDate && poCloseSnapshot.val().date <= endDate){
 
-                    if(poCloseSnapshot.val().delivered_plant == plant){
+                    if(poCloseSnapshot.val().issued_po_plant == plant){
 
                         firebase.database().ref('purchase_order_closed/'+poCloseSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
                             projectSnapshot.forEach(function(projectChildSnapshot){
@@ -365,8 +365,8 @@
         var myTbody = "";
         var count = 1;
 
-        firebase.database().ref('purchase_order_closed').once('value').then(function(poSnapshot){
-            if(poSnapshot.val() == null){
+        firebase.database().ref('purchase_order_closed').on('child_added', function(poSnapshot){
+            if(poSnapshot.val() == null || poSnapshot.val().issued_po_plant != plant){
 
                 myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
@@ -375,7 +375,7 @@
         });
 
         firebase.database().ref('purchase_order_closed').orderByChild('reverseDate').on('child_added', function(poCloseSnapshot){
-            if(poCloseSnapshot.val().delivered_plant == plant){
+            if(poCloseSnapshot.val().issued_po_plant == plant){
                 firebase.database().ref('purchase_order_closed/'+poCloseSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
                     projectSnapshot.forEach(function(projectChildSnapshot){
 

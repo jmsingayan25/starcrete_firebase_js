@@ -260,7 +260,7 @@
 
     		if(fromDate == '' && endDate == ''){
 
-    			if(orderSnapshot.val().delivered_plant == plant){
+    			// if(orderSnapshot.val().delivered_plant == plant){
 
     				firebase.database().ref('purchase_order_closed/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
                         projectSnapshot.forEach(function(projectChildSnapshot){
@@ -329,7 +329,7 @@
                             }
                         });
                     });
-    			}
+    			// }
 
     		}else{
 
@@ -347,7 +347,7 @@
 
 	            if(orderSnapshot.val().date >= fromDate && orderSnapshot.val().date <= endDate){
 
-	            	if(orderSnapshot.val().delivered_plant == plant){
+	            	// if(orderSnapshot.val().delivered_plant == plant){
 
 		            	firebase.database().ref('purchase_order_closed/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
 	                        projectSnapshot.forEach(function(projectChildSnapshot){
@@ -416,7 +416,7 @@
 	                            }
 	                        });
 	                    });
-		            }
+		            // }
 	            }
     		}
     	});
