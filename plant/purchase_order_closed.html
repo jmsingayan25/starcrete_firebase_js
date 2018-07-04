@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+    <link rel="shortcut icon" href="img/favicon.png">
+
+	<title>Closed P.O. - Purchase Order</title>
+
+	<!-- Firebase App is always required and must be first -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+
+	<!-- Add additional services you want to use -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+	<script src="../js_config/firebase_config.js"></script>
+
+	<!-- Bootstrap CSS -->    
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="../css/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="../css/elegant-icons-style.css" rel="stylesheet" />
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
+    <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="../css/fullcalendar.css">
+    <link href="../css/widgets.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/style-responsive.css" rel="stylesheet" />
+    <link href="../css/xcharts.min.css" rel=" stylesheet">	
+    <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+
+    <!-- javascripts -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery-ui-1.10.4.min.js"></script>
+    <script src="../js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+    <!-- bootstrap -->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- nice scroll -->
+    <script src="../js/jquery.scrollTo.min.js"></script>
+    <script src="../js/jquery.nicescroll.js" type="text/javascript"></script>
+    <!-- charts scripts -->
+    <script src="../assets/jquery-knob/js/jquery.knob.js"></script>
+    <script src="../js/jquery.sparkline.js" type="text/javascript"></script>
+    <script src="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+    <script src="../js/owl.carousel.js" ></script>
+    <!-- jQuery full calendar -->
+    <script src="../js/fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
+    <script src="../assets/fullcalendar/fullcalendar/fullcalendar.js"></script>
+    <!--script for this page only-->
+    <script src="../js/calendar-custom.js"></script>
+    <script src="../js/jquery.rateit.min.js"></script>
+    <!-- custom select -->
+    <script src="../js/jquery.customSelect.min.js" ></script>
+    <script src="../assets/chart-master/Chart.js"></script>
+
+    <!--custome script for all page-->
+    <script src="../js/scripts.js"></script>
+    <!-- custom script for this page-->
+    <script src="../js/sparkline-chart.js"></script>
+    <script src="../js/easy-pie-chart.js"></script>
+    <script src="../js/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="../js/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="../js/xcharts.min.js"></script>
+    <script src="../js/jquery.autosize.min.js"></script>
+    <script src="../js/jquery.placeholder.min.js"></script>
+    <script src="../js/gdp-data.js"></script>  
+    <script src="../js/morris.min.js"></script>
+    <script src="../js/sparklines.js"></script>    
+    <script src="../js/charts.js"></script>
+    <script src="../js/jquery.slimscroll.min.js"></script>
+    <script src="../js_config/function.js"></script>
+
+    <!-- =======================================================
+    Theme Name: NiceAdmin
+    Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+    Author: BootstrapMade
+    Author URL: https://bootstrapmade.com
+    ======================================================= -->
+
+<script>
+	
+	var timer = null;
+
+    function goAway() {
+        clearTimeout(timer);
+        timer = setTimeout(function() {
+            // window.location.reload(true);
+            tableData();
+            totalCountBadge();
+        }, 60000);
+    }
+
+    window.addEventListener('mousemove', goAway, true);
+    window.addEventListener('keypress', goAway, true);
+
+    goAway();
+
+	$(document).ready(function(){
+        $('.filterable .btn-filter').click(function(){
+            var $panel = $(this).parents('.filterable'),
+            $filters = $panel.find('.filters input'),
+            $tbody = $panel.find('.table tbody');
+            if ($filters.prop('disabled') == true) {
+                $filters.prop('disabled', false);
+                $filters.first().focus();
+            } else {
+                $filters.val('').prop('disabled', true);
+                $tbody.find('.no-result').remove();
+                $tbody.find('tr').show();
+            }
+        });
+
+        $('.filterable .filters input').keyup(function(e){
+            /* Ignore tab key */
+            var code = e.keyCode || e.which;
+            if (code == '9') return;
+            /* Useful DOM data and selectors */
+            var $input = $(this),
+            inputContent = $input.val().toLowerCase(),
+            $panel = $input.parents('.filterable'),
+            column = $panel.find('.filters th').index($input.parents('th')),
+            $table = $panel.find('.table'),
+            $rows = $table.find('tbody tr');
+            /* Dirtiest filter function ever ;) */
+            var $filteredRows = $rows.filter(function(){
+                var value = $(this).find('td').eq(column).text().toLowerCase();
+                return value.indexOf(inputContent) === -1;
+            });
+            /* Clean previous no-result if exist */
+            $table.find('tbody .no-result').remove();
+            /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
+            $rows.show();
+            $filteredRows.hide();
+            /* Prepend no-result row if all rows are filtered */
+            if ($filteredRows.length === $rows.length) {
+                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="10" style="min-height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
+            }
+        });
+
+        startTime();
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user != null) {
+
+                var uid = user.uid;
+        
+                firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+
+                    plant = snapshot.val().office;
+
+                    if(plant == 'Head Office'){
+                        window.location.href = '../headoffice/index.html';
+                    }
+                    
+                    tableData();
+                    totalCountBadge();
+                    // goAway(plant);
+
+                    document.getElementById('username').innerHTML = snapshot.val().firstname; 
+                    // document.getElementById('id_hidden_plant').innerHTML = "<input type='hidden' id='hidden_plant' value='" + plant + "'>";
+                },(error) => {
+                    console.log(error);
+                });
+            } else {
+                window.location.href = '../login.html';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+    });
+
+    function tableData(){
+
+    	var myTbody = "";
+    	var count = 1;
+
+    	firebase.database().ref('purchase_order_closed').orderByChild('reverseDate').on('child_added', function(orderSnapshot){
+    		firebase.database().ref('purchase_order_closed/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
+    			projectSnapshot.forEach(function(projectChildSnapshot){
+
+    				project_name = projectChildSnapshot.val().project_name;
+    				project_address  =projectChildSnapshot.val().project_address;
+    				date = orderSnapshot.val().date;
+		    		delivered_plant = orderSnapshot.val().delivered_plant;
+		    		issued_po_plant = orderSnapshot.val().issued_po_plant;
+		    		item_no = orderSnapshot.val().item_no;
+		    		po_no = orderSnapshot.val().po_no;
+		    		psi = orderSnapshot.val().psi;
+
+		    		if(psi != ''){
+		    			psi_ext = " (" + psi + " PSI)";
+		    		}else{
+		    			psi_ext = "";
+		    		}
+
+		    		quantity = Number(orderSnapshot.val().quantity).toLocaleString('en');
+		    		reason = orderSnapshot.val().reason;
+		    		status = orderSnapshot.val().status;
+		    		time = orderSnapshot.val().time;
+
+		    		myTbody += "<tr><td><strong>" + count + "</strong></td>";
+		    		myTbody += "<td><strong>" + po_no + "</strong></td>";
+		    		myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+		    		myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+		    		myTbody += "<td><strong>" + project_name + "</strong></td>";
+		    		myTbody += "<td><strong>" + project_address + "</strong></td>";
+		    		myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+
+		    		firebase.database().ref('purchase_order_closed/'+orderSnapshot.key+'/contact').once('value', function(contactSnapshot){
+                        contactSnapshot.forEach(function(contactChildSnapshot){
+
+                            contact_name = contactChildSnapshot.val().contact_name;
+                            contact_no = contactChildSnapshot.val().contact_no;
+                            myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+                        }); 
+                    });
+
+		    		myTbody += "</td>";
+		    		myTbody += "<td><strong>" + date + "</strong></td>";
+		    		myTbody += "<td><strong>" + status + "</strong></td>";
+		    		myTbody += "<td><strong>" + reason + "</strong></td></tr>";
+
+		    		document.getElementById('orderList').innerHTML = myTbody;
+		    		count++
+    			});
+    		});
+    	});
+
+    	if(plant == 'Bravo'){
+            plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
+        }else{
+            plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
+        }
+
+        document.getElementById('id_plant_name').innerHTML = plant_name;
+
+    }
+
+    function submitForm(){
+
+    	event.preventDefault();
+
+    	var myTbody = "";
+    	var count = 1;
+    	var fromDate = document.getElementById('start_date').value;
+    	var endDate = document.getElementById('end_date').value;
+    	var search_text = document.getElementById('search').value;
+
+    	firebase.database().ref('purchase_order_closed').on('child_added', function(orderSnapshot){
+
+    		if(fromDate == '' && endDate == ''){
+
+    			if(orderSnapshot.val().delivered_plant == plant){
+
+    				firebase.database().ref('purchase_order_closed/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
+                        projectSnapshot.forEach(function(projectChildSnapshot){
+
+                            text_po_no = orderSnapshot.val().po_no.toLowerCase();
+                            text_item_no = orderSnapshot.val().item_no.toLowerCase();
+                            text_project_name = projectChildSnapshot.val().project_name.toLowerCase();
+                            text_project_address = projectChildSnapshot.val().project_address.toLowerCase();
+
+                            all_text = text_po_no + " " + text_item_no + " " + text_project_name + " " + text_project_address;
+
+                            search = searchMatch(search_text, all_text);
+
+                            if(search != null){
+
+                                po_no = orderSnapshot.val().po_no;
+                                item_no = orderSnapshot.val().item_no;
+                                psi = orderSnapshot.val().psi;
+
+                                if(psi != ""){
+                                    psi_ext = " (" + psi + " PSI)";
+                                }else{
+                                    psi_ext = "";
+                                }
+
+                                quantity = orderSnapshot.val().quantity || "";
+                                balance = orderSnapshot.val().balance || "";
+                                project_name = projectChildSnapshot.val().project_name;
+                                project_address = projectChildSnapshot.val().project_address;
+                                date = dateFormat(orderSnapshot.val().date);
+                                status = orderSnapshot.val().status;
+                                reason = orderSnapshot.val().reason;
+                                po_no_key = orderSnapshot.val().po_no_key;
+
+                                if(quantity != ""){
+                                    closed_quantity = Number(quantity).toLocaleString('en');
+                                }else{
+                                    closed_quantity = Number(balance).toLocaleString('en');
+                                }
+
+                                myTbody += "<tr><td><strong>" + count + "</strong></td>";
+                                // myTbody += "<td><strong>" + po_no + "</strong></td>";
+                                myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
+                                myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+                                myTbody += "<td><strong>" + closed_quantity + " pcs</strong></td>";
+                                myTbody += "<td><strong>" + project_name + "</strong></td>";
+                                myTbody += "<td><strong>" + project_address + "</strong></td>";
+                                myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+
+                                firebase.database().ref('purchase_order_closed/'+orderSnapshot.key+'/contact').once('value', function(contactSnapshot){
+                                    contactSnapshot.forEach(function(contactChildSnapshot){
+
+                                        contact_name = contactChildSnapshot.val().contact_name;
+                                        contact_no = contactChildSnapshot.val().contact_no;
+                                        myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+                                    }); 
+                                });
+
+                                myTbody += "</td>";
+                                myTbody += "<td><strong>" + date + "</strong></td>";
+                                myTbody += "<td><strong>" + status + "</strong></td>";
+                                myTbody += "<td><strong>" + reason + "</strong></td></tr>";
+
+                                // document.getElementById('orderList').innerHTML = myTbody;
+                                count++;
+                            }
+                        });
+                    });
+    			}
+
+    		}else{
+
+    			if(fromDate == ''){
+	                fromDate = new Date().toLocaleDateString('en');
+	            }else{
+	                fromDate = new Date(fromDate).toLocaleDateString('en');
+	            }
+
+	            if(endDate == ''){
+	                endDate = new Date().toLocaleDateString('en');
+	            }else{
+	                endDate = new Date(endDate).toLocaleDateString('en');
+	            }
+
+	            if(orderSnapshot.val().date >= fromDate && orderSnapshot.val().date <= endDate){
+
+	            	if(orderSnapshot.val().delivered_plant == plant){
+
+		            	firebase.database().ref('purchase_order_closed/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
+	                        projectSnapshot.forEach(function(projectChildSnapshot){
+
+	                            text_po_no = orderSnapshot.val().po_no.toLowerCase();
+	                            text_item_no = orderSnapshot.val().item_no.toLowerCase();
+	                            text_project_name = projectChildSnapshot.val().project_name.toLowerCase();
+	                            text_project_address = projectChildSnapshot.val().project_address.toLowerCase();
+
+	                            all_text = text_po_no + " " + text_item_no + " " + text_project_name + " " + text_project_address;
+
+	                            search = searchMatch(search_text, all_text);
+
+	                            if(search != null){
+
+	                                po_no = orderSnapshot.val().po_no;
+	                                item_no = orderSnapshot.val().item_no;
+	                                psi = orderSnapshot.val().psi;
+
+	                                if(psi != ""){
+	                                    psi_ext = " (" + psi + " PSI)";
+	                                }else{
+	                                    psi_ext = "";
+	                                }
+
+	                                quantity = orderSnapshot.val().quantity || "";
+	                                balance = orderSnapshot.val().balance || "";
+	                                project_name = projectChildSnapshot.val().project_name;
+	                                project_address = projectChildSnapshot.val().project_address;
+	                                date = dateFormat(orderSnapshot.val().date);
+	                                status = orderSnapshot.val().status;
+	                                reason = orderSnapshot.val().reason;
+	                                po_no_key = orderSnapshot.val().po_no_key;
+
+	                                if(quantity != ""){
+	                                    closed_quantity = Number(quantity).toLocaleString('en');
+	                                }else{
+	                                    closed_quantity = Number(balance).toLocaleString('en');
+	                                }
+
+	                                myTbody += "<tr><td><strong>" + count + "</strong></td>";
+	                                // myTbody += "<td><strong>" + po_no + "</strong></td>";
+	                                myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
+	                                myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+	                                myTbody += "<td><strong>" + closed_quantity + " pcs</strong></td>";
+	                                myTbody += "<td><strong>" + project_name + "</strong></td>";
+	                                myTbody += "<td><strong>" + project_address + "</strong></td>";
+	                                myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+
+	                                firebase.database().ref('purchase_order_closed/'+orderSnapshot.key+'/contact').once('value', function(contactSnapshot){
+	                                    contactSnapshot.forEach(function(contactChildSnapshot){
+
+	                                        contact_name = contactChildSnapshot.val().contact_name;
+	                                        contact_no = contactChildSnapshot.val().contact_no;
+	                                        myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+	                                    }); 
+	                                });
+
+	                                myTbody += "</td>";
+	                                myTbody += "<td><strong>" + date + "</strong></td>";
+	                                myTbody += "<td><strong>" + status + "</strong></td>";
+	                                myTbody += "<td><strong>" + reason + "</strong></td></tr>";
+
+	                                // document.getElementById('orderList').innerHTML = myTbody;
+	                                count++;
+	                            }
+	                        });
+	                    });
+		            }
+	            }
+    		}
+    	});
+
+		if(myTbody == ""){
+
+            myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+            document.getElementById('orderList').innerHTML = myTbody;
+
+        }else{
+            document.getElementById('orderList').innerHTML = myTbody;
+        }
+    }
+
+    function totalCountBadge(){
+
+        po_count = 0;
+        firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
+            if(orderSnapshot.val() != null){
+                firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
+                    itemSnapshot.forEach(function(itemChildSnapshot){
+                        if(itemChildSnapshot.val().balance != 0){
+                            po_count++;
+                            document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
+                        }
+                    });
+                });
+            }
+        });
+
+        if(po_count == 0){
+            document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
+        }
+
+        do_count = 0;
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot) {
+            if(ongoingOrderSnapshot.val() != null){
+                do_count++;
+                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+            }
+        });
+
+        if(do_count == 0){
+            document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+        }
+    }
+
+    function startTime() {
+
+        var today = new Date();
+        var hr = today.getHours();
+        var min = today.getMinutes();
+        var sec = today.getSeconds();
+        ap = (hr < 12) ? "<span>AM</span>" : "<span>PM</span>";
+        hr = (hr == 0) ? 12 : hr;
+        hr = (hr > 12) ? hr - 12 : hr;
+        //Add a zero in front of numbers<10
+        hr = checkTime(hr);
+        min = checkTime(min);
+        sec = checkTime(sec);
+        document.getElementById("clock").innerHTML = hr + ":" + min + ":" + sec + " " + ap;
+        
+        var months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        var curWeekDay = days[today.getDay()];
+        var curDay = today.getDate();
+        var curMonth = months[today.getMonth()];
+        var curYear = today.getFullYear();
+        var date = curWeekDay+", "+curDay+" "+curMonth+" "+curYear;
+        document.getElementById("date").innerHTML = date;
+        
+        var time = setTimeout(function(){ startTime() }, 500);
+    }
+
+    function checkTime(i) {
+
+        if (i < 10) {
+            i = "0" + i;
+        }
+        return i;
+    }
+
+    function printPo(){
+
+        var fromDate = document.getElementById('start_date').value;
+        var endDate = document.getElementById('end_date').value;
+        var search_text = document.getElementById('search').value;
+
+        window.open('purchase_order_closed_print.html?plant='+plant+'&fromDate='+fromDate+'&endDate='+endDate+'&search_text='+search_text,'_blank');
+    }
+
+</script>
+<style>
+.table_page{
+    /*margin: auto;*/
+    margin-top: -40px;
+    /*width: 100%;*/
+    text-align: center;
+}
+
+.table_row_count{
+    margin-top: -15px;
+}
+
+.filterable .panel-heading .pull-right {
+    margin-top: -20px;
+}
+.filterable .filters input[disabled] {
+    background-color: transparent;
+    text-align: center;
+    border: none;
+    cursor: auto;
+    box-shadow: none;
+    padding: 0;
+    height: auto;
+}
+.filterable .filters input[disabled]::-webkit-input-placeholder {
+    color: white;
+    text-align: left;
+    font-weight: bold;
+}
+.filterable .filters input[disabled]::-moz-placeholder {
+     color: white;
+     text-align: left;
+     font-weight: bold;
+}
+.filterable .filters input[disabled]:-ms-input-placeholder {
+     color: white;
+     text-align: left;
+     font-weight: bold;
+}
+</style>
+</head>
+<body>
+	<!-- container section start -->
+    <section id="container" class="">
+        <header class="header dark-bg">
+            <div class="toggle-nav">
+            <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
+            </div>
+
+            <!--logo start-->
+
+            <!--logo end-->
+            <span id="id_plant_name"></span>
+            <div class="top-nav notification-row">                
+                <!-- notificatoin dropdown start-->
+                <ul class="nav pull-right top-menu">
+                    <!-- user login dropdown start-->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <!--  <span class="profile-ava">
+                        <img alt="" src="img/avatar1_small.jpg">
+                        </span> -->
+                            <span class="username" id="username"></span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <div class="log-arrow-up"></div>
+                            <li>
+                                <a href="" id="logoutBtn"><i class="icon_key_alt"></i> Log Out</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->
+                </ul>
+                <!-- notificatoin dropdown end-->
+            </div>
+        </header>  
+
+        <!--sidebar start-->
+	    <aside>
+	        <div id="sidebar"  class="nav-collapse ">
+	            <!-- sidebar menu start-->
+	            <ul class="sidebar-menu">                
+	                <li class="">
+	                    <a class="" href="index.html">
+	                        <i class="icon_house"></i>
+	                        <span>History</span>
+	                    </a>
+	                </li>
+                    <li class="">
+                        <a class="" href="diesel.html">
+                            <i class="fa fa-building"></i>
+                            <span>Diesel</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a class="" href="diesel_category.html">
+                            <i class="fa fa-building"></i>
+                            <span>Oil</span>
+                        </a>
+                    </li>
+	                <li class="sub-menu">
+	                    <a href="javascript:;" class="">
+	                        <i class="fa fa-building"></i>
+	                        <span>Purchase Order</span>
+	                        <span class="menu-arrow arrow_carrot-down"></span>
+	                    </a>
+	                    <ul class="sub">
+	                        <li><a class="" href="purchase_order.html">Pending P.O.</a></li>
+	                        <!-- <li><a class="" href="purchase_closed_order.html">Closed P.O.</a></li> -->
+	                    </ul>
+	                </li>  
+	                <li class="sub-menu">
+	                    <a href="javascript:;" class="">
+	                        <i class="fa fa-building"></i>
+	                        <span>Delivery Order</span>
+	                        <span class="menu-arrow arrow_carrot-down"></span>
+	                    </a>
+	                    <ul class="sub">
+	                        <li><a class="" href="delivery_pending_order.html">Existing P.O. <span id="id_count_existing_po"></span></a></li>    
+	                        <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span id="id_count_ongoing_order"></span></a></li>                          
+	                        <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
+	                        <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
+	                    </ul>
+	                </li>  
+	            </ul>
+	            <!-- sidebar menu end-->
+	        </div>
+	    </aside>
+	    <!--sidebar end-->
+
+	    <!--main content start-->
+        <section id="main-content">
+            <section class="wrapper">            
+                <!--overview start-->
+                <div class="row">
+                    <div class="col-md-12">
+                        <h3 class="page-header"><a href="purchase_order_closed.html" style="color: inherit;">Closed Purchase Order</a></h3>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-8">
+                        <ol class="breadcrumb">
+	                        <li><i class="fa fa-building"></i>Purchase Order</li>
+	                        <li><i class="icon_document"></i>Closed P.O.</li>						  	
+	                    </ol>
+                    </div>
+                    <div class="col-md-4">
+                        <ol class="breadcrumb">
+                            <li>As of <strong><span id="clock"></span>, <span id="date"></span></strong></li> 
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <section class="panel">
+                            <form class="form-inline" onsubmit="return submitForm();">
+                                <header class="panel-heading">
+                                    <div class="row" style="margin-bottom: 5px;">
+                                    	<span id="id_hidden_plant"></span>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="start_date">From:</label>
+                                                <div class="tooltips" data-original-title="Start date of transaction" data-placement="top">
+                                                    <input type="date" id="start_date" name="start_date" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2">
+                                            <div class="form-group">
+                                                <label for="end_date">To:</label>
+                                                <div class="tooltips" data-original-title="End date of transaction" data-placement="top">
+                                                    <input type="date" id="end_date" name="end_date" class="form-control">
+                                                </div>
+                                            </div>
+                                        </div>  
+                                        <div class="input-group col-md-5" style="margin: 38px 0px 0px 0px;">
+                                            <div class="tooltips" data-original-title="Search P.O. No., Item, Project Name, Address or Contact" data-placement="top">
+                                                <input type="text" id="search" name="search" class="form-control" placeholder="Search...">
+                                            </div>
+                                            <span class="input-group-btn">
+                                                <button class="btn btn-info" type="submit" name="search_table">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                        <div class="input-group col-md-2" style="white-space: nowrap; margin: 38px 0px 0px 60px;">
+                                            <label for="view_count" class="col-md-8 control-label">Number of rows:</label>
+                                            <div class="form-group">
+                                                <div class="col-md-12">
+                                                    <select id="view_count" name="view_count" class="form-control" onchange="this.form.submit()">
+                                                        <option value="25">25</option>
+                                                        <option value="50">50</option>
+                                                        <option value="75">75</option>
+                                                        <option value="100">100</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                    </div>
+                                </header>
+                            </form>
+                            <div class="table-responsive filterable">
+                                <table class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr class="filterable">
+                                            <th colspan="10">
+                                                <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button>
+                                                <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
+                                            </th>
+                                        </tr>
+                                        <tr class="filters" style="background-color: #00a3cc;">
+                                            <th class="col-md-1" style="color: white">#</th>
+                                            <th class="col-md-1"><input type="text" class="form-control" placeholder="P.O. No." disabled></th>
+                                            <th class="col-md-1"><input type="text" class="form-control" placeholder="Item" disabled></th>
+                                            <th class="col-md-1" style="color: white">Quantity</th>
+                                            <th class="col-md-2"><input type="text" class="form-control" placeholder="Project Name" disabled></th>
+                                            <th class="col-md-2"><input type="text" class="form-control" placeholder="Address" disabled></th>
+                                            <th class="col-md-1"><input type="text" class="form-control" placeholder="Contact" disabled></th>
+                                            <th class="col-md-1" style="color: white">Date</th>
+                                            <th class="col-md-1" style="color: white">Status</th>
+                                            <th class="col-md-1" style="color: white">Reason</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="orderList">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </section>
+	</section>
+</body>
+</html>
