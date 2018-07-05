@@ -278,7 +278,6 @@
                                     var stock_seperate_available  = {CategoryName: get_textCategory,
                                                                     Liters: NewStringTotal};
                                      firebase.database().ref().child("available_seperate_category/" + plant + "/" + SeperateChildSnapshot.key).set(stock_seperate_available);
-
                                      var currentStockHolder = {
                                      po_no: po_no, dr_no: dr_no, 
                                      quantity_in: quantity_in,
@@ -304,11 +303,8 @@
                         var UpdateReverseDate = {reverseDate: StartReverseDate};;
 
                         if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
-                        alert("Incoming diesel complete.");
-                        // window.location.reload();
                     }
                         });     
-
                    });
                         firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(NewSeperateSnapshots)
                         {               var po_no = document.getElementById('po_no').value;

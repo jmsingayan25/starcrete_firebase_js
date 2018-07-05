@@ -249,10 +249,39 @@
                                     firebase.database().ref().child("available_seperate_category/" + plant + "/" + SeperateChildSnapshot.key).set(stock_seperate_available);
 
                                     }
+                                    //
+                                firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot)
+                                {
+                                    var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
+                                    var UpdateReverseDate = {reverseDate: StartReverseDate};
+                                    
+                                    // firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
+                                    console.log(StartReverseDate);
+
+                                    if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
+                                        alert("Outgoing diesel complete.");
+                                        //window.location.reload();
+                                    }
+                                });
+
+                                 firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(negativestockSnapshot)
+                                {
+                                    var getLiters = Number(negativestockSnapshot.val().Liters);
+                                    if (getLiters <= 0) 
+                                    {
+                                    getLiters = Math.max(0,getLiters);
+
+                                    var stock_available  = {Liters: getLiters};
+                                    firebase.database().ref().child("available_diesel_category/" + plant).set(stock_available );
+                                    }
+                                   
+                                });
                                     window.location.reload();       
                                 }
-                        });
-                        //endforeach  
+                        }); 
+                        //endforeach
+                        
+                        // 
                     });    
                 });
             }

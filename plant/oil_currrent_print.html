@@ -150,8 +150,8 @@
                     if(plant == 'Head Office'){
                         window.location.href = '../headoffice/index.html';
                     }
-                    
-                    displaycurrentCategory()
+                    displaycurrentCategory();
+
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
@@ -174,6 +174,8 @@ function displaycurrentCategory()
 
                 document.getElementById("stateDate").innerHTML = DieselPrintransaction.val().printCurrentDate;
                 document.getElementById("Current_category").innerHTML = DieselPrintransaction.val().printCurrentCatagory;
+                document.getElementById("getcurrentcategoryname").innerHTML = DieselPrintransaction.val().printCurrentCatagory;
+                //document.getElementById("id_Categorystock").innerHTML = SeperateChildSnapshot.val().Liters + " Liter(s)";
                 var getdataCurrentCategory = dieselChildSnapshot.val().PickCategoryName;
                 var date = DieselPrintransaction.val().printCurrentDate;
                 //var get_transactionCategory = DieselPrintransaction.val().printCurrentCatagory;
@@ -216,33 +218,35 @@ function displaycurrentCategory()
                         if (dieselChildSnapshot.val().PickCategoryName == SeperateChildSnapshot.val().CategoryName) 
                         {
                         document.getElementById("id_Categorystock").innerHTML = SeperateChildSnapshot.val().Liters + " Liter(s)"; 
+                                        
                         }
 
                         });
                         });  
                        
-                } 
+                    } 
                 }
                });
                if (myTbody == "") 
                {
                     myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
                     document.getElementById("DieselList").innerHTML = myTbody; 
-                }else{document.getElementById("DieselList").innerHTML = myTbody; }   
-                  window.print();
+                }else{document.getElementById("DieselList").innerHTML = myTbody;}
+                setTimeout(function (){ window.print();}, 1000);  
+                  
       });
             });
 
-        firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(totalstockSnapshot)
-     {
-        var get_totalStock = totalstockSnapshot.val().Liters;
-        document.getElementById("id_stock").innerHTML = get_totalStock + " Liter(s)";
+    //     firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(totalstockSnapshot)
+    //  {
+    //     var get_totalStock = totalstockSnapshot.val().Liters;
+    //     document.getElementById("id_stock").innerHTML = get_totalStock + " Liter(s)";
 
-        if(get_totalStock <= 3500)
-        {
-            document.getElementById("id_stock").style.color ="red";
-        }
-    });
+    //     if(get_totalStock <= 3500)
+    //     {
+    //         document.getElementById("id_stock").style.color ="red";
+    //     }
+    // });
   
         firebase.database().ref().child("incoming_diesel_category/" + plant).orderByChild("date").limitToLast(1).on('child_added',function(lastDaySnapshot)
      {
@@ -253,7 +257,6 @@ function displaycurrentCategory()
      });
 
 }
-
 </script>
 <style>
 
@@ -323,9 +326,9 @@ function displaycurrentCategory()
                                     <thead>
                                         <tr >
                                             <th colspan="8">
-                                                <span>Available stock as of today: <span id="id_stock">
-                                                </span></span><br>
-                                                <span>Category stock as of today: <span id="id_Categorystock">
+                                                <!-- <span>Available stock as of today: <span id="id_stock">
+                                                </span></span><br> -->
+                                                <span><span id ="getcurrentcategoryname"></span> stock as of today: <span id="id_Categorystock">
                                                 </span></span>
                                                 <br><span>Last Delivery: <span id ="last_day"></span></span><br>
                                                 <span>Category: <span id ="Current_category"></span></span>
