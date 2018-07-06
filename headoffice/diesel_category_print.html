@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+    <link rel="shortcut icon" href="img/favicon.png">
+
+	<title>Oil</title>
+
+	<!-- Firebase App is always required and must be first -->
+	<!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-app.js"></script>
+
+	<!-- Add additional services you want to use -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+	<script src="../js_config/firebase_config.js"></script>
+
+	<!-- Bootstrap CSS -->    
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="../css/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="../css/elegant-icons-style.css" rel="stylesheet" />
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
+    <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="../css/fullcalendar.css">
+    <link href="../css/widgets.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/style-responsive.css" rel="stylesheet" />
+    <link href="../css/xcharts.min.css" rel=" stylesheet">	
+    <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+
+    <!-- javascripts -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery-ui-1.10.4.min.js"></script>
+    <script src="../js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+    <!-- bootstrap -->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- nice scroll -->
+    <script src="../js/jquery.scrollTo.min.js"></script>
+    <script src="../js/jquery.nicescroll.js" type="text/javascript"></script>
+    <!-- charts scripts -->
+    <script src="../assets/jquery-knob/js/jquery.knob.js"></script>
+    <script src="../js/jquery.sparkline.js" type="text/javascript"></script>
+    <script src="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+    <script src="../js/owl.carousel.js" ></script>
+    <!-- jQuery full calendar -->
+    <script src="../js/fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
+    <script src="../assets/fullcalendar/fullcalendar/fullcalendar.js"></script>
+    <!--script for this page only-->
+    <script src="../js/calendar-custom.js"></script>
+    <script src="../js/jquery.rateit.min.js"></script>
+    <!-- custom select -->
+    <script src="../js/jquery.customSelect.min.js" ></script>
+    <script src="../assets/chart-master/Chart.js"></script>
+
+    <!--custome script for all page-->
+    <script src="../js/scripts.js"></script>
+    <!-- custom script for this page-->
+    <script src="../js/sparkline-chart.js"></script>
+    <script src="../js/easy-pie-chart.js"></script>
+    <script src="../js/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="../js/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="../js/xcharts.min.js"></script>
+    <script src="../js/jquery.autosize.min.js"></script>
+    <script src="../js/jquery.placeholder.min.js"></script>
+    <script src="../js/gdp-data.js"></script>  
+    <script src="../js/morris.min.js"></script>
+    <script src="../js/sparklines.js"></script>    
+    <script src="../js/charts.js"></script>
+    <script src="../js/jquery.slimscroll.min.js"></script>
+    <script src="../js_config/function.js"></script>
+
+    <!-- =======================================================
+    Theme Name: NiceAdmin
+    Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
+    Author: BootstrapMade
+    Author URL: https://bootstrapmade.com
+    ======================================================= -->
+
+<script>
+
+	var plant = getUrlParameter('plant');	
+
+	$(document).ready(function(){
+
+		document.getElementById('page_header').innerHTML = plant +" Oil Transactions";
+
+		displaycurrentCategory();
+
+	});
+	function displaycurrentCategory()
+{
+    var myTbody = "";
+    firebase.database().ref('diesel_category_print/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselPrintransaction) {
+      firebase.database().ref('incoming_diesel_category/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
+        DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
+
+                document.getElementById("stateDate").innerHTML = DieselPrintransaction.val().printCurrentDate;
+                document.getElementById("Current_category").innerHTML = DieselPrintransaction.val().printCurrentCatagory;
+                var getdataCurrentCategory = dieselChildSnapshot.val().PickCategoryName;
+                var date = DieselPrintransaction.val().printCurrentDate;
+                //var get_transactionCategory = DieselPrintransaction.val().printCurrentCatagory;
+                var CurrentDate = new Date();
+
+                if(document.getElementById("stateDate").innerHTML == date)
+                {
+                if ( document.getElementById("Current_category").innerHTML ==  getdataCurrentCategory) 
+                {
+                var truckno = dieselChildSnapshot.val().truck_no;
+                var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
+                var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
+                var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
+                var time = dieselChildSnapshot.val().time_input;
+                var drno = dieselChildSnapshot.val().dr_no || "";
+                console.log(quantityin);
+
+                var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
+                //var address = dieselChildSnapshot.val().destination || "";
+                
+                if (quantityin == "NaN"){quantityholder = "";}
+                else{quantityholder = quantityin + " liter(s)" ;}
+                if (quantityout == "NaN"){quantityoutholder = "";}
+                else{quantityoutholder = quantityout + " liter(s)";}
+                
+                myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+                myTbody += "<td><strong>" + suppliername + "</strong></td>";
+                myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+                myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
+                myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                //myTbody += "<td><strong>" + address + "</strong></td>";
+                myTbody += "<td><strong>" + time + "</strong></td>";
+                myTbody += "<td><strong>" + drno + "</strong></td></tr>";
+               
+
+                        firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(DisplayStockSnapshots)
+                        {
+                            DisplayStockSnapshots.forEach(function(SeperateChildSnapshot){
+
+                        if (dieselChildSnapshot.val().PickCategoryName == SeperateChildSnapshot.val().CategoryName) 
+                        {
+                        document.getElementById("id_Categorystock").innerHTML = SeperateChildSnapshot.val().Liters + " Liter(s)"; 
+                        }
+
+                        });
+                        });  
+                       
+                } 
+                }
+               });
+               if (myTbody == "") 
+               {
+                    myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+                    document.getElementById("oilList").innerHTML = myTbody; 
+                }else{document.getElementById("oilList").innerHTML = myTbody; }   
+                  // window.print();
+      });
+            });
+
+        firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(totalstockSnapshot)
+     {
+        var get_totalStock = totalstockSnapshot.val().Liters;
+        document.getElementById("id_stock").innerHTML = get_totalStock + " Liter(s)";
+
+        if(get_totalStock <= 3500)
+        {
+            document.getElementById("id_stock").style.color ="red";
+        }
+    });
+  
+        firebase.database().ref().child("incoming_diesel_category/" + plant).orderByChild("date").limitToLast(1).on('child_added',function(lastDaySnapshot)
+     {
+        var options = { year: "numeric", month: "long", day: "numeric" };
+        var LastDayHolder = new Date (lastDaySnapshot.val().Date_Input).toLocaleDateString("en",options); 
+        document.getElementById("last_day").innerHTML = LastDayHolder;
+
+     });
+
+}
+</script>
+</head>
+<body>
+	<div class="container">
+		<section id="wrapper">
+			<div class="row">
+                <div class="col-md-12">
+                    <h3 class="page-header" id="page_header"></h3>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <section class="panel">
+                        <div>
+                            <table class="table table-bordered">
+                                <thead>
+
+                                    <tr>
+                                        <th colspan="8">
+                                            <span>Available stock as of today: <span id="id_stock">
+                                            </span></span><br>
+                                            <span>Category stock as of today: <span id="id_Categorystock">
+                                            </span></span>
+                                            <br><span>Last Delivery: <span id ="last_day"></span></span><br>
+                                            <span>Category: <span id ="Current_category"></span></span> 
+                                            <button class="btn btn-info btn-md" id="printPageButton" onclick="return window.print();" style="float: right;"><strong><span class="fa fa-print"></span> Print</strong></button>
+                                        </th>
+                                    </tr>
+                                    <tr class="filters" style="background-color: #00a3cc;">
+										<th class="col-md-1" style="color:white">Truck No.</th>
+										<th class="col-md-2" style="color:white">Driver/ Operator/ Supplier</th>
+										<th class="col-md-1" style="color:white">Quantity (IN)</th>
+										<th class="col-md-1" style="color:white">Quantity (OUT)</th>
+										<th class="col-md-1" style="color:white">Current Stock</th>
+										<!-- <th class="col-md-2"><input type="text" class="form-control" placeholder="Address" disabled ></th> -->
+										<th class="col-md-1" style="color:white">Time</th>
+                                        <th class="col-md-1" style="color:white">DR No.</th>
+									</tr>
+								</thead>
+								<tbody id="oilList"></tbody>
+							</table>
+						</div>
+					</section>
+				</div>
+			</div>
+		</section>
+	</div>
+</body>
+</html>

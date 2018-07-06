@@ -83,84 +83,13 @@
 <script>
 	
     var plant = getUrlParameter("plant");
-	var timer = null;
-
-    function goAway() {
-        clearTimeout(timer);
-        timer = setTimeout(function() {
-            window.location.reload(true);
-        }, 60000);
-    }
-
-    window.addEventListener('mousemove', goAway, true);
-    window.addEventListener('keypress', goAway, true);
-
-    goAway();
 
 	$(document).ready(function(){
-        $('.filterable .btn-filter').click(function(){
-            var $panel = $(this).parents('.filterable'),
-            $filters = $panel.find('.filters input'),
-            $tbody = $panel.find('.table tbody');
-            if ($filters.prop('disabled') == true) {
-                $filters.prop('disabled', false);
-                $filters.first().focus();
-            } else {
-                $filters.val('').prop('disabled', true);
-                $tbody.find('.no-result').remove();
-                $tbody.find('tr').show();
-            }
-        });
 
-        $('.filterable .filters input').keyup(function(e){
-            /* Ignore tab key */
-            var code = e.keyCode || e.which;
-            if (code == '9') return;
-            /* Useful DOM data and selectors */
-            var $input = $(this),
-            inputContent = $input.val().toLowerCase(),
-            $panel = $input.parents('.filterable'),
-            column = $panel.find('.filters th').index($input.parents('th')),
-            $table = $panel.find('.table'),
-            $rows = $table.find('tbody tr');
-            /* Dirtiest filter function ever ;) */
-            var $filteredRows = $rows.filter(function(){
-                var value = $(this).find('td').eq(column).text().toLowerCase();
-                return value.indexOf(inputContent) === -1;
-            });
-            /* Clean previous no-result if exist */
-            $table.find('tbody .no-result').remove();
-            /* Show all rows, hide filtered ones (never do that outside of a demo ! xD) */
-            $rows.show();
-            $filteredRows.hide();
-            /* Prepend no-result row if all rows are filtered */
-            if ($filteredRows.length === $rows.length) {
-                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="10" style="min-height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
-            }
-        });
+        document.getElementById('page_header').innerHTML = plant +" Diesel Transactions";
 
         DisplayCurrentData();
 
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (user != null) {
-
-                var uid = user.uid;
-        
-                firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-                    if(snapshot.val().office != 'Head Office'){
-                        window.location.href = '../plant/index.html';
-                    }
-                    
-                    document.getElementById('username').innerHTML = snapshot.val().firstname; 
-                },(error) => {
-                    console.log(error);
-                });
-            } else {
-                window.location.href = '../login.html';
-            }
-        });
-
-        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
 // function Go()
@@ -230,76 +159,73 @@
         
 // }
  
-function DisplayCurrentData()
-{
-    var myTbody = "";
-    //start
-    firebase.database().ref('diesel_current_date_print/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselPrintransaction) {
-    firebase.database().ref('incoming_diesel/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
-        DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
+    function DisplayCurrentData(){
 
-                document.getElementById("stateDate").innerHTML = DieselPrintransaction.val().printCurrentDate;
-                var date = dieselChildSnapshot.val().Date_Input;
-                var CurrentDate = new Date();
+        var myTbody = "";
+        //start
+        firebase.database().ref('diesel_current_date_print/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselPrintransaction) {
+            firebase.database().ref('incoming_diesel/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
+                DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
-                 if(document.getElementById("stateDate").innerHTML == date)
-                {
-                var truckno = dieselChildSnapshot.val().truck_no;
-                var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
-                var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
-                var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
-                var time = dieselChildSnapshot.val().time_input;
-                var drno = dieselChildSnapshot.val().dr_no || "";
-                console.log(quantityin);
+                    document.getElementById("stateDate").innerHTML = DieselPrintransaction.val().printCurrentDate;
+                    var date = dieselChildSnapshot.val().Date_Input;
+                    var CurrentDate = new Date();
 
-                var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
-                var address = dieselChildSnapshot.val().destination || "";
+                    if(document.getElementById("stateDate").innerHTML == date){
+
+                        var truckno = dieselChildSnapshot.val().truck_no;
+                        var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
+                        var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
+                        var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
+                        var time = dieselChildSnapshot.val().time_input;
+                        var drno = dieselChildSnapshot.val().dr_no || "";
+                        console.log(quantityin);
+
+                        var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
+                        var address = dieselChildSnapshot.val().destination || "";
+                        
+                        if (quantityin == "NaN"){quantityholder = "";}
+                        else{quantityholder = quantityin + " liter(s)" ;}
+                        if (quantityout == "NaN"){quantityoutholder = "";}
+                        else{quantityoutholder = quantityout + " liter(s)";}
+                        
+                        myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+                        myTbody += "<td><strong>" + suppliername + "</strong></td>";
+                        myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+                        myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
+                        myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                        myTbody += "<td><strong>" + address + "</strong></td>";
+                        myTbody += "<td><strong>" + time + "</strong></td>";
+                        myTbody += "<td><strong>" + drno + "</strong></td></tr>";
+
+                    }
+
+                });
+                if (myTbody == ""){
+                    myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+                    document.getElementById("DieselList").innerHTML = myTbody; 
+                }else{document.getElementById("DieselList").innerHTML = myTbody; }
                 
-                if (quantityin == "NaN"){quantityholder = "";}
-                else{quantityholder = quantityin + " liter(s)" ;}
-                if (quantityout == "NaN"){quantityoutholder = "";}
-                else{quantityoutholder = quantityout + " liter(s)";}
-                
-                myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
-                myTbody += "<td><strong>" + suppliername + "</strong></td>";
-                myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
-                myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
-                myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
-                myTbody += "<td><strong>" + address + "</strong></td>";
-                myTbody += "<td><strong>" + time + "</strong></td>";
-                myTbody += "<td><strong>" + drno + "</strong></td></tr>";
- 
-                }
-
+            });
         });
-        if (myTbody == "") 
-        {
-            myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-            document.getElementById("DieselList").innerHTML = myTbody; 
-        }else{document.getElementById("DieselList").innerHTML = myTbody; }
-          window.print();
-    });
-    });
-    //end
-     firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot)
-     {
-        var get_totalStock = totalstockSnapshot.val().Liters;
-        document.getElementById("id_stock").innerHTML = get_totalStock + " Liter(s)";
+        //end
+        firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot){
+            var get_totalStock = totalstockSnapshot.val().Liters;
+            document.getElementById("id_stock").innerHTML = get_totalStock + " Liter(s)";
 
-        if(get_totalStock <= 3500)
-        {
-            document.getElementById("id_stock").style.color ="red";
-        }
-    });
-     //
-      firebase.database().ref().child("incoming_diesel/" + plant).orderByChild("date").limitToLast(1).on('child_added',function(lastDaySnapshot)
-     {
-        var options = { year: "numeric", month: "long", day: "numeric" };
-        var LastDayHolder = new Date (lastDaySnapshot.val().Date_Input).toLocaleDateString("en",options); 
-        document.getElementById("last_day").innerHTML = LastDayHolder;
-     });
+            if(get_totalStock <= 3500)
+            {
+                document.getElementById("id_stock").style.color ="red";
+            }
+        });
+         //
+          firebase.database().ref().child("incoming_diesel/" + plant).orderByChild("date").limitToLast(1).on('child_added',function(lastDaySnapshot){
+            var options = { year: "numeric", month: "long", day: "numeric" };
+            var LastDayHolder = new Date (lastDaySnapshot.val().Date_Input).toLocaleDateString("en",options); 
+            document.getElementById("last_day").innerHTML = LastDayHolder;
+         });
 
-      if(plant == 'Bravo'){
+        if(plant == 'Bravo'){
             plant_name = "<a class='logo'>Starcrete Manufacturing Corporation</a>";
         }else{
             plant_name = "<a class='logo'>Quality Star Concrete Products, Inc.</a>";
@@ -307,79 +233,116 @@ function DisplayCurrentData()
 
         document.getElementById('id_plant_name').innerHTML = plant_name;
 
-}
+    }
+
+
 
 </script>
 <style>
+@media print {
+  table{
+    font-size: 11px;
+  }
+  #printPageButton{
+    display: none;
+  }
 
-html { overflow: hidden; }
-
+}
 </style>
 </head>
-<body id = "bodyCanvas">
+<body>
 	<!-- container section start -->
-    <section id="container" class="container"> 
-            <div class = "row" >
-             <span id="id_plant_name"></span>
-             </div>          
-                <!--overview start-->
-                <div class="row">
-                    <div class="col-md-12">
-                        <section class="panel">
-                        	<form class="form-inline" onsubmit="return Go()">
-                                <header>
-                                    <div class="row" style="margin-bottom: 5px;">
-                                        <div class="col-md-6" style="margin: 5px 0px 0px 0px;">
-                                            <div class="form-group">
-                                                <div class="row">
-                                                    <div class="col-md-12" style=" white-space: nowrap;">
-                                                        <label for="date_view" class="col-md-3 control-label" style="white-space: nowrap;" ><strong>Date:<span id = stateDate></span></strong></label>  
-                                                      <!--   <div class="col-md-8">
-                                                            <span id = stateDate></span>  
-                                                                            
-                                                        </div>  -->
-                                                    </div>
-                                                </div>
+    <!-- <section id="container" class="container"> 
+    <div class = "row" >
+     <span id="id_plant_name"></span></div>          
+
+        <div class="row">
+            <div class="col-md-12">
+                <section class="panel">
+                	<form class="form-inline" onsubmit="return Go()">
+                        <header>
+                            <div class="row" style="margin-bottom: 5px;">
+                                <div class="col-md-6" style="margin: 5px 0px 0px 0px;">
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-md-12" style=" white-space: nowrap;">
+                                                <label for="date_view" class="col-md-3 control-label" style="white-space: nowrap;" ><strong>Date:<span id = stateDate></span></strong></label>  
                                             </div>
                                         </div>
-                                        <div class="col-md-6" style="margin: 5px 0px 0px 0px;">
-                                           
-                                        </div>
                                     </div>
-                                </header>
-                            </form>
-                            <div class="table-responsive">
-                        		<table class="table table-bordered">
-                        			<thead>
-                        				<tr >
-                        					<th colspan="8">
-                                                <span>Available stock as of today: <span id="id_stock">
-                                                </span></span>
-                                                <br><span>Last Delivery: <span id ="last_day"></span></span>
-                        					</th>
-                        				</tr>
-                        				<tr>
-											<th class="col-md-1" style="text-align:center;">Truck No.</th>
-											<th class="col-md-1" style="text-align:center;">Drvr/Oprtr/Supp</th>
-											<th class="col-md-1" style="text-align:center;">Quantity (IN)</th>
-											<th class="col-md-1" style="text-align:center;">Quantity (OUT)</th>
-											<th class="col-md-1" style="text-align:center;">Current Stock</th>
-											<th class="col-md-1" style="text-align:center;">Address</th>
-											<th class="col-md-1" style="text-align:center;">Time</th>
-                                            <th class="col-md-1" style="text-align:center;">DR No.</th>
-										</tr>
-                        			</thead>
-                        			<tbody id = "DieselList">
-                                  <!--   <span id = "nodata"><tr>
-                                    <td colspan="7" style='height: 100%; background: white; text-align:center; 
-                                    vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>
-                                    </span> -->
-                        			</tbody>
-                        		</table>
-                        	</div>
-                        </section>
-                    </div>
+                                </div>
+                                <div class="col-md-6" style="margin: 5px 0px 0px 0px;">
+                                   
+                                </div>
+                            </div>
+                        </header>
+                    </form>
+                    <div>
+                		<table class="table table-bordered">
+                			<thead>
+                				<tr >
+                					<th colspan="8">
+                                        <span>Available stock as of today: <span id="id_stock">
+                                        </span></span>
+                                        <br><span>Last Delivery: <span id ="last_day"></span></span>
+                					</th>
+                				</tr>
+                				<tr>
+									<th class="col-md-1" style="text-align:center;">Truck No.</th>
+									<th class="col-md-1" style="text-align:center;">Drvr/Oprtr/Supp</th>
+									<th class="col-md-1" style="text-align:center;">Quantity (IN)</th>
+									<th class="col-md-1" style="text-align:center;">Quantity (OUT)</th>
+									<th class="col-md-1" style="text-align:center;">Current Stock</th>
+									<th class="col-md-1" style="text-align:center;">Address</th>
+									<th class="col-md-1" style="text-align:center;">Time</th>
+                                    <th class="col-md-1" style="text-align:center;">DR No.</th>
+								</tr>
+                			</thead>
+                			<tbody id = "DieselList">
+                			</tbody>
+                		</table>
+                	</div>
+                </section>
+            </div>
+        </div>
+	</section> -->
+    <div class="container">
+        <section id="wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <h3 class="page-header" id="page_header"></h3>
                 </div>
-	</section>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <section class="panel">
+                        <div>
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th colspan="8">
+                                            <label for="date_view" class="col-md-3 control-label" style="white-space: nowrap;" ><strong>Date:<span id = "stateDate"></span></strong></label>  
+                                            <button class="btn btn-info btn-md" id="printPageButton" onclick="return window.print();" style="float: right;"><strong><span class="fa fa-print"></span> Print</strong></button>
+                                        </th>
+                                    </tr>
+                                    <tr>
+                                        <th class="col-md-1" style="text-align:center;">Truck No.</th>
+                                        <th class="col-md-1" style="text-align:center;">Driver/Operator/Supplier</th>
+                                        <th class="col-md-1" style="text-align:center;">Quantity (IN)</th>
+                                        <th class="col-md-1" style="text-align:center;">Quantity (OUT)</th>
+                                        <th class="col-md-1" style="text-align:center;">Current Stock</th>
+                                        <th class="col-md-1" style="text-align:center;">Address</th>
+                                        <th class="col-md-1" style="text-align:center;">Time</th>
+                                        <th class="col-md-1" style="text-align:center;">DR No.</th>
+                                    </tr>
+                                    <tbody id="DieselList"></tbody>
+                                </thead>
+                            </table>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </section>
+    </div>
 </body>
 </html>
