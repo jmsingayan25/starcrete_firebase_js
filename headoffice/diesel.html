@@ -335,7 +335,7 @@
             var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
 
             date = new Date(deliverySnapshot.val().date).toLocaleDateString('en', options);
-            document.getElementById('id_last_delivery').innerHTML = date;
+            // document.getElementById('id_last_delivery').innerHTML = date;
         });
     }
 
@@ -552,9 +552,9 @@ function datePrint(){
                                                 <input type="hidden" id="hidden_stock">
                         						
                                                 <span>Available stock as of today: <span id="id_stock"></span></span><br>
-                                                <span>Last Delivery: <span id="id_last_delivery"></span>
+                                                <!-- <span>Last Delivery: <span id="id_last_delivery"></span>
                                                     
-                                                </span><br>
+                                                </span><br> -->
                                                 <span>Search Date: <span id="search_date"></span> <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button></span><br>
                                                 <button type="button" class="btn btn-info btn-md" onclick= "datePrint()"><strong>Print</strong></button>
                         					</th>

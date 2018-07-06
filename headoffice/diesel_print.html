@@ -222,7 +222,7 @@
           firebase.database().ref().child("incoming_diesel/" + plant).orderByChild("date").limitToLast(1).on('child_added',function(lastDaySnapshot){
             var options = { year: "numeric", month: "long", day: "numeric" };
             var LastDayHolder = new Date (lastDaySnapshot.val().Date_Input).toLocaleDateString("en",options); 
-            document.getElementById("last_day").innerHTML = LastDayHolder;
+            // document.getElementById("last_day").innerHTML = LastDayHolder;
          });
 
         if(plant == 'Bravo'){
