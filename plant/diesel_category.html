@@ -183,7 +183,6 @@ function submitcategory()
 
           var clearText = document.getElementById("textcategory");
           clearText.value = "";
-          alert("Add Category complete.");
           window.location.reload();
     });    
 }
@@ -265,7 +264,7 @@ function displaycurrentCategory(getCurrentCategory)
                 var truckno = dieselChildSnapshot.val().truck_no;
                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
-                var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
+                var availablestock = Number(dieselChildSnapshot.val().seperateCurrentStock).toLocaleString("en");
                 var time = dieselChildSnapshot.val().time_input;
                 var drno = dieselChildSnapshot.val().dr_no || "";
                 var key = dieselChildSnapshot.key;
@@ -371,7 +370,7 @@ function Go()
                 var truckno = dieselChildSnapshot.val().truck_no;
                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
-                var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
+                var availablestock = Number(dieselChildSnapshot.val().seperateCurrentStock).toLocaleString("en");
                 var time = dieselChildSnapshot.val().time_input;
                 var drno = dieselChildSnapshot.val().dr_no || "";
                 var key = dieselChildSnapshot.key;
@@ -635,7 +634,7 @@ function DeleteRowData(key,plant)
                                                 </span></span>
                                                 <br><span>Last Delivery: <span id ="last_day"></span></span><br>
                                                 <span>Search Date: <span id="Search_day"></span></span><br>
-                                                 <button type="button" class="btn btn-info btn-md" onclick= "datePrint()"><strong><span class="fa fa-print"></span> Print</strong></button> 
+                                                 <button type="button" class="btn btn-info btn-md" onclick= "datePrint()"><strong><span class="fa fa-print"></span> Print Preview</strong></button> 
                                                 <!-- <input type="hidden" id="hidden_stock" value="<?php echo getDieselStock($db, $search_plant); ?>">
                         						<?php 
                             						$date_view = date_create($_GET['date_view']); 

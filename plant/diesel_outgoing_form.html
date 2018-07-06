@@ -154,7 +154,71 @@
         firebase.database().ref().child("available_stock/" + plant).once('value',function(CheckSnapshot)
         {
             if (CheckSnapshot.val() == null) {
-                alert("Fill Incoming Required");
+                //alert("Fill Incoming Required");
+                var quantity_out = document.getElementById('quantity_out').value;
+             quantity_out = quantity_out.replace(",","");
+             var destination = document.getElementById('destination').value;
+             var truck_no = document.getElementById('truck_no').value;
+             var operator = document.getElementById('operator').value;
+             var date = new Date().toLocaleDateString('en');
+             var time = new Date().toLocaleTimeString('en');
+             var date_input = dateFormat(document.getElementById('date_input').value);
+             var time_input = startTime(document.getElementById('time_input').value);
+
+             //var get_liters = CheckSnapshot.val().Liters;
+             var decrease_int_liters = 0 - Number(quantity_out);
+             var decrease_string_liters = decrease_int_liters.toString();
+             var new_liters = decrease_string_liters;
+             var stock_available  = {Liters: new_liters};
+             firebase.database().ref().child("available_stock/" + plant).set(stock_available); 
+
+                 var currentStockCopy = new_liters;
+                 transactionType = "Out";
+                 var OutcomingData = { 
+                 quantity_out: quantity_out, 
+                 destination: destination.toUpperCase(),
+                 truck_no: truck_no.toUpperCase(), 
+                 operator: operator.toUpperCase(),
+                 reverseDate: firebase.database.ServerValue.TIMESTAMP,
+                 date: date, 
+                 time: time,
+                 currentstockCopy: currentStockCopy,
+                 TransactionType: transactionType,
+                 Date_Input: date_input,
+                 time_input: time_input};
+
+                var postData = firebase.database().ref('incoming_diesel/' + plant);
+                var newPostRef = postData.push();
+                newPostRef.set(OutcomingData);
+
+                var postId = newPostRef.key;
+                
+                firebase.database().ref().child("incoming_diesel/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot)
+                {
+                    var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
+                    var UpdateReverseDate = {reverseDate: StartReverseDate};
+                    
+                    // firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
+                    console.log(StartReverseDate);
+
+                    if(firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate)){
+                        alert("Outgoing diesel complete.");
+                         window.location.reload();
+                    }
+                });
+
+                    firebase.database().ref().child("available_stock/" + plant).once('value',function(negativestockSnapshot)
+                    {
+                        var getLiters = Number(negativestockSnapshot.val().Liters);
+                        if (getLiters <= 0) 
+                        {
+                        getLiters = Math.max(0,getLiters);
+
+                        var stock_available  = {Liters: getLiters};
+                        firebase.database().ref().child("available_stock/" + plant).set(stock_available );
+                        }
+                       
+                    });
             }
             else 
             {
@@ -236,7 +300,7 @@
                 document.getElementById("stock").innerHTML = " 0 Liter(s)"}
             else{
                 var get_totalStock = totalstockSnapshot.val().Liters;
-                document.getElementById("stock").innerHTML = get_totalStock + " Liter(s)";}
+                document.getElementById("stock").innerHTML = Number(get_totalStock).toLocaleString("en") + " Liter(s)";}
             if(get_totalStock <= 3500)
                 {
             document.getElementById("stock").style.color ="red";
