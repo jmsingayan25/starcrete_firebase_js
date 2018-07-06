@@ -295,7 +295,7 @@ function displaycurrentCategory(getCurrentCategory)
 
             if (dieselChildSnapshot.val().PickCategoryName == SeperateChildSnapshot.val().CategoryName) 
             {                   
-                document.getElementById("id_Categorystock").innerHTML = SeperateChildSnapshot.val().Liters + " Liter(s)";
+                document.getElementById("id_Categorystock").innerHTML = Number(SeperateChildSnapshot.val().Liters).toLocaleString("en") + " Liter(s)";
                  if (SeperateChildSnapshot.val().Liters <= 3500) 
                 {
                 document.getElementById("id_Categorystock").style.color = "red";
@@ -325,7 +325,7 @@ function displaycurrentCategory(getCurrentCategory)
         firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(totalstockSnapshot)
      {
         var get_totalStock = totalstockSnapshot.val().Liters;
-        document.getElementById("id_stock").innerHTML = get_totalStock + " Liter(s)";
+        document.getElementById("id_stock").innerHTML = Number(get_totalStock).toLocaleString("en") + " Liter(s)";
 
         if(get_totalStock <= 3500)
         {
@@ -400,7 +400,7 @@ function Go()
 
             if (dieselChildSnapshot.val().PickCategoryName == SeperateChildSnapshot.val().CategoryName) 
             {
-                document.getElementById("id_Categorystock").innerHTML = SeperateChildSnapshot.val().Liters + " Liter(s)"; 
+                document.getElementById("id_Categorystock").innerHTML = Number(SeperateChildSnapshot.val().Liters).toLocaleString("en") + " Liter(s)"; 
             }
 
             });
