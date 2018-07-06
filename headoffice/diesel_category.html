@@ -209,7 +209,7 @@
 
 					date = oilSnapshot.val().date;
 					category_name = oilSnapshot.val().PickCategoryName;
-					current_stock = oilSnapshot.val().currentstockCopy;
+					current_stock = oilSnapshot.val().seperateCurrentStock;
 					dr_no = oilSnapshot.val().dr_no || "";
 					po_no = oilSnapshot.val().po_no;
 					quantity_in = Number(oilSnapshot.val().quantity_in).toLocaleString('en');
@@ -286,7 +286,7 @@
 				// console.log(oilSnapshot.val().PickCategoryName, oil_value);
 				date = oilSnapshot.val().date;
 				category_name = oilSnapshot.val().PickCategoryName;
-				current_stock = Number(oilSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
+				current_stock = Number(oilSnapshot.val().seperateCurrentStock).toLocaleString('en') + " liter(s)";
 				dr_no = oilSnapshot.val().dr_no || "";
 				po_no = oilSnapshot.val().po_no;
 				quantity_in = Number(oilSnapshot.val().quantity_in).toLocaleString('en');
@@ -329,7 +329,7 @@
 
 			// 	date = oilSnapshot.val().date;
 			// 	category_name = oilSnapshot.val().PickCategoryName;
-			// 	current_stock = oilSnapshot.val().currentstockCopy;
+			// 	current_stock = oilSnapshot.val().seperateCurrentStock;
 			// 	dr_no = oilSnapshot.val().dr_no || "";
 			// 	po_no = oilSnapshot.val().po_no;
 			// 	quantity_in = Number(oilSnapshot.val().quantity_in).toLocaleString('en');
@@ -400,6 +400,14 @@
 		var oil_dropdown = document.getElementById('oil_category');
 		var oil_value = oil_dropdown.options[oil_dropdown.selectedIndex].value;
 
+		if(search_date == ""){
+            search_date = new Date().toLocaleDateString();
+        }
+
+        var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+        var searchDate = new Date(search_date).toLocaleDateString('en', options);
+
+        document.getElementById('search_date').innerHTML = searchDate;
 
 		firebase.database().ref('incoming_diesel_category/'+plant).orderByChild('reverseDate').on('child_added', function(oilSnapshot){
 
@@ -409,7 +417,7 @@
 
 					date = oilSnapshot.val().date;
 					category_name = oilSnapshot.val().PickCategoryName;
-					current_stock = Number(oilSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
+					current_stock = Number(oilSnapshot.val().seperateCurrentStock).toLocaleString('en') + " liter(s)";
 					dr_no = oilSnapshot.val().dr_no || "";
 					po_no = oilSnapshot.val().po_no;
 					quantity_in = Number(oilSnapshot.val().quantity_in).toLocaleString('en');
@@ -456,7 +464,7 @@
 
 					date = oilSnapshot.val().date;
 					category_name = oilSnapshot.val().PickCategoryName;
-					current_stock = Number(oilSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
+					current_stock = Number(oilSnapshot.val().seperateCurrentStock).toLocaleString('en') + " liter(s)";
 					dr_no = oilSnapshot.val().dr_no || "";
 					po_no = oilSnapshot.val().po_no;
 					quantity_in = Number(oilSnapshot.val().quantity_in).toLocaleString('en');

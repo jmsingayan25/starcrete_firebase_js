@@ -100,6 +100,7 @@
 		document.getElementById('page_header').innerHTML = plant +" Oil Transactions";
 
 		tableData();
+		availableStock();
 
 	});
 
@@ -115,7 +116,7 @@
 				// console.log(oilSnapshot.val().PickCategoryName, oil_value);
 				date = oilSnapshot.val().date;
 				category_name = oilSnapshot.val().PickCategoryName;
-				current_stock = Number(oilSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
+				current_stock = Number(oilSnapshot.val().seperateCurrentStock).toLocaleString('en') + " liter(s)";
 				dr_no = oilSnapshot.val().dr_no || "";
 				po_no = oilSnapshot.val().po_no;
 				quantity_in = Number(oilSnapshot.val().quantity_in).toLocaleString('en');
@@ -175,6 +176,18 @@
 			});
 		});
 	}
+
+	function availableStock(){
+
+		firebase.database().ref('available_diesel_category/'+plant).on('value', function(stockSnapshot){
+
+			if(stockSnapshot.val() != null){
+
+				available_stock = stockSnapshot.val().Liters || "";
+				document.getElementById('id_stock').innerHTML = Number(available_stock).toLocaleString('en') + " liter(s)";
+			}
+		});
+	}
 // 	function displaycurrentCategory()
 // {
 //     var myTbody = "";
@@ -196,7 +209,7 @@
 //                 var truckno = dieselChildSnapshot.val().truck_no;
 //                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
 //                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
-//                 var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
+//                 var availablestock = Number(dieselChildSnapshot.val().seperateCurrentStock).toLocaleString("en");
 //                 var time = dieselChildSnapshot.val().time_input;
 //                 var drno = dieselChildSnapshot.val().dr_no || "";
 //                 console.log(quantityin);
