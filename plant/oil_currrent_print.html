@@ -217,7 +217,7 @@ function displaycurrentCategory()
 
                         if (dieselChildSnapshot.val().PickCategoryName == SeperateChildSnapshot.val().CategoryName) 
                         {
-                        document.getElementById("id_Categorystock").innerHTML = SeperateChildSnapshot.val().Liters + " Liter(s)"; 
+                        document.getElementById("id_Categorystock").innerHTML = Number(SeperateChildSnapshot.val().Liters).toLocaleString("en") + " Liter(s)"; 
                                         
                         }
 
@@ -248,13 +248,13 @@ function displaycurrentCategory()
     //     }
     // });
   
-        firebase.database().ref().child("incoming_diesel_category/" + plant).orderByChild("date").limitToLast(1).on('child_added',function(lastDaySnapshot)
-     {
-        var options = { year: "numeric", month: "long", day: "numeric" };
-        var LastDayHolder = new Date (lastDaySnapshot.val().Date_Input).toLocaleDateString("en",options); 
-        document.getElementById("last_day").innerHTML = LastDayHolder;
+     //    firebase.database().ref().child("incoming_diesel_category/" + plant).orderByChild("date").limitToLast(1).on('child_added',function(lastDaySnapshot)
+     // {
+     //    var options = { year: "numeric", month: "long", day: "numeric" };
+     //    var LastDayHolder = new Date (lastDaySnapshot.val().Date_Input).toLocaleDateString("en",options); 
+     //    document.getElementById("last_day").innerHTML = LastDayHolder;
 
-     });
+     // });
 
 }
 
@@ -341,7 +341,7 @@ function datePrint()
                                                 </span></span><br> -->
                                                 <span><span id ="getcurrentcategoryname"></span> stock as of today: <span id="id_Categorystock">
                                                 </span></span>
-                                                <br><span>Last Delivery: <span id ="last_day"></span></span><br>
+                                                <!-- <br><span>Last Delivery: <span id ="last_day"></span></span> --><br>
                                                 <span>Category: <span id ="Current_category"></span></span>
                                             </th>
                                         </tr>

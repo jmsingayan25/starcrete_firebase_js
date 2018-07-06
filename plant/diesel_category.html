@@ -295,7 +295,7 @@ function displaycurrentCategory(getCurrentCategory)
 
             if (dieselChildSnapshot.val().PickCategoryName == SeperateChildSnapshot.val().CategoryName) 
             {                   
-                document.getElementById("id_Categorystock").innerHTML = SeperateChildSnapshot.val().Liters + " Liter(s)";
+                document.getElementById("id_Categorystock").innerHTML = Number(SeperateChildSnapshot.val().Liters).toLocaleString("en") + " Liter(s)";
                  if (SeperateChildSnapshot.val().Liters <= 3500) 
                 {
                 document.getElementById("id_Categorystock").style.color = "red";
@@ -325,7 +325,7 @@ function displaycurrentCategory(getCurrentCategory)
         firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(totalstockSnapshot)
      {
         var get_totalStock = totalstockSnapshot.val().Liters;
-        document.getElementById("id_stock").innerHTML = get_totalStock + " Liter(s)";
+        document.getElementById("id_stock").innerHTML = Number(get_totalStock).toLocaleString("en") + " Liter(s)";
 
         if(get_totalStock <= 3500)
         {
@@ -333,13 +333,13 @@ function displaycurrentCategory(getCurrentCategory)
         }
     });
   
-        firebase.database().ref().child("incoming_diesel_category/" + plant).orderByChild("date").limitToLast(1).on('child_added',function(lastDaySnapshot)
-     {
-        var options = { year: "numeric", month: "long", day: "numeric" };
-        var LastDayHolder = new Date (lastDaySnapshot.val().Date_Input).toLocaleDateString("en",options); 
-        document.getElementById("last_day").innerHTML = LastDayHolder;
+     //    firebase.database().ref().child("incoming_diesel_category/" + plant).orderByChild("date").limitToLast(1).on('child_added',function(lastDaySnapshot)
+     // {
+     //    var options = { year: "numeric", month: "long", day: "numeric" };
+     //    var LastDayHolder = new Date (lastDaySnapshot.val().Date_Input).toLocaleDateString("en",options); 
+     //    document.getElementById("last_day").innerHTML = LastDayHolder;
 
-     });
+     // });
 
 }
 
@@ -400,7 +400,7 @@ function Go()
 
             if (dieselChildSnapshot.val().PickCategoryName == SeperateChildSnapshot.val().CategoryName) 
             {
-                document.getElementById("id_Categorystock").innerHTML = SeperateChildSnapshot.val().Liters + " Liter(s)"; 
+                document.getElementById("id_Categorystock").innerHTML = Number(SeperateChildSnapshot.val().Liters).toLocaleString("en") + " Liter(s)"; 
             }
 
             });
@@ -632,7 +632,7 @@ function DeleteRowData(key,plant)
                                                 </span></span><br>
                                                 <span id = "category_current">Category</span><span> Available stock as of today: <span id="id_Categorystock">
                                                 </span></span>
-                                                <br><span>Last Delivery: <span id ="last_day"></span></span><br>
+                                                <!-- <br><span>Last Delivery: <span id ="last_day"></span></span> --><br>
                                                 <span>Search Date: <span id="Search_day"></span></span><br>
                                                  <button type="button" class="btn btn-info btn-md" onclick= "datePrint()"><strong><span class="fa fa-print"></span> Print Preview</strong></button> 
                                                 <!-- <input type="hidden" id="hidden_stock" value="<?php echo getDieselStock($db, $search_plant); ?>">

@@ -298,13 +298,13 @@ function DisplayCurrentData()
         }
     });
      //
-      firebase.database().ref().child("incoming_diesel/" + plant).orderByChild("date").limitToLast(1).on('child_added',function(lastDaySnapshot)
-     {
-        var options = { year: "numeric", month: "long", day: "numeric" };
-        var LastDayHolder = new Date (lastDaySnapshot.val().Date_Input).toLocaleDateString("en",options); 
-        document.getElementById("last_day").innerHTML = LastDayHolder;
+     //  firebase.database().ref().child("incoming_diesel/" + plant).orderByChild("date").limitToLast(1).on('child_added',function(lastDaySnapshot)
+     // {
+     //    var options = { year: "numeric", month: "long", day: "numeric" };
+     //    var LastDayHolder = new Date (lastDaySnapshot.val().Date_Input).toLocaleDateString("en",options); 
+     //    document.getElementById("last_day").innerHTML = LastDayHolder;
 
-     });
+     // });
 }
 
 function datePrint()
@@ -580,7 +580,7 @@ function DeleteRowData(key,plant)
                         					<th colspan="9">
                                                 <span>Available stock as of today: <span id="id_stock">
                                                 </span></span>
-                                                <br><span>Last Delivery: <span id ="last_day"></span></span><br>
+                                                <!-- <br><span>Last Delivery: <span id ="last_day"></span></span> --><br>
                                                 <span>Search Date: <span id="Search_day"></span></span><br>
                                                 <button type="button" class="btn btn-info btn-md" onclick= "datePrint()"><strong><span class="fa fa-print"></span> Print Preview</strong></button>    
                                                 <!-- <input type="hidden" id="hidden_stock" value="<?php echo getDieselStock($db, $search_plant); ?>">
