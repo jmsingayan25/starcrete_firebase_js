@@ -279,7 +279,7 @@ function DisplayCurrentData()
             myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
             document.getElementById("DieselList").innerHTML = myTbody; 
         }else{document.getElementById("DieselList").innerHTML = myTbody; }
-          window.print();
+          //window.print();
     });
     });
     //end
@@ -303,9 +303,17 @@ function DisplayCurrentData()
 
 }
 
+function datePrint()
+{
+    window.print();
+}
 </script>
 <style>
-
+@media print{
+    #datePrint{
+        display: none;
+    }
+}
 
 </style>
 </head>
@@ -321,22 +329,16 @@ function DisplayCurrentData()
                         <section class="panel">
                         	<form class="form-inline" onsubmit="return Go()">
                                 <header>
-                                    <div class="row" style="margin-bottom: 5px;">
-                                        <div class="col-md-6" style="margin: 5px 0px 0px 0px;">
-                                            <div class="form-group">
                                                 <div class="row">
                                                     <div class="col-md-12" style=" white-space: nowrap;">
-                                                        <label for="date_view" class="col-md-3 control-label" style="white-space: nowrap;" ><strong>Date:<span id = stateDate></span></strong></label>  
+                                                        <label for="date_view" class="col-md-3 control-label" style="white-space: nowrap;" ><strong>Date:<span id = stateDate></span></strong></label>
+                                                                
+                                                 
                                                       <!--   <div class="col-md-8">
                                                             <span id = stateDate></span>  
                                                                             
                                                         </div>  -->
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6" style="margin: 5px 0px 0px 0px;">
-                                           
+                                               
                                         </div>
                                     </div>
                                 </header>
@@ -368,7 +370,9 @@ function DisplayCurrentData()
                                     vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>
                                     </span> -->
                         			</tbody>
+
                         		</table>
+                                              <button type="button" id = "datePrint"class="btn btn-info btn-md" onclick= "datePrint()" style="float: right;"><strong><span class="fa fa-print"></span> Print</strong></button>
                         	</div>
                         </section>
                     </div>

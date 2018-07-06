@@ -160,7 +160,7 @@
 
                       if (Snapshot.val().CurrentCategory == SeperateChildSnapshot.val().CategoryName) 
                 {
-                    document.getElementById("stock").innerHTML = SeperateChildSnapshot.val().Liters + " Liter(s)"; 
+                    document.getElementById("stock").innerHTML = Number(SeperateChildSnapshot.val().Liters).toLocaleString("en") + " Liter(s)"; 
                 }
 
                 });
@@ -191,14 +191,14 @@
                              var date_input = dateFormat(document.getElementById('date_input').value);
                              var time_input = startTime(document.getElementById('time_input').value);
 
-                             var get_liters = CheckSnapshot.val().Liters;
-                             var decrease_int_liters = Number(get_liters) - Number(quantity_out);
-                             var decrease_string_liters = decrease_int_liters.toString();
-                             var new_liters = decrease_string_liters;
-                             var stock_available  = {Liters: new_liters};
-                             firebase.database().ref().child("available_diesel_category/" + plant).set(stock_available); 
+                             // var get_liters = CheckSnapshot.val().Liters;
+                             // var decrease_int_liters = Number(get_liters) - Number(quantity_out);
+                             // var decrease_string_liters = decrease_int_liters.toString();
+                             // var new_liters = decrease_string_liters;
+                             // var stock_available  = {Liters: new_liters};
+                             // firebase.database().ref().child("available_diesel_category/" + plant).set(stock_available); 
 
-                             var currentStockCopy = new_liters;
+                             // var currentStockCopy = new_liters;
                              pickcategory = Snapshot.val().CurrentCategory;
                              transactionType = "Out";
 
@@ -213,6 +213,14 @@
                                     var NewStringTotal = NewTotalSeperate.toString();
                                     var getintNegative = Number(NewTotalSeperate);
 
+                                    var get_liters = CheckSnapshot.val().Liters;
+                             var decrease_int_liters = Number(get_liters) - Number(quantity_out);
+                             var decrease_string_liters = decrease_int_liters.toString();
+                             var new_liters = decrease_string_liters;
+                             var stock_available  = {Liters: new_liters};
+                             firebase.database().ref().child("available_diesel_category/" + plant).set(stock_available); 
+
+                             var currentStockCopy = new_liters;
 
                                         var negativeToString = getintNegative.toString();
                                         var stock_seperate_available  = {CategoryName: get_textCategory,
