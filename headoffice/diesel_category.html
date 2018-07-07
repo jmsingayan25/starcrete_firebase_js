@@ -712,7 +712,8 @@
                 				<table class="table table-bordered table-striped">
                 					<thead>
                 						<tr>
-                        					<th colspan="7">                        						
+                        					<th colspan="7">     
+                        						<button type="button" class="btn btn-info btn-md" onclick= "datePrint()" style="float: right;"><span class="fa fa-print"></span> <strong>Print Preview</strong></button>                   						
                                                 <span>Available stock as of today: <span id="id_stock">
                                                 </span></span><br>
                                                 <span id = "category_current">Category</span><span> Available stock as of today: <span id="id_Categorystock">
@@ -721,7 +722,7 @@
                                                 <span>Last Delivery: <span id="id_last_delivery"></span></span> -->
                                                 <br>
                                                 <span>Search Date: <span id="search_date"></span></span><br>
-                                                <button type="button" class="btn btn-info btn-md" onclick= "datePrint()"><strong>Print</strong></button>
+                                                
                         					</th>
                         				</tr>
                         				<tr class="filterable">
@@ -729,7 +730,7 @@
                         						<div class="row">
                         							<label for="oil_category" class="col-md-1 control-label"><strong>Category: </strong></label>
                         							<div class="col-md-2">
-                        								<select id="oil_category" class="form-control" onchange="selectCategory(this.value);">
+                        								<select id="oil_category" class="form-control">
 			                        						<option value="">Select</option>
 			                        					</select>
                         							</div>

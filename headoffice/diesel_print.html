@@ -83,10 +83,16 @@
 <script>
 	
     var plant = getUrlParameter("plant");
+    var date = getUrlParameter("date");
 
 	$(document).ready(function(){
 
-        document.getElementById('page_header').innerHTML = plant +" Diesel Transactions";
+        if(plant == 'Bravo'){
+            document.getElementById('page_header').innerHTML = "Starcrete Manufacturing Corporation";
+
+        }else{
+            document.getElementById('page_header').innerHTML = "Quality Star Concrete Products, Inc.";
+        }
 
         DisplayCurrentData();
 
@@ -167,11 +173,10 @@
             firebase.database().ref('incoming_diesel/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
                 DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
-                    document.getElementById("stateDate").innerHTML = DieselPrintransaction.val().printCurrentDate;
-                    var date = dieselChildSnapshot.val().Date_Input;
+                    var Date_Input = dieselChildSnapshot.val().Date_Input;
                     var CurrentDate = new Date();
 
-                    if(document.getElementById("stateDate").innerHTML == date){
+                    if(Date_Input == date){
 
                         var truckno = dieselChildSnapshot.val().truck_no;
                         var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
@@ -210,8 +215,8 @@
         });
         //end
         firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot){
-            var get_totalStock = totalstockSnapshot.val().Liters;
-            document.getElementById("id_stock").innerHTML = get_totalStock + " Liter(s)";
+            var get_totalStock = Number(totalstockSnapshot.val().Liters).toLocaleString('en');
+            document.getElementById("id_stock").innerHTML = "Available stock as of today: " + get_totalStock + " liter(s)";
 
             if(get_totalStock <= 3500)
             {
@@ -225,13 +230,8 @@
             // document.getElementById("last_day").innerHTML = LastDayHolder;
          });
 
-        if(plant == 'Bravo'){
-            plant_name = "<a class='logo'>Starcrete Manufacturing Corporation</a>";
-        }else{
-            plant_name = "<a class='logo'>Quality Star Concrete Products, Inc.</a>";
-        }
+        document.getElementById("stateDate").innerHTML = "Date: " + date;
 
-        document.getElementById('id_plant_name').innerHTML = plant_name;
 
     }
 
@@ -321,19 +321,21 @@
                                 <thead>
                                     <tr>
                                         <th colspan="8">
-                                            <label for="date_view" class="col-md-3 control-label" style="white-space: nowrap;" ><strong>Date:<span id = "stateDate"></span></strong></label>  
                                             <button class="btn btn-info btn-md" id="printPageButton" onclick="return window.print();" style="float: right;"><strong><span class="fa fa-print"></span> Print</strong></button>
+                                            <span id = "stateDate"></span><br>
+                                            <span id="id_stock"></span><br>
+                                            <span>Report: DIESEL TRANSACTION</span>
                                         </th>
                                     </tr>
                                     <tr>
-                                        <th class="col-md-1" style="text-align:center;">Truck No.</th>
-                                        <th class="col-md-1" style="text-align:center;">Driver/Operator/Supplier</th>
-                                        <th class="col-md-1" style="text-align:center;">Quantity (IN)</th>
-                                        <th class="col-md-1" style="text-align:center;">Quantity (OUT)</th>
-                                        <th class="col-md-1" style="text-align:center;">Current Stock</th>
-                                        <th class="col-md-1" style="text-align:center;">Address</th>
-                                        <th class="col-md-1" style="text-align:center;">Time</th>
-                                        <th class="col-md-1" style="text-align:center;">DR No.</th>
+                                        <th class="col-md-1">Truck No.</th>
+                                        <th class="col-md-1">Driver/Operator/Supplier</th>
+                                        <th class="col-md-1">Quantity (IN)</th>
+                                        <th class="col-md-1">Quantity (OUT)</th>
+                                        <th class="col-md-1">Current Stock</th>
+                                        <th class="col-md-1">Address</th>
+                                        <th class="col-md-1">Time</th>
+                                        <th class="col-md-1">DR No.</th>
                                     </tr>
                                     <tbody id="DieselList"></tbody>
                                 </thead>

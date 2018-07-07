@@ -97,22 +97,26 @@
 
 	$(document).ready(function(){
 
+        if(plant == 'Bravo'){
+            document.getElementById('page_header').innerHTML = "Starcrete Manufacturing Corporation";
 
-		document.getElementById('page_header').innerHTML = plant +" Backloaded Order";
+        }else{
+            document.getElementById('page_header').innerHTML = "Quality Star Concrete Products, Inc.";
+        }
 
         if(fromDate != '' && endDate != ''){
-            document.getElementById('id_date_range').innerHTML = "Date: " + dateFormat(fromDate) + " - " + dateFormat(endDate);
+            document.getElementById('id_date_range').innerHTML = "Date: " + dateFormat(fromDate) + " - " + dateFormat(endDate) + "<br> Plant: " + plant + " <br> Report: BACKLOADED ORDER";
         }else if(fromDate != '' && endDate == ''){
 
             currentEndDate = new Date();
-            document.getElementById('id_date_range').innerHTML = "Date: " + dateFormat(fromDate) + " - " + dateFormat(currentEndDate);
+            document.getElementById('id_date_range').innerHTML = "Date: " + dateFormat(fromDate) + " - " + dateFormat(currentEndDate) + "<br> Plant: " + plant + " <br> Report: BACKLOADED ORDER";
 
         }else if(fromDate == '' && endDate != ''){
 
             firebase.database().ref('delivery_backloaded_order').orderByChild('date').limitToFirst(1).on('child_added', function(dateSnapshot){
                 console.log(dateSnapshot.val().date);
                 firstFromDate = dateSnapshot.val().date;
-                document.getElementById('id_date_range').innerHTML = "Date: " + dateFormat(firstFromDate) + " - " + dateFormat(endDate);
+                document.getElementById('id_date_range').innerHTML = "Date: " + dateFormat(firstFromDate) + " - " + dateFormat(endDate) + "<br> Plant: " + plant + " <br> Report: BACKLOADED ORDER";
             });
 
         }else{
@@ -123,7 +127,7 @@
                 firstFromDate = dateSnapshot.val().date;
                 currentEndDate = new Date();
                 
-                document.getElementById('id_date_range').innerHTML = "Date: " + dateFormat(firstFromDate) + " - " + dateFormat(currentEndDate);
+                document.getElementById('id_date_range').innerHTML = "Date: " + dateFormat(firstFromDate) + " - " + dateFormat(currentEndDate) + "<br> Plant: " + plant + " <br> Report: BACKLOADED ORDER";
             });
 
         }
@@ -329,21 +333,21 @@
 								<thead>
 									<tr>
 										<th colspan="10">
+                                            <button class="btn btn-info btn-md" id="printPageButton" onclick="return window.print();" style="float: right;"><strong><span class="fa fa-print"></span> Print</strong></button>
 											<span id="id_date_range"></span>
-											<button class="btn btn-info btn-md" id="printPageButton" onclick="return window.print();" style="float: right;"><strong><span class="fa fa-print"></span> Print</strong></button>
 										</th>
 									</tr>
-									<tr class="filters" style="background-color: #00a3cc;">
-                                        <th class="col-md-1" style="color: white;">#</th>
-                                        <th class="col-md-1" style="color: white;">DR No.</th>
-                                        <th class="col-md-1" style="color: white;">P.O. No.</th>
-                                        <th class="col-md-1" style="color: white;">Item</th>
-                                        <th class="col-md-1" style="color: white;">Quantity</th>
-                                        <th class="col-md-1" style="color: white;">Project Name</th>
-                                        <th class="col-md-1" style="color: white;">Address</th>
-                                        <th class="col-md-1" style="color: white;">Contact</th>
-                                        <th class="col-md-1" style="color: white;">Date</th>
-                                        <th class="col-md-1" style="color: white;">Status</th>
+									<tr>
+                                        <th class="col-md-1">#</th>
+                                        <th class="col-md-1">DR No.</th>
+                                        <th class="col-md-1">P.O. No.</th>
+                                        <th class="col-md-1">Item</th>
+                                        <th class="col-md-1">Quantity</th>
+                                        <th class="col-md-1">Project Name</th>
+                                        <th class="col-md-1">Address</th>
+                                        <th class="col-md-1">Contact</th>
+                                        <th class="col-md-1">Date</th>
+                                        <th class="col-md-1">Status</th>
                                     </tr>
 								</thead>
 								<tbody id="orderList"></tbody>

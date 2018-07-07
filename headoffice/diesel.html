@@ -365,7 +365,7 @@ function datePrint(){
             firebase.database().ref().child("diesel_current_date_print/" + plant).set(text_date);
 
             // window.location.href = "diesel_print.html?plant=" + plant;
-            window.open('diesel_print.html?plant=' + plant, '_blank');
+            window.open('diesel_print.html?plant=' + plant + "&date=" + GetStringDate, '_blank');
         });
 
     }else{
@@ -379,7 +379,7 @@ function datePrint(){
             firebase.database().ref().child("diesel_current_date_print/" + plant).set(text_date);
 
             // window.location.href = "diesel_print.html?plant=" + plant;
-            window.open('diesel_print.html?plant=' + plant, '_blank');
+            window.open('diesel_print.html?plant=' + plant + "&date=" + GetStringDate, '_blank');
             //window.open("diesel_transaction_print.html","_blank","","","width=200,height=100");
         });
     }  
@@ -547,16 +547,18 @@ function datePrint(){
 	                        <div class="table-responsive filterable">
                         		<table class="table table-striped table-bordered">
                         			<thead>
+                                        <tr>
+                                            <th colspan="8">
+                                                <button type="button" class="btn btn-info btn-md" onclick= "datePrint()" style="float: right;"><span class="fa fa-print"></span> <strong>Print Preview</strong></button>
+                                                <span>Available stock as of today: <span id="id_stock"></span></span><br>
+                                                <span>Search Date: <span id="search_date"></span>
+                                            </th>
+                                        </tr>
                         				<tr class="filterable">
                         					<th colspan="8">
                                                 <input type="hidden" id="hidden_stock">
-                        						
-                                                <span>Available stock as of today: <span id="id_stock"></span></span><br>
-                                                <!-- <span>Last Delivery: <span id="id_last_delivery"></span>
-                                                    
-                                                </span><br> -->
-                                                <span>Search Date: <span id="search_date"></span> <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button></span><br>
-                                                <button type="button" class="btn btn-info btn-md" onclick= "datePrint()"><strong>Print</strong></button>
+                        						<button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button></span><br>
+                                                
                         					</th>
                         				</tr>
                         				<tr class="filters" style="background-color: #00a3cc;">

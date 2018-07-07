@@ -97,7 +97,12 @@
 
 	$(document).ready(function(){
 
-		document.getElementById('page_header').innerHTML = plant +" Oil Transactions";
+		if(plant == 'Bravo'){
+            document.getElementById('page_header').innerHTML = "Starcrete Manufacturing Corporation";
+
+        }else{
+            document.getElementById('page_header').innerHTML = "Quality Star Concrete Products, Inc.";
+        }
 
 		tableData();
 		availableStock();
@@ -110,10 +115,10 @@
 
 		firebase.database().ref('incoming_diesel_category/'+plant).orderByChild('reverseDate').on('child_added', function(oilSnapshot){
 
-			// console.log(oilSnapshot.val().PickCategoryName, oil_value);
+			console.log(oilSnapshot.val().PickCategoryName, category, oilSnapshot.val().date, date);
 			if(oilSnapshot.val().PickCategoryName == category && oilSnapshot.val().date == date){
 
-				// console.log(oilSnapshot.val().PickCategoryName, oil_value);
+				// console.log(oilSnapshot.val().PickCategoryName, category);
 				date = oilSnapshot.val().date;
 				category_name = oilSnapshot.val().PickCategoryName;
 				current_stock = Number(oilSnapshot.val().seperateCurrentStock).toLocaleString('en') + " liter(s)";
@@ -175,6 +180,8 @@
 			
 			});
 		});
+
+		document.getElementById('Current_category').innerHTML = category;
 	}
 
 	function availableStock(){
@@ -277,6 +284,17 @@
 
 // }
 </script>
+<style>
+@media print {
+  table{
+    font-size: 11px;
+  }
+  #printPageButton{
+    display: none;
+  }
+
+}	
+</style>
 </head>
 <body>
 	<div class="container">
@@ -295,24 +313,25 @@
 
                                     <tr>
                                         <th colspan="8">
+                                        	<button class="btn btn-info btn-md" id="printPageButton" onclick="return window.print();" style="float: right;"><strong><span class="fa fa-print"></span> Print</strong></button>
                                             <span>Available stock as of today: <span id="id_stock">
                                             </span></span><br>
                                             <span>Category stock as of today: <span id="id_Categorystock">
                                             </span></span>
                                             <br>
-                                            <span>Category: <span id ="Current_category"></span></span> 
-                                            <button class="btn btn-info btn-md" id="printPageButton" onclick="return window.print();" style="float: right;"><strong><span class="fa fa-print"></span> Print</strong></button>
+                                            <span>Category: <span id ="Current_category"></span></span><br> 
+                                            <span>Report: OIL TRANSACTION</span>
                                         </th>
                                     </tr>
-                                    <tr class="filters" style="background-color: #00a3cc;">
-										<th class="col-md-1" style="color:white">Truck No.</th>
-										<th class="col-md-2" style="color:white">Driver/ Operator/ Supplier</th>
-										<th class="col-md-1" style="color:white">Quantity (IN)</th>
-										<th class="col-md-1" style="color:white">Quantity (OUT)</th>
-										<th class="col-md-1" style="color:white">Current Stock</th>
+                                    <tr>
+										<th class="col-md-1">Truck No.</th>
+										<th class="col-md-2">Driver/ Operator/ Supplier</th>
+										<th class="col-md-1">Quantity (IN)</th>
+										<th class="col-md-1">Quantity (OUT)</th>
+										<th class="col-md-1">Current Stock</th>
 										<!-- <th class="col-md-2"><input type="text" class="form-control" placeholder="Address" disabled ></th> -->
-										<th class="col-md-1" style="color:white">Time</th>
-                                        <th class="col-md-1" style="color:white">DR No.</th>
+										<th class="col-md-1">Time</th>
+                                        <th class="col-md-1">DR No.</th>
 									</tr>
 								</thead>
 								<tbody id="oilList"></tbody>
