@@ -654,6 +654,9 @@
             var time = new Date().toLocaleTimeString('en');
             
             // var date = currentDateTime;
+            var options = {year: "numeric", month: "long"};
+
+            var date_month_year = new Date(date_value).toLocaleDateString('en', options);
             var date = new Date(date_value).toLocaleDateString('en');
             var time_input = new Date(date_value).toLocaleTimeString('en');
             var po_no = orderSnapshot.val().po_no;
@@ -677,6 +680,7 @@
 
             var drData = {
                 date: date,
+                date_month_year: date_month_year,
                 time: time,
                 time_input: time_input,
                 po_no: po_no,
