@@ -202,7 +202,7 @@
                     console.log(StartReverseDate);
 
                     if(firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate)){
-                        alert("Outgoing diesel complete.");
+                        //alert("Outgoing diesel complete.");
                          window.location.reload();
                     }
                 });
@@ -269,7 +269,7 @@
                     console.log(StartReverseDate);
 
                     if(firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate)){
-                        alert("Outgoing diesel complete.");
+                        //alert("Outgoing diesel complete.");
                          window.location.reload();
                     }
                 });
@@ -433,7 +433,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-md-offset-3">
-                        <form id="form" name="form" class="form-horizontal" onsubmit="return submitForm()">
+                        <form id="form" name="form" class="form-horizontal" onsubmit="if(confirm('Proceed?')){submitForm();}else{ event.preventDefault();}">
                             <section class="panel">
                                 <header class="panel-heading">
                                     Details
