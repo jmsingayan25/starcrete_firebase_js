@@ -105,18 +105,18 @@
         }
 
         if(fromDate != '' && endDate != ''){
-            document.getElementById('id_date_range').innerHTML = "Date: " + dateFormat(fromDate) + " - " + dateFormat(endDate) + "<br> Plant: " + plant + " <br> Report: DELIVERED ORDER";
+            document.getElementById('id_date_range').innerHTML = "Report: DELIVERED ORDER <br> Plant: " + plant + " <br> Date: " + dateFormat(fromDate) + " - " + dateFormat(endDate);
         }else if(fromDate != '' && endDate == ''){
 
             currentEndDate = new Date();
-            document.getElementById('id_date_range').innerHTML = "Date: " + dateFormat(fromDate) + " - " + dateFormat(currentEndDate) + "<br> Plant: " + plant + " <br> Report: DELIVERED ORDER";
+            document.getElementById('id_date_range').innerHTML = "Report: DELIVERED ORDER <br> Plant: " + plant + " <br> Date: " + dateFormat(fromDate) + " - " + dateFormat(currentEndDate);
 
         }else if(fromDate == '' && endDate != ''){
 
             firebase.database().ref('delivery_delivered_order').orderByChild('date').limitToFirst(1).on('child_added', function(dateSnapshot){
                 console.log(dateSnapshot.val().date);
                 firstFromDate = dateSnapshot.val().date;
-                document.getElementById('id_date_range').innerHTML = "Date: " + dateFormat(firstFromDate) + " - " + dateFormat(endDate) + "<br> Plant: " + plant + " <br> Report: DELIVERED ORDER";
+                document.getElementById('id_date_range').innerHTML = "Report: DELIVERED ORDER <br> Plant: " + plant + " <br> Date: " + dateFormat(firstFromDate) + " - " + dateFormat(endDate);
             });
 
         }else{
@@ -127,7 +127,7 @@
                 firstFromDate = dateSnapshot.val().date;
                 currentEndDate = new Date();
                 
-                document.getElementById('id_date_range').innerHTML = "Date: " + dateFormat(firstFromDate) + " - " + dateFormat(currentEndDate) + "<br> Plant: " + plant + " <br> Report: DELIVERED ORDER";
+                document.getElementById('id_date_range').innerHTML = "Report: DELIVERED ORDER <br> Plant: " + plant + " <br> Date: " + dateFormat(firstFromDate) + " - " + dateFormat(currentEndDate);
             });
 
         }

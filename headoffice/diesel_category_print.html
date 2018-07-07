@@ -181,7 +181,8 @@
 			});
 		});
 
-		document.getElementById('Current_category').innerHTML = category;
+		document.getElementById('Current_category').innerHTML = category + " <br>";
+		document.getElementById('id_date').innerHTML = date;
 	}
 
 	function availableStock(){
@@ -314,13 +315,12 @@
                                     <tr>
                                         <th colspan="8">
                                         	<button class="btn btn-info btn-md" id="printPageButton" onclick="return window.print();" style="float: right;"><strong><span class="fa fa-print"></span> Print</strong></button>
-                                            <span>Available stock as of today: <span id="id_stock">
-                                            </span></span><br>
-                                            <span>Category stock as of today: <span id="id_Categorystock">
-                                            </span></span>
-                                            <br>
-                                            <span>Category: <span id ="Current_category"></span></span><br> 
-                                            <span>Report: OIL TRANSACTION</span>
+                                            <span>Available stock as of today: <span id="id_stock"></span></span><br>
+                                            <span>Category stock as of today: <span id="id_Categorystock"></span></span><br>
+                                            <span>Category: <span id ="Current_category"></span></span>
+                                            Report: OIL TRANSACTION <br>
+                                            Date: <span id="id_date"></span>
+
                                         </th>
                                     </tr>
                                     <tr>

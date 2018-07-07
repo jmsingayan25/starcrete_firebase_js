@@ -413,9 +413,9 @@
 
 			if(search_date != ''){
 
-				if(oilSnapshot.val().PickCategoryName == oil_value && search_date_convert == oilSnapshot.val().date){
+				if(oilSnapshot.val().PickCategoryName == oil_value && search_date_convert == oilSnapshot.val().Date_Input){
 
-					date = oilSnapshot.val().date;
+					date = oilSnapshot.val().Date_Input;
 					category_name = oilSnapshot.val().PickCategoryName;
 					current_stock = Number(oilSnapshot.val().seperateCurrentStock).toLocaleString('en') + " liter(s)";
 					dr_no = oilSnapshot.val().dr_no || "";

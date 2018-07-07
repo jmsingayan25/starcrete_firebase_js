@@ -97,7 +97,17 @@
 	$(document).ready(function(){
 
 		document.getElementById('page_header').innerHTML = plant +" Parts Transaction";
-		document.getElementById('id_date').innerHTML = dateFormat(search_date);
+		
+
+        if(search_date == ''){
+
+            firebase.database().ref('parts/'+plant).orderByChild('date').limitToFirst(1).on('child_added', function(partsSnapshot){
+                console.log(partsSnapshot.key, partsSnapshot.val());
+                document.getElementById('id_date').innerHTML = dateFormat(search_date);
+            });
+        }else{
+            document.getElementById('id_date').innerHTML = dateFormat(search_date);
+        }
 		tableData();
 	});
 
@@ -107,7 +117,7 @@
 
         firebase.database().ref('parts/'+plant).orderByChild('reverseDate').on('child_added', function(partsSnapshot){
             // partsSnapshot.forEach(function(partsChildSnapshot){
-            	console.log(partsSnapshot.val());
+            console.log(partsSnapshot.val());
             var text_supplier = partsSnapshot.val().supplier.toLowerCase();
             var text_item = partsSnapshot.val().item.toLowerCase();
             var text_po_no = partsSnapshot.val().po_no.toLowerCase();

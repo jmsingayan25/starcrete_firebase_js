@@ -216,7 +216,7 @@
         //end
         firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot){
             var get_totalStock = Number(totalstockSnapshot.val().Liters).toLocaleString('en');
-            document.getElementById("id_stock").innerHTML = "Available stock as of today: " + get_totalStock + " liter(s)";
+            document.getElementById("id_stock").innerHTML = get_totalStock + " liter(s)";
 
             if(get_totalStock <= 3500)
             {
@@ -230,7 +230,7 @@
             // document.getElementById("last_day").innerHTML = LastDayHolder;
          });
 
-        document.getElementById("stateDate").innerHTML = "Date: " + date;
+        document.getElementById("stateDate").innerHTML = "Date: " + date + " <br>";
 
 
     }
@@ -322,9 +322,9 @@
                                     <tr>
                                         <th colspan="8">
                                             <button class="btn btn-info btn-md" id="printPageButton" onclick="return window.print();" style="float: right;"><strong><span class="fa fa-print"></span> Print</strong></button>
-                                            <span id = "stateDate"></span><br>
-                                            <span id="id_stock"></span><br>
-                                            <span>Report: DIESEL TRANSACTION</span>
+                                            Available stock as of today: <span id="id_stock"></span><br>
+                                            Report: DIESEL TRANSACTION <br>
+                                            <span id = "stateDate"></span>
                                         </th>
                                     </tr>
                                     <tr>
