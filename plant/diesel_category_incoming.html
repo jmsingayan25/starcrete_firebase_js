@@ -227,7 +227,7 @@
                     /*firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
                     console.log(StartReverseDate);*/
                      if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
-                        alert("Incoming diesel complete.");
+                        //alert("Incoming diesel complete.");
                         window.location.reload();
                         }
                     });
@@ -296,7 +296,7 @@
                                      var newPostRef = postData.push();
                                      newPostRef.set(currentStockHolder);
                                      var postId = newPostRef.key;
-                                     alert("Incoming diesel complete.");
+                                     //alert("Incoming diesel complete.");
                                      window.location.reload();
                                  }
                                       firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot){
@@ -364,7 +364,7 @@
                                         var newPostRef = postData.push();
                                         newPostRef.set(currentStockHolder);
                                         var postId = newPostRef.key;
-                                        alert("Incoming diesel complete.");
+                                        //alert("Incoming diesel complete.");
                                         window.location.reload();
                         }
                             });  
@@ -492,7 +492,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-6 col-md-offset-3">
-                        <form id="form" name="form" class="form-horizontal" onsubmit="return submitForm()">
+                        <form id="form" name="form" class="form-horizontal" onsubmit="if(confirm('Proceed?')){submitForm();}else{ event.preventDefault();}">
                             <section class="panel">
                                 <header class="panel-heading">
                                     Details
