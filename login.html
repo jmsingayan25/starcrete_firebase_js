@@ -65,11 +65,11 @@
 					var uemail = user.email;
 
 					var userInfo = {
-						firstname: "Rica",
-						lastname: "Romulo",
+						firstname: "Jimmy",
+						lastname: "Bacar",
 						email: uemail,
-						position: "secretary",
-						office: "Bravo"
+						position: "admin",
+						office: "Head Office"
 					}
 
 					firebase.database().ref("users/"+uid).set(userInfo);
@@ -178,7 +178,7 @@
 
 	window.onload = function() {
 		
-		initState();
+		// initState();
     	document.getElementById('login-submit').addEventListener('click', signIn, false);
 
     	var input_pass = document.getElementById('loginPassword');

@@ -655,8 +655,10 @@
             
             // var date = currentDateTime;
             var options = {year: "numeric", month: "long"};
+            var options2 = {year: "numeric", month: "long", day: "numeric"}
 
             var date_month_year = new Date(date_value).toLocaleDateString('en', options);
+            var date_day = new Date(date_value).toLocaleDateString('en', options2);
             var date = new Date(date_value).toLocaleDateString('en');
             var time_input = new Date(date_value).toLocaleTimeString('en');
             var po_no = orderSnapshot.val().po_no;
@@ -697,7 +699,7 @@
                 delivered_plant: delivered_plant
             }
 
-            console.log(drData);
+            // console.log(drData);
 
             var drPost = firebase.database().ref('delivery_delivered_order/');
             var drPostData = drPost.push();
@@ -838,6 +840,29 @@
                         console.log('EXIST');
                     }
                 });
+            });
+
+            var itemSummary = {
+                item_no: item_no,
+                total: quantity
+            }
+            
+            firebase.database().ref().child('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day).orderByChild('item_no').equalTo(item_no).once('value').then(function(dateSnapshot){
+                
+                if(dateSnapshot.val() == null){
+                    firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day).push(itemSummary);
+                }else{
+                    dateSnapshot.forEach(function(dateChildSnapshot){
+                        
+                        var newTotal = Number(quantity) + Number(dateChildSnapshot.val().total);
+
+                        var updateTotal = {
+                            total: newTotal
+                        }
+
+                        firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day+'/'+dateChildSnapshot.key).update(updateTotal);
+                    });
+                }
             });
         });
     }
@@ -1052,14 +1077,14 @@
         }
     }
 
-    function printPo(){
+    // function printPo(){
 
-        var fromDate = document.getElementById('start_date').value;
-        var endDate = document.getElementById('end_date').value;
-        var search_text = document.getElementById('search').value;
+    //     var fromDate = document.getElementById('start_date').value;
+    //     var endDate = document.getElementById('end_date').value;
+    //     var search_text = document.getElementById('search').value;
 
-        window.open('delivery_ongoing_order_print.html?plant='+plant+'&fromDate='+fromDate+'&endDate='+endDate+'&search_text='+search_text,'_blank');
-    }
+    //     window.open('delivery_ongoing_order_print.html?plant='+plant+'&fromDate='+fromDate+'&endDate='+endDate+'&search_text='+search_text,'_blank');
+    // }
 
 </script>
 <style>
@@ -1269,7 +1294,7 @@
                                     <thead>
                                         <tr class="filterable">
                                             <th colspan="11">
-                                                <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button>
+                                              <!--   <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button> -->
                                                 <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                             </th>
                                         </tr>

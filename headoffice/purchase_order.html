@@ -291,10 +291,16 @@
                                                 var psi_ext = "";
                                             }
 
+                                            if(Number(itemChildSnapshot.val().balance) <= 500){
+                                                balance_ext = "<span style='color: red'>" + balance + " pcs</span>";
+                                            }else{
+                                                balance_ext = balance + " pcs";
+                                            }
+
                                             myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                             myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='purchase_order_detail.html?key=" + orderSnapshot.key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
                                             myTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
-                                            myTbody += "<td><strong>" + quantity + " pcs / " + balance + " pcs</strong></td>";
+                                            myTbody += "<td><strong>" + quantity + " pcs / " + balance_ext + " </strong></td>";
                                             myTbody += "<td><strong>" + project_name + "</strong></td>";
                                             myTbody += "<td><strong>" + project_address + "</strong></td>";
                                             myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
@@ -376,10 +382,16 @@
                                                     var psi_ext = "";
                                                 }
 
+                                                if(Number(itemChildSnapshot.val().balance) <= 500){
+                                                    balance_ext = "<span style='color: red'>" + balance + " pcs</span>";
+                                                }else{
+                                                    balance_ext = balance + " pcs";
+                                                }
+
                                                 myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                                 myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='purchase_order_detail.html?key=" + orderSnapshot.key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
                                                 myTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
-                                                myTbody += "<td><strong>" + quantity + " pcs / " + balance + " pcs</strong></td>";
+                                                myTbody += "<td><strong>" + quantity + " pcs / " + balance_ext + " </strong></td>";
                                                 myTbody += "<td><strong>" + project_name + "</strong></td>";
                                                 myTbody += "<td><strong>" + project_address + "</strong></td>";
                                                 myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
@@ -458,10 +470,16 @@
                                         var psi_ext = "";
                                     }
 
+                                    if(Number(itemChildSnapshot.val().balance) <= 500){
+                                        balance_ext = "<span style='color: red'>" + balance + " pcs</span>";
+                                    }else{
+                                        balance_ext = balance + " pcs";
+                                    }
+
                                     myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                     myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='purchase_order_detail.html?key=" + orderSnapshot.key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
                                     myTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
-                                    myTbody += "<td><strong>" + quantity + " pcs / " + balance + " pcs</strong></td>";
+                                    myTbody += "<td><strong>" + quantity + " pcs / " + balance_ext + " </strong></td>";
                                     myTbody += "<td><strong>" + project_name + "</strong></td>";
                                     myTbody += "<td><strong>" + project_address + "</strong></td>";
                                     myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
