@@ -180,21 +180,52 @@
 
 function Go()
 {
-    firebase.database().ref().child("delivery_delivered_order/" + plant).once('value',function(DeliverySnapshots)
-    {
-         DeliverySnapshots.forEach(function(DeliverListSnapshots){
+    event.preventDefault();
 
-                var options = {month: "long",year: "numeric"};
-                var getDate = new Date(document.getElementById("date_view").value).toLocaleDateString("en",options);
+    // firebase.database().ref().child("delivery_delivered_order/").once('value',function(DeliverySnapshots)
+    // {
+    //      DeliverySnapshots.forEach(function(DeliverListSnapshots){
 
-                var getdatemonthyear = DeliverListSnapshots.val().date_month_year;
-                if (getDate==getdatemonthyear) 
-                {
+    //             if (DeliverListSnapshots.val().delivered_plant == plant) 
+    //             {
+    //                 //date input
+    //                 var options = {month: "long",year: "numeric"};
+    //                 var getDate = new Date(document.getElementById("date_view").value).toLocaleDateString("en",options);
+    //                 //date from firebase
+    //                 var getdatemonthyear = DeliverListSnapshots.val().date_month_year;
+    //                 //item from firebase
+    //                 var getitem = DeliverySnapshots.val().item_key;
+                   
+    //                     if (getDate == getdatemonthyear) 
+    //                     {
 
-                }
-         });
+    //                     } else{
+    //                                     var newSummaryMonth = {
+    //                                     sum_day_month_year:getDate 
+    //                                                         };
+    //                                     var postData = firebase.database().ref('summary_report_delivered_order/' + plant);
+    //                                     var newPostRef = postData.push();
+    //                                     newPostRef.set(newSummaryMonth);
 
-    });
+    //                                     var newId = newPostRef.key;
+
+    //                                     var newMonth = new Date(getDate).getMonth() + 1;
+    //                                     var newYear = new Date(getDate).getFullYear();
+    //                                     for (var i = 1; i <= 31; i++) {
+                                            
+    //                                         FullDate = newMonth + '-' + i + '-' + newYear;
+
+    //                                         sampledata = {
+    //                                             sampleitem1: "1A"
+    //                                         };
+    //                                         firebase.database().ref("summary_report_delivered_order/" + plant + "/" + newId + "/" + getDate + "/" + FullDate + "/item").push(sampledata);
+    //                                     }
+
+    //                                 }
+    //             }    
+    //      });
+
+    // });
 }    
 
 </script>
