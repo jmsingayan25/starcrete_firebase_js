@@ -655,8 +655,10 @@
             
             // var date = currentDateTime;
             var options = {year: "numeric", month: "long"};
+            var options2 = {year: "numeric", month: "long", day: "numeric"}
 
             var date_month_year = new Date(date_value).toLocaleDateString('en', options);
+            var date_day = new Date(date_value).toLocaleDateString('en', options2);
             var date = new Date(date_value).toLocaleDateString('en');
             var time_input = new Date(date_value).toLocaleTimeString('en');
             var po_no = orderSnapshot.val().po_no;
@@ -697,147 +699,170 @@
                 delivered_plant: delivered_plant
             }
 
-            console.log(drData);
+            // console.log(drData);
 
-            var drPost = firebase.database().ref('delivery_delivered_order/');
-            var drPostData = drPost.push();
-            drPostData.set(drData);
-            var postId = drPostData.key;
+            // var drPost = firebase.database().ref('delivery_delivered_order/');
+            // var drPostData = drPost.push();
+            // drPostData.set(drData);
+            // var postId = drPostData.key;
 
-            // insert data of project details to recently added transaction
-            firebase.database().ref('delivery_ongoing_order/'+orderKey+'/project_detail').once('value').then(function(projectSnapshot){
-                projectSnapshot.forEach(function(projectChildSnapshot){
+            // // insert data of project details to recently added transaction
+            // firebase.database().ref('delivery_ongoing_order/'+orderKey+'/project_detail').once('value').then(function(projectSnapshot){
+            //     projectSnapshot.forEach(function(projectChildSnapshot){
 
-                    var project_address = projectChildSnapshot.val().project_address;
-                    var project_name = projectChildSnapshot.val().project_name;
-                    var project_key = projectChildSnapshot.key;
+            //         var project_address = projectChildSnapshot.val().project_address;
+            //         var project_name = projectChildSnapshot.val().project_name;
+            //         var project_key = projectChildSnapshot.key;
 
-                    var projectData = {
-                        project_address: project_address,
-                        project_name: project_name
-                    }
+            //         var projectData = {
+            //             project_address: project_address,
+            //             project_name: project_name
+            //         }
 
-                    firebase.database().ref('delivery_delivered_order/'+postId+'/project_detail/'+project_key).set(projectData);
+            //         firebase.database().ref('delivery_delivered_order/'+postId+'/project_detail/'+project_key).set(projectData);
 
-                    var historyData = {
-                        date: date,
-                        time: time,
-                        reverseDate: firebase.database.ServerValue.TIMESTAMP,
-                        type_of_transaction: "Delivered DR No.",
-                        history: "Delivered DR No. " + dr_no + " with P.O. No. " + po_no + " and " + Number(quantity) + " pcs of " + item_no + psi_ext + " to " + project_name + " in " + project_address
-                    }
+            //         var historyData = {
+            //             date: date,
+            //             time: time,
+            //             reverseDate: firebase.database.ServerValue.TIMESTAMP,
+            //             type_of_transaction: "Delivered DR No.",
+            //             history: "Delivered DR No. " + dr_no + " with P.O. No. " + po_no + " and " + Number(quantity) + " pcs of " + item_no + psi_ext + " to " + project_name + " in " + project_address
+            //         }
 
-                    var postHistoryData = firebase.database().ref('history/'+plant+'/');
-                    var newHistoryPostRef = postHistoryData.push();
-                    newHistoryPostRef.set(historyData);
+            //         var postHistoryData = firebase.database().ref('history/'+plant+'/');
+            //         var newHistoryPostRef = postHistoryData.push();
+            //         newHistoryPostRef.set(historyData);
 
-                    var postHistoryId = newHistoryPostRef.key;
+            //         var postHistoryId = newHistoryPostRef.key;
 
-                    firebase.database().ref().child('history/'+plant+'/'+postHistoryId).once('value', function(snapshot){
+            //         firebase.database().ref().child('history/'+plant+'/'+postHistoryId).once('value', function(snapshot){
 
-                        var timestamp = snapshot.val().reverseDate * -1;
-                        var timeUpdate = {
-                            reverseDate: timestamp
-                        } 
+            //             var timestamp = snapshot.val().reverseDate * -1;
+            //             var timeUpdate = {
+            //                 reverseDate: timestamp
+            //             } 
 
-                        firebase.database().ref('history/'+plant+'/'+postHistoryId).update(timeUpdate);
-                    });
-                });
-            }); 
+            //             firebase.database().ref('history/'+plant+'/'+postHistoryId).update(timeUpdate);
+            //         });
+            //     });
+            // }); 
 
-            // insert contact detail to recently added transaction
-            firebase.database().ref('delivery_ongoing_order/'+orderKey+'/contact').on('value', function(contactSnapshot){
-                contactSnapshot.forEach(function(contactChildSnapshot){
+            // // insert contact detail to recently added transaction
+            // firebase.database().ref('delivery_ongoing_order/'+orderKey+'/contact').on('value', function(contactSnapshot){
+            //     contactSnapshot.forEach(function(contactChildSnapshot){
 
-                var contact_name = contactChildSnapshot.val().contact_name;
-                var contact_no = contactChildSnapshot.val().contact_no;
-                var contact_key = contactChildSnapshot.key;
+            //     var contact_name = contactChildSnapshot.val().contact_name;
+            //     var contact_no = contactChildSnapshot.val().contact_no;
+            //     var contact_key = contactChildSnapshot.key;
 
-                var contactData = {
-                    contact_name: contact_name,
-                    contact_no: contact_no
-                }
+            //     var contactData = {
+            //         contact_name: contact_name,
+            //         contact_no: contact_no
+            //     }
 
-                firebase.database().ref('delivery_delivered_order/'+postId+'/contact/'+contact_key).set(contactData);
-                });
-            }); 
+            //     firebase.database().ref('delivery_delivered_order/'+postId+'/contact/'+contact_key).set(contactData);
+            //     });
+            // }); 
 
-            //update on child node: reverseDate
-            firebase.database().ref().child('delivery_delivered_order/'+postId).once('value', function(snapshot){
+            // //update on child node: reverseDate
+            // firebase.database().ref().child('delivery_delivered_order/'+postId).once('value', function(snapshot){
 
-                var timestamp = snapshot.val().reverseDate * -1;
-                var timeUpdate = {
-                    reverseDate: timestamp
-                } 
+            //     var timestamp = snapshot.val().reverseDate * -1;
+            //     var timeUpdate = {
+            //         reverseDate: timestamp
+            //     } 
 
-                if(firebase.database().ref('delivery_delivered_order/'+postId).update(timeUpdate)){
-                    if(firebase.database().ref('delivery_ongoing_order/'+orderKey).remove()){
-                        alert("DR No. " + dr_no + " has been delivered successfully.");
-                        window.location.href = 'delivery_ongoing_order.html';
-                    }
-                }
-            });
+            //     if(firebase.database().ref('delivery_delivered_order/'+postId).update(timeUpdate)){
+            //         if(firebase.database().ref('delivery_ongoing_order/'+orderKey).remove()){
+            //             alert("DR No. " + dr_no + " has been delivered successfully.");
+            //             window.location.href = 'delivery_ongoing_order.html';
+            //         }
+            //     }
+            // });
     
-            firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
-                balance = itemSnapshot.val().balance;
-                quantity_order = itemSnapshot.val().quantity;
+            // firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
+            //     balance = itemSnapshot.val().balance;
+            //     quantity_order = itemSnapshot.val().quantity;
 
-                countItemOngoingDelivery(orderKey, plant, function(response){
-                    if(response == null && balance == 0){
+            //     countItemOngoingDelivery(orderKey, plant, function(response){
+            //         if(response == null && balance == 0){
 
-                        var closedPoData = {
-                            item_no: item_no,
-                            psi: psi,
-                            quantity: quantity_order,
-                            date: date,
-                            time: time,
-                            issued_po_plant: issued_po_plant,
-                            delivered_plant: delivered_plant,
-                            po_no: po_no,
-                            po_no_key: po_no_key,
-                            reverseDate: firebase.database.ServerValue.TIMESTAMP,
-                            status: 'CLOSED',
-                            reason: 'DELIVERED'
+            //             var closedPoData = {
+            //                 item_no: item_no,
+            //                 psi: psi,
+            //                 quantity: quantity_order,
+            //                 date: date,
+            //                 time: time,
+            //                 issued_po_plant: issued_po_plant,
+            //                 delivered_plant: delivered_plant,
+            //                 po_no: po_no,
+            //                 po_no_key: po_no_key,
+            //                 reverseDate: firebase.database.ServerValue.TIMESTAMP,
+            //                 status: 'CLOSED',
+            //                 reason: 'DELIVERED'
+            //             }
+
+            //             var closedPoRef = firebase.database().ref('purchase_order_closed');
+            //             var closedPoPush = closedPoRef.push();
+            //             closedPoPush.set(closedPoData);
+
+            //             var closedPoKey = closedPoPush.key;
+            //             firebase.database().ref('purchase_order/'+po_no_key+'/contact').on('value', function(contactSnapshot){
+            //                 contactSnapshot.forEach(function(contactChildSnapshot){
+
+            //                     var contact_name = contactChildSnapshot.val().contact_name;
+            //                     var contact_no = contactChildSnapshot.val().contact_no;
+
+            //                     var contactData = {
+            //                         contact_name: contact_name,
+            //                         contact_no: contact_no
+            //                     }
+
+            //                     firebase.database().ref('purchase_order_closed/'+closedPoKey+'/contact/'+contactChildSnapshot.key).set(contactData);
+            //                 });
+            //             });
+
+            //             firebase.database().ref('purchase_order/'+po_no_key+'/project_detail').once('value', function(projectSnapshot){
+            //                 projectSnapshot.forEach(function(projectChildSnapshot){
+
+            //                     var project_name = projectChildSnapshot.val().project_name;
+            //                     var project_address = projectChildSnapshot.val().project_address;
+                            
+            //                     var projectData = {
+            //                         project_name: project_name,
+            //                         project_address: project_address
+            //                     }
+
+            //                     firebase.database().ref('purchase_order_closed/'+closedPoKey+'/project_detail/'+projectChildSnapshot.key).set(projectData);
+            //                 });
+            //             });
+            //         }else{
+            //             console.log('EXIST');
+            //         }
+            //     });
+            // });
+
+            var itemSummary = {
+                item_no: item_no,
+                total: quantity
+            }
+            
+            firebase.database().ref().child('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day).orderByChild('item_no').equalTo(item_no).once('value').then(function(dateSnapshot){
+                
+                if(dateSnapshot.val() == null){
+                    firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day).push(itemSummary);
+                }else{
+                    dateSnapshot.forEach(function(dateChildSnapshot){
+                        
+                        var newTotal = Number(quantity) + Number(dateChildSnapshot.val().total);
+
+                        var updateTotal = {
+                            total: newTotal
                         }
 
-                        var closedPoRef = firebase.database().ref('purchase_order_closed');
-                        var closedPoPush = closedPoRef.push();
-                        closedPoPush.set(closedPoData);
-
-                        var closedPoKey = closedPoPush.key;
-                        firebase.database().ref('purchase_order/'+po_no_key+'/contact').on('value', function(contactSnapshot){
-                            contactSnapshot.forEach(function(contactChildSnapshot){
-
-                                var contact_name = contactChildSnapshot.val().contact_name;
-                                var contact_no = contactChildSnapshot.val().contact_no;
-
-                                var contactData = {
-                                    contact_name: contact_name,
-                                    contact_no: contact_no
-                                }
-
-                                firebase.database().ref('purchase_order_closed/'+closedPoKey+'/contact/'+contactChildSnapshot.key).set(contactData);
-                            });
-                        });
-
-                        firebase.database().ref('purchase_order/'+po_no_key+'/project_detail').once('value', function(projectSnapshot){
-                            projectSnapshot.forEach(function(projectChildSnapshot){
-
-                                var project_name = projectChildSnapshot.val().project_name;
-                                var project_address = projectChildSnapshot.val().project_address;
-                            
-                                var projectData = {
-                                    project_name: project_name,
-                                    project_address: project_address
-                                }
-
-                                firebase.database().ref('purchase_order_closed/'+closedPoKey+'/project_detail/'+projectChildSnapshot.key).set(projectData);
-                            });
-                        });
-                    }else{
-                        console.log('EXIST');
-                    }
-                });
+                        firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day+'/'+dateChildSnapshot.key).update(updateTotal);
+                    });
+                }
             });
         });
     }
