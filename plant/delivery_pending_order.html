@@ -229,10 +229,16 @@
                                             var psi_ext = "";
                                         }
 
+                                        if(Number(itemChildSnapshot.val().balance) <= 1350){
+                                            balance_ext = "<span style='color: red'>" + balance + " pcs</span>";
+                                        }else{
+                                            balance_ext = balance + " pcs";
+                                        }
+
                                         myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                         myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.key + "'\"><strong>" + po_no + "</strong></div></td>";
                                         myTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
-                                        myTbody += "<td><strong>" + quantity + " pcs / " + balance + " pcs</strong></td>";
+                                        myTbody += "<td><strong>" + quantity + " pcs / " + balance_ext + " </strong></td>";
                                         myTbody += "<td><strong>" + project_name + "</strong></td>";
                                         myTbody += "<td><strong>" + project_address + "</strong></td>";
                                         myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
@@ -312,10 +318,16 @@
                                                 var psi_ext = "";
                                             }
 
+                                            if(Number(itemChildSnapshot.val().balance) <= 1350){
+                                                balance_ext = "<span style='color: red'>" + balance + " pcs</span>";
+                                            }else{
+                                                balance_ext = balance + " pcs";
+                                            }
+
                                             myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                             myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.key + "'\"><strong>" + po_no + "</strong></div></td>";
                                             myTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
-                                            myTbody += "<td><strong>" + quantity + " pcs / " + balance + " pcs</strong></td>";
+                                            myTbody += "<td><strong>" + quantity + " pcs / " + balance_ext + " </strong></td>";
                                             myTbody += "<td><strong>" + project_name + "</strong></td>";
                                             myTbody += "<td><strong>" + project_address + "</strong></td>";
                                             myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
@@ -396,10 +408,16 @@
                                     var psi_ext = "";
                                 }
 
+                                if(Number(itemChildSnapshot.val().balance) <= 1350){
+                                    balance_ext = "<span style='color: red'>" + balance + " pcs</span>";
+                                }else{
+                                    balance_ext = balance + " pcs";
+                                }
+
                                 myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                 myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.key + "'\"><strong>" + po_no + "</strong></div></td>";
                                 myTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
-                                myTbody += "<td><strong>" + quantity + " pcs / " + balance + " pcs</strong></td>";
+                                myTbody += "<td><strong>" + quantity + " pcs / " + balance_ext + " </strong></td>";
                                 myTbody += "<td><strong>" + project_name + "</strong></td>";
                                 myTbody += "<td><strong>" + project_address + "</strong></td>";
                                 myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
@@ -520,14 +538,14 @@
         }
     }
 
-    function printPo(){
+    // function printPo(){
 
-        var fromDate = document.getElementById('start_date').value;
-        var endDate = document.getElementById('end_date').value;
-        var search_text = document.getElementById('search').value;
+    //     var fromDate = document.getElementById('start_date').value;
+    //     var endDate = document.getElementById('end_date').value;
+    //     var search_text = document.getElementById('search').value;
 
-        window.open('delivery_pending_order_print.html?plant='+plant+'&fromDate='+fromDate+'&endDate='+endDate+'&search_text='+search_text,'_blank');
-    }
+    //     window.open('delivery_pending_order_print.html?plant='+plant+'&fromDate='+fromDate+'&endDate='+endDate+'&search_text='+search_text,'_blank');
+    // }
 
 </script>    
 <style>
@@ -737,7 +755,7 @@
                                     <thead>
                                         <tr class="filterable">
                                             <th colspan="10">
-                                                <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button>
+                                                <!-- <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button> -->
                                                 <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                             </th>
                                         </tr>

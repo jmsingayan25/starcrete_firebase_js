@@ -183,10 +183,16 @@
                                             date = dateFormat(orderSnapshot.val().date);
                                             status = orderSnapshot.val().status;
 
+                                            if(Number(itemChildSnapshot.val().balance) <= 1350){
+                                                balance_ext = "<span style='color: red'>" + balance + " pcs</span>";
+                                            }else{
+                                                balance_ext = balance + " pcs";
+                                            }
+
                                             myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                             myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
                                             myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
-                                            myTbody += "<td><strong>" + quantity + " pcs / " + balance +" pcs</strong></td>";
+                                            myTbody += "<td><strong>" + quantity + " pcs / " + balance_ext +" </strong></td>";
                                             myTbody += "<td><strong>" + project_name + "</strong></td>";
                                             myTbody += "<td><strong>" + project_address + "</strong></td>";
                                             myTbody += "<td>";
@@ -267,10 +273,16 @@
                                                 date = dateFormat(orderSnapshot.val().date);
                                                 status = orderSnapshot.val().status;
 
+                                                if(Number(itemChildSnapshot.val().balance) <= 1350){
+                                                    balance_ext = "<span style='color: red'>" + balance + " pcs</span>";
+                                                }else{
+                                                    balance_ext = balance + " pcs";
+                                                }
+
                                                 myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                                 myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
                                                 myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
-                                                myTbody += "<td><strong>" + quantity + " pcs / " + balance +" pcs</strong></td>";
+                                                myTbody += "<td><strong>" + quantity + " pcs / " + balance_ext +" </strong></td>";
                                                 myTbody += "<td><strong>" + project_name + "</strong></td>";
                                                 myTbody += "<td><strong>" + project_address + "</strong></td>";
                                                 myTbody += "<td>";

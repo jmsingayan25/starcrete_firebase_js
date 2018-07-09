@@ -96,18 +96,21 @@
 
 	$(document).ready(function(){
 
-		document.getElementById('page_header').innerHTML = plant +" Parts Transaction";
-		
+		if(plant == 'Bravo'){
+            document.getElementById('page_header').innerHTML = "Starcrete Manufacturing Corporation";
 
-        if(search_date == ''){
-
-            firebase.database().ref('parts/'+plant).orderByChild('date').limitToFirst(1).on('child_added', function(partsSnapshot){
-                console.log(partsSnapshot.key, partsSnapshot.val());
-                document.getElementById('id_date').innerHTML = dateFormat(search_date);
-            });
         }else{
-            document.getElementById('id_date').innerHTML = dateFormat(search_date);
+            document.getElementById('page_header').innerHTML = "Quality Star Concrete Products, Inc.";
         }
+		
+        if(search_date != ''){
+
+            document.getElementById('id_date').innerHTML = "Report: PARTS TRANSACTION <br> Plant: " + plant + " <br> Date: " + dateFormat(search_date);
+  
+        }else{
+            document.getElementById('id_date').innerHTML = "Report: PARTS TRANSACTION <br> Plant: " + plant;
+        }
+
 		tableData();
 	});
 
@@ -287,8 +290,8 @@
 								<thead>
 									<tr>
 										<th colspan="10">
-											Date: <span id="id_date"></span>
 											<button class="btn btn-info btn-md" id="printPageButton" onclick="return window.print();" style="float: right;"><strong><span class="fa fa-print"></span> Print</strong></button>
+                                            <span id="id_date"></span>
 										</th>
 									</tr>
 									<tr class="filters" style="background-color: #00a3cc;">

@@ -25,63 +25,63 @@
 	
 	$(document).ready(function(){
 
-		// var itemData = {
-		// 	// item: "1A",
-		// 	// item: "1B",
-		// 	// item: "1C",
-		// 	// item: "1X",
-		// 	// item: "1XX",
-		// 	// item: "2A",
-		// 	// item: "2B",
-		// 	// item: "2C",
-		// 	// item: "2X",
-		// 	// item: "2XX",
-		// 	// item: "3A",
-		// 	// item: "3B",
-		// 	// item: "3C",
-		// 	// item: "3X",
-		// 	// item: "3XX",
-		// 	// item: "5A",
-		// 	// item: "5B",
-		// 	// item: "5C",
-		// 	// item: "5X",
-		// 	// item: "5XX",
-		// 	// item: "BB",
-		// 	// item: "LC",
-		// 	// item: "NS",
-		// 	// item: "SE",
-		// 	quantity: "0"
-		// }
+		var itemData = {
+			item: "1A",
+			item: "1B",
+			item: "1C",
+			item: "1X",
+			item: "1XX",
+			item: "2A",
+			item: "2B",
+			item: "2C",
+			item: "2X",
+			item: "2XX",
+			item: "3A",
+			item: "3B",
+			item: "3C",
+			item: "3X",
+			item: "3XX",
+			item: "5A",
+			item: "5B",
+			item: "5C",
+			item: "5X",
+			item: "5XX",
+			item: "BB",
+			item: "LC",
+			item: "NS",
+			item: "SE"
+			// quantity: "0"
+		}
 
-		// if(firebase.database().ref('item').push(itemData)){
-		// 	alert("YES");
-		// }
+		if(firebase.database().ref('item').push(itemData)){
+			alert("YES");
+		}
 	
-		countItemOngoingDelivery('-LG3JVlx2c3FrmjfamQz', function(response){
-			if(response == null){
-				result = "EXIST";
-			}else{
-				result = "NOT EXIST";
-			}
-		console.log(result);
-		// return result;
+		// countItemOngoingDelivery('-LG3JVlx2c3FrmjfamQz', function(response){
+		// 	if(response == null){
+		// 		result = "EXIST";
+		// 	}else{
+		// 		result = "NOT EXIST";
+		// 	}
+		// console.log(result);
+		// // return result;
 
-		});
+		// });
 
 });
 
-	function countItemOngoingDelivery(itemKey, callback){
+	// function countItemOngoingDelivery(itemKey, callback){
 
 		
-        firebase.database().ref('delivery_ongoing_order').orderByChild('item_key').equalTo(itemKey).on('value', 
-        function(orderSnapshot){
+ //        firebase.database().ref('delivery_ongoing_order').orderByChild('item_key').equalTo(itemKey).on('value', 
+ //        function(orderSnapshot){
 
-            response = orderSnapshot.val();
+ //            response = orderSnapshot.val();
 
-        	callback(response);
+ //        	callback(response);
 
-        });
-    }
+ //        });
+ //    }
 
 
 

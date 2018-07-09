@@ -206,6 +206,16 @@
     function tableData(){
 
         var myTbody = "";
+
+        firebase.database().ref('client').once('value', function(clientSnapshot){
+            
+            if(clientSnapshot.val() == null){
+                myTbody = "<tr><td colspan='4' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                document.getElementById("clientList").innerHTML = myTbody;
+            }
+        });
+
         firebase.database().ref('client').orderByChild('client_name').on('child_added', function(clientSnapshot){
 
             var client_name = clientSnapshot.val().client_name;
