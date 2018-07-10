@@ -181,51 +181,45 @@
 function Go()
 {
     event.preventDefault();
+      var myTbody = "";
+      var myThead = "";
+      var options = {month: "long",year: "numeric"};
+      var getDate = new Date(document.getElementById("date_view").value).toLocaleDateString("en",options);
+       firebase.database().ref().child("item/").once('value',function(itemSnapshots)
+    {   
+        myThead += "<th style='color: white; text-align:center'>" + "Date"+ "</th>"
+        itemSnapshots.forEach(function(getitemSnapshots){
 
-    // firebase.database().ref().child("delivery_delivered_order/").once('value',function(DeliverySnapshots)
-    // {
-    //      DeliverySnapshots.forEach(function(DeliverListSnapshots){
+            myThead += "<th style='color: white; text-align:center'>" + getitemSnapshots.val().item + "</th>"
 
-    //             if (DeliverListSnapshots.val().delivered_plant == plant) 
-    //             {
-    //                 //date input
-    //                 var options = {month: "long",year: "numeric"};
-    //                 var getDate = new Date(document.getElementById("date_view").value).toLocaleDateString("en",options);
-    //                 //date from firebase
-    //                 var getdatemonthyear = DeliverListSnapshots.val().date_month_year;
-    //                 //item from firebase
-    //                 var getitem = DeliverySnapshots.val().item_key;
-                   
-    //                     if (getDate == getdatemonthyear) 
-    //                     {
+        });
+         myThead += "<th style='color: white; text-align:center'>" + "Total"+ "</th>"
+         document.getElementById("filters").innerHTML = myThead;
+    }); 
 
-    //                     } else{
-    //                                     var newSummaryMonth = {
-    //                                     sum_day_month_year:getDate 
-    //                                                         };
-    //                                     var postData = firebase.database().ref('summary_report_delivered_order/' + plant);
-    //                                     var newPostRef = postData.push();
-    //                                     newPostRef.set(newSummaryMonth);
+    firebase.database().ref().child("summary_delivered_order/" + plant + "/"+ getDate).once('value',function(SummarySnapshots)
+    {   
+            SummarySnapshots.forEach(function(forSummarySnapshots){
 
-    //                                     var newId = newPostRef.key;
+                        
 
-    //                                     var newMonth = new Date(getDate).getMonth() + 1;
-    //                                     var newYear = new Date(getDate).getFullYear();
-    //                                     for (var i = 1; i <= 31; i++) {
-                                            
-    //                                         FullDate = newMonth + '-' + i + '-' + newYear;
+     firebase.database().ref().child("summary_delivered_order/" + plant + "/"+ getDate + "/" +forSummarySnapshots.key + "/item").once('value',function(ItemSnapshots)
+    {  
+        myTbody += "<tr><td style='background-color: #00a3cc; color: white; text-align:center'><strong>" + new Date(forSummarySnapshots.key).getDate() + "</strong></td>";
 
-    //                                         sampledata = {
-    //                                             sampleitem1: "1A"
-    //                                         };
-    //                                         firebase.database().ref("summary_report_delivered_order/" + plant + "/" + newId + "/" + getDate + "/" + FullDate + "/item").push(sampledata);
-    //                                     }
-
-    //                                 }
-    //             }    
-    //      });
-
-    // });
+                ItemSnapshots.forEach(function(perItemSnapshot){
+                        var getItem = perItemSnapshot.val().total;
+                         myTbody += "<td><strong>" + getItem + "</strong></td>";
+                
+                });     
+                        var getTotal = forSummarySnapshots.val().total;
+                         myTbody += "<td style='background-color: #00b300; color: white; text-align:center'><strong>" + getTotal+ "</strong></td>";
+                         document.getElementById("orderList").innerHTML = myTbody;
+                         
+            });
+                });
+        });
+    
 }    
 
 </script>
@@ -395,7 +389,8 @@ function Go()
                                                         <label for="date_view" class="col-md-3 control-label" style="white-space: nowrap;"><strong>Select Date:</strong></label>
                                                         <div class="col-md-7">
                                                             <input type="month" id = "date_view" name="date_view" class="form-control" >   
-                                                            <button type="submit" id = "submitGo" class="btn btn-md btn-info"><strong>Go</strong></button>                      
+                                                            <button type="submit" id = "submitGo" class="btn btn-md btn-info"><strong>Go</strong></button>  
+                                                             <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button>                    
                                                         </div> 
                                                     </div>
                                                 </div>
@@ -407,14 +402,8 @@ function Go()
 	                        <div class="table-responsive filterable">
                                 <table class="table table-striped table-bordered">
                                     <thead>
-                                        <tr class="filterable">
-                                            <th colspan="14">
-                                                <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button>
-                                                <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
-                                            </th>
-                                        </tr>
-                                        <tr class="filters" style="background-color: #00a3cc;">
-                                            <th class="col-md-1" style="color: white; text-align:center">Date</th>
+                                        <tr class="filters" style="background-color: #00a3cc;" id="filters">
+                                            <!-- <th class="col-md-1" style="color: white; text-align:center">Date</th>
                                             <th class="col-md-1" style="color: white; text-align:center">1C</th>
                                             <th class="col-md-1" style="color: white; text-align:center">2C</th>
                                             <th class="col-md-1" style="color: white; text-align:center">1B</th>
@@ -427,7 +416,7 @@ function Go()
                                             <th class="col-md-1" style="color: white; text-align:center">2H</th>
                                             <th class="col-md-1" style="color: white; text-align:center">1H</th>
                                             <th class="col-md-1" style="color: white; text-align:center">5LB</th>
-                                            <th class="col-md-1" style="color: white; text-align:center">TOTAL</th>
+                                            <th class="col-md-1" style="color: white; text-align:center">TOTAL</th> -->
                                         </tr>
                                     </thead>
                                     <tbody id="orderList">
