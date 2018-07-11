@@ -25,6 +25,8 @@
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <!-- bootstrap theme -->
     <link href="css/bootstrap-theme.css" rel="stylesheet">
@@ -39,12 +41,26 @@
 	
 
 	<!-- Load the jQuery library, which we'll use to manipulate HTML elements with Javascript. -->
-    <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+    <!-- <script src="https://code.jquery.com/jquery-2.2.0.min.js"></script> -->
     
     <!-- Load Bootstrap stylesheet, which will is CSS that makes everything prettier and also responsive (aka will work on all devices of all sizes). -->
 
 <script>
 
+	$(document).ready(function(){
+
+		var remember = $.cookie('remember');
+        if (remember == 'true') 
+        {
+            var email = $.cookie('loginEmail');
+            var password = $.cookie('loginPassword');
+            // autofill the fields
+            $('#loginEmail').val(email);
+            $('#loginPassword').val(password);
+
+        }
+	});
+	
 	function createUser(){
 
 		if(firebase.auth().currentUser){
@@ -124,6 +140,23 @@
 
 			firebase.auth().onAuthStateChanged(function(user) {
 				if (user != null) {
+
+					if ($('#remember').is(':checked')) {
+			            var email_cookie = $('#loginEmail').val();
+			            var password_cookie = $('#loginPassword').val();
+
+			            // set cookies to expire in 14 days
+			            $.cookie('loginEmail', email_cookie, { expires: 14 });
+			            $.cookie('loginPassword', password_cookie, { expires: 14 });
+			            $.cookie('remember', true, { expires: 14 });                
+			        }
+			        else
+			        {
+			            // reset cookies
+			            $.cookie('loginEmail', null);
+			            $.cookie('loginPassword', null);
+			            $.cookie('remember', null);
+			        }
 					// User is signed in.
 					// user.providerData.forEach(function (profile) {
 					// 	console.log("Sign-in provider: " + profile.providerId);
