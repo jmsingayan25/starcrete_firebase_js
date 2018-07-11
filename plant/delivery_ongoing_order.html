@@ -985,39 +985,6 @@
                             }
                         }
                     });
-
-                    // array_total = [];
-                    // var grand_total = 0;
-                    // firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year).once('value', function(totalSnapshot){
-                    //     totalSnapshot.forEach(function(totalChildSnapshot){
-
-                    //         // console.log(totalChildSnapshot.val());
-                    //         var arrayTotal = {
-                    //             total: totalChildSnapshot.val().total
-                    //         }
-                    //         console.log(arrayTotal);
-                    //         array_total.push(arrayTotal);
-                    //     });
-
-                    //     for(var i = 0; i < array_total.length; i++){
-
-                    //         grand_total += array_total[i].total;
-                    //     }
-
-                    //     var updateGrandTotal = {
-                    //         total: grand_total
-                    //     }
-                    //     // console.log(updateGrandTotal);
-
-                    //     // firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year).update(updateGrandTotal);
-
-                    //     if(firebase.database().ref('summary_delivered_order_monthly_total/'+plant+'/'+date_year+'/'+date_month_year).set(updateGrandTotal)){
-                    //         if(firebase.database().ref('delivery_ongoing_order/'+orderKey).remove()){
-                    //             alert("DR No. " + dr_no + " has been delivered successfully.");
-                    //             window.location.href = 'delivery_ongoing_order.html';
-                    //         }
-                    //     }
-                    // });
                 }
             });
         });
