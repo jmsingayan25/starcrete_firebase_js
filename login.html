@@ -47,19 +47,19 @@
 
 <script>
 
-	$(document).ready(function(){
+	// $(document).ready(function(){
 
-		var remember = $.cookie('remember');
-        if (remember == 'true') 
-        {
-            var email = $.cookie('loginEmail');
-            var password = $.cookie('loginPassword');
-            // autofill the fields
-            $('#loginEmail').val(email);
-            $('#loginPassword').val(password);
+	// 	var remember = $.cookie('remember');
+ //        if (remember == 'true') 
+ //        {
+ //            var email = $.cookie('loginEmail');
+ //            var password = $.cookie('loginPassword');
+ //            // autofill the fields
+ //            $('#loginEmail').val(email);
+ //            $('#loginPassword').val(password);
 
-        }
-	});
+ //        }
+	// });
 	
 	function createUser(){
 
@@ -141,22 +141,22 @@
 			firebase.auth().onAuthStateChanged(function(user) {
 				if (user != null) {
 
-					if ($('#remember').is(':checked')) {
-			            var email_cookie = $('#loginEmail').val();
-			            var password_cookie = $('#loginPassword').val();
+					// if ($('#remember').is(':checked')) {
+			  //           var email_cookie = $('#loginEmail').val();
+			  //           var password_cookie = $('#loginPassword').val();
 
-			            // set cookies to expire in 14 days
-			            $.cookie('loginEmail', email_cookie, { expires: 14 });
-			            $.cookie('loginPassword', password_cookie, { expires: 14 });
-			            $.cookie('remember', true, { expires: 14 });                
-			        }
-			        else
-			        {
-			            // reset cookies
-			            $.cookie('loginEmail', null);
-			            $.cookie('loginPassword', null);
-			            $.cookie('remember', null);
-			        }
+			  //           // set cookies to expire in 14 days
+			  //           $.cookie('loginEmail', email_cookie, { expires: 14 });
+			  //           $.cookie('loginPassword', password_cookie, { expires: 14 });
+			  //           $.cookie('remember', true, { expires: 14 });                
+			  //       }
+			  //       else
+			  //       {
+			  //           // reset cookies
+			  //           $.cookie('loginEmail', null);
+			  //           $.cookie('loginPassword', null);
+			  //           $.cookie('remember', null);
+			  //       }
 					// User is signed in.
 					// user.providerData.forEach(function (profile) {
 					// 	console.log("Sign-in provider: " + profile.providerId);
