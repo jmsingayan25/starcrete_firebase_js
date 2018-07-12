@@ -656,7 +656,9 @@
             // var date = currentDateTime;
             var options = {year: "numeric", month: "long"};
             var options2 = {year: "numeric", month: "long", day: "numeric"}
+            var options3 = {year: "numeric"}
 
+            var date_year = new Date(date_value).toLocaleDateString('en', options3);
             var date_month_year = new Date(date_value).toLocaleDateString('en', options);
             var date_day = new Date(date_value).toLocaleDateString('en', options2);
             var date = new Date(date_value).toLocaleDateString('en');
@@ -772,12 +774,13 @@
                     reverseDate: timestamp
                 } 
 
-                if(firebase.database().ref('delivery_delivered_order/'+postId).update(timeUpdate)){
-                    if(firebase.database().ref('delivery_ongoing_order/'+orderKey).remove()){
-                        alert("DR No. " + dr_no + " has been delivered successfully.");
-                        window.location.href = 'delivery_ongoing_order.html';
-                    }
-                }
+                firebase.database().ref('delivery_delivered_order/'+postId).update(timeUpdate);
+                // if(firebase.database().ref('delivery_delivered_order/'+postId).update(timeUpdate)){
+                //     if(firebase.database().ref('delivery_ongoing_order/'+orderKey).remove()){
+                //         alert("DR No. " + dr_no + " has been delivered successfully.");
+                //         window.location.href = 'delivery_ongoing_order.html';
+                //     }
+                // }
             });
     
             firebase.database().ref('purchase_order/'+po_no_key+'/item/'+item_key).once('value', function(itemSnapshot){
@@ -786,6 +789,12 @@
 
                 countItemOngoingDelivery(orderKey, plant, function(response){
                     if(response == null && balance == 0){
+
+                        var closedStatus = {
+                            status: "CLOSED"
+                        }
+
+                        firebase.database().ref('purchase_order/'+po_no_key).update(closedStatus);
 
                         var closedPoData = {
                             item_no: item_no,
@@ -836,31 +845,154 @@
                                 firebase.database().ref('purchase_order_closed/'+closedPoKey+'/project_detail/'+projectChildSnapshot.key).set(projectData);
                             });
                         });
+
+                        firebase.database().ref('purchase_order_closed/'+closedPoKey).once('value', function(timeSnapshot){
+
+                            var closedtimestamp = timeSnapshot.val().reverseDate * -1;
+                            var closedTimeUpdate = {
+                                reverseDate: closedtimestamp
+                            } 
+
+                            firebase.database().ref('purchase_order_closed/'+closedPoKey).update(closedTimeUpdate);
+                        });
+
                     }else{
                         console.log('EXIST');
                     }
                 });
             });
 
-            var itemSummary = {
-                item_no: item_no,
-                total: quantity
-            }
-            
-            firebase.database().ref().child('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day).orderByChild('item_no').equalTo(item_no).once('value').then(function(dateSnapshot){
-                
-                if(dateSnapshot.val() == null){
-                    firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day).push(itemSummary);
-                }else{
-                    dateSnapshot.forEach(function(dateChildSnapshot){
-                        
-                        var newTotal = Number(quantity) + Number(dateChildSnapshot.val().total);
+            firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year).orderByChild('date').equalTo(date).once('value').then(function(dateSnapshot){
 
-                        var updateTotal = {
-                            total: newTotal
+                if(dateSnapshot.val() == null){
+                    // // alert("not exist");
+                    var date_number = new Date(date_value).getDate();
+
+                    var dateInsert = {
+                        date: date,
+                        total: "",
+                        number: date_number
+                    }
+
+                    firebase.database().ref().child('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day).set(dateInsert);
+
+                    firebase.database().ref('item').on('child_added', function(itemInsertSnapshot){
+                        // console.log(itemInsertSnapshot.val());
+                        var insert_item_no = itemInsertSnapshot.val().item;
+                        var position = itemInsertSnapshot.val().position;
+                        
+
+                        var itemSummary = {
+                            item_no: insert_item_no,
+                            total: " ",
+                            position: position
                         }
 
-                        firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day+'/'+dateChildSnapshot.key).update(updateTotal);
+                        firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day+'/item').push(itemSummary);
+
+                        firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day+'/item').orderByChild('item_no').equalTo(item_no).once('value').then(function(itemUpdateSnapshot){
+                            itemUpdateSnapshot.forEach(function(itemUpdateChildSnapshot){
+
+                                var itemUpdate = {
+                                    total: quantity
+                                }
+
+                                // console.log(itemUpdate);
+
+                                firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day+'/item/'+itemUpdateChildSnapshot.key).update(itemUpdate);
+                            });
+                        });
+
+                        firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day).once('value', function(totalSnapahot){
+
+                            var updateTotal = {
+                                total: quantity
+                            }
+
+                            firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day).update(updateTotal);
+                        });
+                    });
+
+                    firebase.database().ref('summary_delivered_order_monthly_total/'+plant+'/'+date_year+'/'+date_month_year).once('value', function(monthTotalSnapshot){
+
+                        if(monthTotalSnapshot.val() == null){
+                            console.log(monthTotalSnapshot.val());
+
+                            var grandTotal = {
+                                grand_total: quantity
+                            }
+
+                            // firebase.database().ref('summary_delivered_order_monthly_total/'+plant+'/'+date_year+'/'+date_month_year).set(grandTotal); 
+
+                            if(firebase.database().ref('summary_delivered_order_monthly_total/'+plant+'/'+date_year+'/'+date_month_year).set(grandTotal)){
+                                if(firebase.database().ref('delivery_ongoing_order/'+orderKey).remove()){
+                                    alert("DR No. " + dr_no + " has been delivered successfully.");
+                                    window.location.href = 'delivery_ongoing_order.html';
+                                }
+                            }
+                        
+                        }else{
+
+                            var new_grand_total = Number(monthTotalSnapshot.val().grand_total) + Number(quantity);
+
+                            var grandTotal = {
+                                grand_total: new_grand_total
+                            }
+
+                            // firebase.database().ref('summary_delivered_order_monthly_total/'+plant+'/'+date_year+'/'+date_month_year).update(grandTotal); 
+
+                            if(firebase.database().ref('summary_delivered_order_monthly_total/'+plant+'/'+date_year+'/'+date_month_year).update(grandTotal)){
+                                if(firebase.database().ref('delivery_ongoing_order/'+orderKey).remove()){
+                                    alert("DR No. " + dr_no + " has been delivered successfully.");
+                                    window.location.href = 'delivery_ongoing_order.html';
+                                }
+                            }
+                        }
+                    });
+
+                }else{
+
+                    firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day+'/item').orderByChild('item_no').equalTo(item_no).once('value').then(function(dateExistSnapshot){
+                        dateExistSnapshot.forEach(function(dateExistChildSnapshot){
+
+                            var new_total = Number(dateExistChildSnapshot.val().total) + Number(quantity);
+
+                            var updateItem = {
+                                total: new_total
+                            }
+                            // console.log(updateItem);
+                            firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day+'/item/'+dateExistChildSnapshot.key).update(updateItem);
+                        });
+                    });
+
+                    firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day).once('value', function(totalSnapahot){
+
+                        var new_all_total = Number(totalSnapahot.val().total) + Number(quantity);
+
+                        var updateTotal = {
+                            total: new_all_total
+                        }
+
+                        firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day).update(updateTotal);
+
+                    });
+
+                    firebase.database().ref('summary_delivered_order_monthly_total/'+plant+'/'+date_year+'/'+date_month_year).once('value', function(grandTotalSnapshot){
+
+                        var new_grand_total = Number(grandTotalSnapshot.val().grand_total) + Number(quantity);
+
+                        var updateGrandTotal = {
+                            grand_total: new_grand_total
+                        }
+
+                        // firebase.database().ref('summary_delivered_order_monthly_total/'+plant+'/'+date_year+'/'+date_month_year).update(updateGrandTotal);
+
+                        if(firebase.database().ref('summary_delivered_order_monthly_total/'+plant+'/'+date_year+'/'+date_month_year).update(updateGrandTotal)){
+                            if(firebase.database().ref('delivery_ongoing_order/'+orderKey).remove()){
+                                alert("DR No. " + dr_no + " has been delivered successfully.");
+                                window.location.href = 'delivery_ongoing_order.html';
+                            }
+                        }
                     });
                 }
             });
