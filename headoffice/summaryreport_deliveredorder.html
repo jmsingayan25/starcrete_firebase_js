@@ -149,53 +149,68 @@
     	var currentMonthYear = new Date().toLocaleDateString('en', optionMonthYear);
     	count = 0;
 
-    	document.getElementById('id_month_head').innerHTML = "<th colspan='26' style='color: white;'>For the Month of " + currentMonthYear + "</th>";
+    	firebase.database().ref('summary_delivered_order/'+plant+'/'+currentMonthYear).once('value', function(dateSnapshot){
+    		console.log(dateSnapshot.val());
 
-    	firebase.database().ref('item').once('value', function(itemSnapshot){
+    		document.getElementById('id_month_head').innerHTML = "<th colspan='26' style='color: white;'>For the Month of " + currentMonthYear + "</th>";
 
-    		myThead += "<th style='color: white;'>Date</th>";
-    		itemSnapshot.forEach(function(itemChildSnapshot){
+    		if(dateSnapshot.val() == null){
+    		
+    			myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
-		  		myThead += "<th style='color: white;'>" + itemChildSnapshot.val().item + "</th>";
-				
-    		});
+    			document.getElementById('quantityList').innerHTML = myTbody;
+    			document.getElementById('quantityTotalList').innerHTML = "";
+    			document.getElementById('id_item_head').innerHTML = "";
+    			
+    		}else{
 
-    		myThead += "<th style='color: white;'>Total</th>";
-    		document.getElementById('id_item_head').innerHTML = myThead;
+    			firebase.database().ref('item').once('value', function(itemSnapshot){
+
+		    		myThead += "<th style='color: white;'>Date</th>";
+		    		itemSnapshot.forEach(function(itemChildSnapshot){
+
+				  		myThead += "<th style='color: white;'>" + itemChildSnapshot.val().item + "</th>";
+						
+		    		});
+
+		    		myThead += "<th style='color: white;'>Total</th>";
+		    		document.getElementById('id_item_head').innerHTML = myThead;
+		    	});
+
+		    	firebase.database().ref('summary_delivered_order/'+plant+'/'+currentMonthYear).orderByChild('number').once('value', function(dateDaySnapshot){
+		    		dateDaySnapshot.forEach(function(dateDayChildSnapshot){
+		 
+		    			firebase.database().ref('summary_delivered_order/'+plant+'/'+currentMonthYear+'/'+dateDayChildSnapshot.key+'/item').once('value', function(itemSnapshot){
+
+							var day = new Date(dateDayChildSnapshot.val().date).getDate();
+
+		    				myTbody += "<tr><td style='background-color: #00a3cc; color: white;'><strong>" + day + "</strong></td>";
+
+		    				itemSnapshot.forEach(function(itemChildSnapshot){
+
+		    					myTbody += "<td><strong>" + itemChildSnapshot.val().total + "</strong></td>";
+
+		    				});
+
+							myTbody += "<td style='background-color: #00b300; color: white;'><strong>" + dateDayChildSnapshot.val().total + "</strong></td></tr>";
+
+		    				document.getElementById('quantityList').innerHTML = myTbody;
+
+		    			});
+		    		});
+		    	});
+
+		    	firebase.database().ref('summary_delivered_order_monthly_total/'+plant+'/'+currentYear+'/'+currentMonthYear).once('value', function(totalSnapshot){
+					console.log(count);
+
+					myTbody1 += "<tr><td style='background-color: #007a99; color: white;'><strong>Grand Total</strong></td>";
+					myTbody1 += "<td colspan='" + 24 + "'></td>";
+					myTbody1 += "<td style='background-color: #008000; color: white;'><strong>" + totalSnapshot.val().grand_total + "</strong></td></tr>";
+
+					document.getElementById('quantityTotalList').innerHTML = myTbody1;
+				});
+    		}
     	});
-
-    	firebase.database().ref('summary_delivered_order/'+plant+'/'+currentMonthYear).orderByChild('number').once('value', function(dateDaySnapshot){
-    		dateDaySnapshot.forEach(function(dateDayChildSnapshot){
- 
-    			firebase.database().ref('summary_delivered_order/'+plant+'/'+currentMonthYear+'/'+dateDayChildSnapshot.key+'/item').once('value', function(itemSnapshot){
-
-					var day = new Date(dateDayChildSnapshot.val().date).getDate();
-
-    				myTbody += "<tr><td style='background-color: #00a3cc; color: white;'><strong>" + day + "</strong></td>";
-
-    				itemSnapshot.forEach(function(itemChildSnapshot){
-
-    					myTbody += "<td><strong>" + itemChildSnapshot.val().total + "</strong></td>";
-
-    				});
-
-					myTbody += "<td style='background-color: #00b300; color: white;'><strong>" + dateDayChildSnapshot.val().total + "</strong></td></tr>";
-
-    				document.getElementById('quantityList').innerHTML = myTbody;
-
-    			});
-    		});
-    	});
-
-    	firebase.database().ref('summary_delivered_order_monthly_total/'+plant+'/'+currentYear+'/'+currentMonthYear).once('value', function(totalSnapshot){
-			console.log(count);
-
-			myTbody1 += "<tr><td style='background-color: #007a99; color: white;'><strong>Grand Total</strong></td>";
-			myTbody1 += "<td colspan='" + 24 + "'></td>";
-			myTbody1 += "<td style='background-color: #008000; color: white;'><strong>" + totalSnapshot.val().grand_total + "</strong></td></tr>";
-
-			document.getElementById('quantityTotalList').innerHTML = myTbody1;
-		});
     }
 
     function submitForm(){
@@ -316,6 +331,17 @@
             i = "0" + i;
         }
         return i;
+    }
+
+    function print(){
+
+    	if(document.getElementById('month').value == ""){
+	    	var selectMonthYear = new Date().toLocaleDateString('en');
+    	}else{
+	    	var selectMonthYear = document.getElementById('month').value;
+    	}
+
+    	window.open("summaryreport_deliveredorder_print.html?plant="+plant+"&date="+selectMonthYear,"_blank");
     }
 </script>
 </head>
@@ -444,15 +470,20 @@
 	                    	<form class="form-inline" onsubmit="return submitForm();">
 	                            <header class="panel-heading">
 	                                <div class="row">
-                                        <div class="form-group">
-                                            <label for="month" class="col-md-2 control-label" style="margin-right: -10px;">From:</label>
-                                            <div class="col-md-8" style="margin-right: -30px;">
+                                        <div class="form-group" style="margin-top: 5px; margin-bottom: 5px;">
+                                            <label for="month" class="col-md-2 control-label" style="margin-right: -10px;">Date:</label>
+                                            <div class="col-md-7" style="margin-right: -25px;">
                                                 <input type="month" id="month" name="month" class="form-control">
 	                                            
                                             </div>
-                                            <div class="col-md-1">
+                                            <div class="col-md-1" style="margin-right: 25px;">
                                             	<button class="btn btn-info" type="submit" name="search_table">
 	                                                <i class="fa fa-search"></i>
+	                                            </button>
+                                            </div>
+                                             <div class="col-md-1">
+                                            	<button class="btn btn-info" onclick="print();">
+	                                                <span class="fa fa-print"></span> <strong>Print Preview</strong>
 	                                            </button>
                                             </div>
                                         </div>	                                
