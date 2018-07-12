@@ -790,6 +790,12 @@
                 countItemOngoingDelivery(orderKey, plant, function(response){
                     if(response == null && balance == 0){
 
+                        var closedStatus = {
+                            status: "CLOSED"
+                        }
+
+                        firebase.database().ref('purchase_order/'+po_no_key).update(closedStatus);
+
                         var closedPoData = {
                             item_no: item_no,
                             psi: psi,
@@ -840,9 +846,14 @@
                             });
                         });
 
-                        firebase.database().ref('purchase_order_closed'+closedPoKey).once('value', function(timeSnapshot){
+                        firebase.database().ref('purchase_order_closed/'+closedPoKey).once('value', function(timeSnapshot){
 
-                            var update
+                            var closedtimestamp = timeSnapshot.val().reverseDate * -1;
+                            var closedTimeUpdate = {
+                                reverseDate: closedtimestamp
+                            } 
+
+                            firebase.database().ref('purchase_order_closed/'+closedPoKey).update(closedTimeUpdate);
                         });
 
                     }else{
@@ -864,8 +875,6 @@
                     }
 
                     firebase.database().ref().child('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day).set(dateInsert);
-
-
 
                     firebase.database().ref('item').on('child_added', function(itemInsertSnapshot){
                         // console.log(itemInsertSnapshot.val());
