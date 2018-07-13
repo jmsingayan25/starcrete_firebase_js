@@ -308,6 +308,30 @@ function displaycurrentCategory(getCurrentCategory)
                     
                 }
 
+            }else
+            {
+              if (getCurrentCategory ==  getdataCurrentCategory) 
+                {
+                
+            firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(DisplayStockSnapshots)
+            {
+                DisplayStockSnapshots.forEach(function(SeperateChildSnapshot){
+
+            if (dieselChildSnapshot.val().PickCategoryName == SeperateChildSnapshot.val().CategoryName) 
+            {                   
+                document.getElementById("id_Categorystock").innerHTML = Number(SeperateChildSnapshot.val().Liters).toLocaleString("en") + " Liter(s)";
+                 if (SeperateChildSnapshot.val().Liters <= 3500) 
+                {
+                document.getElementById("id_Categorystock").style.color = "red";
+                }else
+                {
+                  document.getElementById("id_Categorystock").style.color = "gray";  
+                }
+            }
+            });
+            });
+                    
+                }
             }
 
             });
