@@ -211,6 +211,8 @@
 
     	var myTbody = "";
 
+        document.getElementById("orderList").innerHTML = "<tr><td colspan='7' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
+
     	firebase.database().ref('delivery_ongoing_order/').orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(ongoingOrderSnapshot){
 
 			dr_no = ongoingOrderSnapshot.val().dr_no;

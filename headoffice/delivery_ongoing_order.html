@@ -347,8 +347,11 @@
         if(myTbody == ''){
             myTbody = "<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
+            document.getElementById('printPo').style.display = 'none';
             document.getElementById("orderList").innerHTML = myTbody;
         }else{
+
+            document.getElementById('printPo').style.display = 'inline';
             document.getElementById("orderList").innerHTML = myTbody;
 
         } 
@@ -367,6 +370,8 @@
                 document.getElementById("orderList").innerHTML = myTbody;
             }
         });
+
+        document.getElementById("orderList").innerHTML = "<tr><td colspan='11' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
 
     	firebase.database().ref('delivery_ongoing_order').orderByChild('reverseDate').on('child_added', function(orderSnapshot){
 
@@ -416,8 +421,10 @@
                         myTbody += "<td><span class='label' style='background-color: #ffa000; font-size: 11px;'><strong>" + status + "</strong></span></td></tr>";
                         // myTbody += "<td style='background-color: #ffa000; color: white;'><strong>" + status + "</strong></td></tr>";
 
+                        document.getElementById('printPo').style.display = 'inline';
                         document.getElementById('orderList').innerHTML = myTbody;
                         count++;
+
         			});
         		});
             }
@@ -544,6 +551,7 @@
      text-align: left;
      font-weight: bold;
 }
+
 </style>
 </head>
 <body>
@@ -719,7 +727,7 @@
                                 <thead>
                                     <tr class="filterable">
                                         <th colspan="11">
-                                            <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print Preview</strong></button>
+                                            <button class="btn btn-info btn-md" id="printPo" style="display: none;" onclick="printPo();"><strong><span class="fa fa-print"></span> Print Preview</strong></button>
                                             <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                         </th>
                                     </tr>

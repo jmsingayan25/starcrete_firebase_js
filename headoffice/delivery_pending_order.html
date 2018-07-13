@@ -259,7 +259,7 @@
                                             myTbody += "<td><strong>" + date + "</strong></td>";
                                             myTbody += "<td><span class='label' style='background-color: #b3b3b3; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
                                             
-                                            document.getElementById('orderList').innerHTML = myTbody;
+                                            // document.getElementById('orderList').innerHTML = myTbody;
                                             count++;
                                         }
                                     });
@@ -354,7 +354,7 @@
                                                 myTbody += "<td><strong>" + date + "</strong></td>";
                                                 myTbody += "<td><span class='label' style='background-color: #b3b3b3; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
                                                 
-                                                document.getElementById('orderList').innerHTML = myTbody;
+                                                // document.getElementById('orderList').innerHTML = myTbody;
                                                 count++;
                                             }
                                         });
@@ -365,7 +365,21 @@
                     }
                 }
             });
-        }    
+        } 
+
+        if(myTbody == ""){
+
+            myTbody = "<tr><td colspan='9' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+            document.getElementById('printPo').style.display = 'none';
+            document.getElementById("orderList").innerHTML = myTbody;
+
+        }else{
+
+            document.getElementById('printPo').style.display = 'inline';
+            document.getElementById("orderList").innerHTML = myTbody;
+
+        }   
     }
 
     function tableData(plant){
@@ -438,6 +452,7 @@
                                     myTbody += "<td><strong>" + date + "</strong></td>";
                                     myTbody += "<td><span class='label' style='background-color: #b3b3b3; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
                                     
+                                    document.getElementById('printPo').style.display = 'inline';
                                     document.getElementById('orderList').innerHTML = myTbody;
                                     count++;
                                 });
@@ -744,7 +759,7 @@
                                     <thead>
                                         <tr class="filterable">
                                             <th colspan="10">
-                                                <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print Preview</strong></button>
+                                                <button class="btn btn-info btn-md" id="printPo" style="display: none;" onclick="printPo();"><strong><span class="fa fa-print"></span> Print Preview</strong></button>
                                                 <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                             </th>
                                         </tr>

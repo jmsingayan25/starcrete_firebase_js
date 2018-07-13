@@ -177,6 +177,8 @@
             }
         });
 
+        document.getElementById("historyList").innerHTML = "<tr><td colspan='3' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
+        
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
@@ -279,6 +281,8 @@
 	function tableData(){
 
         var myTbody = "";
+
+        
 
         firebase.database().ref('history/'+plant).once('value', function(drSnapshot){
             if(drSnapshot.val() == null){

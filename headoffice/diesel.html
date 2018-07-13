@@ -246,8 +246,10 @@
 
             myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
+            document.getElementById('datePrint').style.display = 'none';
             document.getElementById('dieselList').innerHTML = myTbody;
         }else{
+            document.getElementById('datePrint').style.display = 'inline';
             document.getElementById('dieselList').innerHTML = myTbody;
         }
     }
@@ -260,6 +262,8 @@
 
         // document.getElementById('search_date').innerHTML = currentDate;
 
+        document.getElementById("dieselList").innerHTML = "<tr><td colspan='8' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
+        
         firebase.database().ref('incoming_diesel/'+plant).orderByChild('Date_Input').equalTo(currentDate).once('value', function(dieselSnapshot){
 
             // console.log(dieselSnapshot.val(), dateFormat(currentDate));
@@ -271,6 +275,8 @@
 
             }
         });
+
+        
 
         firebase.database().ref('incoming_diesel/'+plant).orderByChild('reverseDate').on('child_added', function(dieselSnapshot){
 
@@ -317,6 +323,7 @@
                 myTbody += "<td><strong>" + time + "</strong></td>";
                 myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
 
+                document.getElementById('datePrint').style.display = 'inline';
                 document.getElementById('dieselList').innerHTML = myTbody;
             }
         });
@@ -549,7 +556,7 @@ function datePrint(){
                         			<thead>
                                         <tr>
                                             <th colspan="8">
-                                                <button type="button" class="btn btn-info btn-md" onclick= "datePrint()" style="float: right;"><span class="fa fa-print"></span> <strong>Print Preview</strong></button>
+                                                <button type="button" class="btn btn-info btn-md" id="datePrint" onclick= "datePrint()" style="float: right; display: none;"><span class="fa fa-print"></span> <strong>Print Preview</strong></button>
                                                 <span>Available stock as of today: <span id="id_stock"></span></span><br>
                                                 <span>Search Date: <span id="search_date"></span>
                                             </th>

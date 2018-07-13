@@ -273,6 +273,8 @@
             }
         });
 
+        document.getElementById("projectList").innerHTML = "<tr><td colspan='4' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
+
         firebase.database().ref('project/'+clientKeyId).orderByChild('project_name').on('child_added', function(projectSnapshot){
             console.log(projectSnapshot.key, projectSnapshot.val());
 

@@ -308,9 +308,13 @@
         if(myTbody == ""){
                 
             myTbody = "<tr><td colspan='7' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+            document.getElementById('printPo').style.display = 'none';
             document.getElementById("partsList").innerHTML = myTbody;
 
         }else{
+
+            document.getElementById('printPo').style.display = 'inline';
             document.getElementById("partsList").innerHTML = myTbody;
         }
     }
@@ -318,6 +322,8 @@
     function tableData(plant){
 
     	var myTbody = "";
+
+        document.getElementById("partsList").innerHTML = "<tr><td colspan='7' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
 
     	firebase.database().ref('parts/'+plant).on('value', function(partsSnapshot){
     		// console.log(partsSnapshot.val());
@@ -350,6 +356,7 @@
                 myTbody += "<td><strong>" + po_no + "</strong></td>";
                 myTbody += "<td><strong>" + date + "</strong></td></tr>";
 
+                document.getElementById('printPo').style.display = 'inline';
                 document.getElementById('partsList').innerHTML = myTbody;
             // });
     	});
@@ -607,7 +614,7 @@
                                     <thead>
                                         <tr class="filterable">
                                             <th colspan="10">
-                                                <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button>
+                                                <button class="btn btn-info btn-md" id="printPo" style="display: none;" onclick="printPo();"><strong><span class="fa fa-print"></span> Print Preview</strong></button>
                                                 <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                             </th>
                                         </tr>

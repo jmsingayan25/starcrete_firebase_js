@@ -216,6 +216,8 @@
             }
         });
 
+        document.getElementById("clientList").innerHTML = "<tr><td colspan='4' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
+
         firebase.database().ref('client').orderByChild('client_name').on('child_added', function(clientSnapshot){
 
             var client_name = clientSnapshot.val().client_name;

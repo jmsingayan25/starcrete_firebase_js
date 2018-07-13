@@ -212,6 +212,8 @@
                 }else{document.getElementById("DieselList").innerHTML = myTbody; }
                 
             });
+
+            $(".se-pre-con").fadeOut("slow");
         });
         //end
         firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot){
@@ -306,6 +308,7 @@
             </div>
         </div>
 	</section> -->
+    <div class="se-pre-con"></div>
     <div class="container">
         <section id="wrapper">
             <div class="row">

@@ -149,6 +149,8 @@
     	var currentMonthYear = new Date().toLocaleDateString('en', optionMonthYear);
     	count = 0;
 
+        document.getElementById("quantityList").innerHTML = "<tr><td colspan='26' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
+
     	firebase.database().ref('summary_delivered_order/'+plant+'/'+currentMonthYear).once('value', function(dateSnapshot){
     		console.log(dateSnapshot.val());
 

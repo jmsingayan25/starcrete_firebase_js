@@ -188,6 +188,8 @@
 		var currentDate = new Date().toLocaleDateString('en');
 		var select_value = document.getElementById('oil_category').value;
 
+		document.getElementById("oilList").innerHTML = "<tr><td colspan='11' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
+
 		firebase.database().ref('incoming_diesel_category/'+plant).orderByChild('date').equalTo(currentDate).once('value', function(dieselSnapshot){
 
             // console.log(dieselSnapshot.val(), dateFormat(currentDate));
@@ -245,11 +247,13 @@
 					myTbody += "<td><strong>" + time + "</strong></td>";
 					myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
 
+					document.getElementById('datePrint').style.display = 'inline';
 					document.getElementById('oilList').innerHTML = myTbody;
 				}else{
 
 					myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
+					document.getElementById('datePrint').style.display = 'none';
 					document.getElementById('oilList').innerHTML = myTbody;	
 				}
 			}
@@ -378,16 +382,16 @@
 
 		}
 
-		firebase.database().ref('available_seperate_category/'+plant).orderByChild('CategoryName').equalTo(oil_value).on('value', function(oilSnapshot){
+		// firebase.database().ref('available_seperate_category/'+plant).orderByChild('CategoryName').equalTo(oil_value).on('value', function(oilSnapshot){
 
-			document.getElementById('id_Categorystock').innerHTML = "";
+		// 	document.getElementById('id_Categorystock').innerHTML = "";
 
-			oilSnapshot.forEach(function(oilChildSnaphot){
+		// 	oilSnapshot.forEach(function(oilChildSnaphot){
 					
-				document.getElementById('id_Categorystock').innerHTML = Number(oilChildSnaphot.val().Liters).toLocaleString('en') + " liter(s)";
+		// 		document.getElementById('id_Categorystock').innerHTML = Number(oilChildSnaphot.val().Liters).toLocaleString('en') + " liter(s)";
 			
-			});
-		});
+		// 	});
+		// });
 	}
 
 	function submitForm(){
@@ -453,6 +457,7 @@
 					myTbody += "<td><strong>" + time + "</strong></td>";
 					myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
 
+					document.getElementById('datePrint').style.display = 'inline';
 					document.getElementById('oilList').innerHTML = myTbody;
 				}
 			}else{
@@ -500,6 +505,7 @@
 					myTbody += "<td><strong>" + time + "</strong></td>";
 					myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
 
+					document.getElementById('datePrint').style.display = 'inline';
 					document.getElementById('oilList').innerHTML = myTbody;
 				}
 			}
@@ -509,8 +515,20 @@
 
 			myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
+			document.getElementById('datePrint').style.display = 'none';
 			document.getElementById('oilList').innerHTML = myTbody;
 		}
+
+		firebase.database().ref('available_seperate_category/'+plant).orderByChild('CategoryName').equalTo(oil_value).on('value', function(oilSnapshot){
+
+			document.getElementById('id_Categorystock').innerHTML = "";
+
+			oilSnapshot.forEach(function(oilChildSnaphot){
+					
+				document.getElementById('id_Categorystock').innerHTML = Number(oilChildSnaphot.val().Liters).toLocaleString('en') + " liter(s)";
+			
+			});
+		});
 	}
 
 	function availableStock(){
@@ -713,7 +731,7 @@
                 					<thead>
                 						<tr>
                         					<th colspan="7">     
-                        						<button type="button" class="btn btn-info btn-md" onclick= "datePrint()" style="float: right;"><span class="fa fa-print"></span> <strong>Print Preview</strong></button>                   						
+                        						<button type="button" class="btn btn-info btn-md" id="datePrint" onclick= "datePrint()" style="float: right; display: none;"><span class="fa fa-print"></span> <strong>Print Preview</strong></button>                   						
                                                 <span>Available stock as of today: <span id="id_stock">
                                                 </span></span><br>
                                                 <span id = "category_current">Category</span><span> Available stock as of today: <span id="id_Categorystock">

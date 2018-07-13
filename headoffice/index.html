@@ -105,6 +105,20 @@
 
     goAway();
     
+
+    // function isEmpty( el ){
+    //     return !$.trim(el.html())
+    // }
+    // if (isEmpty($('#historyList'))) {
+    //     // $(".se-pre-con").fadeIn("slow");
+    // }else{
+    //     // $(".se-pre-con").fadeOut("slow");
+    // }
+    // $(window).load(function() {
+    //     // Animate loader off screen
+    //     $(".se-pre-con").fadeOut("slow");
+    // });
+
     $(document).ready(function(){
         $('.filterable .btn-filter').click(function(){
             var $panel = $(this).parents('.filterable'),
@@ -224,15 +238,18 @@
 
     function searchHistory(){
 
+        $(".se-pre-con").fadeIn("fast");
+
         event.preventDefault();
 
         var myTbody = "";
-
+        var isPayloadDone = false;
         var fromDate = document.getElementById('start_date').value;
         var endDate = document.getElementById('end_date').value;
         var plant = $('input[name="plant"]:checked').val();
         var search_text = document.getElementById('search').value;
 
+        document.getElementById("historyList").innerHTML = "<tr><td colspan='3' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
 
         if(fromDate == '' && endDate == ''){
 
@@ -262,6 +279,8 @@
                     }
                 });
 
+                // $(".se-pre-con").fadeOut("slow");
+
                 if(myTbody == ''){
                     myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
@@ -286,7 +305,6 @@
 
             console.log(fromDate, endDate);
 
-            // firebase.database().ref('history/'+plant).orderByChild('date').startAt(fromDate).endAt(endDate).once('value', function(historySnapshot){
             firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value', function(historySnapshot){
                 historySnapshot.forEach(function(historyChildSnapshot){
 
@@ -313,7 +331,11 @@
 
                         }
                     }
+
+
                 });
+
+                // $(".se-pre-con").fadeOut("slow");
 
                 if(myTbody == ''){
 
@@ -323,6 +345,8 @@
                 }else{
                     document.getElementById("historyList").innerHTML = myTbody;
                 }
+
+
             });
         }
     }
@@ -340,6 +364,8 @@
             }
         });
 
+        document.getElementById("historyList").innerHTML = "<tr><td colspan='3' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
+
         firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value', function(historySnapshot) {
             historySnapshot.forEach(function(historyChildSnapshot){
 
@@ -354,8 +380,6 @@
                 document.getElementById("historyList").innerHTML = myTbody;
             });
         });
-
-        // document.getElementById('id_plant').innerHTML = plant;
     }
 
     function startTime() {
@@ -448,9 +472,29 @@
      font-weight: bold;
 }
 
+/*.no-js #loader { 
+    display: none; 
+}
+.js #loader { 
+    display: block; 
+    position: absolute; 
+    left: 100px; 
+    top: 0; 
+}
+.se-pre-con {
+    position: absolute;
+    left: 0px;
+    top: 60px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url(../images/loader-64x/Preloader_2.gif) center no-repeat #fff;
+}*/
+
 </style>
 </head>
 <body onload="tableData('Bravo'); startTime();">
+
 	<section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -485,6 +529,7 @@
                 <!-- notificatoin dropdown end-->
             </div>
         </header>  
+        <div class="se-pre-con"></div>
         <!--sidebar start-->
         <aside>
             <div id="sidebar"  class="nav-collapse ">
@@ -549,7 +594,8 @@
 
         <!--main content start-->
         <section id="main-content">
-            <section class="wrapper">            
+            <section class="wrapper">  
+
                 <!--overview start-->
                 <div class="row">
                     <div class="col-md-8">
@@ -647,7 +693,7 @@
                                             <th class="col-md-1" style="color: white;">Date</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="historyList"></tbody>
+                                    <tbody id="historyList" name="historyList"></tbody>
                                 </table>
                             </div>
                         </section>
