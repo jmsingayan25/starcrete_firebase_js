@@ -169,6 +169,7 @@
 
 function Go()
 {
+     $(".se-pre-con").fadeIn("fast");
    event.preventDefault();
    var myTbody = "";
 
@@ -221,13 +222,15 @@ function Go()
                 myTbody += "<td><strong>" + address + "</strong></td>";
                 myTbody += "<td><strong>" + time + "</strong></td>";
                 myTbody += "<td><strong>" + drno + "</strong></td>";
-                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md'><strong> Delete</strong></button></form></td></tr>" 
+                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>" 
                 document.getElementById("DieselList").innerHTML = myTbody; 
+                 $(".se-pre-con").fadeOut("slow");
                 }
         });
         if (myTbody == ""){
             myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
             document.getElementById("DieselList").innerHTML = myTbody;
+            $(".se-pre-con").fadeOut("slow");
         }else{
             document.getElementById("DieselList").innerHTML = myTbody;
         }
@@ -273,17 +276,17 @@ function DisplayCurrentData()
                 myTbody += "<td><strong>" + address + "</strong></td>";
                 myTbody += "<td><strong>" + time + "</strong></td>";
                 myTbody += "<td><strong>" + drno + "</strong></td>";
-                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md'><strong> Delete</strong></button></form></td></tr>";
-                // myTbody += "<td><button type='submit' class='btn btn-success btn-md' data-toggle='modal' data-target='#myModal"+count+"'><strong> Edit</strong></button><form class='form-inline' onsubmit='if(confirm('Proceed?')){EditNewData();}else{ event.preventDefault();}'><div id='myModal"+count+"' class='modal fade' role='dialog'><div class='modal-dialog'><div class='modal-content'><div class='modal-header'><button type='button' class='close' data-dismiss='modal'>&times;</button><h4 class='modal-title'>Modal Header</h4></div><div class='modal-body'><div class = 'row'><div class = 'col-md-6'><section class ='panel'><header class ='panel-heading'></header><div class ='panel-body'><strong>truck_no:</strong><div class ='form-group'> "+truckno+"</div><strong>Driver/Operator/Supplier:</strong><div class ='form-group'> "+suppliername+"</div><strong>Address:</strong> <div class ='form-group'>"+address+"</div><strong>DR No.:</strong><div class ='form-group'> "+drno+"</div></div></section></div><div class = 'col-md-6'><section class = 'panel'><header class ='panel-heading'></header><div class ='panel-body'><strong>New Truck No.</strong><div class = 'form-group'><input type='text' name='NewTruckNo' id='NewTruckNo' class='form-control' autocomplete='off' style='text-transform: uppercase;' required></div><strong>New Driver/Operator/Supplier</strong><div class = 'form-group'><input type='text' name='NewDOS' id='NewDos' class='form-control' autocomplete='off' style='text-transform: uppercase;' required></div><strong>New Address</strong><div class = 'form-group'><input type='text' name='NewAddress' id='NewAddress' class='form-control' autocomplete='off' style='text-transform: uppercase;' required></div><strong>New DR No.</strong><div class = 'form-group'><input type='text' name='NewDrNo' id='NewDrNo' class='form-control' autocomplete='off' style='text-transform: uppercase;' required></div></div></section></div></div></div><div class='modal-footer'><button type='submit' id = 'EditData' class='btn btn-md btn-info' style=''><strong>Edit</strong></button><button type='button' class='btn btn-default' data-dismiss='modal'>Close</button></div></div></div></div></form></td></tr>";
-                //     count++;
-                // }
+                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>";
+             
+                $(".se-pre-con").fadeOut("slow");
             }
 
         });
         if (myTbody == "") 
         {
             myTbody ="<tr><td colspan='9' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-            document.getElementById("DieselList").innerHTML = myTbody; 
+            document.getElementById("DieselList").innerHTML = myTbody;
+            $(".se-pre-con").fadeOut("slow"); 
         }else{document.getElementById("DieselList").innerHTML = myTbody; }
     });
     //end
@@ -343,6 +346,7 @@ function DeleteRowData(key,plant)
 {
     event.preventDefault();
        firebase.database().ref().child("incoming_diesel/" + plant + "/" + key).remove();
+       $(".se-pre-con").fadeOut("slow");
        window.location.reload();
 
 
@@ -436,9 +440,22 @@ function DeleteRowData(key,plant)
      text-align: center;
      font-weight: bold;
 }
+
+.no-js #loader { display: none;  }
+.js #loader { display: block; position: absolute; left: 100px; top: 0; }
+.se-pre-con {
+    position: fixed; 
+    top: 60px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url(../images/loader-64x/Preloader_2.gif) center no-repeat #fff;
+}
+
 </style>
 </head>
 <body>
+     <div class="se-pre-con"></div>
 	<!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">
@@ -521,7 +538,17 @@ function DeleteRowData(key,plant)
 	                        <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
 	                        <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
 	                    </ul>
-	                </li>  
+	                </li>
+                     <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Summary Report</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="summaryreport_deliveredorder.html">Delivered Order</a></li>
+                        </ul>
+                    </li>  
 	            </ul>
 	            <!-- sidebar menu end-->
 	        </div>

@@ -247,6 +247,7 @@ function categoutcomingbutton()
 
 function displaycurrentCategory(getCurrentCategory)
 {
+    $(".se-pre-con").fadeIn("fast");
     var myTbody = "";
 
       firebase.database().ref('incoming_diesel_category/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
@@ -286,9 +287,7 @@ function displaycurrentCategory(getCurrentCategory)
                 //myTbody += "<td><strong>" + address + "</strong></td>";
                 myTbody += "<td><strong>" + time + "</strong></td>";
                 myTbody += "<td><strong>" + drno + "</strong></td>";
-                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md'><strong> Delete</strong></button></form></td></tr>"
-
-
+                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"
             firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(DisplayStockSnapshots)
             {
                 DisplayStockSnapshots.forEach(function(SeperateChildSnapshot){
@@ -305,20 +304,50 @@ function displaycurrentCategory(getCurrentCategory)
                 }
             }
             });
-            });  
-                } 
+            });
+                    
+                }
+
+            }else
+            {
+              if (getCurrentCategory ==  getdataCurrentCategory) 
+                {
+                
+            firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(DisplayStockSnapshots)
+            {
+                DisplayStockSnapshots.forEach(function(SeperateChildSnapshot){
+
+            if (dieselChildSnapshot.val().PickCategoryName == SeperateChildSnapshot.val().CategoryName) 
+            {                   
+                document.getElementById("id_Categorystock").innerHTML = Number(SeperateChildSnapshot.val().Liters).toLocaleString("en") + " Liter(s)";
+                 if (SeperateChildSnapshot.val().Liters <= 3500) 
+                {
+                document.getElementById("id_Categorystock").style.color = "red";
+                }else
+                {
+                  document.getElementById("id_Categorystock").style.color = "gray";  
+                }
             }
             });
+            });
+                    
+                }
+            }
+
+            });
+                                $(".se-pre-con").fadeOut("slow"); 
                if (myTbody == "") 
                {
                 document.getElementById("id_Categorystock").innerHTML = "";
                 document.getElementById("category_current").innerHTML = getCurrentCategory;
                     myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
                     document.getElementById("DieselList").innerHTML = myTbody; 
-                }else{document.getElementById("DieselList").innerHTML = myTbody; }   
+                    $(".se-pre-con").fadeOut("slow"); 
+                }else{document.getElementById("DieselList").innerHTML = myTbody;}   
 
-                 if (document.getElementById("category_current").innerHTML == "undefined") {document.getElementById("category_current").innerHTML = "Category"}
+                 if (document.getElementById("category_current").innerHTML == "undefined") {document.getElementById("category_current").innerHTML = "Category" }
                     else if(document.getElementById("category_current").innerHTML == ""){document.getElementById("category_current").innerHTML = "Category"}
+
 
       });
 
@@ -345,6 +374,7 @@ function displaycurrentCategory(getCurrentCategory)
 
 function Go()
 {
+     $(".se-pre-con").fadeIn("slow");
     event.preventDefault();
     var myTbody = "";
 
@@ -392,7 +422,7 @@ function Go()
                 //myTbody += "<td><strong>" + address + "</strong></td>";
                 myTbody += "<td><strong>" + time + "</strong></td>";
                 myTbody += "<td><strong>" + drno + "</strong></td>";
-                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md'><strong> Delete</strong></button></form></td></tr>"  
+                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"  
 
                 firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(DisplayStockSnapshots)
             {
@@ -405,6 +435,7 @@ function Go()
 
             });
             }); 
+                 $(".se-pre-con").fadeOut("slow");
                 }
                 }
         });
@@ -412,6 +443,7 @@ function Go()
                {
                     myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
                     document.getElementById("DieselList").innerHTML = myTbody; 
+                     $(".se-pre-con").fadeOut("slow");
                 }else{document.getElementById("DieselList").innerHTML = myTbody; } 
                  document.getElementById("Search_day").innerHTML = dateFormat(date);
     });
@@ -486,9 +518,22 @@ function DeleteRowData(key,plant)
      text-align: center;
      font-weight: bold;
 }
+
+.no-js #loader { display: none;  }
+.js #loader { display: block; position: absolute; left: 100px; top: 0; }
+.se-pre-con {
+    position: fixed; 
+    top: 60px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url(../images/loader-64x/Preloader_2.gif) center no-repeat #fff;
+}
+
 </style>
 </head>
 <body>
+     <div class="se-pre-con"></div>
 	<!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">
@@ -571,7 +616,17 @@ function DeleteRowData(key,plant)
 	                        <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
 	                        <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
 	                    </ul>
-	                </li>  
+	                </li>
+                     <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Summary Report</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="summaryreport_deliveredorder.html">Delivered Order</a></li>
+                        </ul>
+                    </li>  
 	            </ul>
 	            <!-- sidebar menu end-->
 	        </div>
