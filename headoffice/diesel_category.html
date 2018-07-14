@@ -470,10 +470,10 @@
 				}
 			}else{
 
-				current_date = new Date().toLocaleDateString('en');
+				current_date = new Date();
 				console.log(current_date, oil_value);
 
-				if(oilSnapshot.val().PickCategoryName == oil_value && current_date == oilSnapshot.val().date){
+				if(oilSnapshot.val().PickCategoryName == oil_value && current_date == new Date(oilSnapshot.val().date)){
 
 					date = oilSnapshot.val().date;
 					category_name = oilSnapshot.val().PickCategoryName;

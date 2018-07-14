@@ -81,6 +81,10 @@
     <script src="../js/jquery.slimscroll.min.js"></script>
     <script src="../js_config/function.js"></script>
 
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
+
     <!-- =======================================================
     Theme Name: NiceAdmin
     Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -177,70 +181,6 @@
         document.getElementById('link_plant_name').innerHTML = "<i class='fa fa-building'></i>"+plant;
     });
 
-    // function tableData(plant){
-
-    //     var myTbody = "";
-    //     var count = 1;
-        
-    //     firebase.database().ref('purchase_order/'+plant).once('value').then(function(poSnapshot){
-    //         if(poSnapshot.val() == null){
-
-    //             myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-
-    //             document.getElementById("orderList").innerHTML = myTbody;
-    //         }
-    //     });
-
-    //     firebase.database().ref('purchase_order/'+plant).orderByChild('reverseDate').on('child_added', function(orderSnapshot){
-    //         firebase.database().ref('purchase_order/'+plant+'/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
-    //             itemSnapshot.forEach(function(itemChildSnapshot){
-    //                 firebase.database().ref('purchase_order/'+plant+'/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
-    //                     projectSnapshot.forEach(function(projectChildSnapshot){
-
-    //                         po_no = orderSnapshot.val().po_no;
-    //                         item_no = itemChildSnapshot.val().item_no;
-    //                         quantity = Number(itemChildSnapshot.val().quantity).toLocaleString('en');
-    //                         balance = Number(itemChildSnapshot.val().balance).toLocaleString('en');
-    //                         project_name = projectChildSnapshot.val().project_name;
-    //                         project_address = projectChildSnapshot.val().project_address;
-    //                         date = dateFormat(orderSnapshot.val().date);
-    //                         psi = itemChildSnapshot.val().psi || "";
-
-    //                         if(psi != ""){
-    //                             var psi_ext = "(" + psi + " psi)";
-    //                         }else{
-    //                             var psi_ext = "";
-    //                         }
-
-    //                         myTbody += "<tr><td><strong>" + count + "</strong></td>";
-    //                         myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='purchase_order_detail.html?key=" + orderSnapshot.key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
-    //                         myTbody += "<td><strong>" + item_no + " " + psi_ext + "</strong></td>";
-    //                         myTbody += "<td><strong>" + quantity + " pcs / " + balance + " pcs</strong></td>";
-    //                         myTbody += "<td><strong>" + project_name + "</strong></td>";
-    //                         myTbody += "<td><strong>" + project_address + "</strong></td>";
-    //                         myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
-
-    //                         firebase.database().ref('purchase_order/'+plant+'/'+orderSnapshot.key+'/contact').once('value', function(contactSnapshot){
-    //                             contactSnapshot.forEach(function(contactChildSnapshot){
-
-    //                                 contact_name = contactChildSnapshot.val().contact_name;
-    //                                 contact_no = contactChildSnapshot.val().contact_no;
-    //                                 myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
-    //                             }); 
-    //                         });
-
-    //                         myTbody += "</td>";
-    //                         myTbody += "<td><strong>" + date + "</strong></td></tr>";
-
-    //                         document.getElementById('orderList').innerHTML = myTbody;
-    //                         count++;   
-    //                     });
-    //                 });   
-    //             });                 
-    //         }); 
-    //     });        
-    // }
-
     function submitForm(){
 
         event.preventDefault();
@@ -321,7 +261,11 @@
                                             myTbody += "</td>";
                                             myTbody += "<td><strong>" + date + "</strong></td></tr>";
 
-                                            // document.getElementById('orderList').innerHTML = myTbody;
+                                            document.getElementById('printPo').style.display = 'inline';
+                                            document.getElementById("orderList").innerHTML = myTbody;
+
+                                            $(".se-pre-con").fadeOut("slow");
+
                                             count++;  
                                         }  
                                     }
@@ -334,21 +278,21 @@
         }else{
 
             if(fromDate == ''){
-                fromDate = new Date().toLocaleDateString('en');
+                fromDate = new Date();
             }else{
-                fromDate = new Date(fromDate).toLocaleDateString('en');
+                fromDate = new Date(fromDate);
             }
 
             if(endDate == ''){
-                endDate = new Date().toLocaleDateString('en');
+                endDate = new Date();
             }else{
-                endDate = new Date(endDate).toLocaleDateString('en');
+                endDate = new Date(endDate);
             }
 
             // firebase.database().ref('purchase_order').orderByChild('date').startAt(fromDate).endAt(endDate).on('child_added', function(orderSnapshot){
             firebase.database().ref('purchase_order').orderByChild('reverseDate').on('child_added', function(orderSnapshot){
 
-                if(orderSnapshot.val().date >= fromDate && orderSnapshot.val().date <= endDate){
+                if(new Date(orderSnapshot.val().date) >= fromDate && new Date(orderSnapshot.val().date) <= endDate){
 
                     console.log(orderSnapshot.val());
                     firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
@@ -412,6 +356,11 @@
                                                 myTbody += "</td>";
                                                 myTbody += "<td><strong>" + date + "</strong></td></tr>";
 
+                                                document.getElementById('printPo').style.display = 'inline';
+                                                document.getElementById("orderList").innerHTML = myTbody;
+
+                                                $(".se-pre-con").fadeOut("slow");
+
                                                 count++;  
                                             }  
                                         }
@@ -431,14 +380,15 @@
             document.getElementById("orderList").innerHTML = myTbody;
 
             $(".se-pre-con").fadeOut("slow");
-        }else{
-
-            document.getElementById('printPo').style.display = 'inline';
-            document.getElementById("orderList").innerHTML = myTbody;
-
-            $(".se-pre-con").fadeOut("slow");
-
         }
+        // else{
+
+        //     document.getElementById('printPo').style.display = 'inline';
+        //     document.getElementById("orderList").innerHTML = myTbody;
+
+        //     $(".se-pre-con").fadeOut("slow");
+
+        // }
     }
 
     function tableData(plant){
@@ -447,6 +397,7 @@
  
         var myTbody = "";
         var count = 1;
+        var table = $('myTable').DataTable();
         
         firebase.database().ref('purchase_order').orderByChild('issued_po_plant').equalTo(plant).once('value').then(function(poSnapshot){
             if(poSnapshot.val() == null){
@@ -491,6 +442,8 @@
                                     }else{
                                         balance_ext = balance + " pcs";
                                     }
+
+
 
                                     myTbody += "<tr><td><strong>" + count + "</strong></td>";
                                     myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='purchase_order_detail.html?key=" + orderSnapshot.key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
@@ -771,24 +724,11 @@
                                             </span>
                                             
                                         </div>
-                                        <div class="input-group col-md-2" style="white-space: nowrap; margin: 38px 0px 0px 60px;">
-                                            <label for="view_count" class="col-md-8 control-label">Number of rows:</label>
-                                            <div class="form-group">
-                                                <div class="col-md-12">
-                                                    <select id="view_count" name="view_count" class="form-control">
-                                                        <option value="25">25</option>
-                                                        <option value="50">50</option>
-                                                        <option value="75">75</option>
-                                                        <option value="100">100</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div> 
                                     </div>
                                 </header>
                             </form>
                             <div class="table-responsive filterable">
-                                <table class="table table-striped table-bordered">
+                                <table class="table table-striped table-bordered" id="myTable">
                                     <thead>
                                         <tr class="filterable">
                                             <th colspan="10">

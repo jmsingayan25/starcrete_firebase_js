@@ -263,21 +263,22 @@
         }else{
 
             if(fromDate == ''){
-                fromDate = new Date().toLocaleDateString('en');
+                fromDate = new Date();
             }else{
-                fromDate = new Date(fromDate).toLocaleDateString('en');
+                fromDate = new Date(fromDate);
             }
 
             if(endDate == ''){
-                endDate = new Date().toLocaleDateString('en');
+                endDate = new Date();
             }else{
-                endDate = new Date(endDate).toLocaleDateString('en');
+                endDate = new Date(endDate);
             }
+
 
             // firebase.database().ref('purchase_order_closed').orderByChild('date').startAt(fromDate).endAt(endDate).on('child_added', function(poCloseSnapshot){
             firebase.database().ref('purchase_order_closed').orderByChild('reverseDate').on('child_added', function(poCloseSnapshot){
 
-                if(poCloseSnapshot.val().date >= fromDate && poCloseSnapshot.val().date <= endDate){
+                if(new Date(poCloseSnapshot.val().date) >= fromDate && new Date(poCloseSnapshot.val().date) <= endDate){
 
                     if(poCloseSnapshot.val().issued_po_plant == plant){
 
@@ -695,19 +696,6 @@
                                                 </button>
                                             </span>
                                         </div>
-                                        <div class="input-group col-md-2" style="white-space: nowrap; margin: 38px 0px 0px 60px;">
-                                            <label for="view_count" class="col-md-8 control-label">Number of rows:</label>
-                                            <div class="form-group">
-                                                <div class="col-md-12">
-                                                    <select id="view_count" name="view_count" class="form-control" onchange="this.form.submit()">
-                                                        <option value="25">25</option>
-                                                        <option value="50">50</option>
-                                                        <option value="75">75</option>
-                                                        <option value="100">100</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div> 
                                     </div>
                                 </header>
                             </form>

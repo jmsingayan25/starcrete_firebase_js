@@ -213,15 +213,15 @@
         	}else{
 
 	            if(fromDate == ''){
-	                fromDate = new Date().toLocaleDateString('en');
+	                fromDate = new Date();
 	            }else{
-	                fromDate = new Date(fromDate).toLocaleDateString('en');
+	                fromDate = new Date(fromDate);
 	            }
 
 	            if(endDate == ''){
-	                endDate = new Date().toLocaleDateString('en');
+	                endDate = new Date();
 	            }else{
-	                endDate = new Date(endDate).toLocaleDateString('en');
+	                endDate = new Date(endDate);
 	            }
 
 
@@ -229,7 +229,7 @@
 
 				console.log('with data', plant, fromDate, endDate, search_text);
 
-                if(orderSnapshot.val().date >= fromDate && orderSnapshot.val().date <= endDate){
+                if(new Date(orderSnapshot.val().date) >= fromDate && new Date(orderSnapshot.val().date) <= endDate){
 
                     console.log(orderSnapshot.val());
                     firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
