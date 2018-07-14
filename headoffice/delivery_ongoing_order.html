@@ -175,12 +175,16 @@
 
         document.getElementById('id_page_header').innerHTML = "<a href='delivery_ongoing_order.html?plant=" + plant + "' style='color: inherit;'>" + plant + " Ongoing Order</a>";
 
+        // document.getElementById('id_summary_link').innerHTML = "<a href='summaryreport_deliveredorder.html?plant=" + plant + "' class='btn btn-info btn-md btn-block'><strong>MONTHLY DELIVERED ORDER</strong></a>";
+
         document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i>Ongoing Delivery <span id='id_count_ongoing_order'></span></li><li><i class='fa fa-info-circle'></i><a href='delivery_pending_order.html?plant=" + plant + "'>Existing P.O. <span id='id_count_existing_po'></span></a></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i><a href='delivery_backloaded_order.html?plant=" + plant + "'>Backloaded</a></li>";
     }); 
 
     function submitForm(){
 
         event.preventDefault();
+
+        $(".se-pre-con").fadeIn("fast");
 
         var myTbody = "";
         var count = 1;
@@ -341,7 +345,6 @@
                     }
                 }
             });
-
         }
 
         if(myTbody == ''){
@@ -349,15 +352,20 @@
 
             document.getElementById('printPo').style.display = 'none';
             document.getElementById("orderList").innerHTML = myTbody;
+
+            $(".se-pre-con").fadeOut("slow");
         }else{
 
             document.getElementById('printPo').style.display = 'inline';
             document.getElementById("orderList").innerHTML = myTbody;
 
+            $(".se-pre-con").fadeOut("slow");
         } 
     }
 
     function tableData(plant){
+
+        $(".se-pre-con").fadeIn("fast");
 
     	var myTbody = "";
     	var count = 1;
@@ -368,6 +376,7 @@
                 myTbody = "<tr><td colspan='11' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                 document.getElementById("orderList").innerHTML = myTbody;
+                $(".se-pre-con").fadeOut("slow");
             }
         });
 
@@ -428,6 +437,7 @@
         			});
         		});
             }
+            $(".se-pre-con").fadeOut("slow");
     	});
     }
 
@@ -555,6 +565,7 @@
 </style>
 </head>
 <body>
+    <div class="se-pre-con"></div>
 	<!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">
@@ -658,9 +669,12 @@
 	        <section class="wrapper">      
 	            <!--overview start-->
 	            <div class="row">
-	                <div class="col-md-12">
+	                <div class="col-md-8">
 	                    <h3 class="page-header" id="id_page_header"></h3>
 	                </div>
+                    <div class="col-md-4">
+                        <span id="id_summary_link"></span>
+                    </div>
 	            </div>
 	            <div class="row">
 	                <div class="col-md-8">

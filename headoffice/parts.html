@@ -180,6 +180,8 @@
 
         event.preventDefault();
         
+        $(".se-pre-con").fadeIn("fast");
+
         var myTbody = "";
         var search_text = document.getElementById('search').value;
         var search_date = document.getElementById('search_date').value;
@@ -312,15 +314,20 @@
             document.getElementById('printPo').style.display = 'none';
             document.getElementById("partsList").innerHTML = myTbody;
 
+            $(".se-pre-con").fadeOut("slow");
+
         }else{
 
             document.getElementById('printPo').style.display = 'inline';
             document.getElementById("partsList").innerHTML = myTbody;
+
+            $(".se-pre-con").fadeOut("slow");
         }
     }
 
     function tableData(plant){
 
+        $(".se-pre-con").fadeIn("fast");
     	var myTbody = "";
 
         document.getElementById("partsList").innerHTML = "<tr><td colspan='7' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
@@ -358,6 +365,8 @@
 
                 document.getElementById('printPo').style.display = 'inline';
                 document.getElementById('partsList').innerHTML = myTbody;
+
+                $(".se-pre-con").fadeOut("slow");
             // });
     	});
     }
@@ -438,6 +447,7 @@
 </style>
 </head>
 <body>
+    <div class="se-pre-con"></div>
 	<!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">

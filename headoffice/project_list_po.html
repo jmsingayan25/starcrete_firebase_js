@@ -185,6 +185,8 @@
 
     function tableData(){
 
+        $(".se-pre-con").fadeIn("fast");
+
     	var myTbody = "";
     	var count = 1;
 
@@ -268,6 +270,9 @@
                     });
                 }
             });
+
+            $(".se-pre-con").fadeOut("slow");
+
         });
         
     }
@@ -341,6 +346,7 @@
 </style>
 </head>
 <body>
+    <div class="se-pre-con"></div>
 	<!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">

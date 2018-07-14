@@ -213,6 +213,8 @@
 
         event.preventDefault();
 
+        $(".se-pre-con").fadeIn("fast");
+
         var myTbody = "";
         var search_text = document.getElementById('search').value;
 
@@ -253,12 +255,18 @@
             myTbody = "<tr><td colspan='4' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
             document.getElementById("projectList").innerHTML = myTbody;
+
+            $(".se-pre-con").fadeOut("slow");
         }else{
             document.getElementById("projectList").innerHTML = myTbody;
+
+            $(".se-pre-con").fadeOut("slow");
         }
     }
 
     function tableData(){
+
+        $(".se-pre-con").fadeIn("fast");
 
         var myTbody = "";
 
@@ -270,6 +278,8 @@
                 myTbody = "<tr><td colspan='4' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                 document.getElementById("projectList").innerHTML = myTbody;
+
+                $(".se-pre-con").fadeOut("slow");
             }
         });
 
@@ -297,6 +307,8 @@
             myTbody += "<td><div class='row' style='margin-bottom: 2px;'> <div class='col-md-12'> <a href='add_project_contact.html?projectKey=" + projectSnapshot.key + "&clientKey=" + clientKeyId + "'><button class='btn btn-sm btn-block' style='background-color: #1976d2; color: white;'><span class='fa fa-plus'></span> <strong>Add Contact</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><a href='project_update_info.html?projectKey=" + projectSnapshot.key + "&clientKey=" + clientKeyId + "'><button class='btn btn-sm btn-block' style='background-color: #ffa000; color: white;'><span class='fa fa-edit'></span> <strong>Update</strong></button></a></div></div><div class='row' style='margin-bottom: 2px;'><div class='col-md-12'> <a href='project_list_po.html?projectKey=" + projectSnapshot.key + "&clientKey=" + clientKeyId + "'> <button class='btn btn-sm btn-block' style='background-color: #388e3c; color: white;'><span class='fa fa-info-circle'></span> <strong>List of P.O.</strong></button> </a></div></div></td></tr>";
 
             document.getElementById('projectList').innerHTML = myTbody;
+
+            $(".se-pre-con").fadeOut("slow");
         });
     }
 
@@ -343,6 +355,7 @@
 </style>
 </head>
 <body>
+    <div class="se-pre-con"></div>
 	<!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">

@@ -245,6 +245,8 @@
 
         event.preventDefault();
 
+        $(".se-pre-con").fadeIn("fast");
+
         var count = 1;
         var myTbody = "";
         var fromDate = document.getElementById('start_date').value;
@@ -427,16 +429,22 @@
 
             document.getElementById('printPo').style.display = 'none';
             document.getElementById("orderList").innerHTML = myTbody;
+
+            $(".se-pre-con").fadeOut("slow");
         }else{
 
             document.getElementById('printPo').style.display = 'inline';
             document.getElementById("orderList").innerHTML = myTbody;
+
+            $(".se-pre-con").fadeOut("slow");
 
         }
     }
 
     function tableData(plant){
 
+        $(".se-pre-con").fadeIn("fast");
+ 
         var myTbody = "";
         var count = 1;
         
@@ -446,6 +454,7 @@
                 myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                 document.getElementById("orderList").innerHTML = myTbody;
+                $(".se-pre-con").fadeOut("slow");
             }
         });
 
@@ -512,6 +521,8 @@
                     }   
                 });                 
             }); 
+
+            $(".se-pre-con").fadeOut("slow");
         });        
     }
 
@@ -603,6 +614,7 @@
 </style>
 </head>
 <body>
+    <div class="se-pre-con"></div>
 	<!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">

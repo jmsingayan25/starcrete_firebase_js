@@ -249,8 +249,6 @@
         var plant = $('input[name="plant"]:checked').val();
         var search_text = document.getElementById('search').value;
 
-        document.getElementById("historyList").innerHTML = "<tr><td colspan='3' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
-
         if(fromDate == '' && endDate == ''){
 
             // console.log(fromDate, endDate);
@@ -279,7 +277,7 @@
                     }
                 });
 
-                // $(".se-pre-con").fadeOut("slow");
+                $(".se-pre-con").fadeOut("slow");
 
                 if(myTbody == ''){
                     myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
@@ -335,7 +333,7 @@
 
                 });
 
-                // $(".se-pre-con").fadeOut("slow");
+                $(".se-pre-con").fadeOut("slow");
 
                 if(myTbody == ''){
 
@@ -353,6 +351,8 @@
 
     function tableData(plant){
 
+        $(".se-pre-con").fadeIn("fast");
+
         var myTbody = "";
 
         firebase.database().ref('history/'+plant).once('value', function(historySnapshot){
@@ -361,10 +361,9 @@
                 myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                 document.getElementById("historyList").innerHTML = myTbody;
+                $(".se-pre-con").fadeOut("slow");
             }
         });
-
-        document.getElementById("historyList").innerHTML = "<tr><td colspan='3' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
 
         firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value', function(historySnapshot) {
             historySnapshot.forEach(function(historyChildSnapshot){
@@ -379,6 +378,8 @@
 
                 document.getElementById("historyList").innerHTML = myTbody;
             });
+
+            $(".se-pre-con").fadeOut("slow");
         });
     }
 
@@ -494,7 +495,7 @@
 </style>
 </head>
 <body onload="tableData('Bravo'); startTime();">
-
+    <div class="se-pre-con"></div>
 	<section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -529,7 +530,6 @@
                 <!-- notificatoin dropdown end-->
             </div>
         </header>  
-        <div class="se-pre-con"></div>
         <!--sidebar start-->
         <aside>
             <div id="sidebar"  class="nav-collapse ">

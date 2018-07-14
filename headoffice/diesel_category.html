@@ -183,6 +183,8 @@
 
 	function tableData(){
 
+		$(".se-pre-con").fadeIn("fast");
+
 		var myTbody = "";
 		var count = 1;
 		var currentDate = new Date().toLocaleDateString('en');
@@ -257,6 +259,8 @@
 					document.getElementById('oilList').innerHTML = myTbody;	
 				}
 			}
+
+			$(".se-pre-con").fadeOut("slow");
 		});
 	}
 
@@ -398,6 +402,8 @@
 
 		event.preventDefault();
 
+		$(".se-pre-con").fadeIn("fast");
+
 		var myTbody = "";
 		var search_date = document.getElementById('date_view').value;
 		search_date_convert = new Date(search_date).toLocaleDateString('en');
@@ -459,6 +465,8 @@
 
 					document.getElementById('datePrint').style.display = 'inline';
 					document.getElementById('oilList').innerHTML = myTbody;
+
+					$(".se-pre-con").fadeOut("slow");
 				}
 			}else{
 
@@ -507,6 +515,8 @@
 
 					document.getElementById('datePrint').style.display = 'inline';
 					document.getElementById('oilList').innerHTML = myTbody;
+
+					$(".se-pre-con").fadeOut("slow");
 				}
 			}
 		});
@@ -517,6 +527,8 @@
 
 			document.getElementById('datePrint').style.display = 'none';
 			document.getElementById('oilList').innerHTML = myTbody;
+
+			$(".se-pre-con").fadeOut("slow");
 		}
 
 		firebase.database().ref('available_seperate_category/'+plant).orderByChild('CategoryName').equalTo(oil_value).on('value', function(oilSnapshot){
@@ -599,6 +611,7 @@
 
 </head>
 <body>
+	<div class="se-pre-con"></div>
 	<section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">

@@ -109,6 +109,8 @@
 
     $(document).ready(function(){
 
+        $(".se-pre-con").fadeIn("fast");
+
         $('.filterable .btn-filter').click(function(){
             var $panel = $(this).parents('.filterable'),
             $filters = $panel.find('.filters input'),
@@ -197,6 +199,7 @@
 
         document.getElementById('id_dr_detail').innerHTML = "<div class='row'><div class='col-md-6'>Delivery Details for P.O. No. <strong>" + po_no + "</strong></div><div class='col-md-6'>Issued P.O. to Plant: <strong>" +issued_po_plant + "</strong></div></div><br><div class='row'><div class='col-md-6'>Client Name: <strong>" + client_name + "</strong></div><div class='col-md-6'>Project Name: <strong>" + project_name + "</strong></div></div><div class='row'><div class='col-md-6'>Client Address: <strong>" + client_address + "</strong></div><div class='col-md-6'>Project Address: <strong>" + project_address + "</strong></div></div>";
 
+                                        $(".se-pre-con").fadeOut("slow");
                                     }); 
                                 }
                             });
@@ -210,8 +213,6 @@
     function tableData(po_no_key, plant){
 
     	var myTbody = "";
-
-        document.getElementById("orderList").innerHTML = "<tr><td colspan='7' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
 
     	firebase.database().ref('delivery_ongoing_order/').orderByChild('po_no_key').equalTo(po_no_key).on('child_added', function(ongoingOrderSnapshot){
 
@@ -361,6 +362,7 @@
 </style>
 </head>
 <body>
+    <div class="se-pre-con"></div>
 	<!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">

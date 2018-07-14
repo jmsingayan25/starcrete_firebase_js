@@ -167,8 +167,16 @@
                     totalCountBadge();
                     // goAway(plant);
                     
+                    if(plant == 'Bravo'){
+                        plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
+                    }else{
+                        plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
+                    }
+
+                    document.getElementById('id_plant_name').innerHTML = plant_name;
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
                     document.getElementById('id_hidden_plant').innerHTML = "<input type='hidden' id='hidden_plant' name='hidden_plant' value='" + plant + "'>";
+
                 },(error) => {
                     console.log(error);
                 });
@@ -177,14 +185,14 @@
             }
         });
 
-        document.getElementById("historyList").innerHTML = "<tr><td colspan='3' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
-        
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
     function submitForm(){
 
         event.preventDefault();
+
+        $(".se-pre-con").fadeIn("fast");
 
         var myTbody = "";
         var fromDate = document.getElementById('start_date').value
@@ -221,8 +229,12 @@
                     myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                     document.getElementById("historyList").innerHTML = myTbody;
+
+                    $(".se-pre-con").fadeOut("slow");
                 }else{
                     document.getElementById("historyList").innerHTML = myTbody;
+
+                    $(".se-pre-con").fadeOut("slow");
                 }
             });
 
@@ -271,8 +283,12 @@
                     myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                     document.getElementById("historyList").innerHTML = myTbody;
+
+                    $(".se-pre-con").fadeOut("slow");
                 }else{
                     document.getElementById("historyList").innerHTML = myTbody;
+
+                    $(".se-pre-con").fadeOut("slow");
                 }
             });    
         }
@@ -280,9 +296,9 @@
 
 	function tableData(){
 
-        var myTbody = "";
+        $(".se-pre-con").fadeIn("slow");
 
-        
+        var myTbody = "";
 
         firebase.database().ref('history/'+plant).once('value', function(drSnapshot){
             if(drSnapshot.val() == null){
@@ -290,31 +306,31 @@
                 myTbody = "<tr><td colspan='3' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                 document.getElementById("historyList").innerHTML = myTbody;
-            }
-        });
 
-        firebase.database().ref('history/'+plant).orderByChild('reverseDate').on('child_added', function(historySnapshot) {
+                $(".se-pre-con").fadeOut("slow");
+            }else{
+
+                firebase.database().ref('history/'+plant).orderByChild('reverseDate').on('child_added', function(historySnapshot) {
+                    document.getElementById("historyList").innerHTML = "";
             // historySnapshot.forEach(function(historyChildSnapshot){
 
-                var type = historySnapshot.val().type_of_transaction;   //Example of value
-                var detail = historySnapshot.val().history;   //Example of value
-                var date = dateFormat(historySnapshot.val().date);   //Example of value
+                    var type = historySnapshot.val().type_of_transaction;   //Example of value
+                    var detail = historySnapshot.val().history;   //Example of value
+                    var date = dateFormat(historySnapshot.val().date);   //Example of value
 
-                myTbody += "<tr><td><strong>" + type + "</strong></td>";
-                myTbody += "<td><strong>" + detail + "</strong></td>";
-                myTbody += "<td><strong>" + date + "</strong></td></tr>";
+                    myTbody += "<tr><td><strong>" + type + "</strong></td>";
+                    myTbody += "<td><strong>" + detail + "</strong></td>";
+                    myTbody += "<td><strong>" + date + "</strong></td></tr>";
 
-                document.getElementById("historyList").innerHTML = myTbody;
-            // });
+                    // document.getElementById("historyList").innerHTML = myTbody;
+
+                    $(myTbody).prependTo("table > tbody");
+                    // });
+                });
+            }
+
+            $(".se-pre-con").fadeOut("slow");
         });
-
-        if(plant == 'Bravo'){
-            plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
-        }else{
-            plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
-        }
-
-        document.getElementById('id_plant_name').innerHTML = plant_name;
     }
 
     function startTime() {
@@ -446,6 +462,7 @@ li.notif {
 </style>
 </head>
 <body>
+    <div class="se-pre-con"></div>
 	<section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">

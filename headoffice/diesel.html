@@ -180,6 +180,7 @@
         
         event.preventDefault();
 
+        $(".se-pre-con").fadeIn("fast");
         var myTbody = "";
         var selectedDate = document.getElementById('date_view').value;
 
@@ -248,14 +249,19 @@
 
             document.getElementById('datePrint').style.display = 'none';
             document.getElementById('dieselList').innerHTML = myTbody;
+
+            $(".se-pre-con").fadeOut("slow");
         }else{
             document.getElementById('datePrint').style.display = 'inline';
             document.getElementById('dieselList').innerHTML = myTbody;
+
+            $(".se-pre-con").fadeOut("slow");
         }
     }
 
     function tableData(plant){
 
+        $(".se-pre-con").fadeIn("fast");
         var myTbody = "";
         var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
         var currentDate = new Date().toLocaleDateString('en');
@@ -273,6 +279,7 @@
 
                 document.getElementById('dieselList').innerHTML = myTbody;
 
+                $(".se-pre-con").fadeOut("slow");
             }
         });
 
@@ -326,6 +333,8 @@
                 document.getElementById('datePrint').style.display = 'inline';
                 document.getElementById('dieselList').innerHTML = myTbody;
             }
+
+            $(".se-pre-con").fadeOut("slow");
         });
 
         firebase.database().ref('available_stock/'+plant).on('value', function(stockSnapshot){
@@ -424,6 +433,7 @@ function datePrint(){
 </style>
 </head>
 <body>
+    <div class="se-pre-con"></div>
 	<section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">

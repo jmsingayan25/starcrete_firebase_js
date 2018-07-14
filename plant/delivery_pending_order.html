@@ -177,14 +177,14 @@
             }
         });
 
-        document.getElementById("orderList").innerHTML = "<tr><td colspan='9' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
-
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
     function submitForm(){
 
         event.preventDefault();
+
+        $(".se-pre-con").fadeIn("fast");
 
         var myTbody = "";
         var count = 1;
@@ -364,14 +364,19 @@
 
             document.getElementById("orderList").innerHTML = myTbody;
 
+            $(".se-pre-con").fadeOut("slow");
+
         }else{
             document.getElementById("orderList").innerHTML = myTbody;
+
+            $(".se-pre-con").fadeOut("slow");
 
         }
     }
 
     function tableData(){
 
+        $(".se-pre-con").fadeIn("fast");
         var myTbody = "";
         var count = 1;
         
@@ -381,6 +386,8 @@
                 myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                 document.getElementById("orderList").innerHTML = myTbody;
+
+                $(".se-pre-con").fadeOut("slow");
             }
         });
         
@@ -454,6 +461,7 @@
         //     document.getElementById("orderList").innerHTML = myTbody;
             
         // }
+            $(".se-pre-con").fadeOut("slow");
         });
 
 

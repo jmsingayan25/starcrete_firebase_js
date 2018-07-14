@@ -176,12 +176,12 @@
             }
         });
 
-        document.getElementById("orderList").innerHTML = "<tr><td colspan='10' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
-
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
     function tableData(){
+
+        $(".se-pre-con").fadeIn("fast");
 
     	var myTbody = "";
     	var count = 1;
@@ -236,6 +236,8 @@
 		    		count++
     			});
     		});
+
+            $(".se-pre-con").fadeOut("slow");
     	});
 
     	if(plant == 'Bravo'){
@@ -252,6 +254,7 @@
 
     	event.preventDefault();
 
+        $(".se-pre-con").fadeIn("fast");
     	var myTbody = "";
     	var count = 1;
     	var fromDate = document.getElementById('start_date').value;
@@ -429,8 +432,12 @@
 
             document.getElementById('orderList').innerHTML = myTbody;
 
+            $(".se-pre-con").fadeOut("slow");
+
         }else{
             document.getElementById('orderList').innerHTML = myTbody;
+
+            $(".se-pre-con").fadeOut("slow");
         }
     }
 
@@ -554,6 +561,7 @@
 </style>
 </head>
 <body>
+    <div class="se-pre-con"></div>
 	<!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">
