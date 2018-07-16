@@ -170,7 +170,7 @@
 
         bravo_pending_order_count = 0;
         delta_pending_order_count = 0;
-        firebase.database().ref('purchase_order').on('value', function(pendingOrderSnapshot){
+        firebase.database().ref('purchase_order').once('value', function(pendingOrderSnapshot){
 
             if(pendingOrderSnapshot.val() == null){
                 document.getElementById('id_bravo_pending_order').innerHTML = "0";
@@ -183,20 +183,21 @@
                         bravo_pending_order_count++;
                     }
 
-                    document.getElementById('id_bravo_pending_order').innerHTML = Number(bravo_pending_order_count).toLocaleString('en');
-
                     if(pendingOrderChildSnapshot.val().issued_po_plant == 'Delta'){
                         delta_pending_order_count++;
                     }
 
-                    document.getElementById('id_delta_pending_order').innerHTML = Number(delta_pending_order_count).toLocaleString('en');
                 });
+
+                document.getElementById('id_bravo_pending_order').innerHTML = Number(bravo_pending_order_count).toLocaleString('en');
+
+                document.getElementById('id_delta_pending_order').innerHTML = Number(delta_pending_order_count).toLocaleString('en');
             }
         });
 
         bravo_ongoing_order_count = 0;
         delta_ongoing_order_count = 0;
-        firebase.database().ref('delivery_ongoing_order').on('value', function(ongoingOrderSnapshot){
+        firebase.database().ref('delivery_ongoing_order').once('value', function(ongoingOrderSnapshot){
 
             if(ongoingOrderSnapshot.val() == null){
                 document.getElementById('id_bravo_ongoing_order').innerHTML = "0";
@@ -209,20 +210,20 @@
                         bravo_ongoing_order_count++;
                     }
 
-                    document.getElementById('id_bravo_ongoing_order').innerHTML = Number(bravo_ongoing_order_count).toLocaleString('en');
-
                     if(ongoingOrderChildSnapshot.val().issued_dr_plant == 'Delta'){
                         delta_ongoing_order_count++;
                     }
-
-                    document.getElementById('id_delta_ongoing_order').innerHTML = Number(delta_ongoing_order_count).toLocaleString('en');
                 });
+
+                document.getElementById('id_bravo_ongoing_order').innerHTML = Number(bravo_ongoing_order_count).toLocaleString('en');
+
+                document.getElementById('id_delta_ongoing_order').innerHTML = Number(delta_ongoing_order_count).toLocaleString('en');
             }
         });
 
         bravo_delivered_order_count = 0;
         delta_delivered_order_count = 0;
-        firebase.database().ref('delivery_delivered_order').on('value', function(deliveredOrderSnapshot){
+        firebase.database().ref('delivery_delivered_order').once('value', function(deliveredOrderSnapshot){
 
             if(deliveredOrderSnapshot.val() == null){
                 document.getElementById('id_bravo_delivered_order').innerHTML = "0";
@@ -232,23 +233,29 @@
                 deliveredOrderSnapshot.forEach(function(deliveredOrderChildSnapshot){
 
                     if(deliveredOrderChildSnapshot.val().delivered_plant == 'Bravo'){
-                        bravo_delivered_order_count++;
-                    }
 
-                    document.getElementById('id_bravo_delivered_order').innerHTML = Number(bravo_delivered_order_count).toLocaleString('en');
+                        if(new Date(deliveredOrderChildSnapshot.val().date) == new Date()){
+                            bravo_delivered_order_count++;
+                        }
+                    }
 
                     if(deliveredOrderChildSnapshot.val().delivered_plant == 'Delta'){
-                        delta_delivered_order_count++;
-                    }
 
-                    document.getElementById('id_delta_delivered_order').innerHTML = Number(delta_delivered_order_count).toLocaleString('en');
+                        if(new Date(deliveredOrderChildSnapshot.val().date) == new Date()){
+                            delta_delivered_order_count++;
+                        }
+                    }
                 });
+
+                document.getElementById('id_bravo_delivered_order').innerHTML = Number(bravo_delivered_order_count).toLocaleString('en');
+
+                document.getElementById('id_delta_delivered_order').innerHTML = Number(delta_delivered_order_count).toLocaleString('en');
             }
         });
 
         bravo_backloaded_order_count = 0;
         delta_backloaded_order_count = 0;
-        firebase.database().ref('delivery_backloaded_order').on('value', function(backloadedOrderSnapshot){
+        firebase.database().ref('delivery_backloaded_order').once('value', function(backloadedOrderSnapshot){
             console.log(backloadedOrderSnapshot.val());
 
             if(backloadedOrderSnapshot.val() == null){
@@ -262,14 +269,15 @@
                         bravo_backloaded_order_count++;
                     }
 
-                    document.getElementById('id_bravo_backloaded_order').innerHTML = Number(bravo_backloaded_order_count).toLocaleString('en');
-
                     if(backloadedOrderSnapshot.val().backloaded_plant == 'Delta'){
                         delta_backloaded_order_count++;
                     }
-
-                    document.getElementById('id_delta_backloaded_order').innerHTML = Number(delta_backloaded_order_count).toLocaleString('en');
                 });
+
+                document.getElementById('id_bravo_backloaded_order').innerHTML = Number(bravo_backloaded_order_count).toLocaleString('en');
+
+                document.getElementById('id_delta_backloaded_order').innerHTML = Number(delta_backloaded_order_count).toLocaleString('en');
+
             }      
         });
     }
