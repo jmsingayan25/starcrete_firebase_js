@@ -554,7 +554,6 @@ function DeleteRowData(key,plant)
 	        </div>
 	    </aside>
 	    <!--sidebar end-->
-
 	    <section id="main-content">
             <section class="wrapper">            
                 <!--overview start-->
@@ -566,8 +565,26 @@ function DeleteRowData(key,plant)
                             <li><i class="icon_document"></i>Diesel</li>             
                         </ol>
                     </div>
-                </div>	
+                </div>
+                
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="info-box dark-bg">
+                                <i class="fa fa-database"></i>
+                                <div class="count"><span id="id_stock"></span></div>
+                                <div class="title">Available stock as of today</div>
+                                </div>
+                        </div>
 
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <div class="info-box dark-bg">
+                                <i class="fa fa-calendar"></i>
+                                <div class="count"><span id="Search_day"></span></div>
+                                <div class="title">Search Date</div>
+                                </div>
+                        </div>
+                    </div>
+                                                 	
                 <div class="row">
                     <div class="col-md-12">
                         <section class="panel">
@@ -605,25 +622,9 @@ function DeleteRowData(key,plant)
                         			<thead>
                         				<tr class="filterable">
                         					<th colspan="9">
-                                                <span>Available stock as of today: <span id="id_stock">
-                                                </span></span>
-                                                <!-- <br><span>Last Delivery: <span id ="last_day"></span></span> --><br>
-                                                <span>Search Date: <span id="Search_day"></span></span><!-- <br>
-                                                <button type="button" class="btn btn-info btn-md" onclick= "datePrint()"><strong><span class="fa fa-print"></span> Print Preview</strong></button>  -->   
-                                                <!-- <input type="hidden" id="hidden_stock" value="<?php echo getDieselStock($db, $search_plant); ?>">
-                        						<?php 
-                            						$date_view = date_create($_GET['date_view']); 
-                        							$today = date('Y-m-d');
-                        							$today = date_create($today);
-                                                ?>
-                        						<span>Available stock as of today, <?php echo date_format($today,"F d, Y"); ?>: <span id="warning_stock"><?php echo number_format(getDieselStock($db, $search_plant)); ?> liters <span id="triangle" class="fa fa-exclamation-triangle" style="display: none;"></span></span></span><br>
-                                                <span>Last Delivery: 
-                                                    <?php
-                                                        $last_update = date_create(getDieselLastUpdate($db, $search_plant));
-                                                        echo date_format($last_update,"F d, Y h:i A"); 
-                                                    ?>
-                                                </span><br>
-                                                <span>Search Date: <?php echo date_format($date_view,"F d, Y"); ?> -->
+                                                <!-- <span>Available stock as of today:</span> -->
+                                                <!-- <br><span>Last Delivery: <span id ="last_day"></span></span><br> -->
+                                                <!-- <span>Search Date: </span><br> -->
                                                 	<button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button></span>
                         					</th>
                         				</tr>
@@ -645,7 +646,7 @@ function DeleteRowData(key,plant)
                                     vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>
                                     </span> -->
                         			</tbody>
-                        		</table>
+                        		</table>                      
                         	</div>
                         </section>
                     </div>
