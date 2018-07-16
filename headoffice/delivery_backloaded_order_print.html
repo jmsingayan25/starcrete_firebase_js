@@ -212,18 +212,18 @@
 			}else{
 
 				if(fromDate == ''){
-	                fromDate = new Date().toLocaleDateString('en');
+	                fromDate = new Date();
 	            }else{
-	                fromDate = new Date(fromDate).toLocaleDateString('en');
+	                fromDate = new Date(fromDate);
 	            }
 
 	            if(endDate == ''){
-	                endDate = new Date().toLocaleDateString('en');
+	                endDate = new Date();
 	            }else{
-	                endDate = new Date(endDate).toLocaleDateString('en');
+	                endDate = new Date(endDate);
 	            }
 
-	            if(orderSnapshot.val().date >= fromDate && orderSnapshot.val().date <= endDate){
+	            if(new Date(orderSnapshot.val().date) >= fromDate && new Date(orderSnapshot.val().date) <= endDate){
 
                     if(orderSnapshot.val().backloaded_plant == plant){
 

@@ -241,22 +241,22 @@
         }else{
 
             if(fromDate == ''){
-                fromDate = new Date().toLocaleDateString('en');
+                fromDate = new Date();
             }else{
-                fromDate = new Date(fromDate).toLocaleDateString('en');
+                fromDate = new Date(fromDate);
             }
 
             if(endDate == ''){
-                endDate = new Date().toLocaleDateString('en');
+                endDate = new Date();
             }else{
-                endDate = new Date(endDate).toLocaleDateString('en');
+                endDate = new Date(endDate);
             }
 
             // firebase.database().ref('history/'+plant).orderByChild('date').startAt(fromDate).endAt(endDate).once('value', function(historySnapshot){
             firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value', function(historySnapshot){
                 historySnapshot.forEach(function(historyChildSnapshot){
 
-                    if(historyChildSnapshot.val().date >= fromDate && historyChildSnapshot.val().date <= endDate){
+                    if(new Date(historyChildSnapshot.val().date) >= fromDate && new Date(historyChildSnapshot.val().date) <= endDate){
 
                         text_history = historyChildSnapshot.val().history.toLowerCase();
                         text_type = historyChildSnapshot.val().type_of_transaction.toLowerCase();
@@ -613,19 +613,6 @@ li.notif {
 	                                            </button>
 	                                        </span>
 	                                        
-	                                    </div>
-	                                    <div class="input-group col-md-2" style="white-space: nowrap; margin: 38px 0px 0px 60px;">
-	                                        <label for="view" class="col-md-8 control-label">Number of rows:</label>
-	                                        <div class="form-group">
-	                                            <div class="col-md-12">
-	                                                <select id="view" name="view" class="form-control">
-	                                                    <option value="25">25</option>
-	                                                    <option value="50">50</option>
-	                                                    <option value="75">75</option>
-	                                                    <option value="100">100</option>
-	                                                </select>
-	                                            </div>
-	                                        </div>
 	                                    </div>
 	                                </div>
 	                            </header>

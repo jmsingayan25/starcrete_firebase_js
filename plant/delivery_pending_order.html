@@ -269,21 +269,21 @@
         }else{
 
             if(fromDate == ''){
-                fromDate = new Date().toLocaleDateString('en');
+                fromDate = new Date();
             }else{
-                fromDate = new Date(fromDate).toLocaleDateString('en');
+                fromDate = new Date(fromDate);
             }
 
             if(endDate == ''){
-                endDate = new Date().toLocaleDateString('en');
+                endDate = new Date();
             }else{
-                endDate = new Date(endDate).toLocaleDateString('en');
+                endDate = new Date(endDate);
             }
 
             // firebase.database().ref('purchase_order').orderByChild('date').startAt(fromDate).endAt(endDate).on('child_added', function(orderSnapshot){
-            firebase.database().ref('purchase_order').orderByChild('date').startAt(fromDate).endAt(endDate).on('child_added', function(orderSnapshot){
+            firebase.database().ref('purchase_order').orderByChild('reverseDate').on('child_added', function(orderSnapshot){
 
-                if(orderSnapshot.val().date >= fromDate && orderSnapshot.val().date <= endDate){
+                if(new Date(orderSnapshot.val().date) >= fromDate && new Date(orderSnapshot.val().date) <= endDate){
 
                     firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
                         itemSnapshot.forEach(function(itemChildSnapshot){
