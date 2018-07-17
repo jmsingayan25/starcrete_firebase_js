@@ -105,10 +105,10 @@
 
     goAway();
 
-    $(window).load(function() {
-        // Animate loader off screen
-        $(".se-pre-con").fadeOut("slow");;
-    });
+    // $(window).load(function() {
+    //     // Animate loader off screen
+    //     $(".se-pre-con").fadeOut("slow");;
+    // });
 
 	$(document).ready(function(){
         $('.filterable .btn-filter').click(function(){
@@ -169,6 +169,7 @@
                     //tableData();
                     //totalCountBadge();
                     // goAway(plant);
+                    DisplayCurrentMonth();
                     
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
 
@@ -192,7 +193,7 @@
 
 function Go()
 {
-     $(".se-pre-con").fadeIn("slow");
+     $(".se-pre-con").fadeIn("fast");
     event.preventDefault();
       var myTbody = "";
       var myThead = "";
@@ -257,6 +258,81 @@ function Go()
 
         }
     });           
+}
+
+function DisplayCurrentMonth()
+{
+      var myTbody = "";
+      var myThead = "";
+      var myTbodyClone = "";
+      var options = {month: "long",year: "numeric"};
+      var getDate = new Date().toLocaleDateString("en",options);
+      var optionsYear = {year: "numeric"};
+      var getDateyear = new Date().toLocaleDateString("en",optionsYear);
+      var getCurrentData = new Date().toLocaleDateString("en",options);
+      
+    firebase.database().ref("summary_delivered_order/" + plant + "/"+ getDate).orderByChild("number").once('value',function(SummaryMainSnapshots)
+    {
+        
+             if (SummaryMainSnapshots.val() == null) 
+        {
+            myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+            document.getElementById("orderList").innerHTML = myTbody;
+            document.getElementById("filters").innerHTML = "";
+            document.getElementById("orderListclone").innerHTML = "";
+            $(".se-pre-con").fadeOut("slow");
+        }else{
+
+           firebase.database().ref().child("item/").once('value',function(itemSnapshots)
+                {   
+                    myThead += "<th style='color: white; text-align:center'>" + "Date"+ "</th>"
+                    itemSnapshots.forEach(function(getitemSnapshots){
+
+                        myThead += "<th style='color: white; text-align:center'>" + getitemSnapshots.val().item + "</th>"
+
+                    });
+                     myThead += "<th style='color: white; text-align:center'>" + "Total"+ "</th>"
+                     document.getElementById("filters").innerHTML = myThead;
+
+                }); 
+
+
+                    firebase.database().ref("summary_delivered_order/" + plant + "/"+ getDate).orderByChild("number").once('value',function(SummarySnapshots)
+                    {   
+                            SummarySnapshots.forEach(function(forSummarySnapshots){
+                     firebase.database().ref().child("summary_delivered_order/" + plant + "/"+ getDate + "/" +forSummarySnapshots.key + "/item").once('value',function(ItemSnapshots)
+                    {  
+                                myTbody += "<tr><td style='background-color: #00a3cc; color: white; text-align:center'><strong>" + new Date(forSummarySnapshots.val().date).getDate() + "</strong></td>";
+
+                                ItemSnapshots.forEach(function(perItemSnapshot){
+                                        var getItem = perItemSnapshot.val().total;
+                                         myTbody += "<td><strong>" + getItem + "</strong></td>";
+
+                                });     
+                                        var getTotal = forSummarySnapshots.val().total;
+                                         myTbody += "<td style='background-color: #00b300; color: white; text-align:center'><strong>" + Number(getTotal).toLocaleString("en")+ "</strong></td></tr>";
+                                         document.getElementById("orderList").innerHTML = myTbody;
+                    });
+                                });
+                                   $(".se-pre-con").fadeOut("slow");
+                    });
+                   firebase.database().ref("summary_delivered_order_monthly_total/" + plant + "/" + getDateyear +"/" + getDate).once('value',function(YearSnapshots)
+                    {
+                        var getGrandTotal = YearSnapshots.val().grand_total;
+                         myTbodyClone += "<td style='background-color: #007a99; color: white; text-align:center;'><strong>" + "Grand Total"+ "</strong></td>";
+                          myTbodyClone += "<td colspan ='24'></td><td style='background-color: #008000; color: white; text-align:center;'><strong>" + Number(getGrandTotal).toLocaleString("en") + "</strong></td>";
+                          document.getElementById("orderListclone").innerHTML = myTbodyClone;
+                         
+                    }); 
+
+
+        }
+
+
+       
+    });
+
 }
 
 
