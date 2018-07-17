@@ -383,6 +383,7 @@
             document.getElementById('printPo').style.display = 'inline';
             document.getElementById("orderList").innerHTML = myTbody;
 
+            $(function(){ $(".tooltips").tooltip(); });
             $(".se-pre-con").fadeOut("slow");
         }   
     }
@@ -462,6 +463,8 @@
                                     
                                     document.getElementById('printPo').style.display = 'inline';
                                     document.getElementById('orderList').innerHTML = myTbody;
+
+                                    $(function(){ $(".tooltips").tooltip(); });
                                     count++;
                                 });
                             });

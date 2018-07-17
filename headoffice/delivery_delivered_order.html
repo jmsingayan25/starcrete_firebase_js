@@ -360,6 +360,7 @@
             document.getElementById('printPo').style.display = 'inline';
             document.getElementById("orderList").innerHTML = myTbody;
 
+            $(function(){ $(".tooltips").tooltip(); });
             $(".se-pre-con").fadeOut("slow");
 
         }
@@ -431,6 +432,8 @@
                         // myTbody += "<td style='color: #388e3c;'><strong>" + status + "</strong></td></tr>";
                         document.getElementById('printPo').style.display = 'inline';
                         document.getElementById('orderList').innerHTML = myTbody;
+
+                        $(function(){ $(".tooltips").tooltip(); });
                         count++;
                     
         			});
