@@ -140,6 +140,7 @@
 
     function tableData(){
 
+        $(".se-pre-con").fadeIn("fast");
     	var myTbody = "";
     	var myTbody1 = "";
     	var myThead = "";
@@ -163,6 +164,7 @@
     			document.getElementById('quantityList').innerHTML = myTbody;
     			document.getElementById('quantityTotalList').innerHTML = "";
     			document.getElementById('id_item_head').innerHTML = "";
+                $(".se-pre-con").fadeOut("slow");
     			
     		}else{
 
@@ -198,6 +200,7 @@
 
 		    				document.getElementById('quantityList').innerHTML = myTbody;
 
+                            $(".se-pre-con").fadeOut("slow");
 		    			});
 		    		});
 		    	});
@@ -219,6 +222,7 @@
 
     	event.preventDefault();
 
+         $(".se-pre-con").fadeIn("fast");
     	var myTbody = "";
     	var myTbody1 = "";
     	var myThead = "";
@@ -248,6 +252,7 @@
     			document.getElementById('quantityList').innerHTML = myTbody;
     			document.getElementById('quantityTotalList').innerHTML = "";
     			document.getElementById('id_item_head').innerHTML = "";
+                $(".se-pre-con").fadeOut("slow");
 
     		}else{
 
@@ -282,6 +287,8 @@
 							myTbody += "<td style='background-color: #00b300; color: white;'><strong>" + dateDayChildSnapshot.val().total + "</strong></td></tr>";
 
 		    				document.getElementById('quantityList').innerHTML = myTbody;
+
+                             $(".se-pre-con").fadeOut("slow");
 
 		    			});
 		    		});
@@ -348,6 +355,7 @@
 </script>
 </head>
 <body>
+    <div class="se-pre-con"></div>
 	<!-- container section start -->
     <section id="container" class="">
         <header class="header dark-bg">
@@ -391,11 +399,17 @@
 	            <!-- sidebar menu start-->
 	            <ul class="sidebar-menu">                
 	                <li class="">
-	                    <a class="" href="index.html">
-	                        <i class="icon_house"></i>
-	                        <span>History</span>
-	                    </a>
-	                </li>
+                        <a class="" href="index.html">
+                            <i class="icon_house"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li> 
+                    <li>
+                        <a class="" href="transaction_log.html">
+                            <i class="fa fa-list"></i>
+                            <span>Transaction Log</span>
+                        </a>
+                    </li>
 	                <li class="">
 	                    <a class="" href="client.html">
 	                        <i class="fa fa-address-book"></i>

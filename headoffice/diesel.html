@@ -476,7 +476,13 @@ function datePrint(){
                     <li class="">
                         <a class="" href="index.html">
                             <i class="icon_house"></i>
-                            <span>History</span>
+                            <span>Dashboard</span>
+                        </a>
+                    </li> 
+                    <li>
+                        <a class="" href="transaction_log.html">
+                            <i class="fa fa-list"></i>
+                            <span>Transaction Log</span>
                         </a>
                     </li> 
                     <li>
@@ -540,6 +546,22 @@ function datePrint(){
                     </div>
                 </div>	
                 <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-box dark-bg">
+                            <i class="fa fa-database"></i>
+                            <div class="count"><span id="id_stock"></span></div>
+                            <div class="title">Available Stock as of today</div>                       
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-box dark-bg">
+                            <i class="fa fa-calendar"></i>
+                            <div class="count"><span id="search_date"></span></div>
+                            <div class="title">Search Date</div>                       
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-lg-12">
                         <section class="panel">
                         	<form class="form-inline" onsubmit="return submitForm();">
@@ -567,8 +589,8 @@ function datePrint(){
                                         <tr>
                                             <th colspan="8">
                                                 <button type="button" class="btn btn-info btn-md" id="datePrint" onclick= "datePrint()" style="float: right; display: none;"><span class="fa fa-print"></span> <strong>Print Preview</strong></button>
-                                                <span>Available stock as of today: <span id="id_stock"></span></span><br>
-                                                <span>Search Date: <span id="search_date"></span>
+                                                <!-- <span>Available stock as of today: <span id="id_stock"></span></span><br>
+                                                <span>Search Date: <span id="search_date"></span> -->
                                             </th>
                                         </tr>
                         				<tr class="filterable">
