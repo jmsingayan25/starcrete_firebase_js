@@ -169,7 +169,7 @@
                     // goAway(plant);
                     DisplayCurrentDate();
                     
-                    document.getElementById('username').innerHTML = snapshot.val().firstname; 
+                    // document.getElementById('username').innerHTML = snapshot.val().firstname; 
                 },(error) => {
                     console.log(error);
                 });
@@ -178,7 +178,7 @@
             }
         });
 
-        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+        // document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
 function DisplayCurrentDate()
@@ -195,9 +195,11 @@ function DisplayCurrentDate()
       var getDateyear = new Date(document.getElementById("date_view").value).toLocaleDateString("en",optionsYear);
       var getMainDate = new Date(date).toLocaleString("en",optionDate);
       var getMainYear = new Date(date).toLocaleString("en",optionsYear);
-   
+        
+        
        firebase.database().ref().child("item/").once('value',function(itemSnapshots)
     {   
+         document.getElementById('id_month_head').innerHTML = "<th colspan='26' style='color: white;'>For the Month of " + getMainDate  + "</th>";
         myThead += "<th style='color: white; text-align:center'>" + "Date"+ "</th>"
         itemSnapshots.forEach(function(getitemSnapshots){
 
@@ -344,6 +346,7 @@ function datePrint()
 	                   
                                 <table class="table table-striped table-bordered">
                                     <thead>
+                                         <tr id = "id_month_head" style="background-color: #00a3cc"></tr>
                                         <tr class="filters" style="background-color: #00a3cc;" id="filters">
                                         </tr>
                                     </thead>
