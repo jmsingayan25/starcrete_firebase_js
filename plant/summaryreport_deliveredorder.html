@@ -341,7 +341,16 @@ function printSummary()
 {
     var date = document.getElementById('date_view').value;
 
-    window.open("summaryreport_deliveredorder_print.html?plant="+plant+"&date="+date,"_blank");
+    if (document.getElementById('date_view').value == "") 
+    {
+        var newDate = new Date().toLocaleDateString("en");
+        window.open("summaryreport_deliveredorder_print.html?plant="+plant+"&date="+newDate,"_blank");
+    }else
+    {
+            window.open("summaryreport_deliveredorder_print.html?plant="+plant+"&date="+date,"_blank");  
+    }
+    
+
 }
 
 
