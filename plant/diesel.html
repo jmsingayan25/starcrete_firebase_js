@@ -181,6 +181,8 @@ function Go()
             date = new Date().toLocaleDateString("en");
         }
         var GetStringDate = date.toString();
+        var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+        var searchDate = new Date(date).toLocaleDateString('en', options);
 
         firebase.database().ref('incoming_diesel/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
         DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
@@ -234,7 +236,7 @@ function Go()
         }else{
             document.getElementById("DieselList").innerHTML = myTbody;
         }
-            document.getElementById("Search_day").innerHTML = dateFormat(date);
+            document.getElementById("Search_day").innerHTML = searchDate;
     });
         
 }
