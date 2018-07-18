@@ -155,7 +155,7 @@
 
                 pendingOrderSnapshot.forEach(function(pendingOrderChildSnapshot){
 
-                    if(pendingOrderChildSnapshot.val().issued_po_plant == plant){
+                    // if(pendingOrderChildSnapshot.val().issued_po_plant == plant){
 
                         firebase.database().ref('purchase_order/'+pendingOrderChildSnapshot.key+'/item').once('value', function(itemSnapshot){
                             itemSnapshot.forEach(function(itemChildSnapshot){
@@ -168,7 +168,7 @@
                                 document.getElementById('id_pending_order').innerHTML = Number(pending_order_count).toLocaleString('en');
                             });
                         });
-                    }
+                    // }
 
                 }); 
             }
@@ -192,6 +192,9 @@
             }
         });
 
+        newDate = new Date().toLocaleDateString('en');
+        currentDate = new Date(newDate);
+
         firebase.database().ref('delivery_delivered_order').once('value', function(deliveredOrderSnapshot){
 
             if(deliveredOrderSnapshot.val() == null){
@@ -199,10 +202,9 @@
             }else{
 
                 deliveredOrderSnapshot.forEach(function(deliveredOrderChildSnapshot){
-
                     if(deliveredOrderChildSnapshot.val().delivered_plant == plant){
 
-                        if(new Date(deliveredOrderChildSnapshot.val().date) == new Date()){
+                        if(new Date(deliveredOrderChildSnapshot.val().date).getTime() == currentDate.getTime()){
                             delivered_order_count++;
                         }
                     }

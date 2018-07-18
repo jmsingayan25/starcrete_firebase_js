@@ -201,6 +201,8 @@
 
                 document.getElementById('oilList').innerHTML = myTbody;
 
+                $(".se-pre-con").fadeOut("slow");
+
             }
         });
 
@@ -537,8 +539,13 @@
 
 			oilSnapshot.forEach(function(oilChildSnaphot){
 					
-				document.getElementById('id_Categorystock').innerHTML = Number(oilChildSnaphot.val().Liters).toLocaleString('en') + " liter(s)";
+				document.getElementById('id_Categorystock').innerHTML = Number(oilChildSnaphot.val().Liters).toLocaleString('en') + " Liter(s)";
 			
+				if(Number(oilChildSnaphot.val().Liters) <= Number(3500)){
+	                document.getElementById("id_Categorystock").style.color = "red";
+	            }else{
+	                document.getElementById("id_Categorystock").style.color = "";
+	            }
 			});
 		});
 	}
@@ -724,6 +731,23 @@
                     </div>
                 </div>	
                 <div class="row">
+                	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div class="info-box dark-bg" id="example1">
+                        <i class="fa fa-database"></i>
+                        <div class="count"><span id="id_Categorystock"></span></div>
+                        <div class="title"><span id = "category_current">Category</span> Available stock as of today</div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div class="info-box dark-bg" id="example1">
+                        <i class="fa fa-calendar"></i>
+                        <div class="count"><span id="search_date"></span></div>
+                        <div class="title">Search Date</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                 	<div class="col-md-12">
                 		<section class="panel">
                 			<form class="form-inline" onsubmit="return submitForm();">
@@ -753,12 +777,12 @@
                         						<button type="button" class="btn btn-info btn-md" id="datePrint" onclick= "datePrint()" style="float: right; display: none;"><span class="fa fa-print"></span> <strong>Print Preview</strong></button>                   						
                                                 <span>Available stock as of today: <span id="id_stock">
                                                 </span></span><br>
-                                                <span id = "category_current">Category</span><span> Available stock as of today: <span id="id_Categorystock">
+                                               <!--  <span id = "category_current">Category</span><span> Available stock as of today: <span id="id_Categorystock"> -->
                                                 </span></span>
                                                 <!-- <br>
                                                 <span>Last Delivery: <span id="id_last_delivery"></span></span> -->
-                                                <br>
-                                                <span>Search Date: <span id="search_date"></span></span><br>
+                                                <!-- <br>
+                                                <span>Search Date: <span id="search_date"></span></span><br> -->
                                                 
                         					</th>
                         				</tr>
