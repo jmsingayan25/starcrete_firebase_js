@@ -218,18 +218,24 @@
 			}else{
 
 				if(fromDate == ''){
-	                fromDate = new Date();
-	            }else{
-	                fromDate = new Date(fromDate);
-	            }
+                    newFromDate = new Date().toLocaleDateString('en');
+                    fromDate = new Date(newFromDate);
+                }else{
+                    newFromDate = new Date(fromDate).toLocaleDateString('en');
+                    fromDate = new Date(newFromDate);
+                }
 
-	            if(endDate == ''){
-	                endDate = new Date();
-	            }else{
-	                endDate = new Date(endDate);
-	            }
+                if(endDate == ''){
+                    newEndDate = new Date().toLocaleDateString('en');
+                    endDate = new Date(newEndDate);
+                }else{
+                    newEndDate = new Date(endDate).toLocaleDateString('en');
+                    endDate = new Date(newEndDate);
+                }
 
-	            if(new Date(orderSnapshot.val().date) >= fromDate && new Date(orderSnapshot.val().date) <= endDate){
+                orderDate = new Date(orderSnapshot.val().date);
+
+	            if(orderDate.getTime() >= fromDate.getTime() && orderDate.getTime() <= endDate.getTime()){
 
 	            	if(orderSnapshot.val().delivered_plant == plant){
 

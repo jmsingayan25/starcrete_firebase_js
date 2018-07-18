@@ -263,22 +263,28 @@
         }else{
 
             if(fromDate == ''){
-                fromDate = new Date();
+                newFromDate = new Date().toLocaleDateString('en');
+                fromDate = new Date(newFromDate);
             }else{
-                fromDate = new Date(fromDate);
+                newFromDate = new Date(fromDate).toLocaleDateString('en');
+                fromDate = new Date(newFromDate);
             }
 
             if(endDate == ''){
-                endDate = new Date();
+                newEndDate = new Date().toLocaleDateString('en');
+                endDate = new Date(newEndDate);
             }else{
-                endDate = new Date(endDate);
+                newEndDate = new Date(endDate).toLocaleDateString('en');
+                endDate = new Date(newEndDate);
             }
 
 
             // firebase.database().ref('purchase_order_closed').orderByChild('date').startAt(fromDate).endAt(endDate).on('child_added', function(poCloseSnapshot){
             firebase.database().ref('purchase_order_closed').orderByChild('reverseDate').on('child_added', function(poCloseSnapshot){
 
-                if(new Date(poCloseSnapshot.val().date) >= fromDate && new Date(poCloseSnapshot.val().date) <= endDate){
+                orderDate = new Date(poCloseSnapshot.val().date);
+
+                if(orderDate.getTime() >= fromDate.getTime() && orderDate.getTime() <= endDate.getTime()){
 
                     if(poCloseSnapshot.val().issued_po_plant == plant){
 
