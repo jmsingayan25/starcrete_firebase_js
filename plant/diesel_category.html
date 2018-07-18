@@ -360,6 +360,8 @@ function displaycurrentCategory(getCurrentCategory)
         {
             document.getElementById("id_stock").style.color ="red";
         }
+
+        $(".se-pre-con").fadeOut("slow"); 
     });
   
      //    firebase.database().ref().child("incoming_diesel_category/" + plant).orderByChild("date").limitToLast(1).on('child_added',function(lastDaySnapshot)
