@@ -149,10 +149,10 @@
                                 if(itemChildSnapshot.val().balance != 0){
                                     // console.log('purchase_order/'+pendingOrderChildSnapshot.key+'/item/'+itemChildSnapshot.key);
                                     bravo_pending_order_count++;
-                                }
-
-                                document.getElementById('id_bravo_pending_order').innerHTML = Number(bravo_pending_order_count).toLocaleString('en');  
+                                }  
                             });
+
+                            document.getElementById('id_bravo_pending_order').innerHTML = Number(bravo_pending_order_count).toLocaleString('en'); 
                         });
                     }
 
@@ -167,9 +167,10 @@
                                     delta_pending_order_count++;
                                 }
 
-                                document.getElementById('id_delta_pending_order').innerHTML = Number(delta_pending_order_count).toLocaleString('en');  
                             });
-                        });
+
+                            document.getElementById('id_delta_pending_order').innerHTML = Number(delta_pending_order_count).toLocaleString('en'); 
+                        }); 
                     }
                 }); 
             }
@@ -203,6 +204,10 @@
 
         bravo_delivered_order_count = 0;
         delta_delivered_order_count = 0;
+
+        newDate = new Date().toLocaleDateString('en');
+        currentDate = new Date(newDate);
+
         firebase.database().ref('delivery_delivered_order').once('value', function(deliveredOrderSnapshot){
 
             if(deliveredOrderSnapshot.val() == null){
@@ -213,15 +218,15 @@
                 deliveredOrderSnapshot.forEach(function(deliveredOrderChildSnapshot){
 
                     if(deliveredOrderChildSnapshot.val().delivered_plant == 'Bravo'){
-
-                        if(new Date(deliveredOrderChildSnapshot.val().date) == new Date()){
+                        console.log(new Date(deliveredOrderChildSnapshot.val().date).getTime(), currentDate.getTime());
+                        if(new Date(deliveredOrderChildSnapshot.val().date).getTime() == currentDate.getTime()){
                             bravo_delivered_order_count++;
                         }
                     }
 
                     if(deliveredOrderChildSnapshot.val().delivered_plant == 'Delta'){
 
-                        if(new Date(deliveredOrderChildSnapshot.val().date) == new Date()){
+                        if(new Date(deliveredOrderChildSnapshot.val().date).getTime() == currentDate.getTime()){
                             delta_delivered_order_count++;
                         }
                     }
@@ -337,7 +342,6 @@
 </head>
 <body>
     <div class="se-pre-con"></div>
-    <!-- <div class="se-pre-con"></div> -->
     <section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -459,6 +463,146 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col-md-12">
+                        <section class="panel">
+                            <div class="panel-body">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a data-toggle="tab" href="#tabbravo"><strong>Bravo</strong></a></li>
+                                    <li><a data-toggle="tab" href="#tabdelta"><strong>Delta</strong></a></li>
+                                </ul>
+                                <div class="tab-content">
+                                <div id="tabbravo" class="tab-pane fade in active">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <section class="panel">
+                                                <header class="panel-heading">
+                                                    <strong>Delivery</strong>
+                                                </header>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <div class="info-box dark-bg">
+                                                                <i class="fa fa-spinner"></i>
+                                                                <div class="count"><span id="id_bravo_pending_order"></span></div>
+                                                                <div class="title">REMAINING PENDING ORDER</div>                       
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="info-box orange-bg">
+                                                                <i class="fa fa-truck"></i>
+                                                                <div class="count"><span id="id_bravo_ongoing_order"></span></div>
+                                                                <div class="title">ONGOING ORDER</div>                      
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="info-box green-bg">
+                                                                <i class="fa fa-archive"></i>
+                                                                <div class="count"><span id="id_bravo_delivered_order"></span></div>
+                                                                <div class="title">DELIVERED ORDER TODAY</div>                       
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="info-box red-bg">
+                                                                <i class="fa fa-rotate-left"></i>
+                                                                <div class="count"><span id="id_bravo_backloaded_order"></span></div>
+                                                                <div class="title">BACKLOADED ORDER TODAY</div>                      
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <section class="panel">
+                                                <header class="panel-heading">
+                                                    <strong>Stock</strong>
+                                                </header>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <div class="info-box dark-bg">
+                                                                <i class="fa fa-database"></i>
+                                                                <div class="count"><span id="id_bravo_diesel"></span></div>
+                                                                <div class="title">DIESEL STOCK (in liter)</div>                       
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="tabdelta" class="tab-pane fade">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <section class="panel">
+                                                <header class="panel-heading">
+                                                    <strong>Delivery</strong>
+                                                </header>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <div class="info-box dark-bg">
+                                                                <i class="fa fa-spinner"></i>
+                                                                <div class="count"><span id="id_delta_pending_order"></span></div>
+                                                                <div class="title">REMAINING PENDING ORDER</div>                       
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="info-box orange-bg">
+                                                                <i class="fa fa-truck"></i>
+                                                                <div class="count"><span id="id_delta_ongoing_order"></span></div>
+                                                                <div class="title">ONGOING ORDER</div>                      
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="info-box green-bg">
+                                                                <i class="fa fa-archive"></i>
+                                                                <div class="count"><span id="id_delta_delivered_order"></span></div>
+                                                                <div class="title">DELIVERED ORDER TODAY</div>                       
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3">
+                                                            <div class="info-box red-bg">
+                                                                <i class="fa fa-rotate-left"></i>
+                                                                <div class="count"><span id="id_delta_backloaded_order"></span></div>
+                                                                <div class="title">BACKLOADED ORDER TODAY</div>                      
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <section class="panel">
+                                                <header class="panel-heading">
+                                                    <strong>Stock</strong>
+                                                </header>
+                                                <div class="panel-body">
+                                                    <div class="row">
+                                                        <div class="col-md-3">
+                                                            <div class="info-box dark-bg">
+                                                                <i class="fa fa-database"></i>
+                                                                <div class="count"><span id="id_delta_diesel"></span></div>
+                                                                <div class="title">DIESEL STOCK (in liter)</div>                       
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </section>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+                        
+                    </div>
+                </div>
+                <!-- <div class="row">
                     <div class="col-md-12">
                         <div class="panel-group" id="accordion">
                             <div class="panel panel-default">
@@ -607,7 +751,7 @@
                             </div>
                         </div> 
                     </div>
-                </div>
+                </div> -->
             </section>
         </section>
     </section>
