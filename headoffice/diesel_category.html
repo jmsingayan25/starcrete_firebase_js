@@ -537,8 +537,13 @@
 
 			oilSnapshot.forEach(function(oilChildSnaphot){
 					
-				document.getElementById('id_Categorystock').innerHTML = Number(oilChildSnaphot.val().Liters).toLocaleString('en') + " liter(s)";
+				document.getElementById('id_Categorystock').innerHTML = Number(oilChildSnaphot.val().Liters).toLocaleString('en') + " Liter(s)";
 			
+				if(Number(oilChildSnaphot.val().Liters) <= Number(3500)){
+	                document.getElementById("id_Categorystock").style.color = "red";
+	            }else{
+	                document.getElementById("id_Categorystock").style.color = "";
+	            }
 			});
 		});
 	}

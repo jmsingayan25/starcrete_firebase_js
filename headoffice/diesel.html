@@ -344,7 +344,13 @@
             }else{
                 available_stock = Number(stockSnapshot.val().Liters).toLocaleString('en');
             }
-            document.getElementById('id_stock').innerHTML = available_stock + " liter(s)";    
+            document.getElementById('id_stock').innerHTML = available_stock + " liter(s)";
+
+            if(Number(stockSnapshot.val().Liters) <= Number(3500)){
+                document.getElementById("id_stock").style.color = "red";
+            }else{
+                document.getElementById("id_stock").style.color = "";
+            }
         });
 
         firebase.database().ref('incoming_diesel/'+plant).orderByChild('date').limitToLast(1).on('child_added', function(deliverySnapshot){
