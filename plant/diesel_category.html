@@ -378,6 +378,7 @@ function Go()
 {
      $(".se-pre-con").fadeIn("slow");
     event.preventDefault();
+    var submitValue = document.getElementById("selectsys").value;
     var myTbody = "";
 
     firebase.database().ref('incoming_diesel_category/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
@@ -729,7 +730,7 @@ function DeleteRowData(key,plant)
                                                 <label class = "col-md-3 control-label" style="margin-top: 5px"><strong>Category:</strong></label>
                                                 <div class = "col-md-9">
 
-                                                <select  onchange="displaycurrentCategory(this.value)" id="selectsys" class ="form-control">
+                                                <select id="selectsys" class ="form-control">
                                                 <!-- <option value="" disabled="" selected="" style="display:none">Choose Category</option> -->
                                               <!--   <option data-ng-repeat="d in data" data-ng-model="systems">
                                                 <option> -->
