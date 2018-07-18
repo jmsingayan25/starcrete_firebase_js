@@ -279,27 +279,33 @@
         }else{
 
             if(fromDate == ''){
-                fromDate = new Date();
+                newFromDate = new Date().toLocaleDateString('en');
+                fromDate = new Date(newFromDate);
             }else{
-                fromDate = new Date(fromDate);
+                newFromDate = new Date(fromDate).toLocaleDateString('en');
+                fromDate = new Date(newFromDate);
             }
 
             if(endDate == ''){
-                endDate = new Date();
+                newEndDate = new Date().toLocaleDateString('en');
+                endDate = new Date(newEndDate);
             }else{
-                endDate = new Date(endDate);
+                newEndDate = new Date(endDate).toLocaleDateString('en');
+                endDate = new Date(newEndDate);
             }
 
             // firebase.database().ref('purchase_order').orderByChild('date').startAt(fromDate).endAt(endDate).on('child_added', function(orderSnapshot){
             firebase.database().ref('purchase_order').orderByChild('reverseDate').on('child_added', function(orderSnapshot){
 
-                if(new Date(orderSnapshot.val().date) >= fromDate && new Date(orderSnapshot.val().date) <= endDate){
+                orderDate = new Date(orderSnapshot.val().date);
+
+                if(orderDate.getTime() >= fromDate.getTime() && orderDate.getTime() <= endDate.getTime()){
 
                     console.log(orderSnapshot.val());
                     firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
                         itemSnapshot.forEach(function(itemChildSnapshot){
 
-                            if(itemSnapshot.val().balance != 0){
+                            if(itemChildSnapshot.val().balance != 0){
                                 firebase.database().ref('purchase_order/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
                                     projectSnapshot.forEach(function(projectChildSnapshot){
 

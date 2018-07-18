@@ -241,22 +241,27 @@
         }else{
 
             if(fromDate == ''){
-                fromDate = new Date();
+                newFromDate = new Date().toLocaleDateString('en');
+                fromDate = new Date(newFromDate);
             }else{
-                fromDate = new Date(fromDate);
+                newFromDate = new Date(fromDate).toLocaleDateString('en');
+                fromDate = new Date(newFromDate);
             }
 
             if(endDate == ''){
-                endDate = new Date();
+                newEndDate = new Date().toLocaleDateString('en');
+                endDate = new Date(newEndDate);
             }else{
-                endDate = new Date(endDate);
+                newEndDate = new Date(endDate).toLocaleDateString('en');
+                endDate = new Date(newEndDate);
             }
 
-            // firebase.database().ref('history/'+plant).orderByChild('date').startAt(fromDate).endAt(endDate).once('value', function(historySnapshot){
             firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value', function(historySnapshot){
                 historySnapshot.forEach(function(historyChildSnapshot){
 
-                    if(new Date(historyChildSnapshot.val().date) >= fromDate && new Date(historyChildSnapshot.val().date) <= endDate){
+                    historyDate = new Date(historyChildSnapshot.val().date);
+
+                    if(historyDate.getTime() >= fromDate.getTime() && historyDate.getTime() <= endDate.getTime()){
 
                         text_history = historyChildSnapshot.val().history.toLowerCase();
                         text_type = historyChildSnapshot.val().type_of_transaction.toLowerCase();

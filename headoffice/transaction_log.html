@@ -8,7 +8,7 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="img/favicon.png">
 
-    <title>History - Starcrete Manufacturing Corporation</title>
+    <title>Transaction Log</title>
 
     <!-- Firebase App is always required and must be first -->
     <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
@@ -276,23 +276,31 @@
         }else{
 
             if(fromDate == ''){
-                fromDate = new Date();
+                newFromDate = new Date().toLocaleDateString('en');
+                fromDate = new Date(newFromDate);
             }else{
-                fromDate = new Date(fromDate);
+                newFromDate = new Date(fromDate).toLocaleDateString('en');
+                fromDate = new Date(newFromDate);
             }
 
             if(endDate == ''){
-                endDate = new Date();
+                newEndDate = new Date().toLocaleDateString('en');
+                endDate = new Date(newEndDate);
             }else{
-                endDate = new Date(endDate);
+                newEndDate = new Date(endDate).toLocaleDateString('en');
+                endDate = new Date(newEndDate);
             }
 
-            console.log(fromDate, endDate);
+            // console.log(fromDate, endDate);
 
             firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value', function(historySnapshot){
                 historySnapshot.forEach(function(historyChildSnapshot){
 
-                    if(new Date(historyChildSnapshot.val().date) >= fromDate && new Date(historyChildSnapshot.val().date) <= endDate){
+                    // console.log(new Date(historyChildSnapshot.val().date), fromDate);
+
+                    historyDate = new Date(historyChildSnapshot.val().date).getTime();
+
+                    if((historyDate >= fromDate.getTime() && historyDate <= endDate.getTime())){
 
                         console.log(historyChildSnapshot.key,historyChildSnapshot.val().date);
 

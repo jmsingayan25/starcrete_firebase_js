@@ -213,29 +213,32 @@
         	}else{
 
 	            if(fromDate == ''){
-	                fromDate = new Date();
-	            }else{
-	                fromDate = new Date(fromDate);
-	            }
+                    newFromDate = new Date().toLocaleDateString('en');
+                    fromDate = new Date(newFromDate);
+                }else{
+                    newFromDate = new Date(fromDate).toLocaleDateString('en');
+                    fromDate = new Date(newFromDate);
+                }
 
-	            if(endDate == ''){
-	                endDate = new Date();
-	            }else{
-	                endDate = new Date(endDate);
-	            }
+                if(endDate == ''){
+                    newEndDate = new Date().toLocaleDateString('en');
+                    endDate = new Date(newEndDate);
+                }else{
+                    newEndDate = new Date(endDate).toLocaleDateString('en');
+                    endDate = new Date(newEndDate);
+                }
 
 
 	            // firebase.database().ref('purchase_order').orderByChild('date').startAt(fromDate).endAt(endDate).on('child_added', function(orderSnapshot){
+                orderDate = new Date(orderSnapshot.val().date);
 
-				console.log('with data', plant, fromDate, endDate, search_text);
-
-                if(new Date(orderSnapshot.val().date) >= fromDate && new Date(orderSnapshot.val().date) <= endDate){
+                if(orderDate.getTime() >= fromDate.getTime() && orderDate.getTime() <= endDate.getTime()){
 
                     console.log(orderSnapshot.val());
                     firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
                         itemSnapshot.forEach(function(itemChildSnapshot){
 
-                            if(itemSnapshot.val().balance != 0){
+                            if(itemChildSnapshot.val().balance != 0){
                                 firebase.database().ref('purchase_order/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
                                     projectSnapshot.forEach(function(projectChildSnapshot){
 
