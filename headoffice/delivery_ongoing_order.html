@@ -81,6 +81,11 @@
     <script src="../js/jquery.slimscroll.min.js"></script>
     <script src="../js_config/function.js"></script>
 
+    <!-- Custom Javascript Datepicker -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
     <!-- =======================================================
     Theme Name: NiceAdmin
     Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -91,6 +96,8 @@
 	
 	var plant = getUrlParameter('plant');
     var timer = null;
+    var fromDate = "";
+    var endDate = "";
 
     function goAway() {
         clearTimeout(timer);
@@ -178,6 +185,13 @@
         // document.getElementById('id_summary_link').innerHTML = "<a href='summaryreport_deliveredorder.html?plant=" + plant + "' class='btn btn-info btn-md btn-block'><strong>MONTHLY DELIVERED ORDER</strong></a>";
 
         document.getElementById('id_breadcrumb').innerHTML = "<li><i class='fa fa-building'></i>" + plant + "</li><li><i class='icon_document'></i>Ongoing Delivery <span id='id_count_ongoing_order'></span></li><li><i class='fa fa-info-circle'></i><a href='delivery_pending_order.html?plant=" + plant + "'>Existing P.O. <span id='id_count_existing_po'></span></a></li><li><i class='fa fa-truck'></i><a href='delivery_delivered_order.html?plant=" + plant + "'>Delivered</a></li><li><i class='fa fa-reply'></i><a href='delivery_backloaded_order.html?plant=" + plant + "'>Backloaded</a></li>";
+
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'right'
+        }, function(start, end, label) {
+            fromDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
+        });
     }); 
 
     function submitForm(){
@@ -188,8 +202,8 @@
 
         var myTbody = "";
         var count = 1;
-        var fromDate = document.getElementById('start_date').value;
-        var endDate = document.getElementById('end_date').value;
+        // var fromDate = document.getElementById('start_date').value;
+        // var endDate = document.getElementById('end_date').value;
         var search_text = document.getElementById('search').value;
 
         if(fromDate == '' && endDate == ''){
@@ -522,8 +536,8 @@
 
     function printPo(){
 
-        var fromDate = document.getElementById('start_date').value;
-        var endDate = document.getElementById('end_date').value;
+        // var fromDate = document.getElementById('start_date').value;
+        // var endDate = document.getElementById('end_date').value;
         var search_text = document.getElementById('search').value;
 
         window.open('delivery_ongoing_order_print.html?plant='+plant+'&fromDate='+fromDate+'&endDate='+endDate+'&search_text='+search_text,'_blank');
@@ -708,7 +722,7 @@
                         <form class="form-inline" onsubmit="return submitForm();">
                             <header class="panel-heading">
                                 <div class="row" style="margin-bottom: 5px;">
-                                    <div class="col-md-2">
+                                    <!-- <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="start_date">From:</label>
                                             <div class="tooltips" data-original-title="Start date of transaction" data-placement="top">
@@ -723,7 +737,13 @@
                                                 <input type="date" id="end_date" name="end_date" class="form-control">
                                             </div>
                                         </div>
-                                    </div>  
+                                    </div>   -->
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <label for="start_date">Select Date Range:</label>
+                                            <input type="text" name="daterange" id="daterange" value="" class="form-control" autocomplete="off">
+                                        </div>
+                                    </div>
                                     <div class="input-group col-md-5" style="margin: 38px 0px 0px 0px;">
                                         <div class="tooltips" data-original-title="Search DR No., P.O. No., Item, Project Name, Address or Contact" data-placement="top">
                                             <input type="text" id="search" name="search" class="form-control" placeholder="Search...">

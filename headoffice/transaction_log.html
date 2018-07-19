@@ -81,6 +81,12 @@
     <script src="../js/jquery.slimscroll.min.js"></script>
     <script src="../js_config/function.js"></script>
 
+    <!-- Custom Javascript Datepicker -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+
     <!-- =======================================================
     Theme Name: NiceAdmin
     Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -91,6 +97,8 @@
 <script>
     
     var timer = null;
+    var fromDate = "";
+    var endDate = "";
 
     function goAway() {
         clearTimeout(timer);
@@ -195,6 +203,13 @@
             }
         });
 
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'right'
+        }, function(start, end, label) {
+            fromDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
+        });
+
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
     });
@@ -230,8 +245,9 @@
 
         var myTbody = "";
         var isPayloadDone = false;
-        var fromDate = document.getElementById('start_date').value;
-        var endDate = document.getElementById('end_date').value;
+        // var fromDate = document.getElementById('start_date').value;
+        // var endDate = document.getElementById('end_date').value;
+        console.log(fromDate, endDate);
         var plant = $('input[name="plant"]:checked').val();
         var search_text = document.getElementById('search').value;
 
@@ -241,7 +257,7 @@
 
             firebase.database().ref('history/'+plant).orderByChild('reverseDate').once('value', function(historySnapshot){
                 historySnapshot.forEach(function(historyChildSnapshot){
-                    console.log(historyChildSnapshot.key,historyChildSnapshot.val().date);
+                    // console.log(historyChildSnapshot.key,historyChildSnapshot.val().date);
 
                     text_history = historyChildSnapshot.val().history.toLowerCase();
                     text_type = historyChildSnapshot.val().type_of_transaction.toLowerCase();
@@ -302,7 +318,7 @@
 
                     if((historyDate >= fromDate.getTime() && historyDate <= endDate.getTime())){
 
-                        console.log(historyChildSnapshot.key,historyChildSnapshot.val().date);
+                        // console.log(historyChildSnapshot.key,historyChildSnapshot.val().date);
 
                         text_history = historyChildSnapshot.val().history.toLowerCase();
                         text_type = historyChildSnapshot.val().type_of_transaction.toLowerCase();
@@ -412,12 +428,12 @@
 
     function printPo(){
 
-        var fromDate = document.getElementById('start_date').value;
-        var endDate = document.getElementById('end_date').value;
+        // var fromDate = document.getElementById('start_date').value;
+        // var endDate = document.getElementById('end_date').value;
         var search_text = document.getElementById('search').value;
         var plant = $('input[name="plant"]:checked').val();
 
-        window.open('index_print.html?plant='+plant+'&fromDate='+fromDate+'&endDate='+endDate+'&search_text='+search_text,'_blank');
+        window.open('transaction_print.html?plant='+plant+'&fromDate='+fromDate+'&endDate='+endDate+'&search_text='+search_text,'_blank');
     }
 
 </script>
@@ -633,7 +649,7 @@
                                         </div>
                                     </div>
                                     <div class="row" style="margin-bottom: 5px;">
-                                        <div class="col-md-2">
+                                        <!-- <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="start_date">From:</label>
                                                 <div class="tooltips" data-original-title="Start date of transaction" data-placement="top">
@@ -648,7 +664,13 @@
                                                     <input type="date" id="end_date" name="end_date" class="form-control">
                                                 </div>
                                             </div>
-                                        </div>  
+                                        </div>  --> 
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="start_date">Select Date Range:</label>
+                                                <input type="text" name="daterange" id="daterange" value="" class="form-control" autocomplete="off">
+                                            </div>
+                                        </div>
                                         <div class="input-group col-md-5" style="margin: 38px 0px 0px 0px;">
                                             <div class="tooltips" data-original-title="Search Transaction or Description" data-placement="top">
                                                 <input type="text" id="search" name="search" class="form-control" placeholder="Search...">
@@ -667,7 +689,7 @@
                                     <thead>
                                         <tr class="filterable">
                                             <th colspan="3">
-                                                <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print</strong></button>
+                                                <button class="btn btn-info btn-md" onclick="printPo();"><strong><span class="fa fa-print"></span> Print Preview</strong></button>
                                                 <button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button>
                                             </th>
                                         </tr>

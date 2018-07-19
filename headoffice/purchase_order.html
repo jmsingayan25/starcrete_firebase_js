@@ -81,9 +81,10 @@
     <script src="../js/jquery.slimscroll.min.js"></script>
     <script src="../js_config/function.js"></script>
 
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.18/css/dataTables.bootstrap4.min.css">
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/1.10.18/js/dataTables.bootstrap4.min.js"></script>
+    <!-- Custom Javascript Datepicker -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 
     <!-- =======================================================
     Theme Name: NiceAdmin
@@ -95,6 +96,8 @@
     
     var plant = getUrlParameter('plant');
     var timer = null;
+    var fromDate = "";
+    var endDate = "";
 
     function goAway() {
         clearTimeout(timer);
@@ -179,6 +182,13 @@
         document.getElementById('page_header').innerHTML = "<a href='purchase_order.html?plant="+plant+"' style='color: inherit;'>"+ plant +" Pending Purchase Order</a>";
         document.getElementById('link_closed_po').innerHTML = "<i class='icon_document'></i><a href='purchase_order_closed.html?plant="+plant+"'>Closed P.O.</a>";
         document.getElementById('link_plant_name').innerHTML = "<i class='fa fa-building'></i>"+plant;
+
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'right'
+        }, function(start, end, label) {
+            fromDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
+        });
     });
 
     function submitForm(){
@@ -189,8 +199,8 @@
 
         var count = 1;
         var myTbody = "";
-        var fromDate = document.getElementById('start_date').value;
-        var endDate = document.getElementById('end_date').value;
+        // var fromDate = document.getElementById('start_date').value;
+        // var endDate = document.getElementById('end_date').value;
         var search_text = document.getElementById('search').value;
 
         // document.getElementById("orderList").innerHTML = "<tr><td colspan='8' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
@@ -405,7 +415,7 @@
  
         var myTbody = "";
         var count = 1;
-        var table = $('myTable').DataTable();
+        // var table = $('myTable').DataTable();
         
         firebase.database().ref('purchase_order').orderByChild('issued_po_plant').equalTo(plant).once('value').then(function(poSnapshot){
             if(poSnapshot.val() == null){
@@ -416,8 +426,6 @@
                 $(".se-pre-con").fadeOut("slow");
             }
         });
-
-        document.getElementById("orderList").innerHTML = "<tr><td colspan='8' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
 
         firebase.database().ref('purchase_order').orderByChild('reverseDate').on('child_added', function(orderSnapshot){
             firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').once('value', function(itemSnapshot){
@@ -525,8 +533,8 @@
 
     function printPo(){
 
-        var fromDate = document.getElementById('start_date').value;
-        var endDate = document.getElementById('end_date').value;
+        // var fromDate = document.getElementById('start_date').value;
+        // var endDate = document.getElementById('end_date').value;
         var search_text = document.getElementById('search').value;
 
         window.open('purchase_order_print.html?plant='+plant+'&fromDate='+fromDate+'&endDate='+endDate+'&search_text='+search_text,'_blank');
@@ -712,7 +720,7 @@
                             <form class="form-inline" onsubmit="return submitForm();">
                                 <header class="panel-heading">
                                     <div class="row" style="margin-bottom: 5px;">
-                                        <div class="col-md-2">
+                                        <!-- <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="start_date">From:</label>
                                                 <div class="tooltips" data-original-title="Start date of transaction" data-placement="top">
@@ -727,7 +735,13 @@
                                                     <input type="date" id="end_date" name="end_date" class="form-control">
                                                 </div>
                                             </div>
-                                        </div>  
+                                        </div> -->  
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="start_date">Select Date Range:</label>
+                                                <input type="text" name="daterange" id="daterange" value="" class="form-control" autocomplete="off">
+                                            </div>
+                                        </div>
                                         <div class="input-group col-md-5" style="margin: 38px 0px 0px 0px;">
                                             <div class="tooltips" data-original-title="Search P.O. No., Item, Project Name, Address or Contact" data-placement="top">
                                                 <input type="text" id="search" name="search" class="form-control" placeholder="Search...">

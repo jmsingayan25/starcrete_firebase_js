@@ -80,6 +80,11 @@
     <script src="../js/jquery.slimscroll.min.js"></script>
     <script src="../js_config/function.js"></script>
 
+    <!-- Custom Javascript Datepicker -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
     <!-- =======================================================
     Theme Name: NiceAdmin
     Theme URL: https://bootstrapmade.com/nice-admin-bootstrap-admin-html-template/
@@ -90,6 +95,8 @@
 <script>
 	
     var timer = null;
+    var fromDate = "";
+    var endDate = "";
 
     function goAway() {
         clearTimeout(timer);
@@ -176,6 +183,13 @@
             }
         });
 
+        $('input[name="daterange"]').daterangepicker({
+            opens: 'right'
+        }, function(start, end, label) {
+            fromDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
+        });
+
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
@@ -187,8 +201,8 @@
 
         var myTbody = "";
         var count = 1;
-        var fromDate = document.getElementById('start_date').value;
-        var endDate = document.getElementById('end_date').value;
+        // var fromDate = document.getElementById('start_date').value;
+        // var endDate = document.getElementById('end_date').value;
         var search_text = document.getElementById('search').value;
         var plant = document.getElementById('hidden_plant').value;
 
@@ -707,7 +721,7 @@
 	                        	<header class="panel-heading">
 	                                <div class="row" style="margin-bottom: 5px;">
                                         <span id="id_hidden_plant"></span>
-                                        <div class="col-md-2">
+                                        <!-- <div class="col-md-2">
                                             <div class="form-group">
                                                 <label for="start_date">From</label>
                                                 <div class="tooltips" data-original-title="Start date of transaction" data-placement="top">
@@ -722,7 +736,13 @@
                                                     <input type="date" id="end_date" name="end_date" class="form-control">
                                                 </div>
                                             </div>
-                                        </div>  
+                                        </div>  -->
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="start_date">Select Date Range:</label>
+                                                <input type="text" name="daterange" id="daterange" value="" class="form-control" autocomplete="off">
+                                            </div>
+                                        </div> 
                                         <div class="input-group col-md-5" style="margin: 38px 0px 0px 0px;">
                                             <div class="tooltips" data-original-title="Search DR No., P.O. No., Item, Project Name, Address or Contact" data-placement="top">
                                                 <input type="text" id="search" name="search" class="form-control" placeholder="Search...">

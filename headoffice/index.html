@@ -218,7 +218,7 @@
                 deliveredOrderSnapshot.forEach(function(deliveredOrderChildSnapshot){
 
                     if(deliveredOrderChildSnapshot.val().delivered_plant == 'Bravo'){
-                        console.log(new Date(deliveredOrderChildSnapshot.val().date).getTime(), currentDate.getTime());
+
                         if(new Date(deliveredOrderChildSnapshot.val().date).getTime() == currentDate.getTime()){
                             bravo_delivered_order_count++;
                         }
@@ -327,16 +327,11 @@
     }
 </script>
 <style>
-.panel-heading .accordion-toggle:after {
-    /* symbol for "opening" panels */
-    font-family: 'FontAwesome';  /* essential for enabling glyphicon */
-    content: "\f077";    /* adjust as needed, taken from bootstrap.css */
-    float: right;        /* adjust as needed */
-    color: grey;         /* adjust as needed */
-}
-.panel-heading .accordion-toggle.collapsed:after {
-    /* symbol for "collapsed" panels */
-    content: "\f078";    /* adjust as needed, taken from bootstrap.css */
+.view_details_btn{
+    color: #333; 
+    float: right; 
+    margin-right: -15px; 
+    margin-top: -25px;
 }
 </style>
 </head>
@@ -482,30 +477,66 @@
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <div class="info-box dark-bg">
-                                                                <i class="fa fa-spinner"></i>
-                                                                <div class="count"><span id="id_bravo_pending_order"></span></div>
-                                                                <div class="title">REMAINING PENDING ORDER</div>                       
+                                                                <div class="row">
+                                                                    <div class="col-md-6"><i class="fa fa-spinner"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_bravo_pending_order"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-2 col-md-10"><div class="title">REMAINING PENDING ORDER</div> </div>
+                                                                </div>                    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    <a href="delivery_pending_order.html?plant=Bravo" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
                                                             <div class="info-box orange-bg">
-                                                                <i class="fa fa-truck"></i>
-                                                                <div class="count"><span id="id_bravo_ongoing_order"></span></div>
-                                                                <div class="title">ONGOING ORDER</div>                      
+                                                                <div class="row">
+                                                                    <div class="col-md-6"><i class="fa fa-truck"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_bravo_ongoing_order"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-5 col-md-7"><div class="title">ONGOING ORDER</div></div>
+                                                                </div>                     
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    <a href="delivery_ongoing_order.html?plant=Bravo" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
                                                             <div class="info-box green-bg">
-                                                                <i class="fa fa-archive"></i>
-                                                                <div class="count"><span id="id_bravo_delivered_order"></span></div>
-                                                                <div class="title">DELIVERED ORDER TODAY</div>                       
+                                                                <div class="row">
+                                                                    <div class="col-md-6"><i class="fa fa-archive"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_bravo_delivered_order"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-3 col-md-9"><div class="title">DELIVERED ORDER TODAY</div> </div>
+                                                                </div>                       
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    <a href="delivery_delivered_order.html?plant=Bravo" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
                                                             <div class="info-box red-bg">
-                                                                <i class="fa fa-rotate-left"></i>
-                                                                <div class="count"><span id="id_bravo_backloaded_order"></span></div>
-                                                                <div class="title">BACKLOADED ORDER TODAY</div>                      
+                                                                <div class="row">
+                                                                    <div class="col-md-6"><i class="fa fa-rotate-left"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_bravo_backloaded_order"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-2 col-md-10"><div class="title">BACKLOADED ORDER TODAY</div> </div>
+                                                                </div>                     
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    <a href="delivery_backloaded_order.html?plant=Bravo" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -523,9 +554,18 @@
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <div class="info-box dark-bg">
-                                                                <i class="fa fa-database"></i>
-                                                                <div class="count"><span id="id_bravo_diesel"></span></div>
-                                                                <div class="title">DIESEL STOCK (in liter)</div>                       
+                                                                <div class="row">
+                                                                    <div class="col-md-4"><i class="fa fa-database"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_bravo_diesel"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-4 col-md-8"><div class="title">DIESEL STOCK (in liter)</div></div>
+                                                                </div>                    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    <a href="diesel.html?plant=Bravo" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -545,30 +585,68 @@
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <div class="info-box dark-bg">
-                                                                <i class="fa fa-spinner"></i>
-                                                                <div class="count"><span id="id_delta_pending_order"></span></div>
-                                                                <div class="title">REMAINING PENDING ORDER</div>                       
+                                                                <div class="row">
+                                                                    <div class="col-md-6"><i class="fa fa-spinner"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_delta_pending_order"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-2 col-md-10"><div class="title">REMAINING PENDING ORDER</div></div>
+                                                                </div>                     
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    <a href="delivery_pending_order.html?plant=Delta" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
                                                             <div class="info-box orange-bg">
-                                                                <i class="fa fa-truck"></i>
-                                                                <div class="count"><span id="id_delta_ongoing_order"></span></div>
-                                                                <div class="title">ONGOING ORDER</div>                      
+                                                                <div class="row">
+                                                                    <div class="col-md-6"><i class="fa fa-truck"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_delta_ongoing_order"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-5 col-md-7">
+                                                                        <div class="title">ONGOING ORDER</div>  
+                                                                    </div>
+                                                                </div>                    
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    <a href="delivery_ongoing_order.html?plant=Delta" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
                                                             <div class="info-box green-bg">
-                                                                <i class="fa fa-archive"></i>
-                                                                <div class="count"><span id="id_delta_delivered_order"></span></div>
-                                                                <div class="title">DELIVERED ORDER TODAY</div>                       
+                                                                <div class="row">
+                                                                    <div class="col-md-6"><i class="fa fa-archive"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_delta_delivered_order"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-3 col-md-9"><div class="title">DELIVERED ORDER TODAY</div></div>
+                                                                </div>                     
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    <a href="delivery_delivered_order.html?plant=Delta" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                         <div class="col-md-3">
                                                             <div class="info-box red-bg">
-                                                                <i class="fa fa-rotate-left"></i>
-                                                                <div class="count"><span id="id_delta_backloaded_order"></span></div>
-                                                                <div class="title">BACKLOADED ORDER TODAY</div>                      
+                                                                <div class="row">
+                                                                    <div class="col-md-6"><i class="fa fa-rotate-left"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_delta_backloaded_order"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-2 col-md-10"><div class="title">BACKLOADED ORDER TODAY</div> </div>
+                                                                </div>                      
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    <a href="delivery_backloaded_order.html?plant=Delta" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -586,9 +664,18 @@
                                                     <div class="row">
                                                         <div class="col-md-3">
                                                             <div class="info-box dark-bg">
-                                                                <i class="fa fa-database"></i>
-                                                                <div class="count"><span id="id_delta_diesel"></span></div>
-                                                                <div class="title">DIESEL STOCK (in liter)</div>                       
+                                                                <div class="row">
+                                                                    <div class="col-md-6"><i class="fa fa-database"></i></div>
+                                                                    <div class="col-md-6"><div class="count"><span id="id_delta_diesel"></span></div></div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-offset-4 col-md-8"><div class="title">DIESEL STOCK (in liter)</div></div>
+                                                                </div>                
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-11" style="">
+                                                                    <a href="diesel.html?plant=Delta" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>

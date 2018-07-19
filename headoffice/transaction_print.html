@@ -108,7 +108,7 @@
 
         }else if(fromDate == '' && endDate != ''){
 
-            firebase.database().ref('delivery_backloaded_order').orderByChild('date').limitToFirst(1).on('child_added', function(dateSnapshot){
+            firebase.database().ref('history/'+plant).orderByChild('date').limitToFirst(1).on('child_added', function(dateSnapshot){
                 console.log(dateSnapshot.val().date);
                 firstFromDate = dateSnapshot.val().date;
                 document.getElementById('id_date_range').innerHTML = "Date: " + dateFormat(firstFromDate) + " - " + dateFormat(endDate);
@@ -116,7 +116,7 @@
 
         }else{
 
-            firebase.database().ref('delivery_backloaded_order').orderByChild('date').limitToFirst(1).on('child_added', function(dateSnapshot){
+            firebase.database().ref('history/'+plant).orderByChild('date').limitToFirst(1).on('child_added', function(dateSnapshot){
                 console.log(dateSnapshot.val().date);
 
                 firstFromDate = dateSnapshot.val().date;

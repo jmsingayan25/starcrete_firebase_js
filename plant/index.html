@@ -283,6 +283,14 @@
     }
 
 </script>
+<style>
+.view_details_btn{
+    color: #333; 
+    float: right; 
+    margin-right: -15px; 
+    margin-top: -25px;
+}
+</style>
 </head>
 <body>
     <div class="se-pre-con"></div>
@@ -418,30 +426,74 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="info-box dark-bg">
-                                            <i class="fa fa-spinner"></i>
-                                            <div class="count"><span id="id_pending_order"></span></div>
-                                            <div class="title">REMAINING PENDING ORDER</div>                       
+                                            <div class="row">
+                                                <div class="col-md-6"><i class="fa fa-spinner"></i></div>
+                                                <div class="col-md-6"><div class="count"><span id="id_pending_order"></span></div></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-offset-3 col-md-9">
+                                                    <div class="title">REMAINING PENDING ORDER</div>                   
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-11" style="">
+                                                <a href="delivery_pending_order.html" class="view_details_btn"><strong>View Detail >></strong></a>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="info-box orange-bg">
-                                            <i class="fa fa-truck"></i>
-                                            <div class="count"><span id="id_ongoing_order"></span></div>
-                                            <div class="title">ONGOING ORDER</div>                      
+                                            <div class="row">
+                                                <div class="col-md-6"><i class="fa fa-truck"></i></div>
+                                                <div class="col-md-6"><div class="count"><span id="id_ongoing_order"></span></div></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-offset-5 col-md-6">
+                                                    <div class="title">ONGOING ORDER</div>
+                                                </div>
+                                            </div>          
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-11" style="">
+                                                <a href="delivery_ongoing_order.html" class="view_details_btn"><strong>View Detail >></strong></a>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="info-box green-bg">
-                                            <i class="fa fa-archive"></i>
-                                            <div class="count"><span id="id_delivered_order"></span></div>
-                                            <div class="title">DELIVERED ORDER TODAY</div>                       
+                                            <div class="row">
+                                                <div class="col-md-6"><i class="fa fa-archive"></i></div>
+                                                <div class="col-md-6"><div class="count"><span id="id_delivered_order"></span></div></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-offset-4 col-md-9">
+                                                    <div class="title">DELIVERED ORDER TODAY</div> 
+                                                </div>
+                                            </div>                  
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-11" style="">
+                                                <a href="delivery_delivered_order.html" class="view_details_btn"><strong>View Detail >></strong></a>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="col-md-3">
                                         <div class="info-box red-bg">
-                                            <i class="fa fa-rotate-left"></i>
-                                            <div class="count"><span id="id_backloaded_order"></span></div>
-                                            <div class="title">BACKLOADED ORDER TODAY</div>                      
+                                            <div class="row">
+                                                <div class="col-md-6"><i class="fa fa-rotate-left"></i></div>
+                                                <div class="col-md-6"><div class="count"><span id="id_backloaded_order"></span></div></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-offset-3 col-md-9">
+                                                    <div class="title">BACKLOADED ORDER TODAY</div>
+                                                </div>
+                                            </div>                   
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-11" style="">
+                                                <a href="delivery_backloaded_order.html" class="view_details_btn"><strong>View Detail >></strong></a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -459,9 +511,18 @@
                                 <div class="row">
                                     <div class="col-md-3">
                                         <div class="info-box dark-bg">
-                                            <i class="fa fa-database"></i>
-                                            <div class="count"><span id="id_diesel"></span> </div>
-                                            <div class="title">DIESEL STOCK (in Liter)</div>                       
+                                            <div class="row">
+                                                <div class="col-md-4"><i class="fa fa-database"></i></div>
+                                                <div class="col-md-6"><div class="count"><span id="id_diesel"></span> </div></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-offset-4 col-md-8"><div class="title">DIESEL STOCK (in Liter)</div></div>
+                                            </div>                 
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-11" style="">
+                                                <a href="diesel.html" class="view_details_btn"><strong>View Detail >></strong></a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
