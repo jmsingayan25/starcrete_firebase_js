@@ -257,10 +257,11 @@ function displaycurrentCategory(getCurrentCategory)
                 var date = dieselChildSnapshot.val().Date_Input;
                 var CurrentDate = new Date();
 
-                if(dateFormat(CurrentDate) == date)
-                {
+                //if(dateFormat(CurrentDate) == date)
+                //{
                 if (getCurrentCategory ==  getdataCurrentCategory) 
                 {
+                document.getElementById("Search_day").innerHTML = "";
                 document.getElementById("category_current").innerHTML = getCurrentCategory;
                 var truckno = dieselChildSnapshot.val().truck_no;
                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
@@ -308,7 +309,8 @@ function displaycurrentCategory(getCurrentCategory)
                     
                 }
 
-            }else
+            //}
+            else
             {
               if (getCurrentCategory ==  getdataCurrentCategory) 
                 {
@@ -338,6 +340,7 @@ function displaycurrentCategory(getCurrentCategory)
                                 $(".se-pre-con").fadeOut("slow"); 
                if (myTbody == "") 
                {
+                document.getElementById("Search_day").innerHTML = "";
                 document.getElementById("id_Categorystock").innerHTML = "";
                 document.getElementById("category_current").innerHTML = getCurrentCategory;
                     myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
@@ -392,6 +395,7 @@ function Go()
             }else
             {
             date = new Date().toLocaleDateString("en");
+             $(".se-pre-con").fadeOut("slow");
             }
             var GetStringDate = date.toString();
             var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
@@ -438,7 +442,7 @@ function Go()
 
             });
             }); 
-
+                 $(".se-pre-con").fadeOut("slow");
                 }
                 }
         });
@@ -451,7 +455,6 @@ function Go()
                      $(".se-pre-con").fadeOut("slow");
                 }else{document.getElementById("DieselList").innerHTML = myTbody; } 
                  document.getElementById("Search_day").innerHTML = searchDate;
-                                  $(".se-pre-con").fadeOut("slow");
     });
 }
 

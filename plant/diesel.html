@@ -251,8 +251,8 @@ function DisplayCurrentData()
 
                 var date = dieselChildSnapshot.val().Date_Input;
                 var CurrentDate = new Date();
-                 if(dateFormat(CurrentDate) == date)
-                {
+                 //if(dateFormat(CurrentDate) == date)
+                //{
                 var truckno = dieselChildSnapshot.val().truck_no;
                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
@@ -281,7 +281,7 @@ function DisplayCurrentData()
                 myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>";
              
                 $(".se-pre-con").fadeOut("slow");
-            }
+            //}
 
         });
         if (myTbody == "") 
