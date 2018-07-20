@@ -156,6 +156,45 @@
         }
     }
 
+    function submitForm(){
+
+        event.preventDefault();
+
+        var input_project_name = document.getElementById('update_project_name').value;
+        var input_project_address = document.getElementById('update_project_address').value;
+        var input_project_contact_name = $("input[name='update_contact_name[]']").map(function(){return $(this).val();}).get();
+        var input_project_contact_no = $("textarea[name='update_contact_no[]']").map(function(){return $(this).val();}).get();
+
+        var projectData = {
+            project_name: input_project_name.toUpperCase(),
+            project_address: input_project_address.toUpperCase()
+        };
+
+        // var postContact = firebase.database().ref("client_contact/"+clientKeyId+"/"+);
+        firebase.database().ref().child('project/'+clientKeyId+'/'+projectKeyId+'/contact').once('value').then(function(snapshot){
+
+            var count = 0;
+            snapshot.forEach(function(childSnapshot){
+
+                var postUpdateContactData = {
+                    project_contact_name: input_project_contact_name[count].toUpperCase(),
+                    project_contact_no: input_project_contact_no[count],
+                }
+
+                firebase.database().ref('project/'+clientKeyId+'/'+projectKeyId+'/contact/'+childSnapshot.key).update(postUpdateContactData);
+                count++;
+            });
+        });
+
+        if(firebase.database().ref().child('project/'+clientKeyId+'/'+projectKeyId).update(projectData)){
+            alert("Project info successfully update.");
+            window.location.href = "project.html?key=" + clientKeyId;
+        }else{
+            alert("Update Failed. Try again.");
+            window.location.reload();
+        }
+    }
+
 </script>
 </head>
 <body>
@@ -276,7 +315,7 @@
                     </div>
                 </div>
 
-                <form class="form-horizontal" role="form" id="form">
+                <form class="form-horizontal" role="form" id="form" onsubmit="if(confirm('Proceed?')){submitForm();}else{ event.preventDefault();}">
                 <div class="row">
                     <div class="col-md-6">
                         <section class="panel">
@@ -288,14 +327,14 @@
                                     <label for="update_project_name" class="col-md-4 control-label">Project Name</label>
                                     <div class="col-md-8">
                                         <!-- <input type="text" id="update_project_name" name="update_project_name" class="form-control" autocomplete="off" value="<?php echo $site_name; ?>" required> -->
-                                        <textarea name="update_project_name" id="update_project_name" class="form-control" style="resize: none;" required></textarea>
+                                        <textarea name="update_project_name" id="update_project_name" class="form-control" style="resize: none; text-transform: uppercase;" required></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="update_project_address" class="col-md-4 control-label">Project Address</label>
                                     <div class="col-md-8">
                                         <!-- <input type="text" id="update_project_address" name="update_project_address" class="form-control" autocomplete="off" value="<?php echo $site_address; ?>" required> -->
-                                        <textarea name="update_project_address" id="update_project_address" class="form-control" rows="5" style="resize: none;" required></textarea>
+                                        <textarea name="update_project_address" id="update_project_address" class="form-control" rows="5" style="resize: none; text-transform: uppercase;" required></textarea>
                                     </div>
                                 </div>
                                 <div class="form-group">

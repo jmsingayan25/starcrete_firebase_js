@@ -95,6 +95,7 @@
 <script>
 	
     var timer = null;
+    var input_date = getUrlParameter('date');
     var fromDate = "";
     var endDate = "";
 
@@ -408,45 +409,90 @@
                     projectSnapshot.forEach(function(projectChildSnapshot){
                         console.log(orderSnapshot.key, orderSnapshot.val());
 
-                        var dr_no = orderSnapshot.val().dr_no;
-                        var po_no = orderSnapshot.val().po_no;
-                        var item_no = orderSnapshot.val().item_no;
-                        var psi = orderSnapshot.val().psi || "";
+                        if(input_date == dateFormat(orderSnapshot.val().date)){
 
-                        if(psi != ""){
-                            psi_ext = " (" + psi + " psi)";
-                        }else{
-                            psi_ext = "";
-                        }
+                            var dr_no = orderSnapshot.val().dr_no;
+                            var po_no = orderSnapshot.val().po_no;
+                            var item_no = orderSnapshot.val().item_no;
+                            var psi = orderSnapshot.val().psi || "";
 
-                        var quantity = Number(orderSnapshot.val().quantity).toLocaleString('en');
-                        var project_name = projectChildSnapshot.val().project_name;
-                        var project_address = projectChildSnapshot.val().project_address;
-                        var status = orderSnapshot.val().status;
-                        var date = dateFormat(orderSnapshot.val().date);
+                            if(psi != ""){
+                                psi_ext = " (" + psi + " psi)";
+                            }else{
+                                psi_ext = "";
+                            }
 
-                        myTbody += "<tr><td><strong>" + count + "</strong></td>";
-                        myTbody += "<td><strong>" + dr_no + "</strong></td>";
-                        myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "'\"><strong>" + po_no + "</strong></div></td>";
-                        myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
-                        myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
-                        myTbody += "<td><strong>" + project_name + "</strong></td>";
-                        myTbody += "<td><strong>" + project_address + "</strong></td>";
-                        myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+                            var quantity = Number(orderSnapshot.val().quantity).toLocaleString('en');
+                            var project_name = projectChildSnapshot.val().project_name;
+                            var project_address = projectChildSnapshot.val().project_address;
+                            var status = orderSnapshot.val().status;
+                            var date = dateFormat(orderSnapshot.val().date);
 
-                        firebase.database().ref('delivery_delivered_order/'+orderSnapshot.key+'/contact').once('value', function(contactSnapshot){
-                            contactSnapshot.forEach(function(contactChildSnapshot){
+                            myTbody += "<tr><td><strong>" + count + "</strong></td>";
+                            myTbody += "<td><strong>" + dr_no + "</strong></td>";
+                            myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "'\"><strong>" + po_no + "</strong></div></td>";
+                            myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+                            myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+                            myTbody += "<td><strong>" + project_name + "</strong></td>";
+                            myTbody += "<td><strong>" + project_address + "</strong></td>";
+                            myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
 
-                                contact_name = contactChildSnapshot.val().contact_name;
-                                contact_no = contactChildSnapshot.val().contact_no;
-                                
-                                myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+                            firebase.database().ref('delivery_delivered_order/'+orderSnapshot.key+'/contact').once('value', function(contactSnapshot){
+                                contactSnapshot.forEach(function(contactChildSnapshot){
+
+                                    contact_name = contactChildSnapshot.val().contact_name;
+                                    contact_no = contactChildSnapshot.val().contact_no;
+                                    
+                                    myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+                                });
                             });
-                        });
 
-                        myTbody += "</td>";
-                        myTbody += "<td><strong>" + date + "</strong></td>";
-                        myTbody += "<td><span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
+                            myTbody += "</td>";
+                            myTbody += "<td><strong>" + date + "</strong></td>";
+                            myTbody += "<td><span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
+
+                        }else if(input_date == ''){
+
+                            var dr_no = orderSnapshot.val().dr_no;
+                            var po_no = orderSnapshot.val().po_no;
+                            var item_no = orderSnapshot.val().item_no;
+                            var psi = orderSnapshot.val().psi || "";
+
+                            if(psi != ""){
+                                psi_ext = " (" + psi + " psi)";
+                            }else{
+                                psi_ext = "";
+                            }
+
+                            var quantity = Number(orderSnapshot.val().quantity).toLocaleString('en');
+                            var project_name = projectChildSnapshot.val().project_name;
+                            var project_address = projectChildSnapshot.val().project_address;
+                            var status = orderSnapshot.val().status;
+                            var date = dateFormat(orderSnapshot.val().date);
+
+                            myTbody += "<tr><td><strong>" + count + "</strong></td>";
+                            myTbody += "<td><strong>" + dr_no + "</strong></td>";
+                            myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "'\"><strong>" + po_no + "</strong></div></td>";
+                            myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+                            myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+                            myTbody += "<td><strong>" + project_name + "</strong></td>";
+                            myTbody += "<td><strong>" + project_address + "</strong></td>";
+                            myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+
+                            firebase.database().ref('delivery_delivered_order/'+orderSnapshot.key+'/contact').once('value', function(contactSnapshot){
+                                contactSnapshot.forEach(function(contactChildSnapshot){
+
+                                    contact_name = contactChildSnapshot.val().contact_name;
+                                    contact_no = contactChildSnapshot.val().contact_no;
+                                    
+                                    myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+                                });
+                            });
+
+                            myTbody += "</td>";
+                            myTbody += "<td><strong>" + date + "</strong></td>";
+                            myTbody += "<td><span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
+                        }
                         // myTbody += "<td style='color: #388e3c;'><strong>" + status + "</strong></td></tr>";
 
                         document.getElementById('orderList').innerHTML = myTbody;

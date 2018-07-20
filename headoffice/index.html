@@ -124,6 +124,13 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
+        document.getElementById('link_bravo_delivered_order').innerHTML = "<a href='delivery_delivered_order.html?plant=Bravo&date=" + new Date().toLocaleDateString('en') + "' class='view_details_btn'><strong>View Detail >></strong></a>";
+        document.getElementById('link_delta_delivered_order').innerHTML = "<a href='delivery_delivered_order.html?plant=Delta&date=" + new Date().toLocaleDateString('en') + "' class='view_details_btn'><strong>View Detail >></strong></a>";
+
+        document.getElementById('link_bravo_backloaded_order').innerHTML = "<a href='delivery_backloaded_order.html?plant=Bravo&date=" + new Date().toLocaleDateString('en') + "' class='view_details_btn'><strong>View Detail >></strong></a>";
+
+        document.getElementById('link_delta_backloaded_order').innerHTML = "<a href='delivery_backloaded_order.html?plant=Delta&date=" + new Date().toLocaleDateString('en') + "' class='view_details_btn'><strong>View Detail >></strong></a>";
+
     });
 
     function tableData(){
@@ -519,7 +526,8 @@
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-md-11" style="">
-                                                                    <a href="delivery_delivered_order.html?plant=Bravo" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                    <!-- <a href="delivery_delivered_order.html?plant=Bravo" class="view_details_btn"><strong>View Detail >></strong></a> -->
+                                                                    <span id="link_bravo_delivered_order"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -535,7 +543,8 @@
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-md-11" style="">
-                                                                    <a href="delivery_backloaded_order.html?plant=Bravo" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                   <!--  <a href="delivery_backloaded_order.html?plant=Bravo" class="view_details_btn"><strong>View Detail >></strong></a> -->
+                                                                   <span id="link_bravo_backloaded_order"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -629,7 +638,8 @@
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-md-11" style="">
-                                                                    <a href="delivery_delivered_order.html?plant=Delta" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                    <!-- <a href="delivery_delivered_order.html?plant=Delta" class="view_details_btn"><strong>View Detail >></strong></a> -->
+                                                                    <span id="link_delta_delivered_order"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -645,7 +655,8 @@
                                                             </div>
                                                             <div class="row">
                                                                 <div class="col-md-11" style="">
-                                                                    <a href="delivery_backloaded_order.html?plant=Delta" class="view_details_btn"><strong>View Detail >></strong></a>
+                                                                    <!-- <a href="delivery_backloaded_order.html?plant=Delta" class="view_details_btn"><strong>View Detail >></strong></a> -->
+                                                                    <span id="link_delta_backloaded_order"></span>
                                                                 </div>
                                                             </div>
                                                         </div>
