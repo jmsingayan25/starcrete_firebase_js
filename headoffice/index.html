@@ -89,7 +89,7 @@
         clearTimeout(timer);
         timer = setTimeout(function() {
             // window.location.reload(true);
-            tableData();
+            // tableData();
         }, 60000);
     }
 
@@ -137,77 +137,79 @@
 
         $(".se-pre-con").fadeIn("fast");
 
+        /*START OF PENDING ORDER*/
         bravo_pending_order_count = 0;
         delta_pending_order_count = 0;
-        firebase.database().ref('purchase_order').once('value', function(pendingOrderSnapshot){
 
-            if(pendingOrderSnapshot.val() == null){
-                document.getElementById('id_bravo_pending_order').innerHTML = "0";
-                document.getElementById('id_delta_pending_order').innerHTML = "0";
-            }else{
+        firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
+            if(orderSnapshot.val() != null){
+                if(orderSnapshot.val().issued_po_plant == 'Bravo'){
+                    firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').on('child_added', function(itemSnapshot){
+                        if(itemSnapshot.val().balance != 0){
 
-                pendingOrderSnapshot.forEach(function(pendingOrderChildSnapshot){
+                            bravo_pending_order_count = bravo_pending_order_count + 1;
 
-                    if(pendingOrderChildSnapshot.val().issued_po_plant == 'Bravo'){
+                            document.getElementById('id_bravo_pending_order').innerHTML =  Number(bravo_pending_order_count).toLocaleString('en');
 
-                        firebase.database().ref('purchase_order/'+pendingOrderChildSnapshot.key+'/item').once('value', function(itemSnapshot){
-                            itemSnapshot.forEach(function(itemChildSnapshot){
+                        }
+                    });
+                }
+                if(orderSnapshot.val().issued_po_plant == 'Delta'){
+                    firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').on('child_added', function(itemSnapshot){
+                        if(itemSnapshot.val().balance != 0){
 
-                                if(itemChildSnapshot.val().balance != 0){
-                                    // console.log('purchase_order/'+pendingOrderChildSnapshot.key+'/item/'+itemChildSnapshot.key);
-                                    bravo_pending_order_count++;
-                                }  
-                            });
+                            delta_pending_order_count = delta_pending_order_count + 1;
 
-                            document.getElementById('id_bravo_pending_order').innerHTML = Number(bravo_pending_order_count).toLocaleString('en'); 
-                        });
-                    }
+                            document.getElementById('id_delta_pending_order').innerHTML = Number(delta_pending_order_count).toLocaleString('en');
 
-                    if(pendingOrderChildSnapshot.val().issued_po_plant == 'Delta'){
-                        
-
-                        firebase.database().ref('purchase_order/'+pendingOrderChildSnapshot.key+'/item').once('value', function(itemSnapshot){
-                            itemSnapshot.forEach(function(itemChildSnapshot){
-
-                                if(itemChildSnapshot.val().balance != 0){
-                                    // console.log('purchase_order/'+pendingOrderChildSnapshot.key+'/item/'+itemChildSnapshot.key);
-                                    delta_pending_order_count++;
-                                }
-
-                            });
-
-                            document.getElementById('id_delta_pending_order').innerHTML = Number(delta_pending_order_count).toLocaleString('en'); 
-                        }); 
-                    }
-                }); 
+                        }
+                    });
+                }
             }
         });
+
+        if(bravo_pending_order_count == 0){
+            document.getElementById('id_bravo_pending_order').innerHTML = bravo_pending_order_count;
+        }
+
+        if(delta_pending_order_count == 0){
+            document.getElementById('id_delta_pending_order').innerHTML = delta_pending_order_count;
+        }
+
+        /*END OF PENDING ORDER*/
+
+        /*START OF ONGOING ORDER*/
 
         bravo_ongoing_order_count = 0;
         delta_ongoing_order_count = 0;
-        firebase.database().ref('delivery_ongoing_order').once('value', function(ongoingOrderSnapshot){
 
-            if(ongoingOrderSnapshot.val() == null){
-                document.getElementById('id_bravo_ongoing_order').innerHTML = "0";
-                document.getElementById('id_delta_ongoing_order').innerHTML = "0";
-            }else{
-
-                ongoingOrderSnapshot.forEach(function(ongoingOrderChildSnapshot){
-
-                    if(ongoingOrderChildSnapshot.val().issued_dr_plant == 'Bravo'){
-                        bravo_ongoing_order_count++;
-                    }
-
-                    if(ongoingOrderChildSnapshot.val().issued_dr_plant == 'Delta'){
-                        delta_ongoing_order_count++;
-                    }
-                });
-
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo('Bravo').on('child_added', function(ongoingOrderSnapshot) {
+            if(ongoingOrderSnapshot.val() != null){
+                bravo_ongoing_order_count = bravo_ongoing_order_count + 1;
+                
                 document.getElementById('id_bravo_ongoing_order').innerHTML = Number(bravo_ongoing_order_count).toLocaleString('en');
+            }
+        });
 
+        if(bravo_ongoing_order_count == 0){
+            document.getElementById('id_bravo_ongoing_order').innerHTML = bravo_ongoing_order_count;
+        }
+
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo('Delta').on('child_added', function(ongoingOrderSnapshot) {
+            if(ongoingOrderSnapshot.val() != null){
+                delta_ongoing_order_count = delta_ongoing_order_count + 1;
+                
                 document.getElementById('id_delta_ongoing_order').innerHTML = Number(delta_ongoing_order_count).toLocaleString('en');
             }
         });
+
+        if(delta_ongoing_order_count == 0){
+            document.getElementById('id_delta_ongoing_order').innerHTML = delta_ongoing_order_count;
+        }
+
+        /*END OF ONGOING ORDER*/
+
+        /*START OF DELIVERED ORDER*/
 
         bravo_delivered_order_count = 0;
         delta_delivered_order_count = 0;
@@ -215,86 +217,94 @@
         newDate = new Date().toLocaleDateString('en');
         currentDate = new Date(newDate);
 
-        firebase.database().ref('delivery_delivered_order').once('value', function(deliveredOrderSnapshot){
+        firebase.database().ref('delivery_delivered_order').orderByChild('delivered_plant').equalTo('Bravo').on('child_added', function(deliveredOrderSnapshot) {
+            if(deliveredOrderSnapshot.val() != null){
 
-            if(deliveredOrderSnapshot.val() == null){
-                document.getElementById('id_bravo_delivered_order').innerHTML = "0";
-                document.getElementById('id_delta_delivered_order').innerHTML = "0";
-            }else{
-
-                deliveredOrderSnapshot.forEach(function(deliveredOrderChildSnapshot){
-
-                    if(deliveredOrderChildSnapshot.val().delivered_plant == 'Bravo'){
-
-                        if(new Date(deliveredOrderChildSnapshot.val().date).getTime() == currentDate.getTime()){
-                            bravo_delivered_order_count++;
-                        }
-                    }
-
-                    if(deliveredOrderChildSnapshot.val().delivered_plant == 'Delta'){
-
-                        if(new Date(deliveredOrderChildSnapshot.val().date).getTime() == currentDate.getTime()){
-                            delta_delivered_order_count++;
-                        }
-                    }
-                });
-
+                if(new Date(deliveredOrderSnapshot.val().date).getTime() == currentDate.getTime()){
+                    bravo_delivered_order_count = bravo_delivered_order_count + 1;
+                }
+    
                 document.getElementById('id_bravo_delivered_order').innerHTML = Number(bravo_delivered_order_count).toLocaleString('en');
+            }
+        });
 
+        if(bravo_delivered_order_count == 0){
+            document.getElementById('id_bravo_delivered_order').innerHTML = bravo_delivered_order_count;
+        }
+
+        firebase.database().ref('delivery_delivered_order').orderByChild('delivered_plant').equalTo('Delta').on('child_added', function(deliveredOrderSnapshot) {
+            if(deliveredOrderSnapshot.val() != null){
+
+                if(new Date(deliveredOrderSnapshot.val().date).getTime() == currentDate.getTime()){
+                    delta_delivered_order_count = delta_delivered_order_count + 1;
+                }
+    
                 document.getElementById('id_delta_delivered_order').innerHTML = Number(delta_delivered_order_count).toLocaleString('en');
             }
         });
 
+        if(delta_delivered_order_count == 0){
+            document.getElementById('id_delta_delivered_order').innerHTML = delta_delivered_order_count;
+        }
+
+        /*END OF DELIVERY ORDER*/
+
+        /*START OF BACKLOADED ORDER*/
+
         bravo_backloaded_order_count = 0;
         delta_backloaded_order_count = 0;
-        firebase.database().ref('delivery_backloaded_order').once('value', function(backloadedOrderSnapshot){
-            // console.log(backloadedOrderSnapshot.val());
 
-            if(backloadedOrderSnapshot.val() == null){
-                document.getElementById('id_bravo_backloaded_order').innerHTML = "0";
-                document.getElementById('id_delta_backloaded_order').innerHTML = "0";
-            }else{
-                
-                backloadedOrderSnapshot.forEach(function(backloadedOrderChildSnapshot){
+        firebase.database().ref('delivery_backloaded_order').orderByChild('backloaded_plant').equalTo('Bravo').on('child_added', function(backloadedOrderSnapshot) {
+            if(backloadedOrderSnapshot.val() != null){
 
-                    if(backloadedOrderChildSnapshot.val().backloaded_plant == 'Bravo'){
-                        bravo_backloaded_order_count++;
-                    }
-
-                    if(backloadedOrderChildSnapshot.val().backloaded_plant == 'Delta'){
-                        delta_backloaded_order_count++;
-                    }
-                });
-
+                if(new Date(backloadedOrderSnapshot.val().date).getTime() == currentDate.getTime()){
+                    bravo_backloaded_order_count = bravo_backloaded_order_count + 1;
+                }
+    
                 document.getElementById('id_bravo_backloaded_order').innerHTML = Number(bravo_backloaded_order_count).toLocaleString('en');
-
-                document.getElementById('id_delta_backloaded_order').innerHTML = Number(delta_backloaded_order_count).toLocaleString('en');
-
-            }    
+            }
         });
+
+        if(bravo_backloaded_order_count == 0){
+            document.getElementById('id_bravo_backloaded_order').innerHTML = bravo_backloaded_order_count;
+        }
+
+        firebase.database().ref('delivery_backloaded_order').orderByChild('backloaded_plant').equalTo('Delta').on('child_added', function(backloadedOrderSnapshot) {
+            if(backloadedOrderSnapshot.val() != null){
+
+                if(new Date(backloadedOrderSnapshot.val().date).getTime() == currentDate.getTime()){
+                    delta_backloaded_order_count = delta_backloaded_order_count + 1;
+                }
+    
+                document.getElementById('id_delta_backloaded_order').innerHTML = Number(delta_backloaded_order_count).toLocaleString('en');
+            }
+        });
+
+        if(delta_backloaded_order_count == 0){
+            document.getElementById('id_delta_backloaded_order').innerHTML = delta_backloaded_order_count;
+        }
+
+        /*END OF BACKLOADED ORDER*/
+
+        /*START OF DIESEL STOCK*/
 
         bravo_diesel_count = 0;
         delta_diesel_count = 0;
 
-        firebase.database().ref('available_diesel_category/').once('value', function(dieselSnapshot){
+        firebase.database().ref('available_stock/').on('child_added', function(dieselSnapshot){
 
-            dieselSnapshot.forEach(function(dieselChildSnapshot){
-                // console.log(dieselChildSnapshot.key);
+            if(dieselSnapshot.key == 'Bravo'){
+                bravo_diesel_count = dieselSnapshot.val().Liters;  
+            }
 
-                   
-                if(dieselChildSnapshot.key == 'Bravo'){
-                    bravo_diesel_count = dieselChildSnapshot.val().Liters;  
-                }
+            if(dieselSnapshot.key == 'Delta'){
+                delta_diesel_count = dieselSnapshot.val().Liters;
+            } 
 
-                if(dieselChildSnapshot.key == 'Delta'){
-                    delta_diesel_count = dieselChildSnapshot.val().Liters;
-                } 
+            document.getElementById('id_bravo_diesel').innerHTML = Number(bravo_diesel_count).toLocaleString('en');
+            document.getElementById('id_delta_diesel').innerHTML = Number(delta_diesel_count).toLocaleString('en');
 
-                document.getElementById('id_bravo_diesel').innerHTML = Number(bravo_diesel_count).toLocaleString('en');
-                document.getElementById('id_delta_diesel').innerHTML = Number(delta_diesel_count).toLocaleString('en');
-
-            });
-            $(".se-pre-con").fadeOut("slow");  
+            $(".se-pre-con").fadeOut("slow");
         });
     }
 
