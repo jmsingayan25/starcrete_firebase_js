@@ -717,13 +717,13 @@
                     firebase.database().ref('item').on('child_added', function(itemInsertSnapshot){
                         // console.log(itemInsertSnapshot.val());
                         var insert_item_no = itemInsertSnapshot.val().item;
-                        var position = itemInsertSnapshot.val().position;
+                        // var position = itemInsertSnapshot.val().position;
                         
 
                         var itemSummary = {
                             item_no: insert_item_no,
                             total: " ",
-                            position: position
+                            // position: position
                         }
 
                         firebase.database().ref('summary_delivered_order/'+plant+'/'+date_month_year+'/'+date_day+'/item').push(itemSummary);

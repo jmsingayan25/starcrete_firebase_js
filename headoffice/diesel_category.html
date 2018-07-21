@@ -147,7 +147,7 @@
             $filteredRows.hide();
             /* Prepend no-result row if all rows are filtered */
             if ($filteredRows.length === $rows.length) {
-                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="3" style="height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
+                 $table.find('tbody').prepend($('<tr class="no-result text-center"><td colspan="8" style="height: 100%;background: white; text-align:center; vertical-align:middle;"><h4><p class="text-muted">No data found</p></h4></td></tr>'));
             }
         });
 
@@ -251,13 +251,11 @@
 					myTbody += "<td><strong>" + time + "</strong></td>";
 					myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
 
-					document.getElementById('datePrint').style.display = 'inline';
 					document.getElementById('oilList').innerHTML = myTbody;
 				}else{
 
 					myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
-					document.getElementById('datePrint').style.display = 'none';
 					document.getElementById('oilList').innerHTML = myTbody;	
 				}
 			}
@@ -283,6 +281,7 @@
 
 	function selectCategory(oil_value){
 
+		$(".se-pre-con").fadeIn("fast");
 		var myTbody = "";
 		var selected_date = document.getElementById('date_view').value;
 		selected_date = new Date(selected_date).toLocaleDateString('en');
@@ -294,7 +293,7 @@
 			if(oilSnapshot.val().PickCategoryName == oil_value){
 
 				// console.log(oilSnapshot.val().PickCategoryName, oil_value);
-				date = oilSnapshot.val().date;
+				date = oilSnapshot.val().Date_Input;
 				category_name = oilSnapshot.val().PickCategoryName;
 				current_stock = Number(oilSnapshot.val().seperateCurrentStock).toLocaleString('en') + " liter(s)";
 				dr_no = oilSnapshot.val().dr_no || "";
@@ -330,10 +329,28 @@
 				myTbody += "<td><strong>" + quantity_out_ext + "</strong></td>";
 				myTbody += "<td><strong>" + current_stock + "</strong></td>";
 				myTbody += "<td><strong>" + time + "</strong></td>";
+				myTbody += "<td><strong>" + date + "</strong></td>";
 				myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
 
 				document.getElementById('oilList').innerHTML = myTbody;
 
+				$(".se-pre-con").fadeOut("slow");
+
+				firebase.database().ref('available_seperate_category/'+plant).orderByChild('CategoryName').equalTo(oil_value).once('value', function(oilSnapshot){
+
+					document.getElementById('id_Categorystock').innerHTML = "";
+
+					oilSnapshot.forEach(function(oilChildSnaphot){
+							
+						document.getElementById('id_Categorystock').innerHTML = Number(oilChildSnaphot.val().Liters).toLocaleString('en') + " Liter(s)";
+					
+						if(Number(oilChildSnaphot.val().Liters) <= Number(3500)){
+			                document.getElementById("id_Categorystock").style.color = "red";
+			            }else{
+			                document.getElementById("id_Categorystock").style.color = "";
+			            }
+					});
+				});
 			}
 			// else if(oil_value == ''){
 
@@ -385,6 +402,9 @@
 			myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
 			document.getElementById('oilList').innerHTML = myTbody;
+			document.getElementById('id_Categorystock').innerHTML = "";
+
+			$(".se-pre-con").fadeOut("slow");
 
 		}
 
@@ -412,18 +432,18 @@
 		var oil_dropdown = document.getElementById('oil_category');
 		var oil_value = oil_dropdown.options[oil_dropdown.selectedIndex].value;
 
-		if(search_date == ""){
-            search_date = new Date().toLocaleDateString();
-        }
-
-        var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
-        var searchDate = new Date(search_date).toLocaleDateString('en', options);
-
-        document.getElementById('search_date').innerHTML = searchDate;
+		// if(search_date == ""){
+  //           search_date = new Date().toLocaleDateString();
+  //       }
 
 		firebase.database().ref('incoming_diesel_category/'+plant).orderByChild('reverseDate').on('child_added', function(oilSnapshot){
 
 			if(search_date != ''){
+
+		        var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+		        var searchDate = new Date(search_date).toLocaleDateString('en', options);
+
+		        document.getElementById('search_date').innerHTML = searchDate;
 
 				if(oilSnapshot.val().PickCategoryName == oil_value && search_date_convert == oilSnapshot.val().Date_Input){
 
@@ -463,21 +483,20 @@
 					myTbody += "<td><strong>" + quantity_out_ext + "</strong></td>";
 					myTbody += "<td><strong>" + current_stock + "</strong></td>";
 					myTbody += "<td><strong>" + time + "</strong></td>";
+					myTbody += "<td><strong>" + date + "</strong></td>";
 					myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
 
-					document.getElementById('datePrint').style.display = 'inline';
 					document.getElementById('oilList').innerHTML = myTbody;
 
 					$(".se-pre-con").fadeOut("slow");
 				}
 			}else{
 
-				current_date = new Date();
-				console.log(current_date, oil_value);
+				document.getElementById('search_date').innerHTML = "";
 
-				if(oilSnapshot.val().PickCategoryName == oil_value && current_date == new Date(oilSnapshot.val().date)){
+				if(oilSnapshot.val().PickCategoryName == oil_value){
 
-					date = oilSnapshot.val().date;
+					date = oilSnapshot.val().Date_Input;
 					category_name = oilSnapshot.val().PickCategoryName;
 					current_stock = Number(oilSnapshot.val().seperateCurrentStock).toLocaleString('en') + " liter(s)";
 					dr_no = oilSnapshot.val().dr_no || "";
@@ -513,9 +532,9 @@
 					myTbody += "<td><strong>" + quantity_out_ext + "</strong></td>";
 					myTbody += "<td><strong>" + current_stock + "</strong></td>";
 					myTbody += "<td><strong>" + time + "</strong></td>";
+					myTbody += "<td><strong>" + date + "</strong></td>";
 					myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
 
-					document.getElementById('datePrint').style.display = 'inline';
 					document.getElementById('oilList').innerHTML = myTbody;
 
 					$(".se-pre-con").fadeOut("slow");
@@ -525,9 +544,7 @@
 
 		if(myTbody == ""){
 
-			myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-
-			document.getElementById('datePrint').style.display = 'none';
+			myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>"
 			document.getElementById('oilList').innerHTML = myTbody;
 
 			$(".se-pre-con").fadeOut("slow");
@@ -565,9 +582,7 @@
 	function datePrint(){
 
 		var date = document.getElementById('date_view').value;
-		if(date == ''){
-			date = new Date().toLocaleDateString('en');
-		}else{
+		if(date != ''){
 			date = new Date(date).toLocaleDateString('en');
 		}
 		var oil_dropdown = document.getElementById('oil_category');
@@ -773,8 +788,8 @@
                 				<table class="table table-bordered table-striped">
                 					<thead>
                 						<tr>
-                        					<th colspan="7">     
-                        						<button type="button" class="btn btn-info btn-md" id="datePrint" onclick= "datePrint()" style="float: right; display: none;"><span class="fa fa-print"></span> <strong>Print Preview</strong></button>                   						
+                        					<th colspan="8">     
+                        						<button type="button" class="btn btn-info btn-md" id="datePrint" onclick= "datePrint()" style="float: right;"><span class="fa fa-print"></span> <strong>Print Preview</strong></button>                   						
                                                 <span>Available stock as of today: <span id="id_stock">
                                                 </span></span><br>
                                                <!--  <span id = "category_current">Category</span><span> Available stock as of today: <span id="id_Categorystock"> -->
@@ -787,11 +802,11 @@
                         					</th>
                         				</tr>
                         				<tr class="filterable">
-                        					<th colspan="7">
+                        					<th colspan="8">
                         						<div class="row">
                         							<label for="oil_category" class="col-md-1 control-label"><strong>Category: </strong></label>
                         							<div class="col-md-2">
-                        								<select id="oil_category" class="form-control">
+                        								<select id="oil_category" class="form-control" onchange="selectCategory(this.value);">
 			                        						<option value="">Select</option>
 			                        					</select>
                         							</div>
@@ -809,6 +824,7 @@
 											<th class="col-md-1" style="text-align:center; color:white">Current Stock</th>
 											<!-- <th class="col-md-2"><input type="text" class="form-control" placeholder="Address" disabled ></th> -->
 											<th class="col-md-1" style="text-align:center; color:white">Time</th>
+											<th class="col-md-1" style="text-align:center; color:white">Date</th>
                                             <th class="col-md-1" style="text-align:center; color:white">DR No.</th>
 										</tr>
                 					</thead>

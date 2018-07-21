@@ -184,19 +184,21 @@
         var myTbody = "";
         var selectedDate = document.getElementById('date_view').value;
 
-        if(selectedDate == ""){
-            selectedDate = new Date().toLocaleDateString();
-        }
+        // if(selectedDate == ""){
+        //     selectedDate = new Date().toLocaleDateString();
+        // }
 
-        var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
-        var searchDate = new Date(selectedDate).toLocaleDateString('en', options);
-
-        document.getElementById('search_date').innerHTML = searchDate;
+        
 
         firebase.database().ref('incoming_diesel/'+plant).orderByChild('reverseDate').on('child_added', function(dieselSnapshot){
             // console.log(dieselSnapshot.val(), dateFormat(selectedDate));
 
             if(dieselSnapshot.val().Date_Input == dateFormat(selectedDate)){
+
+                var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+                var searchDate = new Date(selectedDate).toLocaleDateString('en', options);
+
+                document.getElementById('search_date').innerHTML = searchDate;
 
                 currentstockCopy = Number(dieselSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
                 date = dieselSnapshot.val().date;
@@ -205,6 +207,7 @@
                 quantity_in = dieselSnapshot.val().quantity_in || "";
                 supplier = dieselSnapshot.val().supplier || "";
                 time = dieselSnapshot.val().time;
+                date = dieselSnapshot.val().Date_Input;
                 truck_no = dieselSnapshot.val().truck_no;
 
                 quantity_out = dieselSnapshot.val().quantity_out || "";
@@ -236,6 +239,55 @@
                 myTbody += "<td><strong>" + currentstockCopy + "</strong></td>";
                 myTbody += "<td><strong>" + address + "</strong></td>";
                 myTbody += "<td><strong>" + time + "</strong></td>";
+                myTbody += "<td><strong>" + date + "</strong></td>";
+                myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
+
+                document.getElementById('dieselList').innerHTML = myTbody;
+
+            }else if(selectedDate == ""){
+
+                document.getElementById('search_date').innerHTML = "";
+
+                currentstockCopy = Number(dieselSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
+                date = dieselSnapshot.val().date;
+                dr_no = dieselSnapshot.val().dr_no || "";
+                po_no = dieselSnapshot.val().po_no;
+                quantity_in = dieselSnapshot.val().quantity_in || "";
+                supplier = dieselSnapshot.val().supplier || "";
+                time = dieselSnapshot.val().time;
+                date = dieselSnapshot.val().Date_Input;
+                truck_no = dieselSnapshot.val().truck_no;
+
+                quantity_out = dieselSnapshot.val().quantity_out || "";
+                address = dieselSnapshot.val().destination || "";
+                operator = dieselSnapshot.val().operator || "";
+
+                if(quantity_in != ""){
+                    quantity_in_string = Number(quantity_in).toLocaleString('en') +  " liter(s)";
+                }else{
+                    quantity_in_string = "";
+                }
+
+                if(quantity_out != ""){
+                    quantity_out_string = Number(quantity_out).toLocaleString('en') + " liter(s)";
+                }else{
+                    quantity_out_string = "";
+                }
+
+                if(supplier != ""){
+                    person = supplier;
+                }else if(operator != ""){
+                    person = operator
+                }
+
+                myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
+                myTbody += "<td><strong>" + person + "</strong></td>";
+                myTbody += "<td><strong>" + quantity_in_string + "</strong></td>";
+                myTbody += "<td><strong>" + quantity_out_string + "</strong></td>";
+                myTbody += "<td><strong>" + currentstockCopy + "</strong></td>";
+                myTbody += "<td><strong>" + address + "</strong></td>";
+                myTbody += "<td><strong>" + time + "</strong></td>";
+                myTbody += "<td><strong>" + date + "</strong></td>";
                 myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
 
                 document.getElementById('dieselList').innerHTML = myTbody;
@@ -245,7 +297,7 @@
 
         if(myTbody == ""){
 
-            myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+            myTbody = "<tr><td colspan='9' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
             document.getElementById('datePrint').style.display = 'none';
             document.getElementById('dieselList').innerHTML = myTbody;
@@ -270,7 +322,7 @@
 
         document.getElementById("dieselList").innerHTML = "<tr><td colspan='8' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
         
-        firebase.database().ref('incoming_diesel/'+plant).orderByChild('Date_Input').equalTo(currentDate).once('value', function(dieselSnapshot){
+        firebase.database().ref('incoming_diesel/'+plant).once('value', function(dieselSnapshot){
 
             // console.log(dieselSnapshot.val(), dateFormat(currentDate));
             if(dieselSnapshot.val() == null){
@@ -288,7 +340,7 @@
         firebase.database().ref('incoming_diesel/'+plant).orderByChild('reverseDate').on('child_added', function(dieselSnapshot){
 
             // console.log(dieselSnapshot.val().date, dateFormat(currentDate));
-            if(dieselSnapshot.val().Date_Input == dateFormat(currentDate)){
+            // if(dieselSnapshot.val().Date_Input == dateFormat(currentDate)){
 
                 currentstockCopy = Number(dieselSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
                 date = dieselSnapshot.val().date;
@@ -298,6 +350,7 @@
                 supplier = dieselSnapshot.val().supplier || "";
                 time = dieselSnapshot.val().time;
                 truck_no = dieselSnapshot.val().truck_no;
+                date = dieselSnapshot.val().Date_Input;
 
                 quantity_out = dieselSnapshot.val().quantity_out || "";
                 address = dieselSnapshot.val().destination || "";
@@ -328,11 +381,12 @@
                 myTbody += "<td><strong>" + currentstockCopy + "</strong></td>";
                 myTbody += "<td><strong>" + address + "</strong></td>";
                 myTbody += "<td><strong>" + time + "</strong></td>";
+                myTbody += "<td><strong>" + date + "</strong></td>";
                 myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
 
                 document.getElementById('datePrint').style.display = 'inline';
                 document.getElementById('dieselList').innerHTML = myTbody;
-            }
+            // }
 
             $(".se-pre-con").fadeOut("slow");
         });
@@ -392,7 +446,7 @@ function datePrint(){
 
     }else{
 
-        var date = new Date().toLocaleDateString('en');
+        var date = "";
         var GetStringDate = date.toString();
         
         firebase.database().ref().child("diesel_current_date_print/" + plant).once('value',function(Snapshot){
@@ -600,7 +654,7 @@ function datePrint(){
                                             </th>
                                         </tr> -->
                         				<tr class="filterable">
-                        					<th colspan="8">
+                        					<th colspan="9">
                                                 <input type="hidden" id="hidden_stock">
                                                 <button type="button" class="btn btn-info btn-md" id="datePrint" onclick= "datePrint()" style="float: left; display: none;"><span class="fa fa-print"></span> <strong>Print Preview</strong></button>
                         						<button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button></span><br>
@@ -615,6 +669,7 @@ function datePrint(){
 											<th class="col-md-1" style="color: white;">Current Stock</th>
 											<th class="col-md-2"><input type="text" class="form-control" placeholder="Address" disabled></th>
                                             <th class="col-md-1" style="color: white;">Time</th>
+                                            <th class="col-md-1" style="color: white;">Date</th>
 											<th class="col-md-1" style="color: white;">Dr No.</th>
 										</tr>
                         			</thead>
