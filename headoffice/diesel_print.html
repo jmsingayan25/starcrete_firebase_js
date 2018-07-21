@@ -83,7 +83,7 @@
 <script>
 	
     var plant = getUrlParameter("plant");
-    var date = getUrlParameter("date");
+    var date_pass = getUrlParameter("date");
 
 	$(document).ready(function(){
 
@@ -175,8 +175,8 @@
 
                     var Date_Input = dieselChildSnapshot.val().Date_Input;
                     var CurrentDate = new Date();
-
-                    if(Date_Input == date){
+                    console.log(Date_Input, date_pass);
+                    if(Date_Input == date_pass){
 
                         var truckno = dieselChildSnapshot.val().truck_no;
                         var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
@@ -205,7 +205,7 @@
                         myTbody += "<td><strong>" + date + "</strong></td>";
                         myTbody += "<td><strong>" + drno + "</strong></td></tr>";
 
-                    }else{
+                    }else if(date_pass == ""){
 
                         var truckno = dieselChildSnapshot.val().truck_no;
                         var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
@@ -237,7 +237,7 @@
 
                 });
                 if (myTbody == ""){
-                    myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+                    myTbody ="<tr><td colspan='9' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
                     document.getElementById("DieselList").innerHTML = myTbody; 
                 }else{document.getElementById("DieselList").innerHTML = myTbody; }
                 

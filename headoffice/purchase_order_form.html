@@ -374,6 +374,7 @@
         var quantity = $("input[name='quantity[]']").map(function(){return $(this).val();}).get();
         var date = new Date().toLocaleDateString('en');
         var time = new Date().toLocaleTimeString('en');
+        var time_timestamp = new Date(date).getTime();
 
         firebase.database().ref('project/'+client_id+'/'+project_id).once('value').then(function(snapshot){
             // console.log(snapshot.val());

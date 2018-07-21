@@ -93,7 +93,7 @@
 	var plant = getUrlParameter('plant');
 	var date = getUrlParameter('date');
 	var category = getUrlParameter('category');	
-	category = category.replace("%","");
+	category = category.replace("%20"," ");
 
 	$(document).ready(function(){
 
@@ -113,94 +113,101 @@
 
 		var myTbody = "";
 
-		firebase.database().ref('incoming_diesel_category/'+plant).orderByChild('Date_Input').on('child_added', function(oilSnapshot){
+		firebase.database().ref('incoming_diesel_category/'+plant).orderByChild('reverseDate').on('child_added', function(oilSnapshot){
 
 			console.log(oilSnapshot.val().PickCategoryName, category, oilSnapshot.val().Date_Input, date);
-			if(oilSnapshot.val().PickCategoryName == category && oilSnapshot.val().Date_Input == date){
 
-				// console.log(oilSnapshot.val().PickCategoryName, category);
-				date = oilSnapshot.val().Date_Input;
-				category_name = oilSnapshot.val().PickCategoryName;
-				current_stock = Number(oilSnapshot.val().seperateCurrentStock).toLocaleString('en') + " liter(s)";
-				dr_no = oilSnapshot.val().dr_no || "";
-				po_no = oilSnapshot.val().po_no;
-				quantity_in = Number(oilSnapshot.val().quantity_in).toLocaleString('en');
-				quantity_out = Number(oilSnapshot.val().quantity_out).toLocaleString('en');
-				supplier = oilSnapshot.val().supplier || "";
-				operator = oilSnapshot.val().operator || "";
-				time = oilSnapshot.val().time;
-				truck_no = oilSnapshot.val().truck_no;
+            if(oilSnapshot.val().PickCategoryName == category){
 
-				if(quantity_in == "NaN"){
-					quantity_in_ext = "";
-				}else{
-					quantity_in_ext = quantity_in + " liter(s)";
-				}
+                if(oilSnapshot.val().Date_Input == date){
 
-				if(quantity_out == "NaN"){
-					quantity_out_ext = "";
-				}else{
-					quantity_out_ext = quantity_out + " liter(s)";
-				}
+                    // console.log(oilSnapshot.val().PickCategoryName, category);
+                    Date_Input = oilSnapshot.val().Date_Input;
+                    category_name = oilSnapshot.val().PickCategoryName;
+                    current_stock = Number(oilSnapshot.val().seperateCurrentStock).toLocaleString('en') + " liter(s)";
+                    dr_no = oilSnapshot.val().dr_no || "";
+                    po_no = oilSnapshot.val().po_no;
+                    quantity_in = Number(oilSnapshot.val().quantity_in).toLocaleString('en');
+                    quantity_out = Number(oilSnapshot.val().quantity_out).toLocaleString('en');
+                    supplier = oilSnapshot.val().supplier || "";
+                    operator = oilSnapshot.val().operator || "";
+                    time = oilSnapshot.val().time;
+                    truck_no = oilSnapshot.val().truck_no;
 
-				if(supplier != ""){
-                    person = supplier;
-                }else if(operator != ""){
-                    person = operator
+                    if(quantity_in == "NaN"){
+                        quantity_in_ext = "";
+                    }else{
+                        quantity_in_ext = quantity_in + " liter(s)";
+                    }
+
+                    if(quantity_out == "NaN"){
+                        quantity_out_ext = "";
+                    }else{
+                        quantity_out_ext = quantity_out + " liter(s)";
+                    }
+
+                    if(supplier != ""){
+                        person = supplier;
+                    }else if(operator != ""){
+                        person = operator
+                    }
+
+                    myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
+                    myTbody += "<td><strong>" + person + "</strong></td>";
+                    myTbody += "<td><strong>" + quantity_in_ext + "</strong></td>";
+                    myTbody += "<td><strong>" + quantity_out_ext + "</strong></td>";
+                    myTbody += "<td><strong>" + current_stock + "</strong></td>";
+                    myTbody += "<td><strong>" + time + "</strong></td>";
+                    myTbody += "<td><strong>" + Date_Input + "</strong></td>";
+                    myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
+
+                    document.getElementById('oilList').innerHTML = myTbody;
+
+                }else if (date == ''){
+
+                    Date_Input = oilSnapshot.val().Date_Input;
+                    category_name = oilSnapshot.val().PickCategoryName;
+                    current_stock = Number(oilSnapshot.val().seperateCurrentStock).toLocaleString('en') + " liter(s)";
+                    dr_no = oilSnapshot.val().dr_no || "";
+                    po_no = oilSnapshot.val().po_no;
+                    quantity_in = Number(oilSnapshot.val().quantity_in).toLocaleString('en');
+                    quantity_out = Number(oilSnapshot.val().quantity_out).toLocaleString('en');
+                    supplier = oilSnapshot.val().supplier || "";
+                    operator = oilSnapshot.val().operator || "";
+                    time = oilSnapshot.val().time;
+                    truck_no = oilSnapshot.val().truck_no;
+
+                    if(quantity_in == "NaN"){
+                        quantity_in_ext = "";
+                    }else{
+                        quantity_in_ext = quantity_in + " liter(s)";
+                    }
+
+                    if(quantity_out == "NaN"){
+                        quantity_out_ext = "";
+                    }else{
+                        quantity_out_ext = quantity_out + " liter(s)";
+                    }
+
+                    if(supplier != ""){
+                        person = supplier;
+                    }else if(operator != ""){
+                        person = operator
+                    }
+
+                    myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
+                    myTbody += "<td><strong>" + person + "</strong></td>";
+                    myTbody += "<td><strong>" + quantity_in_ext + "</strong></td>";
+                    myTbody += "<td><strong>" + quantity_out_ext + "</strong></td>";
+                    myTbody += "<td><strong>" + current_stock + "</strong></td>";
+                    myTbody += "<td><strong>" + time + "</strong></td>";
+                    myTbody += "<td><strong>" + Date_Input + "</strong></td>";
+                    myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
+
+                    document.getElementById('oilList').innerHTML = myTbody;
                 }
 
-				myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
-				myTbody += "<td><strong>" + person + "</strong></td>";
-				myTbody += "<td><strong>" + quantity_in_ext + "</strong></td>";
-				myTbody += "<td><strong>" + quantity_out_ext + "</strong></td>";
-				myTbody += "<td><strong>" + current_stock + "</strong></td>";
-				myTbody += "<td><strong>" + time + "</strong></td>";
-				myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
-
-				document.getElementById('oilList').innerHTML = myTbody;
-
-			}else{
-
-                date = oilSnapshot.val().Date_Input;
-                category_name = oilSnapshot.val().PickCategoryName;
-                current_stock = Number(oilSnapshot.val().seperateCurrentStock).toLocaleString('en') + " liter(s)";
-                dr_no = oilSnapshot.val().dr_no || "";
-                po_no = oilSnapshot.val().po_no;
-                quantity_in = Number(oilSnapshot.val().quantity_in).toLocaleString('en');
-                quantity_out = Number(oilSnapshot.val().quantity_out).toLocaleString('en');
-                supplier = oilSnapshot.val().supplier || "";
-                operator = oilSnapshot.val().operator || "";
-                time = oilSnapshot.val().time;
-                truck_no = oilSnapshot.val().truck_no;
-
-                if(quantity_in == "NaN"){
-                    quantity_in_ext = "";
-                }else{
-                    quantity_in_ext = quantity_in + " liter(s)";
-                }
-
-                if(quantity_out == "NaN"){
-                    quantity_out_ext = "";
-                }else{
-                    quantity_out_ext = quantity_out + " liter(s)";
-                }
-
-                if(supplier != ""){
-                    person = supplier;
-                }else if(operator != ""){
-                    person = operator
-                }
-
-                myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
-                myTbody += "<td><strong>" + person + "</strong></td>";
-                myTbody += "<td><strong>" + quantity_in_ext + "</strong></td>";
-                myTbody += "<td><strong>" + quantity_out_ext + "</strong></td>";
-                myTbody += "<td><strong>" + current_stock + "</strong></td>";
-                myTbody += "<td><strong>" + time + "</strong></td>";
-                myTbody += "<td><strong>" + date + "</strong></td>";
-                myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
-
-                document.getElementById('oilList').innerHTML = myTbody;
+                $(".se-pre-con").fadeOut("slow");
             }
 
             $(".se-pre-con").fadeOut("slow");
