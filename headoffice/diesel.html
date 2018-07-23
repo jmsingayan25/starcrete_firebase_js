@@ -6,7 +6,7 @@
     <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
     <meta name="author" content="GeeksLabs">
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
-    <link rel="shortcut icon" href="img/favicon.png">
+    <link rel="shortcut icon" href="../img/favicon.png">
 
 	<title>Diesel</title>
 
@@ -197,117 +197,119 @@
 
         
 
-        firebase.database().ref('incoming_diesel/'+plant).orderByChild('reverseDate').on('child_added', function(dieselSnapshot){
+        firebase.database().ref('incoming_diesel/'+plant).orderByChild('reverseDate').once('value', function(dieselSnapshot){
             // console.log(dieselSnapshot.val(), dateFormat(selectedDate));
+            dieselSnapshot.forEach(function(dieselChildSnapshot){
 
-            if(dieselSnapshot.val().Date_Input == dateFormat(selectedDate)){
+                if(dieselChildSnapshot.val().Date_Input == dateFormat(selectedDate)){
 
-                currentstockCopy = Number(dieselSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
-                date = dieselSnapshot.val().date;
-                dr_no = dieselSnapshot.val().dr_no || "";
-                po_no = dieselSnapshot.val().po_no;
-                quantity_in = dieselSnapshot.val().quantity_in || "";
-                supplier = dieselSnapshot.val().supplier || "";
-                time = dieselSnapshot.val().time;
-                date = dieselSnapshot.val().Date_Input;
-                truck_no = dieselSnapshot.val().truck_no;
+                    currentstockCopy = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
+                    date = dieselChildSnapshot.val().date;
+                    dr_no = dieselChildSnapshot.val().dr_no || "";
+                    po_no = dieselChildSnapshot.val().po_no;
+                    quantity_in = dieselChildSnapshot.val().quantity_in || "";
+                    supplier = dieselChildSnapshot.val().supplier || "";
+                    time = dieselChildSnapshot.val().time;
+                    date = dieselChildSnapshot.val().Date_Input;
+                    truck_no = dieselChildSnapshot.val().truck_no;
 
-                quantity_out = dieselSnapshot.val().quantity_out || "";
-                address = dieselSnapshot.val().destination || "";
-                operator = dieselSnapshot.val().operator || "";
+                    quantity_out = dieselChildSnapshot.val().quantity_out || "";
+                    address = dieselChildSnapshot.val().destination || "";
+                    operator = dieselChildSnapshot.val().operator || "";
 
-                if(quantity_in != ""){
-                    quantity_in_string = Number(quantity_in).toLocaleString('en') +  " liter(s)";
-                }else{
-                    quantity_in_string = "";
+                    if(quantity_in != ""){
+                        quantity_in_string = Number(quantity_in).toLocaleString('en') +  " liter(s)";
+                    }else{
+                        quantity_in_string = "";
+                    }
+
+                    if(quantity_out != ""){
+                        quantity_out_string = Number(quantity_out).toLocaleString('en') + " liter(s)";
+                    }else{
+                        quantity_out_string = "";
+                    }
+
+                    if(supplier != ""){
+                        person = supplier;
+                    }else if(operator != ""){
+                        person = operator
+                    }
+
+                    myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
+                    myTbody += "<td><strong>" + person + "</strong></td>";
+                    myTbody += "<td><strong>" + quantity_in_string + "</strong></td>";
+                    myTbody += "<td><strong>" + quantity_out_string + "</strong></td>";
+                    myTbody += "<td><strong>" + currentstockCopy + "</strong></td>";
+                    myTbody += "<td><strong>" + address + "</strong></td>";
+                    myTbody += "<td><strong>" + time + "</strong></td>";
+                    myTbody += "<td><strong>" + date + "</strong></td>";
+                    myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
+
+                    // document.getElementById('dieselList').innerHTML = myTbody;
+
+                }else if(selectedDate == ""){
+
+                    currentstockCopy = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
+                    date = dieselChildSnapshot.val().date;
+                    dr_no = dieselChildSnapshot.val().dr_no || "";
+                    po_no = dieselChildSnapshot.val().po_no;
+                    quantity_in = dieselChildSnapshot.val().quantity_in || "";
+                    supplier = dieselChildSnapshot.val().supplier || "";
+                    time = dieselChildSnapshot.val().time;
+                    date = dieselChildSnapshot.val().Date_Input;
+                    truck_no = dieselChildSnapshot.val().truck_no;
+
+                    quantity_out = dieselChildSnapshot.val().quantity_out || "";
+                    address = dieselChildSnapshot.val().destination || "";
+                    operator = dieselChildSnapshot.val().operator || "";
+
+                    if(quantity_in != ""){
+                        quantity_in_string = Number(quantity_in).toLocaleString('en') +  " liter(s)";
+                    }else{
+                        quantity_in_string = "";
+                    }
+
+                    if(quantity_out != ""){
+                        quantity_out_string = Number(quantity_out).toLocaleString('en') + " liter(s)";
+                    }else{
+                        quantity_out_string = "";
+                    }
+
+                    if(supplier != ""){
+                        person = supplier;
+                    }else if(operator != ""){
+                        person = operator
+                    }
+
+                    myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
+                    myTbody += "<td><strong>" + person + "</strong></td>";
+                    myTbody += "<td><strong>" + quantity_in_string + "</strong></td>";
+                    myTbody += "<td><strong>" + quantity_out_string + "</strong></td>";
+                    myTbody += "<td><strong>" + currentstockCopy + "</strong></td>";
+                    myTbody += "<td><strong>" + address + "</strong></td>";
+                    myTbody += "<td><strong>" + time + "</strong></td>";
+                    myTbody += "<td><strong>" + date + "</strong></td>";
+                    myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
+
+                    // document.getElementById('dieselList').innerHTML = myTbody;
+
                 }
+            });
 
-                if(quantity_out != ""){
-                    quantity_out_string = Number(quantity_out).toLocaleString('en') + " liter(s)";
-                }else{
-                    quantity_out_string = "";
-                }
-
-                if(supplier != ""){
-                    person = supplier;
-                }else if(operator != ""){
-                    person = operator
-                }
-
-                myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
-                myTbody += "<td><strong>" + person + "</strong></td>";
-                myTbody += "<td><strong>" + quantity_in_string + "</strong></td>";
-                myTbody += "<td><strong>" + quantity_out_string + "</strong></td>";
-                myTbody += "<td><strong>" + currentstockCopy + "</strong></td>";
-                myTbody += "<td><strong>" + address + "</strong></td>";
-                myTbody += "<td><strong>" + time + "</strong></td>";
-                myTbody += "<td><strong>" + date + "</strong></td>";
-                myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
+            if(myTbody != ""){
 
                 document.getElementById('dieselList').innerHTML = myTbody;
 
-            }else if(selectedDate == ""){
-
-                currentstockCopy = Number(dieselSnapshot.val().currentstockCopy).toLocaleString('en') + " liter(s)";
-                date = dieselSnapshot.val().date;
-                dr_no = dieselSnapshot.val().dr_no || "";
-                po_no = dieselSnapshot.val().po_no;
-                quantity_in = dieselSnapshot.val().quantity_in || "";
-                supplier = dieselSnapshot.val().supplier || "";
-                time = dieselSnapshot.val().time;
-                date = dieselSnapshot.val().Date_Input;
-                truck_no = dieselSnapshot.val().truck_no;
-
-                quantity_out = dieselSnapshot.val().quantity_out || "";
-                address = dieselSnapshot.val().destination || "";
-                operator = dieselSnapshot.val().operator || "";
-
-                if(quantity_in != ""){
-                    quantity_in_string = Number(quantity_in).toLocaleString('en') +  " liter(s)";
-                }else{
-                    quantity_in_string = "";
-                }
-
-                if(quantity_out != ""){
-                    quantity_out_string = Number(quantity_out).toLocaleString('en') + " liter(s)";
-                }else{
-                    quantity_out_string = "";
-                }
-
-                if(supplier != ""){
-                    person = supplier;
-                }else if(operator != ""){
-                    person = operator
-                }
-
-                myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
-                myTbody += "<td><strong>" + person + "</strong></td>";
-                myTbody += "<td><strong>" + quantity_in_string + "</strong></td>";
-                myTbody += "<td><strong>" + quantity_out_string + "</strong></td>";
-                myTbody += "<td><strong>" + currentstockCopy + "</strong></td>";
-                myTbody += "<td><strong>" + address + "</strong></td>";
-                myTbody += "<td><strong>" + time + "</strong></td>";
-                myTbody += "<td><strong>" + date + "</strong></td>";
-                myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
+                $(".se-pre-con").fadeOut("slow");
+            }else{
+                
+                myTbody = "<tr><td colspan='9' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                 document.getElementById('dieselList').innerHTML = myTbody;
 
+                $(".se-pre-con").fadeOut("slow");
             }
         });
-
-        if(myTbody == ""){
-
-            myTbody = "<tr><td colspan='9' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-
-            document.getElementById('dieselList').innerHTML = myTbody;
-
-            $(".se-pre-con").fadeOut("slow");
-        }else{
-            
-            document.getElementById('dieselList').innerHTML = myTbody;
-
-            $(".se-pre-con").fadeOut("slow");
-        }
     }
 
     function tableData(plant){
