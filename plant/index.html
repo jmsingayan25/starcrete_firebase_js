@@ -162,10 +162,14 @@
     
                 document.getElementById('id_delivered_order').innerHTML = Number(delivered_order_count).toLocaleString('en');
             }
+
+            $(".se-pre-con").fadeOut("slow");
         });
 
         if(delivered_order_count == 0){
             document.getElementById('id_delivered_order').innerHTML = delivered_order_count;
+
+            $(".se-pre-con").fadeOut("slow");
         }
 
         firebase.database().ref('delivery_backloaded_order').orderByChild('backloaded_plant').equalTo(plant).on('child_added', function(backloadedOrderSnapshot) {
@@ -183,6 +187,8 @@
 
         if(backloaded_order_count == 0){
             document.getElementById('id_backloaded_order').innerHTML = backloaded_order_count;
+
+            $(".se-pre-con").fadeOut("slow");
         }
 
         diesel_count = 0;
