@@ -164,7 +164,12 @@
              var date = new Date().toLocaleDateString('en');
              var time = new Date().toLocaleTimeString('en');
              var date_input = dateFormat(document.getElementById('date_input').value);
-             var time_input = startTime(document.getElementById('time_input').value);
+
+             if(document.getElementById('time_input').value != ""){
+                var time_input = startTime(document.getElementById('time_input').value);
+            }else{
+                var time_input = "";
+            }
 
              //var get_liters = CheckSnapshot.val().Liters;
              var decrease_int_liters = 0 - Number(quantity_out);
@@ -231,7 +236,12 @@
              var date = new Date().toLocaleDateString('en');
              var time = new Date().toLocaleTimeString('en');
              var date_input = dateFormat(document.getElementById('date_input').value);
-             var time_input = startTime(document.getElementById('time_input').value);
+
+             if(document.getElementById('time_input').value != ""){
+                var time_input = startTime(document.getElementById('time_input').value);
+            }else{
+                var time_input = "";
+            }
 
              var get_liters = CheckSnapshot.val().Liters;
              var decrease_int_liters = Number(get_liters) - Number(quantity_out);
@@ -528,9 +538,9 @@
                                         </div>
                                     </div>
                                        <div class="form-group">
-                                        <label for="time_input" class="col-md-4 control-label">Time<span class="required" style="color: red;">*</span></label>
+                                        <label for="time_input" class="col-md-4 control-label">Time<span class="required" style="color: red;"></span></label>
                                         <div class="col-md-5">
-                                            <input type="time" name="time_input" id="time_input" class="form-control" autocomplete="off" style="text-transform: uppercase;" required>
+                                            <input type="time" name="time_input" id="time_input" class="form-control" autocomplete="off" style="text-transform: uppercase;">
                                         </div>
                                     </div>
                                     <div class="form-group">

@@ -376,7 +376,9 @@
             $(".se-pre-con").fadeOut("slow");
 
         }else{
+
             document.getElementById("orderList").innerHTML = myTbody;
+            $(function(){ $(".tooltips").tooltip(); });
 
             $(".se-pre-con").fadeOut("slow");
 
@@ -496,6 +498,7 @@
                         // myTbody += "<td style='color: #388e3c;'><strong>" + status + "</strong></td></tr>";
 
                         document.getElementById('orderList').innerHTML = myTbody;
+                        $(function(){ $(".tooltips").tooltip(); });
                         count++;
                     });
                 });
