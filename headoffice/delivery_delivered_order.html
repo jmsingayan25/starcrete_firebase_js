@@ -115,6 +115,13 @@
 
     $(document).ready(function(){
 
+        firebase.database().ref('delivery_delivered_order').on('child_changed', function(){
+            $(".se-pre-con").fadeIn("fast");
+            setTimeout(function() {
+                tableData(plant);
+            }, 1000);
+        });
+
         $('.filterable .btn-filter').click(function(){
             var $panel = $(this).parents('.filterable'),
             $filters = $panel.find('.filters input'),
@@ -387,13 +394,9 @@
     }
 
     function tableData(plant){
-
-        $(".se-pre-con").fadeIn("fast");
     
     	var myTbody = "";
     	var count = 1;
-
-        
 
         firebase.database().ref('delivery_delivered_order').orderByChild('delivered_plant').equalTo(plant).once('value').then(function(drSnapshot){
             if(drSnapshot.val() == null){

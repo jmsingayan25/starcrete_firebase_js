@@ -98,10 +98,31 @@
 
     goAway();
 
+    var samplinput = 1000;
+
     $(document).ready(function(){
 
         startTime();
-        tableData();
+        tableData();              
+
+        firebase.database().ref('delivery_ongoing_order').on('child_changed', function(){
+            setTimeout(function() {
+                tableData();
+            }, 1000);
+        });
+
+        firebase.database().ref('delivery_ongoing_order').on('child_removed', function(){
+            setTimeout(function() {
+                tableData();
+            }, 1000);
+        });
+
+        firebase.database().ref('available_stock').on('child_changed', function(){
+            setTimeout(function() {
+                tableData();
+            }, 1000);
+        });
+
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {

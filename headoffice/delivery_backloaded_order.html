@@ -116,6 +116,13 @@
 
     $(document).ready(function(){
 
+        firebase.database().ref('delivery_backloaded_order').on('child_changed', function(){
+            $(".se-pre-con").fadeIn("fast");
+            setTimeout(function() {
+                tableData(plant);
+            }, 1000);
+        });
+
         $('.filterable .btn-filter').click(function(){
             var $panel = $(this).parents('.filterable'),
             $filters = $panel.find('.filters input'),
@@ -387,8 +394,6 @@
     }
 
     function tableData(plant){
-
-        $(".se-pre-con").fadeIn("fast");
 
     	var myTbody = "";
     	var count = 1;

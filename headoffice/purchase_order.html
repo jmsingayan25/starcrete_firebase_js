@@ -245,7 +245,7 @@
                                                 var psi_ext = "";
                                             }
 
-                                            if(Number(itemChildSnapshot.val().balance) <= 500){
+                                            if(Number(itemChildSnapshot.val().balance) <= 1350){
                                                 balance_ext = "<span style='color: red'>" + balance + " pcs</span>";
                                             }else{
                                                 balance_ext = balance + " pcs";
@@ -347,7 +347,7 @@
                                                     var psi_ext = "";
                                                 }
 
-                                                if(Number(itemChildSnapshot.val().balance) <= 500){
+                                                if(Number(itemChildSnapshot.val().balance) <= 1350){
                                                     balance_ext = "<span style='color: red'>" + balance + " pcs</span>";
                                                 }else{
                                                     balance_ext = balance + " pcs";
@@ -418,6 +418,7 @@
         // var table = $('myTable').DataTable();
         
         firebase.database().ref('purchase_order').orderByChild('issued_po_plant').equalTo(plant).once('value').then(function(poSnapshot){
+            console.log(poSnapshot.val());
             if(poSnapshot.val() == null){
 
                 myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
@@ -425,6 +426,16 @@
                 document.getElementById("orderList").innerHTML = myTbody;
                 $(".se-pre-con").fadeOut("slow");
             }
+
+            poSnapshot.forEach(function(poChildSnapshot){
+
+                if(poSnapshot.val().issued_po_plant != plant){
+                    myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                    document.getElementById("orderList").innerHTML = myTbody;
+                    $(".se-pre-con").fadeOut("slow");
+                }
+            });
         });
 
         firebase.database().ref('purchase_order').orderByChild('reverseDate').on('child_added', function(orderSnapshot){
@@ -453,7 +464,7 @@
                                         var psi_ext = "";
                                     }
 
-                                    if(Number(itemChildSnapshot.val().balance) <= 500){
+                                    if(Number(itemChildSnapshot.val().balance) <= 1350){
                                         balance_ext = "<span style='color: red'>" + balance + " pcs</span>";
                                     }else{
                                         balance_ext = balance + " pcs";
