@@ -226,7 +226,7 @@
                 document.getElementById('po_no_id2').innerHTML = poSnapshot.val().po_no;
                 document.getElementById('span_client_name').innerHTML = "";
                 document.getElementById('span_client_address').innerHTML = "";
-                document.getElementById('span_date').innerHTML = dateFormat(poSnapshot.val().date);
+                document.getElementById('span_date').innerHTML = new Date(poSnapshot.val().date).toLocaleDateString('en');
             // });
         });
 
