@@ -69,9 +69,15 @@
 
 		}else{
 
-			var email = document.getElementById('loginEmail').value;
-			var password = document.getElementById('loginPassword').value;
+			var email = document.getElementById('signupEmail').value;
+			var password = document.getElementById('signupPassword').value;
+			var firstname = document.getElementById('signupFirstName').value;
+			var lastname = document.getElementById('signupLastName').value;
+			var office = document.querySelector('input[name="optradio"]:checked').value;
+			var $this = $('#signup-submit');
+			$this.button('loading');
 
+			// console.log(email, password, firstname, lastname, office);
 			// alert(email+" "+password);
 			firebase.auth().createUserWithEmailAndPassword(email, password).then(function(){
 
@@ -81,14 +87,23 @@
 					var uemail = user.email;
 
 					var userInfo = {
-						firstname: "Jimmy",
-						lastname: "Bacar",
+						firstname: firstname,
+						lastname: lastname,
 						email: uemail,
-						position: "admin",
-						office: "Head Office"
+						position: " ",
+						office: office
 					}
 
-					firebase.database().ref("users/"+uid).set(userInfo);
+					// console.log(uid, userInfo, "users/"+uid);
+					// firebase.database().ref("users/"+uid).set(userInfo);
+					if(firebase.database().ref("users/"+uid).set(userInfo)){
+						alert("User successfully added..");
+						window.location.href = 'login.html';
+					}
+
+					// firebase.auth().signOut().then(function() {
+			  //           window.location.href = 'login.html';
+			  //       });
 				});
 			}).catch(function(error) {
 				// Handle Errors here.
@@ -213,16 +228,26 @@
 
 	window.onload = function() {
 		
-		initState();
     	document.getElementById('login-submit').addEventListener('click', signIn, false);
+    	document.getElementById('signup-submit').addEventListener('click', createUser, false);
 
     	var input_pass = document.getElementById('loginPassword');
+    	var signup_pass = document.getElementById('signupPassword');
     	input_pass.addEventListener('keyup', function(event){
     		event.preventDefault();
     		if(event.keyCode === 13){
     			signIn();
     		}
     	});
+
+    	signup_pass.addEventListener('keyup', function(event){
+    		event.preventDefault();
+    		if(event.keyCode === 13){
+    			createUser();
+    		}
+    	});
+
+    	initState();
     };
 
 
@@ -230,31 +255,74 @@
 </head>
 <body class="login-img3-body">
     <div class="container">
-        <form class="login-form">        
-            <div class="login-wrap">
-                <p class="login-img"><i class="icon_lock_alt"></i></p>
-                    <div class="alert alert-danger" id="error_msg" style="display: none;">
-                        <span class="glyphicon glyphicon-remove"></span> Your Username or Password is invalid.
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="icon_profile"></i></span>
-                        <input type="email" name="loginEmail" id="loginEmail" class="form-control" placeholder="Email" required autofocus>
-                    </div>
-                    <div class="input-group">
-                        <span class="input-group-addon"><i class="icon_key_alt"></i></span>
-                        <input type="password" name="loginPassword" id="loginPassword" class="form-control" placeholder="Password" required>
-                    </div>
-                    <div class="input-group">
-                        <div class="col-lg-12">
-                            <div class="checkbox">
-                            <label>
-                                <input type="checkbox" name="remember" id="remember"> Remember me
-                            </label>
-                            </div>
-                        </div>
-                    </div>
-                <button class="btn btn-primary btn-lg btn-block" name="login-submit"  id="login-submit" type="button"  data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Logging In">Login</button>
-            </div>
+        <form class="login-form">       
+	        <ul class="nav nav-tabs">
+	            <li class="active"><a data-toggle="tab" href="#tab_signin"><strong>Sign In</strong></a></li>
+	            <li><a data-toggle="tab" href="#tab_signup"><strong>Signup</strong></a></li>
+	        </ul>
+	        <div class="tab-content">
+	            <div id="tab_signin" class="tab-pane fade in active">
+	            	<div class="login-wrap">
+
+		                <p class="login-img"><i class="icon_lock_alt"></i></p>
+<!-- 		                    <div class="alert alert-danger" id="error_msg" style="display: none;">
+		                        <span class="glyphicon glyphicon-remove"></span> Your Username or Password is invalid.
+		                    </div> -->
+		                    <div class="input-group">
+		                        <span class="input-group-addon"><i class="icon_profile"></i></span>
+		                        <input type="email" name="loginEmail" id="loginEmail" class="form-control" placeholder="Email" required autofocus>
+		                    </div>
+		                    <div class="input-group">
+		                        <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+		                        <input type="password" name="loginPassword" id="loginPassword" class="form-control" placeholder="Password" required>
+		                    </div>
+		                    <div class="input-group">
+		                        <div class="col-lg-12">
+		                            <div class="checkbox">
+		                            <label>
+		                                <input type="checkbox" name="remember" id="remember"> Remember me
+		                            </label>
+		                            </div>
+		                        </div>
+		                    </div>
+		                <button class="btn btn-primary btn-lg btn-block" name="login-submit"  id="login-submit" type="button"  data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Logging In">Login</button>
+		            </div>
+	            </div>
+	            <div id="tab_signup" class="tab-pane fade">
+	            	<div class="login-wrap">
+	            		<p class="login-img"><i class="icon_document_alt"></i></p>
+		            	<div class="input-group">
+	                        <span class="input-group-addon"><i class="icon_profile"></i></span>
+	                        <input type="text" name="signupFirstName" id="signupFirstName" class="form-control" placeholder="First Name" required autofocus>
+	                    </div>
+	                    <div class="input-group">
+	                        <span class="input-group-addon"><i class="icon_profile"></i></span>
+	                        <input type="text" name="signupLastName" id="signupLastName" class="form-control" placeholder="Last Name" required>
+	                    </div>
+	                    <div class="input-group">
+	                        <span class="input-group-addon"><i class="icon_profile"></i></span>
+	                        <input type="email" name="signupEmail" id="signupEmail" class="form-control" placeholder="Email" required>
+	                    </div>
+	                    <div class="input-group">
+	                        <span class="input-group-addon"><i class="icon_key_alt"></i></span>
+	                        <input type="password" name="signupPassword" id="signupPassword" class="form-control" placeholder="Password" required>
+	                    </div>
+	                    <div class="input-group">
+	                    	Office: 
+	                        <label class="radio-inline">
+						      <input type="radio" name="optradio" value="Head Office" checked>Head Office
+						    </label>
+						    <label class="radio-inline">
+						      <input type="radio" name="optradio" value="Bravo">Bravo
+						    </label>
+						    <label class="radio-inline">
+						      <input type="radio" name="optradio" value="Delta">Delta
+						    </label>
+	                    </div>
+	                    <button class="btn btn-primary btn-lg btn-block" name="signup-submit"  id="signup-submit" type="button"  data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Signing Up">Sign Up</button>
+	                </div>
+	            </div>
+	        </div> 
         </form>
     </div>
 </body>
