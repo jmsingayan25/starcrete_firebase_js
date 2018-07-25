@@ -399,14 +399,13 @@
         var myTbody = "";
         var count = 1;
 
-        firebase.database().ref('purchase_order').on('child_added', function(drSnapshot){
-            console.log(drSnapshot.val());
-            if(drSnapshot.val() == null){
+       firebase.database().ref('purchase_order').once('value').then(function(poSnapshot){
+            
+            if(poSnapshot.val() == null){
 
                 myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                 document.getElementById("orderList").innerHTML = myTbody;
-
                 $(".se-pre-con").fadeOut("slow");
             }
         });
@@ -471,8 +470,9 @@
                     }
                 });
             });
-            $(".se-pre-con").fadeOut("slow");
         });
+
+        $(".se-pre-con").fadeOut("slow");
 
         if(plant == 'Bravo'){
             plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
