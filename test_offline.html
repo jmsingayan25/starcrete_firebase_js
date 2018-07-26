@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script>
+
+	<!-- Add additional services you want to use -->
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+	<script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+	<script src="js_config/firebase_config.js"></script>
+	<script src="js_config/function.js"></script>
+
+	<!-- javascripts -->
+    <script src="js/jquery.js"></script>
+    <script src="js/jquery-ui-1.10.4.min.js"></script>
+    <script src="js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+<script>
+	
+	// $(document).ready(function(){
+
+	// 	// // since I can connect from multiple devices or browser tabs, we store each connection instance separately
+	// 	// // any time that connectionsRef's value is null (i.e. has no children) I am offline
+	// 	// var myConnectionsRef = firebase.database().ref('users/joe/connections');
+
+	// 	// // stores the timestamp of my last disconnect (the last time I was seen online)
+	// 	// var lastOnlineRef = firebase.database().ref('users/joe/lastOnline');
+
+	// 	// var connectedRef = firebase.database().ref('.info/connected');
+	// 	// connectedRef.on('value', function(snap) {
+	// 	//   if (snap.val() === true) {
+	// 	//   	console.log("connected");
+	// 	//     // We're connected (or reconnected)! Do anything here that should happen only if online (or on reconnect)
+	// 	//     var con = myConnectionsRef.push();
+
+	// 	//     // When I disconnect, remove this device
+	// 	//     con.onDisconnect().remove();
+
+	// 	//     // Add this device to my connections list
+	// 	//     // this value could contain info about the device or a timestamp too
+	// 	//     con.set(true);
+
+	// 	//     // When I disconnect, update the last time I was seen online
+	// 	//     lastOnlineRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
+	// 	//   } else {
+	// 	//     console.log("not connected");
+	// 	//   }
+	// 	// });
+	// });
+
+	function submitForm(){
+
+		event.preventDefault();
+
+		// var input = "connection";
+
+		var connectedRef = firebase.database().ref('.info/connected');
+		connectedRef.on('value', function(snap) {
+		  if (snap.val() === true) {
+		  	console.log("connected");
+		    // We're connected (or reconnected)! Do anything here that should happen only if online (or on reconnect)
+		    // var con = myConnectionsRef.push();
+
+		    // // When I disconnect, remove this device
+		    // con.onDisconnect().remove();
+
+		    // // Add this device to my connections list
+		    // // this value could contain info about the device or a timestamp too
+		    // con.set(true);
+
+		    // // When I disconnect, update the last time I was seen online
+		    // lastOnlineRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
+		  } else {
+		    console.log("not connected");
+		  }
+		});
+
+	}
+
+
+</script>
+</head>
+<body>
+	<form class="form-inline" onsubmit="return submitForm();">
+		<button type="submit" id="submit">Submit</button>
+	</form>
+</body>
+</html>
