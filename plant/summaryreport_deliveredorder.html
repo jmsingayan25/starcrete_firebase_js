@@ -90,6 +90,7 @@
 <script>
 	
     var timer = null;
+    var plant = "";
 
     function goAway() {
         clearTimeout(timer);
@@ -186,6 +187,13 @@
             } else {
                 window.location.href = '../login.html';
             }
+
+            firebase.database().ref('delivery_delivered_order').on('child_changed', function(){
+                $(".se-pre-con").fadeIn("fast");
+                setTimeout(function() {
+                    DisplayCurrentMonth();
+                }, 1000);
+            });
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);

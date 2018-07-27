@@ -403,18 +403,18 @@
                 $(".se-pre-con").fadeOut("slow");
             }
 
-            drSnapshot.forEach(function(drChildSnapshot){
+            // drSnapshot.forEach(function(drChildSnapshot){
 
-                if(drChildSnapshot.val().delivered_plant != plant){
+            //     if(drChildSnapshot.val().delivered_plant != plant){
 
-                    myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+            //         myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
-                    document.getElementById("orderList").innerHTML = myTbody;
+            //         document.getElementById("orderList").innerHTML = myTbody;
 
-                    $(".se-pre-con").fadeOut("slow");
+            //         $(".se-pre-con").fadeOut("slow");
 
-                }
-            });
+            //     }
+            // });
         });
 
         firebase.database().ref('delivery_delivered_order/').orderByChild('reverseDate').on('child_added', function(orderSnapshot){
@@ -425,7 +425,7 @@
                     projectSnapshot.forEach(function(projectChildSnapshot){
                         console.log(orderSnapshot.key, orderSnapshot.val());
 
-                        if(input_date == dateFormat(orderSnapshot.val().date)){
+                        if(input_date == new Date(orderSnapshot.val().date).toLocaleDateString('en')){
 
                             var dr_no = orderSnapshot.val().dr_no;
                             var po_no = orderSnapshot.val().po_no;
@@ -466,6 +466,17 @@
                             myTbody += "</td>";
                             myTbody += "<td><strong>" + date + "</strong></td>";
                             myTbody += "<td><span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
+
+                            if(myTbody == ''){
+
+                                myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                                document.getElementById("orderList").innerHTML = myTbody;
+
+                                $(".se-pre-con").fadeOut("slow");
+                            }else{
+                                document.getElementById('orderList').innerHTML = myTbody;
+                            }
 
                         }else if(input_date == ''){
 
@@ -511,7 +522,17 @@
                         }
                         // myTbody += "<td style='color: #388e3c;'><strong>" + status + "</strong></td></tr>";
 
-                        document.getElementById('orderList').innerHTML = myTbody;
+                        if(myTbody == ''){
+
+                            myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                            document.getElementById("orderList").innerHTML = myTbody;
+
+                            $(".se-pre-con").fadeOut("slow");
+                        }else{
+                            document.getElementById('orderList').innerHTML = myTbody;
+                        }
+                        
                         $(function(){ $(".tooltips").tooltip(); });
                         count++;
                     });

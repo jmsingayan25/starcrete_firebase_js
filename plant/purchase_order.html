@@ -97,6 +97,7 @@
     var timer = null;
     var fromDate = "";
     var endDate = "";
+    var plant = "";
 
     function goAway() {
         clearTimeout(timer);
@@ -181,6 +182,13 @@
             } else {
                 window.location.href = '../login.html';
             }
+
+            firebase.database().ref('purchase_order').orderByKey().limitToLast(1).on('child_changed', function(){
+                $(".se-pre-con").fadeIn("fast");
+                setTimeout(function() {
+                    tableData();
+                }, 1000);
+            });
         });
 
         $('input[name="daterange"]').daterangepicker({
@@ -394,8 +402,6 @@
 
     function tableData(){
 
-        $(".se-pre-con").fadeIn("fast");
-
         var myTbody = "";
         var count = 1;
 
@@ -464,6 +470,8 @@
                                 myTbody += "<td><strong>" + status + "</strong></td></tr>";
 
                                 document.getElementById('orderList').innerHTML = myTbody;
+
+                                $(".se-pre-con").fadeOut("slow");
                                 count++;
                             });
                         });
@@ -472,7 +480,7 @@
             });
         });
 
-        $(".se-pre-con").fadeOut("slow");
+        
 
         if(plant == 'Bravo'){
             plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
