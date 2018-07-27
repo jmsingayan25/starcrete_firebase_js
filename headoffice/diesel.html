@@ -107,6 +107,14 @@
     goAway();
     
     $(document).ready(function(){
+
+        firebase.database().ref('available_stock').orderByKey().equalTo(plant).on('child_changed', function(){
+            $(".se-pre-con").fadeIn("fast");
+            setTimeout(function() {
+                tableData(plant);
+            }, 1000);
+        });
+
         $('.filterable .btn-filter').click(function(){
             var $panel = $(this).parents('.filterable'),
             $filters = $panel.find('.filters input'),
@@ -314,7 +322,6 @@
 
     function tableData(plant){
 
-        $(".se-pre-con").fadeIn("fast");
         var myTbody = "";
         var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
         var currentDate = new Date().toLocaleDateString('en');

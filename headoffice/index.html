@@ -96,7 +96,7 @@
     window.addEventListener('mousemove', goAway, true);
     window.addEventListener('keypress', goAway, true);
 
-    goAway();
+    // goAway();
 
     var samplinput = 1000;
 
@@ -105,21 +105,35 @@
         startTime();
         tableData();              
 
-        firebase.database().ref('delivery_ongoing_order').on('child_changed', function(){
+        firebase.database().ref('purchase_order').on('child_changed', function(){
+            $(".se-pre-con").fadeIn("fast");
             setTimeout(function() {
                 tableData();
+                $(".se-pre-con").fadeOut("slow");
+            }, 1000);
+        });
+
+        firebase.database().ref('delivery_ongoing_order').on('child_changed', function(){
+            $(".se-pre-con").fadeIn("fast");
+            setTimeout(function() {
+                tableData();
+                $(".se-pre-con").fadeOut("slow");
             }, 1000);
         });
 
         firebase.database().ref('delivery_ongoing_order').on('child_removed', function(){
+            $(".se-pre-con").fadeIn("fast");
             setTimeout(function() {
                 tableData();
+                $(".se-pre-con").fadeOut("slow");
             }, 1000);
         });
 
         firebase.database().ref('available_stock').on('child_changed', function(){
+            $(".se-pre-con").fadeIn("fast");
             setTimeout(function() {
                 tableData();
+                $(".se-pre-con").fadeOut("slow");
             }, 1000);
         });
 
@@ -135,6 +149,8 @@
                     }
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
+
+                    $(".se-pre-con").fadeOut("slow");
                 },(error) => {
                     console.log(error);
                 });
@@ -156,36 +172,51 @@
 
     function tableData(){
 
-        $(".se-pre-con").fadeIn("fast");
-
         /*START OF PENDING ORDER*/
+
         bravo_pending_order_count = 0;
         delta_pending_order_count = 0;
 
-        firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
+        firebase.database().ref('purchase_order').orderByChild('issued_po_plant').equalTo('Bravo').once('value', function(orderSnapshot){
+
+            bravo_pending_order_count = 0;
+
             if(orderSnapshot.val() != null){
-                if(orderSnapshot.val().issued_po_plant == 'Bravo'){
-                    firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').on('child_added', function(itemSnapshot){
-                        if(itemSnapshot.val().balance != 0){
+                orderSnapshot.forEach(function(orderChildSnapshot){
 
-                            bravo_pending_order_count = bravo_pending_order_count + 1;
+                    firebase.database().ref('purchase_order/'+orderChildSnapshot.key+'/item').once('value', function(itemSnapshot){
+                        itemSnapshot.forEach(function(itemChildSnapshot){
 
-                            document.getElementById('id_bravo_pending_order').innerHTML =  Number(bravo_pending_order_count).toLocaleString('en');
+                            if(itemChildSnapshot.val().balance != 0){
 
-                        }
+                                bravo_pending_order_count++;
+
+                                document.getElementById('id_bravo_pending_order').innerHTML = Number(bravo_pending_order_count).toLocaleString('en');
+                            }
+                        });
                     });
-                }
-                if(orderSnapshot.val().issued_po_plant == 'Delta'){
-                    firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').on('child_added', function(itemSnapshot){
-                        if(itemSnapshot.val().balance != 0){
+                });
+            }
+        });
+   
+        firebase.database().ref('purchase_order').orderByChild('issued_po_plant').equalTo('Delta').once('value', function(orderSnapshot){
 
-                            delta_pending_order_count = delta_pending_order_count + 1;
+            delta_pending_order_count = 0;
 
-                            document.getElementById('id_delta_pending_order').innerHTML = Number(delta_pending_order_count).toLocaleString('en');
+            if(orderSnapshot.val() != null){
+                orderSnapshot.forEach(function(orderChildSnapshot){
+                    firebase.database().ref('purchase_order/'+orderChildSnapshot.key+'/item').once('value', function(itemSnapshot){
+                        itemSnapshot.forEach(function(itemChildSnapshot){
 
-                        }
+                            if(itemChildSnapshot.val().balance != 0){
+
+                                delta_pending_order_count++;
+
+                                document.getElementById('id_delta_pending_order').innerHTML = Number(delta_pending_order_count).toLocaleString('en');
+                            }
+                        });
                     });
-                }
+                });
             }
         });
 
@@ -204,25 +235,37 @@
         bravo_ongoing_order_count = 0;
         delta_ongoing_order_count = 0;
 
-        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo('Bravo').on('child_added', function(ongoingOrderSnapshot) {
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo('Bravo').once('value', function(ongoingOrderSnapshot) {
+
+            bravo_ongoing_order_count = 0;
+
             if(ongoingOrderSnapshot.val() != null){
-                bravo_ongoing_order_count = bravo_ongoing_order_count + 1;
+
+                ongoingOrderSnapshot.forEach(function(ongoingOrderChildSnapshot){
+                    bravo_ongoing_order_count = bravo_ongoing_order_count + 1;
+                });
                 
                 document.getElementById('id_bravo_ongoing_order').innerHTML = Number(bravo_ongoing_order_count).toLocaleString('en');
+            }
+        });
+
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo('Delta').once('value', function(ongoingOrderSnapshot) {
+
+            delta_ongoing_order_count = 0;
+
+            if(ongoingOrderSnapshot.val() != null){
+
+                ongoingOrderSnapshot.forEach(function(ongoingOrderChildSnapshot){
+                    delta_ongoing_order_count = delta_ongoing_order_count + 1;
+                });
+                
+                document.getElementById('id_delta_ongoing_order').innerHTML = Number(delta_ongoing_order_count).toLocaleString('en');
             }
         });
 
         if(bravo_ongoing_order_count == 0){
             document.getElementById('id_bravo_ongoing_order').innerHTML = bravo_ongoing_order_count;
         }
-
-        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo('Delta').on('child_added', function(ongoingOrderSnapshot) {
-            if(ongoingOrderSnapshot.val() != null){
-                delta_ongoing_order_count = delta_ongoing_order_count + 1;
-                
-                document.getElementById('id_delta_ongoing_order').innerHTML = Number(delta_ongoing_order_count).toLocaleString('en');
-            }
-        });
 
         if(delta_ongoing_order_count == 0){
             document.getElementById('id_delta_ongoing_order').innerHTML = delta_ongoing_order_count;
@@ -238,31 +281,43 @@
         newDate = new Date().toLocaleDateString('en');
         currentDate = new Date(newDate);
 
-        firebase.database().ref('delivery_delivered_order').orderByChild('delivered_plant').equalTo('Bravo').on('child_added', function(deliveredOrderSnapshot) {
+        firebase.database().ref('delivery_delivered_order').orderByChild('delivered_plant').equalTo('Bravo').once('value', function(deliveredOrderSnapshot) {
+
+            bravo_delivered_order_count = 0;
+
             if(deliveredOrderSnapshot.val() != null){
 
-                if(new Date(deliveredOrderSnapshot.val().date).getTime() == currentDate.getTime()){
-                    bravo_delivered_order_count = bravo_delivered_order_count + 1;
-                }
-    
+                deliveredOrderSnapshot.forEach(function(deliveredOrderChildSnapshot){
+
+                    if(new Date(deliveredOrderChildSnapshot.val().date).getTime() == currentDate.getTime()){
+                        bravo_delivered_order_count = bravo_delivered_order_count + 1;
+                    }
+                });
+
                 document.getElementById('id_bravo_delivered_order').innerHTML = Number(bravo_delivered_order_count).toLocaleString('en');
+            }
+        });
+
+        firebase.database().ref('delivery_delivered_order').orderByChild('delivered_plant').equalTo('Delta').once('value', function(deliveredOrderSnapshot) {
+
+            delta_delivered_order_count = 0;
+
+            if(deliveredOrderSnapshot.val() != null){
+
+                deliveredOrderSnapshot.forEach(function(deliveredOrderChildSnapshot){
+
+                    if(new Date(deliveredOrderChildSnapshot.val().date).getTime() == currentDate.getTime()){
+                        delta_delivered_order_count = delta_delivered_order_count + 1;
+                    }
+                });
+
+                document.getElementById('id_delta_delivered_order').innerHTML = Number(delta_delivered_order_count).toLocaleString('en');
             }
         });
 
         if(bravo_delivered_order_count == 0){
             document.getElementById('id_bravo_delivered_order').innerHTML = bravo_delivered_order_count;
         }
-
-        firebase.database().ref('delivery_delivered_order').orderByChild('delivered_plant').equalTo('Delta').on('child_added', function(deliveredOrderSnapshot) {
-            if(deliveredOrderSnapshot.val() != null){
-
-                if(new Date(deliveredOrderSnapshot.val().date).getTime() == currentDate.getTime()){
-                    delta_delivered_order_count = delta_delivered_order_count + 1;
-                }
-    
-                document.getElementById('id_delta_delivered_order').innerHTML = Number(delta_delivered_order_count).toLocaleString('en');
-            }
-        });
 
         if(delta_delivered_order_count == 0){
             document.getElementById('id_delta_delivered_order').innerHTML = delta_delivered_order_count;
@@ -275,31 +330,43 @@
         bravo_backloaded_order_count = 0;
         delta_backloaded_order_count = 0;
 
-        firebase.database().ref('delivery_backloaded_order').orderByChild('backloaded_plant').equalTo('Bravo').on('child_added', function(backloadedOrderSnapshot) {
+        firebase.database().ref('delivery_backloaded_order').orderByChild('backloaded_plant').equalTo('Bravo').once('value', function(backloadedOrderSnapshot) {
+
+            bravo_backloaded_order_count = 0;
+
             if(backloadedOrderSnapshot.val() != null){
 
-                if(new Date(backloadedOrderSnapshot.val().date).getTime() == currentDate.getTime()){
-                    bravo_backloaded_order_count = bravo_backloaded_order_count + 1;
-                }
-    
+                backloadedOrderSnapshot.forEach(function(backloadedOrderChildSnapshot){
+
+                    if(new Date(backloadedOrderChildSnapshot.val().date).getTime() == currentDate.getTime()){
+                        bravo_backloaded_order_count = bravo_backloaded_order_count + 1;
+                    }
+                });
+                
                 document.getElementById('id_bravo_backloaded_order').innerHTML = Number(bravo_backloaded_order_count).toLocaleString('en');
+            }
+        });
+
+        firebase.database().ref('delivery_backloaded_order').orderByChild('backloaded_plant').equalTo('Delta').once('value', function(backloadedOrderSnapshot) {
+
+            delta_backloaded_order_count = 0;
+
+            if(backloadedOrderSnapshot.val() != null){
+
+                backloadedOrderSnapshot.forEach(function(backloadedOrderChildSnapshot){
+
+                    if(new Date(backloadedOrderChildSnapshot.val().date).getTime() == currentDate.getTime()){
+                        delta_backloaded_order_count = delta_backloaded_order_count + 1;
+                    }
+                });
+
+                document.getElementById('id_delta_backloaded_order').innerHTML = Number(delta_backloaded_order_count).toLocaleString('en');
             }
         });
 
         if(bravo_backloaded_order_count == 0){
             document.getElementById('id_bravo_backloaded_order').innerHTML = bravo_backloaded_order_count;
         }
-
-        firebase.database().ref('delivery_backloaded_order').orderByChild('backloaded_plant').equalTo('Delta').on('child_added', function(backloadedOrderSnapshot) {
-            if(backloadedOrderSnapshot.val() != null){
-
-                if(new Date(backloadedOrderSnapshot.val().date).getTime() == currentDate.getTime()){
-                    delta_backloaded_order_count = delta_backloaded_order_count + 1;
-                }
-    
-                document.getElementById('id_delta_backloaded_order').innerHTML = Number(delta_backloaded_order_count).toLocaleString('en');
-            }
-        });
 
         if(delta_backloaded_order_count == 0){
             document.getElementById('id_delta_backloaded_order').innerHTML = delta_backloaded_order_count;
@@ -312,21 +379,29 @@
         bravo_diesel_count = 0;
         delta_diesel_count = 0;
 
-        firebase.database().ref('available_stock/').on('child_added', function(dieselSnapshot){
-
-            if(dieselSnapshot.key == 'Bravo'){
-                bravo_diesel_count = dieselSnapshot.val().Liters;  
-            }
-
-            if(dieselSnapshot.key == 'Delta'){
-                delta_diesel_count = dieselSnapshot.val().Liters;
-            } 
-
-            document.getElementById('id_bravo_diesel').innerHTML = Number(bravo_diesel_count).toLocaleString('en');
-            document.getElementById('id_delta_diesel').innerHTML = Number(delta_diesel_count).toLocaleString('en');
-
-            $(".se-pre-con").fadeOut("slow");
+        firebase.database().ref('available_stock/').orderByKey().equalTo('Bravo').once('value', function(dieselSnapshot){
+            dieselSnapshot.forEach(function(dieselChildSnapshot){
+               bravo_diesel_count = dieselChildSnapshot.val().Liters;
+               document.getElementById('id_bravo_diesel').innerHTML = Number(bravo_diesel_count).toLocaleString('en');
+            });
         });
+
+        firebase.database().ref('available_stock/').orderByKey().equalTo('Delta').once('value', function(dieselSnapshot){
+            dieselSnapshot.forEach(function(dieselChildSnapshot){
+               delta_diesel_count = dieselChildSnapshot.val().Liters;
+               document.getElementById('id_delta_diesel').innerHTML = Number(delta_diesel_count).toLocaleString('en');
+            });
+        });
+
+        if(bravo_diesel_count == 0){
+            document.getElementById('id_bravo_diesel').innerHTML = Number(bravo_diesel_count).toLocaleString('en');
+        }
+
+        if(bravo_diesel_count == 0){
+            document.getElementById('id_bravo_diesel').innerHTML = Number(bravo_diesel_count).toLocaleString('en');
+        }
+
+        /*END OF DIESEL STOCK*/
     }
 
     function startTime() {
@@ -707,7 +782,7 @@
                                                         <div class="col-md-3">
                                                             <div class="info-box dark-bg">
                                                                 <div class="row">
-                                                                    <div class="col-md-6"><i class="fa fa-database"></i></div>
+                                                                    <div class="col-md-4"><i class="fa fa-database"></i></div>
                                                                     <div class="col-md-6"><div class="count"><span id="id_delta_diesel"></span></div></div>
                                                                 </div>
                                                                 <div class="row">

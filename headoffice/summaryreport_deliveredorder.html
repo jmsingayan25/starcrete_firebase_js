@@ -104,14 +104,20 @@
     window.addEventListener('mousemove', goAway, true);
     window.addEventListener('keypress', goAway, true);
 
-    goAway();
+    // goAway();
 
     $(document).ready(function(){
 
     	tableData();
         startTime();
         // totalCountBadge();
-
+        firebase.database().ref('delivery_delivered_order').on('child_changed', function(){
+            $(".se-pre-con").fadeIn("fast");
+            setTimeout(function() {
+                tableData(plant);
+            }, 1000);
+        });
+        
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
 
