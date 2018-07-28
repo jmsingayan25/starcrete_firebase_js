@@ -364,8 +364,9 @@
     	event.preventDefault();
 
     	var input_date = document.getElementById('date_selected').value;
-    	input_date = new Date(input_date).toLocaleDateString('en');
-    	
+    	var option = {year: "numeric", month: "long", day: "numeric"}
+    	input_date = new Date(input_date).toLocaleDateString('en', option);
+
     	var input_machine1_name = $("input[name='machine1_name[]']").map(function(){return $(this).val();}).get();
     	var input_machine3_name = $("input[name='machine3_name[]']").map(function(){return $(this).val();}).get();
     	var input_nonskid1_name = $("input[name='nonskid1_name[]']").map(function(){return $(this).val();}).get();
@@ -380,8 +381,8 @@
     	var input_kamador_name = $("input[name='kamador_name[]']").map(function(){return $(this).val();}).get();
     	var input_others_name = $("input[name='others_name[]']").map(function(){return $(this).val();}).get();
     	var input_absent_name = $("input[name='absent_name[]']").map(function(){return $(this).val();}).get();
-    	var input_absent_reason = $("input[name='absent_reason[]']").map(function(){return $(this).val();}).get();
-    	var input_comment = $("input[name='comment[]']").map(function(){return $(this).val();}).get();
+    	var input_absent_reason = $("textarea[name='absent_reason[]']").map(function(){return $(this).val();}).get();
+    	var input_comment = document.getElementById('comment').value || "";
 
 
     	// console.log(input_machine1_name, input_machine3_name, input_forklift_operator_name, input_mechanic_name);
@@ -403,6 +404,130 @@
 
     		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/machine3').push(machine3Data);
     	}
+
+    	for(var a = 0; a < input_nonskid1_name.length; a++){
+
+    		var nonskid1Data = {
+    			employee_name: input_nonskid1_name[a].toUpperCase()
+    		}
+
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/nonskid1').push(nonskid1Data);
+    	}
+
+    	for(var a = 0; a < input_nonskid2_name.length; a++){
+
+    		var nonskid2Data = {
+    			employee_name: input_nonskid2_name[a].toUpperCase()
+    		}
+
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/nonskid2').push(nonskid2Data);
+    	}
+
+    	for(var a = 0; a < input_nonskid2_name.length; a++){
+
+    		var nonskid2Data = {
+    			employee_name: input_nonskid2_name[a].toUpperCase()
+    		}
+
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/nonskid2').push(nonskid2Data);
+    	}
+
+    	for(var a = 0; a < input_nonskid3_name.length; a++){
+
+    		var nonskid3Data = {
+    			employee_name: input_nonskid3_name[a].toUpperCase()
+    		}
+
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/nonskid3').push(nonskid3Data);
+    	}
+
+    	for(var a = 0; a < input_nonskid4_name.length; a++){
+
+    		var nonskid4Data = {
+    			employee_name: input_nonskid4_name[a].toUpperCase()
+    		}
+
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/nonskid4').push(nonskid4Data);
+    	}
+
+    	for(var a = 0; a < input_kamador_name.length; a++){
+
+    		var kamadorData = {
+    			employee_name: input_kamador_name[a].toUpperCase()
+    		}
+
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/kamador').push(kamadorData);
+    	}
+
+    	for(var a = 0; a < input_forklift_operator_name.length; a++){
+
+    		var forkliftOperatorData = {
+    			employee_name: input_forklift_operator_name[a].toUpperCase()
+    		}
+
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/forklift_operator').push(forkliftOperatorData);
+    	}
+
+    	for(var a = 0; a < input_mechanic_name.length; a++){
+
+    		var mechanicData = {
+    			employee_name: input_mechanic_name[a].toUpperCase()
+    		}
+
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/mechanic').push(mechanicData);
+    	}
+
+    	for(var a = 0; a < input_tagapukpok_name.length; a++){
+
+    		var tagapukpokData = {
+    			employee_name: input_tagapukpok_name[a].toUpperCase()
+    		}
+
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/tagapukpok').push(tagapukpokData);
+    	}
+
+    	for(var a = 0; a < input_checker_name.length; a++){
+
+    		var checkerData = {
+    			employee_name: input_checker_name[a].toUpperCase()
+    		}
+
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/checker').push(checkerData);
+    	}
+
+    	for(var a = 0; a < input_loader_name.length; a++){
+
+    		var loaderData = {
+    			employee_name: input_loader_name[a].toUpperCase()
+    		}
+
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/loader').push(loaderData);
+    	}
+
+    	for(var a = 0; a < input_others_name.length; a++){
+
+    		var othersData = {
+    			employee_name: input_others_name[a].toUpperCase()
+    		}
+
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/others').push(othersData);
+    	}
+
+    	for(var a = 0; a < input_absent_name.length; a++){
+
+    		var absentData = {
+    			employee_name: input_absent_name[a].toUpperCase(),
+    			reason: input_absent_reason[a].toUpperCase()
+    		}
+
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/absent').push(absentData);
+    	}
+
+    	var commentData = {
+    		comment: input_comment.toUpperCase()
+    	}
+
+    	firebase.database().ref('plant_attendance/'+plant+'/'+input_date).push(commentData);
     
     }
 
@@ -1049,7 +1174,7 @@
                 			</div>
                 			<div class="row">
                 				<div class="col-md-12">
-                					<textarea name="comment" class="form-control" rows="5" placeholder="Comment here..."></textarea>
+                					<textarea name="comment" id="comment" class="form-control" rows="5" placeholder="Comment here..."></textarea>
                 				</div>
                 			</div>
                 			
