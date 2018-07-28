@@ -83,8 +83,17 @@
 
 <script>
 	
+	var plant = "";
+
 	$(document).ready(function(){
 
+		$('#locationList option').each(function(){
+		   if($.inArray(this.value, optionValues) >-1){
+		      $(this).remove()
+		   }else{
+		      optionValues.push(this.value);
+		   }
+		});
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
 
@@ -98,7 +107,7 @@
                         window.location.href = '../headoffice/index.html';
                     }
 
-                    tableData();
+                    // tableData();
                     
                     if(plant == 'Bravo'){
                         plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
@@ -108,6 +117,7 @@
 
                     document.getElementById('id_plant_name').innerHTML = plant_name;
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
+                    document.getElementById('id_heading').innerHTML = "Plant: " + plant;
 
                 },(error) => {
                     console.log(error);
@@ -116,82 +126,227 @@
                 window.location.href = '../login.html';
             }
 
-            
-
             document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+
+        	
         });
 
         
+        
     });
 
-    function tableData(){
-
-    	firebase.database().ref('employee/'+plant+'/machine').once('value', function(employeeSnapshot){
-    		employeeSnapshot.forEach(function(employeeChildSnapshot){
-    			$("#list_of_machine1_employee").append("<option value='" + employeeChildSnapshot.key + "'>" + employeeChildSnapshot.val().employee_name + "</option>");
-    		});
-    	});
-    }
-
-    function add_machine1_row(){
+    function add_machine1_employee(){
 
     	event.preventDefault();
 
-    	$rowno=$("#machine_1_table tr").length;
-        $rowno=$rowno+1;
-        $("#machine_1_table tr:last").after("<tr id='machine1_row" + $rowno + "' style='text-align: center;'><td class='col-md-5'><div class='form-group'><input type='text' name='machine_1_name[]' class='form-control input_type'></div></td><td class='col-md-1'><div class='form-group'><button type='button' class='btn btn-danger btn-md' onclick=remove_machine_1_row('machine1_row" + $rowno + "') style='font-weight: bold;'><span class='fa fa-minus'></span></button></div></td></tr>");
+    	$rowno = $("#machine1_table tr").length;
+        $rowno = $rowno + 1;
+        $("#machine1_table tr:last").after("<tr id='machine1_row" + $rowno + "' style='text-align: center;'><td class='col-md-5'><input type='text' name='machine1_name[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_machine_1_row('machine1_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
     }
 
     function remove_machine_1_row(rowno){
 		$('#'+rowno).remove();
     }
 
-    function add_employee(){
+    function add_forklift_operator_employee(){
 
     	event.preventDefault();
 
-    	$rowno=$("#employee_table tr").length;
-        $rowno=$rowno+1;
-
-        $("#employee_table tr:last").after("<tr id='eployee_row" + $rowno + "' style='text-align: center;'><td class='col-md-5'><div class='form-group'><input type='text' name='employee_name[]' class='form-control input_type' autofocus></div></td><td class='col-md-1'><div class='form-group'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('eployee_row" + $rowno + "') style='font-weight: bold;'><span class='fa fa-minus'></span></button></div></td></tr>");
+    	$rowno = $("#forklift_operator_table tr").length;
+    	$rowno = $rowno + 1;
+    	$("#forklift_operator_table tr:last").after("<tr id='forklift_operator_row" + $rowno + "' style='text-align: center;'>><td class='col-md-5'><input type='text' name='forklift_operator_name[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_forklift_operator_row('forklift_operator_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
     }
 
-    function remove_employee_row(rowno){
+    function remove_forklift_operator_row(rowno){
+		$('#'+rowno).remove();
+    }
+
+    function add_machine3_employee(){
+
+    	event.preventDefault();
+
+    	$rowno = $("#machine3_table tr").length;
+    	$rowno = $rowno + 1;
+    	$("#machine3_table tr:last").after("<tr id='machine3_row" + $rowno + "' style='text-align: center;'>><td class='col-md-5'><input type='text' name='machine3_name[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_machine3_row('machine3_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+
+    function remove_machine3_row(rowno){
+		$('#'+rowno).remove();
+    }
+
+    function add_mechanic_employee(){
+
+    	event.preventDefault();
+
+    	$rowno = $("#mechanic_table tr").length;
+    	$rowno = $rowno + 1;
+    	$("#mechanic_table tr:last").after("<tr id='mechanic_row" + $rowno + "' style='text-align: center;'>><td class='col-md-5'><input type='text' name='mechanic_name[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_mechanic_row('mechanic_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+
+    function remove_mechanic_row(rowno){
+		$('#'+rowno).remove();
+    }
+
+    function add_nonskid1_employee(){
+
+    	event.preventDefault();
+
+    	$rowno = $("#nonskid1_table tr").length;
+    	$rowno = $rowno + 1;
+    	$("#nonskid1_table tr:last").after("<tr id='nonskid1_row" + $rowno + "' style='text-align: center;'>><td class='col-md-5'><input type='text' name='nonskid1_name[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_nonskid1_row('nonskid1_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+
+    function remove_nonskid1_row(rowno){
+		$('#'+rowno).remove();
+    }
+
+    function add_tagapukpok_employee(){
+
+    	event.preventDefault();
+
+    	$rowno = $("#tagapukpok_table tr").length;
+    	$rowno = $rowno + 1;
+    	$("#tagapukpok_table tr:last").after("<tr id='tagapukpok_row" + $rowno + "' style='text-align: center;'>><td class='col-md-5'><input type='text' name='tagapukpok_name[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_tagapukpok_row('tagapukpok_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+
+    function remove_tagapukpok_row(rowno){
+		$('#'+rowno).remove();
+    }
+
+    function add_nonskid2_employee(){
+
+    	event.preventDefault();
+
+    	$rowno = $("#nonskid2_table tr").length;
+    	$rowno = $rowno + 1;
+    	$("#nonskid2_table tr:last").after("<tr id='nonskid2_row" + $rowno + "' style='text-align: center;'>><td class='col-md-5'><input type='text' name='nonskid2_name[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_nonskid2_row('nonskid2_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+
+    function remove_nonskid2_row(rowno){
+		$('#'+rowno).remove();
+    }
+
+    function add_checker_employee(){
+
+    	event.preventDefault();
+
+    	$rowno = $("#checker_table tr").length;
+    	$rowno = $rowno + 1;
+    	$("#checker_table tr:last").after("<tr id='checker_row" + $rowno + "' style='text-align: center;'>><td class='col-md-5'><input type='text' name='checker_name[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_checker_row('checker_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+
+    function remove_checker_row(rowno){
+		$('#'+rowno).remove();
+    }
+
+    function add_nonskid3_employee(){
+
+    	event.preventDefault();
+
+    	$rowno = $("#nonskid3_table tr").length;
+    	$rowno = $rowno + 1;
+    	$("#nonskid3_table tr:last").after("<tr id='nonskid3_row" + $rowno + "' style='text-align: center;'>><td class='col-md-5'><input type='text' name='nonskid3_name[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_nonskid3_row('nonskid3_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+
+    function remove_nonskid3_row(rowno){
+		$('#'+rowno).remove();
+    }
+
+    function add_loader_employee(){
+
+    	event.preventDefault();
+
+    	$rowno = $("#loader_table tr").length;
+    	$rowno = $rowno + 1;
+    	$("#loader_table tr:last").after("<tr id='loader_row" + $rowno + "' style='text-align: center;'>><td class='col-md-5'><input type='text' name='loader_name[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_loader_row('loader_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+
+    function remove_loader_row(rowno){
+		$('#'+rowno).remove();
+    }
+
+    function add_nonskid4_employee(){
+
+    	event.preventDefault();
+
+    	$rowno = $("#nonskid4_table tr").length;
+    	$rowno = $rowno + 1;
+    	$("#nonskid4_table tr:last").after("<tr id='nonskid4_row" + $rowno + "' style='text-align: center;'>><td class='col-md-5'><input type='text' name='nonskid4_name[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_nonskid4_row('nonskid4_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+
+    function remove_nonskid4_row(rowno){
+		$('#'+rowno).remove();
+    }
+
+    function add_kamador_employee(){
+
+    	event.preventDefault();
+
+    	$rowno = $("#kamador_table tr").length;
+    	$rowno = $rowno + 1;
+    	$("#kamador_table tr:last").after("<tr id='kamador_row" + $rowno + "' style='text-align: center;'>><td class='col-md-5'><input type='text' name='kamador_name[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_kamador_row('kamador_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+
+    function remove_kamador_row(rowno){
 		$('#'+rowno).remove();
     }
 
 
 
+
+
+  //   function add_employee(){
+
+  //   	event.preventDefault();
+
+  //   	$rowno=$("#employee_table tr").length;
+  //       $rowno=$rowno+1;
+
+  //       $("#employee_table tr:last").after("<tr id='employee_row" + $rowno + "' style='text-align: center;'><div class='form-group'><td class='col-md-5'><input type='text' name='employee_name[]' class='form-control input_type' autofocus></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "') style='font-weight: bold;'><span class='fa fa-minus'></span></button></td></div></tr>");
+  //   }
+
+  //   function remove_employee_row(rowno){
+		// $('#'+rowno).remove();
+  //   }
+
+   // function saveEmployee(){
+
+    // 	event.preventDefault();
+
+    // 	var position = document.getElementById('position').value;
+    // 	var input_employee_name = $("input[name='employee_name[]']").map(function(){return $(this).val().toUpperCase() || "";}).get();
+
+    // 	count = 0;
+    // 	for(var i = 0; i < input_employee_name.length; i++){
+
+    // 		var employeeData = {
+    // 			employee_name: input_employee_name[i]
+    // 		}
+
+    // 		firebase.database().ref('employee/'+plant+'/'+position).push(employeeData);
+    // 		count++;
+    // 	}
+
+    // 	if(count == input_employee_name.length){
+    // 		alert('Employee has been added..');
+    // 		window.location='attendance.html';
+    // 	}
+    // }
+
     function submitForm(){
 
     	event.preventDefault();
 
-    	var input_name_machine1 = $("input[name='machine_1_name[]']").map(function(){return $(this).val() || "";}).get();
+    	var input_machine1_name = $("input[name='machine1_name[]']").map(function(){return $(this).val() || "";}).get();
+    	var input_machine3_name = $("input[name='machine3_name[]']").map(function(){return $(this).val() || "";}).get();
+    	var input_forklift_operator_name = $("input[name='forklift_operator_name[]']").map(function(){return $(this).val() || "";}).get();
+    	var input_mechanic_name = $("input[name='mechanic_name[]']").map(function(){return $(this).val() || "";}).get();
+
+
+    	console.log(input_machine1_name, input_machine3_name, input_forklift_operator_name, input_mechanic_name);
     }
 
-    function saveEmployee(){
-
-    	event.preventDefault();
-
-    	var position = document.getElementById('position').value;
-    	var input_employee_name = $("input[name='employee_name[]']").map(function(){return $(this).val().toUpperCase() || "";}).get();
-
-    	count = 0;
-    	for(var i = 0; i < input_employee_name.length; i++){
-
-    		var employeeData = {
-    			employee_name: input_employee_name[i]
-    		}
-
-    		firebase.database().ref('employee/'+plant+'/'+position).push(employeeData);
-    		count++;
-    	}
-
-    	if(count == input_employee_name.length){
-    		alert('Employee has been added..');
-    		window.location='attendance.html';
-    	}
-    }
+   
 
 </script>
 <style>
@@ -277,14 +432,12 @@
                 <!--overview start-->
                 <div class="row">
                     <div class="col-md-12">
-                        <!-- <h3 class="page-header"><i class="fa fa-home"></i> History</h3> -->
                         <ol class="breadcrumb">
-                            <!-- <li><i class="fa fa-building"></i><?php echo $plant; ?></li> -->
                             <li><i class="icon_document"></i><a href="attendance.html">Employee Attendance</a></li>                       
                         </ol>
                     </div>
                 </div>
-                <div class="row">
+               <!--  <div class="row">
                 	<div class="col-md-12">
                 		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#employeeModal">
                 			<strong>Add Employee <span class="fa fa-plus"></span></strong>
@@ -302,55 +455,50 @@
                 					<div class="modal-body">
                 						<div class="row">
                 							<div class="col-md-12">
-                								<!-- <section class="panel"> -->
-                									<!-- <div class="panel-body"> -->
-                										<div class="row">
-                											<div class="col-md-3">
-			                                                    <label for="category">For Category</label>
-			                                                </div>
-			                                                <div class="col-md-9">
-			                                                	<select name="position" id="position" class="form-control">
-			                                                		<option value="machine">MACHINE 1 / MACHINE 3</option>
-			                                                		<option value="non-skid1">NON-SKID 1</option>
-			                                                		<option value="non-skid2">NON-SKID 2</option>
-			                                                		<option value="non-skid3">NON-SKID 3</option>
-			                                                		<option value="non-skid4">NON-SKID 4</option>
-			                                                		<option value="kamador">KAMADOR</option>
-			                                                		<option value="forklift_operator">FORKLIFT OPERATOR</option>
-			                                                		<option value="mechanic">MECHANIC</option>
-			                                                		<option value="tagapukpok">TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG</option>
-			                                                		<option value="checker">CHECKER / FOREMAN / BATCHER / SUPERVISOR</option>
-			                                                		<option value="loader">LOADER</option>
-			                                                		<option value="other">OTHER</option>
-			                                                	</select>
-			                                                </div>
-                										</div>
-                										<div class="row" style="margin: 5px;">
-                											<table id="employee_table" align="center">
-                												<tr>
-					                                                <td class="col-md-5">
-					                                                    <label for="employee_name">Name</label>
-					                                                </td>
-					                                                <td class="col-md-1">
-					                                                    <label for="psi"></label>
-					                                                </td>
-					                                            </tr>
-					                                            <tr id="employee_row" style="text-align: center;">
-					                                                <td class="col-md-5">
-					                                                    <div class="form-group">
-					                                                        <input type="text" name="employee_name[]" class="form-control input_type" autofocus>
-					                                                    </div>
-					                                                </td>
-					                                                <td class="col-md-1">
-					                                                    <div class="form-group">
-					                                                        <button type="button" onclick="add_employee();" class='btn btn-primary btn-md' autocomplete="off" style="font-weight: bold;"><span class="fa fa-plus"></span></button> 
-					                                                    </div>
-					                                                </td>
-					                                            </tr>
-                											</table>
-                										</div>
-                									<!-- </div> -->
-                								<!-- </section> -->
+        										<div class="row">
+        											<div class="col-md-3">
+	                                                    <label for="category">For Category</label>
+	                                                </div>
+	                                                <div class="col-md-9">
+	                                                	<select name="position" id="position" class="form-control">
+	                                                		<option value="machine">MACHINE 1 / MACHINE 3</option>
+	                                                		<option value="non-skid1">NON-SKID 1</option>
+	                                                		<option value="non-skid2">NON-SKID 2</option>
+	                                                		<option value="non-skid3">NON-SKID 3</option>
+	                                                		<option value="non-skid4">NON-SKID 4</option>
+	                                                		<option value="kamador">KAMADOR</option>
+	                                                		<option value="forklift_operator">FORKLIFT OPERATOR</option>
+	                                                		<option value="mechanic">MECHANIC</option>
+	                                                		<option value="tagapukpok">TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG</option>
+	                                                		<option value="checker">CHECKER / FOREMAN / BATCHER / SUPERVISOR</option>
+	                                                		<option value="loader">LOADER</option>
+	                                                		<option value="other">OTHER</option>
+	                                                	</select>
+	                                                </div>
+        										</div>
+        										<div class="row" style="margin: 5px;">
+        											<table id="employee_table" align="center">
+        												<tr>
+        													
+			                                                <td class="col-md-5">
+			                                                    <label for="employee_name">Name</label>
+			                                                </td>
+			                                                <td class="col-md-1">
+			                                                    <label for=""></label>
+			                                                </td>
+			                                            </tr>
+			                                            <tr id="employee_row" style="text-align: center;">
+			                                                <div class="form-group">
+				                                                <td class="col-md-5">
+				                                                    <input type="text" name="employee_name[]" class="form-control input_type" autofocus>
+				                                                </td>
+				                                                <td class="col-md-1">
+				                                                    <button type="button" onclick="add_employee();" class='btn btn-primary btn-md' autocomplete="off" style="font-weight: bold;"><span class="fa fa-plus"></span></button> 
+			                                                     </td>
+		                                                    </div>
+			                                            </tr>
+        											</table>
+        										</div>
                 							</div>
                 						</div>
                 					</div>
@@ -363,54 +511,343 @@
                 			</div>
                 		</div>
                 	</div>
-                </div>
-                <form id="form" name="form" class="form-horizontal" onsubmit="if(confirm('Proceed?')){submitForm();}else{ event.preventDefault();}">
-	                <div class="row">
-	                    <div class="col-md-6">
-                            <section class="panel">
-                                <header class="panel-heading">
-                                    MACHINE 1
-                                </header>
-                                <div class="panel-body">
-                                	<div class="row">
-                                        <table id="machine_1_table" align="center">
-                                            <tr>
-                                                <td class="col-md-5">
-                                                    <label for="machine_1_name">Name</label>
-                                                </td>
-                                                <td class="col-md-1">
-                                                    <label for="psi"></label>
-                                                </td>
-                                            </tr>
-                                            <tr id="machine1_row1" style="text-align: center;">
-                                                <td class="col-md-5">
-                                                    <div class="form-group">
-                                                        <!-- <input type="text" name="machine_1_name[]" class="form-control input_type" autofocus> -->
-                                                        <select name="list_of_machine1_employee" id="list_of_machine1_employee" class="form-control">
-                                                        	<option value="">Select...</option>
-                                                        </select>
-                                                    </div>
-                                                </td>
-                                                <td class="col-md-1">
-                                                    <div class="form-group">
-                                                        <button type="button" onclick="add_machine1_employee();" class='btn btn-primary btn-md' autocomplete="off" style="font-weight: bold;"><span class="fa fa-plus"></span></button> 
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        </table>
-	                                </div>
-	                                <div class="row">
-	                                	<table>
-	                                		<tr>
-	                                			
-	                                		</tr>
-	                                	</table>
-	                                </div>
-	                            </div>
-                            </section>
-	                    </div>
-	                </div>
-                </form>
+                </div> -->
+            	<section class="panel">
+            		<header class="panel-heading">
+                        <div class="row">
+                        	<div class="col-md-offset-5 col-md-2">
+                        		<h4><strong>PLANT LINE UP</strong></h4>
+                        	</div>
+                        </div>
+                        <div class="row">
+                        	<div class="col-md-12">
+                        		<strong><span id="id_heading"></span></strong>
+                        	</div>
+                        </div>
+                    </header>
+                    <form id="form" name="form" class="form-horizontal" onsubmit="if(confirm('Proceed?')){submitForm();}else{ event.preventDefault();}">
+                		<div class="panel-body">
+                			<div class="row">
+			                    <div class="col-md-6">
+		                            <section class="panel">
+		                                <header class="panel-heading">
+		                                    MACHINE 1
+		                                </header>
+		                                <div class="panel-body">
+		                                	<div class="row">
+		                                        <table id="machine1_table" align="center">
+		                                            <tr>
+		                                                <td class="col-md-5">
+		                                                    <label for="machine1_name">Name</label>
+		                                                </td>
+		                                            </tr>
+		                                            <tr id="machine1_row1" style="text-align: center;">
+		                                            	<td class="col-md-5">
+		                                                    <input type="text" name="machine1_name[]" class="form-control input_type" autofocus>
+		                                            	</td>
+		                                            	<td class="col-md-1">
+		                                                    <button type="button" onclick="add_machine1_employee();" class='btn btn-primary btn-md'><span class="fa fa-plus"></span></button> 
+		                                            	</td>
+		                                            </tr>
+		                                        </table>
+			                                </div>
+			                            </div>
+		                            </section>
+			                    </div>
+			                    <div class="col-md-6">
+			                    	<section class="panel">
+			                    		<header class="panel-heading">
+			                    			FORKLIFT OPERATOR
+			                    		</header>
+			                    		<div class="panel-body">
+			                    			<div class="row">
+			                    				<table id="forklift_operator_table" align="center">
+			                    					<tr>
+			                    						<td class="col-md-5">
+			                    							<label for="forklift_operator_name">Name</label>
+			                    						</td>
+			                    					</tr>
+			                    					<tr id="forklift_operator_row1" style="text-align: center;">
+			                    						<td class="col-md-5">
+			                    							<input type="text" name="forklift_operator_name[]" class="form-control input_type" autofocus>
+			                    						</td>
+			                    						<td class="col-md-1">
+			                    							<button type="button" onclick="add_forklift_operator_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                    						</td>
+			                    					</tr>
+			                    				</table>
+			                    			</div>
+			                    		</div>
+			                    	</section>
+			                    </div>
+			                </div>
+			                <div class="row">
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				MACHINE 3
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="machine3_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="machine3_name">Name</label>
+			                							</td>
+			                						</tr>
+			                						<tr id="machine3_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="machine3_name[]" class="form-control input_type" autofocus></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_machine3_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				MECHANIC
+			                			</header>
+			                			<div class="panel-body">
+		                					<div class="row">
+		                						<table id="mechanic_table" align="center">
+		                							<tr>
+		                								<td class="col-md-5">
+		                									<label for="mechanic_name">Name</label>
+		                								</td>
+		                							</tr>
+		                							<tr id="mechanic_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="mechanic_name[]" class="form-control input_type" autofocus></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_mechanic_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+		                						</table>
+		                					</div>
+		                				</div>
+			                		</section>
+			                	</div>
+			                </div>
+			                <div class="row">
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				NON-SKID 1
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="nonskid1_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="nonskid1_name">Name</label>
+			                							</td>
+			                						</tr>
+			                						<tr id="nonskid1_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="nonskid1_name[]" class="form-control input_type" autofocus></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_nonskid1_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="tagapukpok_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="tagapukpok_name">Name</label>
+			                							</td>
+			                						</tr>
+			                						<tr id="tagapukpok_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="tagapukpok_name[]" class="form-control input_type" autofocus></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_tagapukpok_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                </div>
+			                <div class="row">
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				NON-SKID 2
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="nonskid2_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="nonskid2_name">Name</label>
+			                							</td>
+			                						</tr>
+			                						<tr id="nonskid2_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="nonskid2_name[]" class="form-control input_type" autofocus></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_nonskid2_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				CHECKER / FOREMAN / BATCHER / SUPERVISOR
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="checker_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="checker_name">Name</label>
+			                							</td>
+			                						</tr>
+			                						<tr id="checker_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="checker_name[]" class="form-control input_type" autofocus></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_checker_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                </div>
+			                <div class="row">
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				NON-SKID 3
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="nonskid3_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="nonskid3_name">Name</label>
+			                							</td>
+			                						</tr>
+			                						<tr id="nonskid3_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="nonskid3_name[]" class="form-control input_type" autofocus></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_nonskid3_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				LOADER
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="loader_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="loader_name">Name</label>
+			                							</td>
+			                						</tr>
+			                						<tr id="loader_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="loader_name[]" class="form-control input_type" autofocus></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_loader_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                </div>
+			                <div class="row">
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				NON-SKID 4
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="nonskid4_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="nonskid4_name"></label>
+			                							</td>
+			                						</tr>
+			                						<tr id="nonskid4_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="nonskid4_name[]" class="form-control input_type" autofocus></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_nonskid4_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				KAMADOR
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="kamador_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="kamador_name"></label>
+			                							</td>
+			                						</tr>
+			                						<tr id="kamador_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="kamador_name[]" class="form-control input_type" autofocus></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_kamador_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                </div>
+			                <div class="row">
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				OTHERS
+			                			</header>
+			                			<div class=""></div>
+			                		</section>
+			                	</div>
+			                	<div class="col-md-6"></div>
+			                </div>
+                		</div>
+                		<footer class="panel-footer">
+	            			<button type="submit" class="btn btn-primary btn-block"><strong>Submit</strong></button>
+	            		</footer>
+            		</form>
+            	</section>
             </section>
         </section>
     </section>
