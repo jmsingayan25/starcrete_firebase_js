@@ -182,6 +182,14 @@
             } else {
                 window.location.href = '../login.html';
             }
+
+            firebase.database().ref('delivery_delivered_order').on('child_changed', function(){
+                $(".se-pre-con").fadeIn("fast");
+                setTimeout(function(){
+                    tableData();
+                    $(".se-pre-con").fadeOut("slow");
+                }, 1000);
+            });
         });
 
         $('input[name="daterange"]').daterangepicker({
@@ -387,8 +395,6 @@
 
     function tableData(){
 
-        $(".se-pre-con").fadeIn("fast");
-
         var myTbody = "";
         var count = 1;
 
@@ -587,38 +593,95 @@
 
     function totalCountBadge(){
 
-        po_count = 0;
-        firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
-            if(orderSnapshot.val() != null){
-                firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').on('child_added', function(itemSnapshot){
-                    if(itemSnapshot.val().balance != 0){
-                        po_count = po_count + 1;
+        pending_order_count = 0;
+        ongoing_order_count = 0;
 
-                        document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + Number(po_count).toLocaleString('en') + "</span>";
+        firebase.database().ref('purchase_order').once('value', function(pendingOrderSnapshot){
 
-                    }
+            if(pendingOrderSnapshot.val() != null){
+
+                pendingOrderSnapshot.forEach(function(pendingOrderChildSnapshot){
+
+                    firebase.database().ref('purchase_order/'+pendingOrderChildSnapshot.key+'/item').once('value', function(itemSnapshot){
+
+                        pending_order_count = 0;
+
+                        itemSnapshot.forEach(function(itemChildSnapshot){
+
+                            if(itemChildSnapshot.val().balance != 0){
+
+                                pending_order_count++;
+                            }
+                        });
+
+                        document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + Number(pending_order_count).toLocaleString('en') + "</span>";
+
+                    });
                 });
             }
+    
+            $(".se-pre-con").fadeOut("slow");
         });
 
-        if(po_count == 0){
-            document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
+        if(pending_order_count == 0){
+            document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + pending_order_count + "</span>";
+
+            $(".se-pre-con").fadeOut("slow");
         }
 
-        do_count = 0;
-        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot) {
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).once('value', function(ongoingOrderSnapshot) {
+
+            ongoing_order_count = 0;
+
             if(ongoingOrderSnapshot.val() != null){
-                do_count = do_count + 1;
 
-                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + Number(do_count).toLocaleString('en') + "</span>";
-
+                ongoingOrderSnapshot.forEach(function(ongoingOrderChildSnapshot){
+                    ongoing_order_count = ongoing_order_count + 1;
+                });
+                
+                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" +  Number(ongoing_order_count).toLocaleString('en') + "</span>";
             }
         });
 
-        if(do_count == 0){
-            document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+        if(ongoing_order_count == 0){
+            document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + ongoing_order_count + "</span>";
         }
     }
+
+    // function totalCountBadge(){
+
+    //     po_count = 0;
+    //     firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
+    //         if(orderSnapshot.val() != null){
+    //             firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').on('child_added', function(itemSnapshot){
+    //                 if(itemSnapshot.val().balance != 0){
+    //                     po_count = po_count + 1;
+
+    //                     document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + Number(po_count).toLocaleString('en') + "</span>";
+
+    //                 }
+    //             });
+    //         }
+    //     });
+
+    //     if(po_count == 0){
+    //         document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
+    //     }
+
+    //     do_count = 0;
+    //     firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot) {
+    //         if(ongoingOrderSnapshot.val() != null){
+    //             do_count = do_count + 1;
+
+    //             document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + Number(do_count).toLocaleString('en') + "</span>";
+
+    //         }
+    //     });
+
+    //     if(do_count == 0){
+    //         document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
+    //     }
+    // }
 
     // function printPo(){
 

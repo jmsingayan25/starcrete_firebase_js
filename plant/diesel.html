@@ -83,6 +83,7 @@
 <script>
 	
 	var timer = null;
+    var plant = "";
 
     function goAway() {
         clearTimeout(timer);
@@ -96,9 +97,10 @@
     window.addEventListener('mousemove', goAway, true);
     window.addEventListener('keypress', goAway, true);
 
-    goAway();
+    // goAway();
 
 	$(document).ready(function(){
+
         $('.filterable .btn-filter').click(function(){
             var $panel = $(this).parents('.filterable'),
             $filters = $panel.find('.filters input'),
@@ -166,6 +168,14 @@
             } else {
                 window.location.href = '../login.html';
             }
+
+            firebase.database().ref('available_stock').orderByKey().equalTo(plant).on('child_changed', function(){
+                $(".se-pre-con").fadeIn("fast");
+                setTimeout(function() {
+                    DisplayCurrentData();
+                    $(".se-pre-con").fadeOut("slow");
+                }, 1000);
+            });
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);

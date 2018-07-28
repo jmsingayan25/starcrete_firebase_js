@@ -104,7 +104,7 @@
     window.addEventListener('mousemove', goAway, true);
     window.addEventListener('keypress', goAway, true);
 
-    goAway();
+    // goAway();
     
     $(document).ready(function(){
 
@@ -112,6 +112,7 @@
             $(".se-pre-con").fadeIn("fast");
             setTimeout(function() {
                 tableData(plant);
+                $(".se-pre-con").fadeOut("slow");
             }, 1000);
         });
 

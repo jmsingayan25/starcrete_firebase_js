@@ -114,6 +114,15 @@
     goAway();
 
 	$(document).ready(function(){
+
+        firebase.database().ref('delivery_backloaded_order').on('child_changed', function(){
+            $(".se-pre-con").fadeIn("fast");
+            setTimeout(function(){
+                tableData();
+                $(".se-pre-con").fadeOut("slow");
+            }, 1000);
+        });
+
         $('.filterable .btn-filter').click(function(){
             var $panel = $(this).parents('.filterable'),
             $filters = $panel.find('.filters input'),
@@ -384,8 +393,6 @@
     }
 
     function tableData(){
-
-        $(".se-pre-con").fadeIn("fast");
 
     	myTbody = "";
     	count = 1;

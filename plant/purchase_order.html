@@ -183,10 +183,11 @@
                 window.location.href = '../login.html';
             }
 
-            firebase.database().ref('purchase_order').orderByKey().limitToLast(1).on('child_changed', function(){
+            firebase.database().ref('purchase_order').on('child_changed', function(){
                 $(".se-pre-con").fadeIn("fast");
                 setTimeout(function() {
                     tableData();
+                    $(".se-pre-con").fadeOut("slow");
                 }, 1000);
             });
         });

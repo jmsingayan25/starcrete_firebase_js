@@ -82,26 +82,13 @@
     <script src="../js_config/function.js"></script>
 
 <script>
-    
-    var timer = null;
 
-    function goAway() {
-        clearTimeout(timer);
-        timer = setTimeout(function() {
-            // window.location.reload(true);
-            // totalCountBadge();
-            // tableData();
-        }, 60000);
-    }
-
-    window.addEventListener('mousemove', goAway, true);
-    window.addEventListener('keypress', goAway, true);
-
-    goAway();
+    var plant = "";
 
     $(document).ready(function(){
 
         startTime();
+
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
 
@@ -116,7 +103,6 @@
                     }
                     
                     tableData();
-                    totalCountBadge();
                     // goAway(plant);
                     
                     if(plant == 'Bravo'){
@@ -134,6 +120,52 @@
             } else {
                 window.location.href = '../login.html';
             }
+
+            // firebase.database().ref('purchase_order').on('child_added', function(){
+            //     $(".se-pre-con").fadeIn("fast");
+            //     setTimeout(function() {
+            //         tableData();
+            //     }, 1000);
+            // });
+
+            firebase.database().ref('purchase_order').on('child_changed', function(){
+                $(".se-pre-con").fadeIn("fast");
+                setTimeout(function() {
+                    tableData();
+                    $(".se-pre-con").fadeOut("slow");
+                }, 1000);
+            });
+
+            firebase.database().ref('delivery_ongoing_order').on('child_changed', function(){
+                $(".se-pre-con").fadeIn("fast");
+                setTimeout(function() {
+                    tableData();
+                    $(".se-pre-con").fadeOut("slow");
+                }, 1000);
+            });
+
+            firebase.database().ref('delivery_ongoing_order').on('child_removed', function(){
+                $(".se-pre-con").fadeIn("fast");
+                setTimeout(function() {
+                    tableData();
+                    $(".se-pre-con").fadeOut("slow");
+                }, 1000);
+            });
+
+            // firebase.database().ref('available_stock').on('child_added', function(){
+            //     $(".se-pre-con").fadeIn("fast");
+            //     setTimeout(function() {
+            //         tableData();
+            //     }, 1000);
+            // });
+
+            firebase.database().ref('available_stock').on('child_changed', function(){
+                $(".se-pre-con").fadeIn("fast");
+                setTimeout(function() {
+                    tableData();
+                    $(".se-pre-con").fadeOut("slow");
+                }, 1000);
+            });
         });
 
         document.getElementById('link_delivered_order').innerHTML = "<a href='delivery_delivered_order.html?date=" + new Date().toLocaleDateString('en') + "' class='view_details_btn'><strong>View Detail >></strong></a>";
@@ -145,110 +177,165 @@
 
     function tableData(){
 
-        $(".se-pre-con").fadeIn("fast");
-
+        pending_order_count = 0;
+        ongoing_order_count = 0;
         delivered_order_count = 0;
         backloaded_order_count = 0;
+        diesel_count = 0;
+
+        /*START OF PENDING ORDER BLOCK*/
+
+        firebase.database().ref('purchase_order').once('value', function(pendingOrderSnapshot){
+
+            pending_order_count = 0;
+
+            if(pendingOrderSnapshot.val() != null){
+
+                pendingOrderSnapshot.forEach(function(pendingOrderChildSnapshot){
+
+                    firebase.database().ref('purchase_order/'+pendingOrderChildSnapshot.key+'/item').once('value', function(itemSnapshot){
+                        itemSnapshot.forEach(function(itemChildSnapshot){
+
+                            if(itemChildSnapshot.val().balance != 0){
+
+                                pending_order_count++;
+                            }
+                        });
+
+                        document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + Number(pending_order_count).toLocaleString('en') + "</span>";
+
+                        document.getElementById('id_pending_order').innerHTML = Number(pending_order_count).toLocaleString('en');
+                    });
+                });
+            }
+    
+            $(".se-pre-con").fadeOut("slow");
+        });
+
+        if(pending_order_count == 0){
+            document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + pending_order_count + "</span>";
+            document.getElementById('id_pending_order').innerHTML = pending_order_count;
+
+            $(".se-pre-con").fadeOut("slow");
+        }
+
+        /*END OF PENDING ORDER BLOCK*/
+
+        /*START OF ONGOING ORDER BLOCK*/
+
+        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).once('value', function(ongoingOrderSnapshot){
+
+            ongoing_order_count = 0;
+
+            if(ongoingOrderSnapshot.val() != null){
+
+                ongoingOrderSnapshot.forEach(function(ongoingOrderChildSnapshot){
+
+                    ongoing_order_count++;
+                });
+
+                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + Number(ongoing_order_count).toLocaleString('en') + "</span>";
+
+                document.getElementById('id_ongoing_order').innerHTML = Number(ongoing_order_count).toLocaleString('en');
+            }
+    
+    $(".se-pre-con").fadeOut("slow");
+        });
+
+        if(ongoing_order_count == 0){
+            document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + ongoing_order_count + "</span>";
+            document.getElementById('id_ongoing_order').innerHTML = ongoing_order_count;
+
+    
+    $(".se-pre-con").fadeOut("slow");
+        }
+
+        /*END OF ONGOING ORDER BLOCK*/
+
+        /*START OF DELIVERY ORDER BLOCK*/
 
         newDate = new Date().toLocaleDateString('en');
         currentDate = new Date(newDate);
 
-        firebase.database().ref('delivery_delivered_order').orderByChild('delivered_plant').equalTo(plant).on('child_added', function(deliveredOrderSnapshot) {
+        firebase.database().ref('delivery_delivered_order').orderByChild('delivered_plant').equalTo(plant).once('value', function(deliveredOrderSnapshot) {
+
+            delivered_order_count = 0;
+
             if(deliveredOrderSnapshot.val() != null){
 
-                if(new Date(deliveredOrderSnapshot.val().date).getTime() == currentDate.getTime()){
-                    delivered_order_count = delivered_order_count + 1;
-                }
-    
+                deliveredOrderSnapshot.forEach(function(deliveredOrderChildSnapshot){
+
+                    if(new Date(deliveredOrderChildSnapshot.val().date).getTime() == currentDate.getTime()){
+                        delivered_order_count = delivered_order_count + 1;
+                    }
+                });
+                
                 document.getElementById('id_delivered_order').innerHTML = Number(delivered_order_count).toLocaleString('en');
+
             }
 
-            $(".se-pre-con").fadeOut("slow");
+    
+    $(".se-pre-con").fadeOut("slow");
         });
 
         if(delivered_order_count == 0){
             document.getElementById('id_delivered_order').innerHTML = delivered_order_count;
 
-            $(".se-pre-con").fadeOut("slow");
+    
+    $(".se-pre-con").fadeOut("slow");
         }
 
-        firebase.database().ref('delivery_backloaded_order').orderByChild('backloaded_plant').equalTo(plant).on('child_added', function(backloadedOrderSnapshot) {
+        /*END OF DELIVERY ORDER BLOCK*/
+
+        /*START OF BACKLOADED ORDER BLOCK*/
+
+        firebase.database().ref('delivery_backloaded_order').orderByChild('backloaded_plant').equalTo(plant).once('value', function(backloadedOrderSnapshot) {
+
+            backloaded_order_count = 0;
+
             if(backloadedOrderSnapshot.val() != null){
 
-                if(new Date(backloadedOrderSnapshot.val().date).getTime() == currentDate.getTime()){
-                    backloaded_order_count = backloaded_order_count + 1;
-                }
-    
+                backloadedOrderSnapshot.forEach(function(backloadedOrderChildSnapshot){
+
+                    if(new Date(backloadedOrderChildSnapshot.val().date).getTime() == currentDate.getTime()){
+                        backloaded_order_count = backloaded_order_count + 1;
+                    }
+                });
+                
                 document.getElementById('id_backloaded_order').innerHTML = Number(backloaded_order_count).toLocaleString('en');
             }
 
-            $(".se-pre-con").fadeOut("slow");
+    
+    $(".se-pre-con").fadeOut("slow");
         });
 
         if(backloaded_order_count == 0){
             document.getElementById('id_backloaded_order').innerHTML = backloaded_order_count;
 
-            $(".se-pre-con").fadeOut("slow");
+    
+    $(".se-pre-con").fadeOut("slow");
         }
 
-        diesel_count = 0;
+        /*END OF BACKLOADED ORDER BLOCK*/
 
-        firebase.database().ref('available_stock/').on('child_added', function(dieselSnapshot){
+        /*START OF DIESEL STOCK*/
 
-            if(dieselSnapshot.key == plant){
-                diesel_count = dieselSnapshot.val().Liters;  
-            }
+        firebase.database().ref('available_stock').orderByKey().equalTo(plant).once('value', function(dieselSnapshot){
+            dieselSnapshot.forEach(function(dieselChildSnapshot){
+               diesel_count = dieselChildSnapshot.val().Liters;
+               document.getElementById('id_diesel').innerHTML = Number(diesel_count).toLocaleString('en');
+            });
+        });
 
+        if(diesel_count == 0){
             document.getElementById('id_diesel').innerHTML = Number(diesel_count).toLocaleString('en');
 
-            $(".se-pre-con").fadeOut("slow");
-        });
-    }
-
-   function totalCountBadge(){
-
-        po_count = 0;
-        firebase.database().ref('purchase_order').on('child_added', function(orderSnapshot){
-            if(orderSnapshot.val() != null){
-                firebase.database().ref('purchase_order/'+orderSnapshot.key+'/item').on('child_added', function(itemSnapshot){
-                    if(itemSnapshot.val().balance != 0){
-                        po_count = po_count + 1;
-
-                        document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + Number(po_count).toLocaleString('en') + "</span>";
-
-                        document.getElementById('id_pending_order').innerHTML = Number(po_count).toLocaleString('en');
-                    }
-                });
-            }
-
-            $(".se-pre-con").fadeOut("slow");
-        });
-
-        if(po_count == 0){
-            document.getElementById('id_count_existing_po').innerHTML = "<span class='badge'>" + po_count + "</span>";
-            document.getElementById('id_pending_order').innerHTML = po_count;
-
-            $(".se-pre-con").fadeOut("slow");
+    
+    $(".se-pre-con").fadeOut("slow");
         }
 
-        do_count = 0;
-        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).on('child_added', function(ongoingOrderSnapshot) {
-            if(ongoingOrderSnapshot.val() != null){
-                do_count = do_count + 1;
 
-                document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + Number(do_count).toLocaleString('en') + "</span>";
-
-                document.getElementById('id_ongoing_order').innerHTML = Number(do_count).toLocaleString('en');
-            }
-            $(".se-pre-con").fadeOut("slow");
-        });
-
-        if(do_count == 0){
-            document.getElementById('id_count_ongoing_order').innerHTML = "<span class='badge'>" + do_count + "</span>";
-            document.getElementById('id_ongoing_order').innerHTML = do_count;
-
-            $(".se-pre-con").fadeOut("slow");
-        }
+        /*END OF DIESEL STOCK*/
     }
 
     function startTime() {
