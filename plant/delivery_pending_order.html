@@ -94,7 +94,7 @@
 
 <script>
 	
-
+    var plant = "";
     var timer = null;
     var fromDate = "";
     var endDate = "";
@@ -182,8 +182,16 @@
             } else {
                 window.location.href = '../login.html';
             }
-        });
 
+            firebase.database().ref('purchase_order').on('child_changed', function(){
+                $(".se-pre-con").fadeIn("fast");
+                setTimeout(function() {
+                    tableData();
+                    $(".se-pre-con").fadeOut("slow");
+                }, 1000);
+            });
+        });
+        
         $('input[name="daterange"]').daterangepicker({
             opens: 'right'
         }, function(start, end, label) {
@@ -397,7 +405,6 @@
 
     function tableData(){
 
-        $(".se-pre-con").fadeIn("fast");
         var myTbody = "";
         var count = 1;
         
@@ -411,17 +418,6 @@
 
                 $(".se-pre-con").fadeOut("slow");
 
-            }else if(drSnapshot.val() != null){
-
-                drSnapshot.forEach(function(drChildSnapshot){
-
-                    if(drChildSnapshot.val().issued_po_plant != plant){
-                        myTbody = "<tr><td colspan='9' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-
-                        document.getElementById("orderList").innerHTML = myTbody;
-                        $(".se-pre-con").fadeOut("slow");
-                    }
-                });
             }
         });
         
@@ -478,7 +474,16 @@
                                 myTbody += "<td><strong>" + date + "</strong></td>";
                                 myTbody += "<td><a href='delivery_issue_dr_form.html?key=" + orderSnapshot.key + "&itemKey=" + itemChildSnapshot.key + "' value='Issue DR No.' class='btn btn-sm btn-block' style='background-color: #388e3c; color: white; margin-bottom: 5px; font-weight: bold;'><strong>Issue DR No.</a></strong></td></tr>";
 
-                                document.getElementById('orderList').innerHTML = myTbody;
+                                 if(myTbody == ""){
+
+                                    myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                                    document.getElementById("orderList").innerHTML = myTbody;
+                                }else{
+                                    document.getElementById("orderList").innerHTML = myTbody;
+                                    
+                                }
+                                
                                 $(function(){ $(".tooltips").tooltip(); });
                                 count++;
                             });
