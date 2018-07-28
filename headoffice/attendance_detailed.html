@@ -213,6 +213,72 @@ function CurrentDate()
      var searchDate = new Date().toLocaleDateString('en', options);
      document.getElementById('currentDate').innerHTML = searchDate;
 }
+
+
+    function add_kamador_employee(){
+
+        event.preventDefault();
+
+        $rowno = $("#kamador_table tr").length;
+        $rowno = $rowno + 1;
+        $("#kamador_table tr:last").after("<tr id='kamador_row" + $rowno + "' style='text-align: center;'>><td class='col-md-2'><input type='text' name='kamador_name[]' class='form-control input_type' autofocus required></td> <td class='col-md-2'><input type='text' name='kamador_name[]' class='form-control input_type' autofocus></td> <td class='col-md-2'><input type='text' name='kamador_name[]' class='form-control input_type' autofocus></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_kamador_row('kamador_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+
+    function remove_kamador_row(rowno){
+        $('#'+rowno).remove();
+    }
+
+
+    function add_kamador_agency(){
+
+        event.preventDefault();
+
+        $rowno = $("#kamador_table_agency tr").length;
+        $rowno = $rowno + 1;
+        $("#kamador_table_agency tr:last").after("<tr id='kamador_row_agency" + $rowno + "' style='text-align: center;'>><td class='col-md-2'><input type='text' name='kamador_name_agency[]' class='form-control input_type' autofocus required></td> <td class='col-md-2'><input type='text' name='kamador_name_agency[]' class='form-control input_type' autofocus></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_kamador_agency('kamador_row_agency" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+     function remove_kamador_agency(rowno){
+        $('#'+rowno).remove();
+    }
+
+      function add_kamador_plant(){
+
+        event.preventDefault();
+
+        $rowno = $("#kamador_table_plant tr").length;
+        $rowno = $rowno + 1;
+        $("#kamador_table_plant tr:last").after("<tr id='kamador_row_plant" + $rowno + "' style='text-align: center;'>><td class='col-md-2'><input type='text' name='kamador_name_plant[]' class='form-control input_type' autofocus required></td> <td class='col-md-2'><input type='text' name='kamador_name_plant[]' class='form-control input_type' autofocus></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_kamador_plant('kamador_row_plant" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+     function remove_kamador_plant(rowno){
+        $('#'+rowno).remove();
+    }
+
+
+      function add_kamador_Motor(){
+
+        event.preventDefault();
+
+        $rowno = $("#kamador_table_Motor tr").length;
+        $rowno = $rowno + 1;
+        $("#kamador_table_Motor tr:last").after("<tr id='kamador_row_Motor" + $rowno + "' style='text-align: center;'>><td class='col-md-2'><input type='text' name='kamador_name_Motor[]' class='form-control input_type' autofocus required></td> <td class='col-md-2'><input type='text' name='kamador_name_Motor[]' class='form-control input_type' autofocus></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_kamador_Motor('kamador_row_Motor" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+     function remove_kamador_Motor(rowno){
+        $('#'+rowno).remove();
+    }
+
+        function add_kamador_Trucking(){
+
+        event.preventDefault();
+
+        $rowno = $("#kamador_table_Motor tr").length;
+        $rowno = $rowno + 1;
+        $("#kamador_table_Trucking tr:last").after("<tr id='kamador_row_Trucking" + $rowno + "' style='text-align: center;'>><td class='col-md-2'><input type='text' name='kamador_name_Trucking[]' class='form-control input_type' autofocus required></td> <td class='col-md-2'><input type='text' name='kamador_name_Trucking[]' class='form-control input_type' autofocus></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_kamador_Trucking('kamador_row_Trucking" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+     function remove_kamador_Trucking(rowno){
+        $('#'+rowno).remove();
+    }
+
+
 </script>
 <style>
 .view_details_btn{
@@ -346,29 +412,241 @@ function CurrentDate()
                     </div>
                 </div>
 
-                    <section class="panel">
+               <!--      <section class="panel">
                         <header class="panel-heading">
                             <div align="center"><strong>OFFICE</strong></div>
                                 </header>
 
-                    </section>
-                        <div class="col-md-6">
+                    </section> -->
+                    <div class="row">
+                        <div class="col-md-12">
                             <section class="panel">
                                 <header class="panel-heading">
-                                <div align="center"><strong>Time In</strong></div>
+                                <div align="center"><strong>OFFICE</strong></div>
                                 </header>
-                                <div>
-                                </div>
+                                <div class="panel-body">
+                                <div class="row">
+                                       <div class="col-md-12"> 
+                                        <table id="kamador_table" align="center">
+                                         
+                                                    <tr>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name">Name</label>
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name">Time In</label>
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name">Time Out</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="kamador_row1" style="text-align: center;">
+                                                        <td class="col-md-2"><input type="text" name="kamador_name[]" class="form-control input_type" autofocus></td>
+                                                         <td class="col-md-2"><input type="text" name="kamador_name[]" class="form-control input_type" autofocus></td>
+                                                          <td class="col-md-2"><input type="text" name="kamador_name[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-1">
+                                                            <button type="button" onclick="add_kamador_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+                                                        </td>
+                                                         
+                                                    </tr>
 
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                              <div class="row">
+                            <div class="col-md-12">
+                            <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
+                            </div>
+                            </div>
                             </section>
+                          
+            
                      </div>
-                        <div class="col-md-6">
+                </div>
+                <!-- tab -->
+                <ul class="nav nav-tabs">
+                                    <li class="active"><a data-toggle="tab" href="#tabbravo"><strong>Agency</strong></a></li>
+                                    <li><a data-toggle="tab" href="#plant"><strong>Plant</strong></a></li>
+                                    <li><a data-toggle="tab" href="#Motor"><strong>Motor Pool</strong></a></li>
+                                    <li><a data-toggle="tab" href="#Trucking"><strong>Trucking</strong></a></li>
+                                </ul>
+                                <div class="tab-content">
+                                <div id="tabbravo" class="tab-pane fade in active">
+                                        <!-- agency -->
+                    <div class="row">
+                        <div class="col-md-12">
                             <section class="panel">
                                 <header class="panel-heading">
-                                <div align="center"><strong>Time Out</strong></div>
+                                <div align="center"><strong>Agency</strong></div>
                                 </header>
+                                <div class="panel-body">
+                                <div class="row">
+                                       <div class="col-md-12"> 
+                                        <table id="kamador_table_agency" align="center">
+                                         
+                                                    <tr>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_agency">Name</label>
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_agency">Reason</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="kamador_row1_agency" style="text-align: center;">
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_agency[]" class="form-control input_type" autofocus></td>
+                                                         <td class="col-md-2"><input type="text" name="kamador_name_agency[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-1">
+                                                            <button type="button" onclick="add_kamador_agency();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+                                                        </td>
+                                                         
+                                                    </tr>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="row">
+                            <div class="col-md-12">
+                            <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
+                            </div>
+                            </div>
                             </section>
                      </div>
+                </div>
+                <!-- end agency -->
+                        </div>
+                        <div id="plant" class="tab-pane fade in">
+                                        <!-- agency -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                <div align="center"><strong>Plant</strong></div>
+                                </header>
+                                <div class="panel-body">
+                                <div class="row">
+                                       <div class="col-md-12"> 
+                                        <table id="kamador_table_plant" align="center">
+                                                    <tr>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_plant">Name</label>
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_plant">Reason</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="kamador_row1_plant" style="text-align: center;">
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_plant[]" class="form-control input_type" autofocus></td>
+                                                         <td class="col-md-2"><input type="text" name="kamador_name_plant[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-1">
+                                                            <button type="button" onclick="add_kamador_plant();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+                                                        </td>
+                                                    </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="row">
+                            <div class="col-md-12">
+                            <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
+                            </div>
+                            </div>
+                            </section>
+                     </div>
+                </div>
+                <!-- end agency -->
+                    </div>
+                     <!-- end Motor -->
+                     <div id="Motor" class="tab-pane fade in">
+                                        <!-- agency -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                <div align="center"><strong>Motor Pool</strong></div>
+                                </header>
+                                <div class="panel-body">
+                                <div class="row">
+                                       <div class="col-md-12"> 
+                                        <table id="kamador_table_Motor" align="center">
+                                                    <tr>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_Motor">Name</label>
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_Motor">Reason</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="kamador_row1_Motor" style="text-align: center;">
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_Motor[]" class="form-control input_type" autofocus></td>
+                                                         <td class="col-md-2"><input type="text" name="kamador_name_Motor[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-1">
+                                                            <button type="button" onclick="add_kamador_Motor();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+                                                        </td>
+                                                    </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="row">
+                            <div class="col-md-12">
+                            <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
+                            </div>
+                            </div>
+                            </section>
+                     </div>
+                </div>
+                <!-- end Motor -->
+                   </div>
+                     <!-- end Motor -->
+                     <div id="Trucking" class="tab-pane fade in">
+                                        <!-- agency -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                <div align="center"><strong>Trucking</strong></div>
+                                </header>
+                                <div class="panel-body">
+                                <div class="row">
+                                       <div class="col-md-12"> 
+                                        <table id="kamador_table_Trucking" align="center">
+                                                    <tr>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_Trucking">Name</label>
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_Trucking">Reason</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="kamador_row1_Trucking" style="text-align: center;">
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_Trucking[]" class="form-control input_type" autofocus></td>
+                                                         <td class="col-md-2"><input type="text" name="kamador_name_Trucking[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-1">
+                                                            <button type="button" onclick="add_kamador_Trucking();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+                                                        </td>
+                                                    </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="row">
+                            <div class="col-md-12">
+                            <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
+                            </div>
+                            </div>
+                            </section>
+                     </div>
+                </div>
+                <!-- end Motor -->
+                        </div>
+                        
+
+
+
+                <!-- endtab -->
+            
 
 
             </section>
