@@ -279,6 +279,18 @@ function CurrentDate()
     }
 
 
+     function add_kamador_schedule(){
+
+        event.preventDefault();
+
+        $rowno = $("#kamador_table_schedule tr").length;
+        $rowno = $rowno + 1;
+        $("#kamador_table_schedule tr:last").after("<tr id='kamador_row_schedule" + $rowno + "' style='text-align: center;'>><td class='col-md-2'><input type='time' name='kamador_name_schedule[]' class='form-control input_type' autofocus required></td> <td class='col-md-2'><input type='time' name='kamador_name_schedule[]' class='form-control input_type' autofocus></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_kamador_schedule('kamador_row_schedule" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+     function remove_kamador_schedule(rowno){
+        $('#'+rowno).remove();
+    }
+
 </script>
 <style>
 .view_details_btn{
@@ -418,6 +430,8 @@ function CurrentDate()
                                 </header>
 
                     </section> -->
+                    <input type="date" id = "date_view" name="date_view" class="form-control"> 
+
                     <div class="row">
                         <div class="col-md-12">
                             <section class="panel">
@@ -454,17 +468,18 @@ function CurrentDate()
                                     </div>
                                 </div>
                             </div>
-                              <div class="row">
+                             <!--  <div class="row">
                             <div class="col-md-12">
                             <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
                             </div>
-                            </div>
+                            </div> -->
                             </section>
                           
             
                      </div>
                 </div>
                 <!-- tab -->
+                <input type="date" id = "date_view" name="date_view" class="form-control"> 
                 <ul class="nav nav-tabs">
                                     <li class="active"><a data-toggle="tab" href="#tabbravo"><strong>Agency</strong></a></li>
                                     <li><a data-toggle="tab" href="#plant"><strong>Plant</strong></a></li>
@@ -490,7 +505,7 @@ function CurrentDate()
                                                             <label for="kamador_name_agency">Name</label>
                                                         </td>
                                                         <td class="col-md-2">
-                                                            <label for="kamador_name_agency">Reason</label>
+                                                            <label for="kamador_name_agency">Comment</label>
                                                         </td>
                                                     </tr>
                                                     <tr id="kamador_row1_agency" style="text-align: center;">
@@ -506,11 +521,11 @@ function CurrentDate()
                                     </div>
                                 </div>
                             </div>
-                             <div class="row">
+                           <!--   <div class="row">
                             <div class="col-md-12">
                             <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
                             </div>
-                            </div>
+                            </div> -->
                             </section>
                      </div>
                 </div>
@@ -533,7 +548,7 @@ function CurrentDate()
                                                             <label for="kamador_name_plant">Name</label>
                                                         </td>
                                                         <td class="col-md-2">
-                                                            <label for="kamador_name_plant">Reason</label>
+                                                            <label for="kamador_name_plant">Comment</label>
                                                         </td>
                                                     </tr>
                                                     <tr id="kamador_row1_plant" style="text-align: center;">
@@ -547,11 +562,11 @@ function CurrentDate()
                                     </div>
                                 </div>
                             </div>
-                             <div class="row">
+                            <!--  <div class="row">
                             <div class="col-md-12">
                             <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
                             </div>
-                            </div>
+                            </div> -->
                             </section>
                      </div>
                 </div>
@@ -575,7 +590,7 @@ function CurrentDate()
                                                             <label for="kamador_name_Motor">Name</label>
                                                         </td>
                                                         <td class="col-md-2">
-                                                            <label for="kamador_name_Motor">Reason</label>
+                                                            <label for="kamador_name_Motor">Comment</label>
                                                         </td>
                                                     </tr>
                                                     <tr id="kamador_row1_Motor" style="text-align: center;">
@@ -589,11 +604,11 @@ function CurrentDate()
                                     </div>
                                 </div>
                             </div>
-                             <div class="row">
+                             <!-- <div class="row">
                             <div class="col-md-12">
                             <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
                             </div>
-                            </div>
+                            </div> -->
                             </section>
                      </div>
                 </div>
@@ -617,7 +632,7 @@ function CurrentDate()
                                                             <label for="kamador_name_Trucking">Name</label>
                                                         </td>
                                                         <td class="col-md-2">
-                                                            <label for="kamador_name_Trucking">Reason</label>
+                                                            <label for="kamador_name_Trucking">Comment</label>
                                                         </td>
                                                     </tr>
                                                     <tr id="kamador_row1_Trucking" style="text-align: center;">
@@ -631,22 +646,61 @@ function CurrentDate()
                                     </div>
                                 </div>
                             </div>
-                             <div class="row">
+                            <!--  <div class="row">
                             <div class="col-md-12">
                             <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
                             </div>
-                            </div>
+                            </div> -->
                             </section>
                      </div>
                 </div>
                 <!-- end Motor -->
                         </div>
-                        
-
-
-
                 <!-- endtab -->
-            
+                <!-- schedule -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                <div align="center"><strong>Schedule</strong></div>
+                                </header>
+                                <div class="panel-body">
+                                <div class="row">
+                                       <div class="col-md-12"> 
+                                        <table id="kamador_table_schedule" align="center">
+                                         
+                                                    <tr>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_schedule">Time Start</label>
+                                                        </td>
+
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_schedule">Time End</label>
+                                                        </td>
+                                                       
+                                                    </tr>
+                                                    <tr id="kamador_row1_schedule" style="text-align: center;">
+                                                        <td class="col-md-2"><input type="time" name="kamador_name_schedule[]" class="form-control input_type" autofocus></td>
+                                                         <td class="col-md-2"><input type="time" name="kamador_name_schedule[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-1">
+                                                            <button type="button" onclick="add_kamador_schedule();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+                                                        </td>
+                                                         
+                                                    </tr>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                             <!--  <div class="row">
+                            <div class="col-md-12">
+                            <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
+                            </div>
+                            </div> -->
+                            </section>
+                     </div>
+                </div>
+                <!-- end schedule -->
 
 
             </section>
