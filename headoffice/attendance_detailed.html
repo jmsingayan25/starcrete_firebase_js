@@ -291,6 +291,106 @@ function CurrentDate()
         $('#'+rowno).remove();
     }
 
+    // g2
+     function add_kamador_NS1(){
+
+        event.preventDefault();
+
+        $rowno = $("#kamador_table_NS1 tr").length;
+        $rowno = $rowno + 1;
+        $("#kamador_table_NS1 tr:last").after("<tr id='kamador_row_NS1" + $rowno + "' style='text-align: center;'>><td class='col-md-2'><input type='text' name='kamador_name_NS1[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_kamador_NS1('kamador_row_NS1" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+     function remove_kamador_NS1(rowno){
+        $('#'+rowno).remove();
+    }
+
+      function add_kamador_NS2(){
+
+        event.preventDefault();
+
+        $rowno = $("#kamador_table_NS2 tr").length;
+        $rowno = $rowno + 1;
+        $("#kamador_table_NS2 tr:last").after("<tr id='kamador_row_NS2" + $rowno + "' style='text-align: center;'>><td class='col-md-2'><input type='text' name='kamador_name_NS2[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_kamador_NS2('kamador_row_NS2" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+     function remove_kamador_NS2(rowno){
+        $('#'+rowno).remove();
+    }
+
+      function add_kamador_NS3(){
+
+        event.preventDefault();
+
+        $rowno = $("#kamador_table_NS3 tr").length;
+        $rowno = $rowno + 1;
+        $("#kamador_table_NS3 tr:last").after("<tr id='kamador_row_NS3" + $rowno + "' style='text-align: center;'>><td class='col-md-2'><input type='text' name='kamador_name_NS3[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_kamador_NS3('kamador_row_NS3" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+     function remove_kamador_NS3(rowno){
+        $('#'+rowno).remove();
+    }
+
+       function add_kamador_NS4(){
+
+        event.preventDefault();
+
+        $rowno = $("#kamador_table_NS4 tr").length;
+        $rowno = $rowno + 1;
+        $("#kamador_table_NS4 tr:last").after("<tr id='kamador_row_NS4" + $rowno + "' style='text-align: center;'>><td class='col-md-2'><input type='text' name='kamador_name_NS4[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_kamador_NS4('kamador_row_NS4" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+     function remove_kamador_NS4(rowno){
+        $('#'+rowno).remove();
+    }
+
+
+    //    function add_kamador_TruckingDriver(){
+
+    //     event.preventDefault();
+
+    //     $rowno = $("#kamador_table_TruckingDriver tr").length;
+    //     $rowno = $rowno + 1;
+    //     $("#kamador_table_TruckingDriver tr:last").after("<tr id='kamador_row_TruckingDriver" + $rowno + "' style='text-align: center;'>><td class='col-md-2'><input type='text' name='kamador_name_TruckingDriver[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_kamador_TruckingDriver('kamador_row_TruckingDriver" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    // }
+    //  function remove_kamador_TruckingDriver(rowno){
+    //     $('#'+rowno).remove();
+    // }
+
+     function add_kamador_Drivers(){
+
+        event.preventDefault();
+
+        $rowno = $("#kamador_table_Drivers tr").length;
+        $rowno = $rowno + 1;
+        $("#kamador_table_Drivers tr:last").after("<tr id='kamador_row_Drivers" + $rowno + "' style='text-align: center;'>><td class='col-md-2'><input type='text' name='kamador_name_Drivers[]' class='form-control input_type' autofocus required></td><td class='col-md-2'><input type='text' name='kamador_name_Drivers[]' class='form-control input_type' autofocus required></td><td class='col-md-2'><input type='text' name='kamador_name_Drivers[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_kamador_Drivers('kamador_row_Drivers" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+     function remove_kamador_Drivers(rowno){
+        $('#'+rowno).remove();
+    }
+
+     function add_kamador_Pahinante(){
+
+        event.preventDefault();
+
+        $rowno = $("#kamador_table_Pahinante tr").length;
+        $rowno = $rowno + 1;
+        $("#kamador_table_Pahinante tr:last").after("<tr id='kamador_row_Pahinante" + $rowno + "' style='text-align: center;'>><td class='col-md-2'><input type='text' name='kamador_name_Pahinante[]' class='form-control input_type' autofocus required></td><td class='col-md-2'><input type='text' name='kamador_name_Pahinante[]' class='form-control input_type' autofocus required></td><td class='col-md-2'><input type='text' name='kamador_name_Pahinante[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_kamador_Pahinante('kamador_row_Pahinante" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+     function remove_kamador_Pahinante(rowno){
+        $('#'+rowno).remove();
+    }
+
+ function add_kamador_Pahinante2(){
+
+        event.preventDefault();
+
+        $rowno = $("#kamador_table_Pahinante2 tr").length;
+        $rowno = $rowno + 1;
+        $("#kamador_table_Pahinante2 tr:last").after("<tr id='kamador_row_Pahinante2" + $rowno + "' style='text-align: center;'>><td class='col-md-2'><input type='text' name='kamador_name_Pahinante2[]' class='form-control input_type' autofocus required></td><td class='col-md-2'><input type='text' name='kamador_name_Pahinante2[]' class='form-control input_type' autofocus required></td><td class='col-md-2'><input type='text' name='kamador_name_Pahinante2[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_kamador_Pahinante2('kamador_row_Pahinante2" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+    }
+     function remove_kamador_Pahinante2(rowno){
+        $('#'+rowno).remove();
+    }
+
+
+
 </script>
 <style>
 .view_details_btn{
@@ -701,7 +801,425 @@ function CurrentDate()
                      </div>
                 </div>
                 <!-- end schedule -->
+                <!-- tab 2 -->
+                <ul class="nav nav-tabs">
+                                    <li class="active"><a data-toggle="tab" href="#NS1"><strong>NS1</strong></a></li>
+                                    <li><a data-toggle="tab" href="#NS2"><strong>NS2</strong></a></li>
+                                    <li><a data-toggle="tab" href="#NS3"><strong>NS3</strong></a></li>
+                                    <li><a data-toggle="tab" href="#NS4"><strong>NS4</strong></a></li>
+                                    <li><a data-toggle="tab" href="#TruckingDriver"><strong>Trucking/Driver</strong></a></li>
+                                    <li><a data-toggle="tab" href="#Drivers"><strong>Driver</strong></a></li>
+                                    <li><a data-toggle="tab" href="#Pahinante"><strong>Pahinante1</strong></a></li>
+                                    <li><a data-toggle="tab" href="#Pahinante2"><strong>Pahinante2</strong></a></li>
+                                    <li><a data-toggle="tab" href="#Forklift"><strong>Forklift</strong></a></li>
 
+                                </ul>
+                                <div class="tab-content">
+                                <div id="NS1" class="tab-pane fade in active">
+                                        <!-- agency -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                <div align="center"><strong>NS1</strong></div>
+                                </header>
+                                <div class="panel-body">
+                                <div class="row">
+                                       <div class="col-md-12"> 
+                                        <table id="kamador_table_NS1" align="center">
+                                         
+                                                    <tr>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_NS1">Name</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="kamador_row1_NS1" style="text-align: center;">
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_NS1[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-1">
+                                                            <button type="button" onclick="add_kamador_NS1();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+                                                        </td>
+                                                         
+                                                    </tr>
+
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                           <!--   <div class="row">
+                            <div class="col-md-12">
+                            <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
+                            </div>
+                            </div> -->
+                            </section>
+                     </div>
+                </div>
+                <!-- end agency -->
+                        </div>
+                        <div id="NS2" class="tab-pane fade in">
+                                        <!-- agency -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                <div align="center"><strong>NS2</strong></div>
+                                </header>
+                                <div class="panel-body">
+                                <div class="row">
+                                       <div class="col-md-12"> 
+                                        <table id="kamador_table_NS2" align="center">
+                                                    <tr>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_NS2">Name</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="kamador_row1_plant" style="text-align: center;">
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_NS2[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-1">
+                                                            <button type="button" onclick="add_kamador_NS2();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+                                                        </td>
+                                                    </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--  <div class="row">
+                            <div class="col-md-12">
+                            <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
+                            </div>
+                            </div> -->
+                            </section>
+                     </div>
+                </div>
+                <!-- end agency -->
+                    </div>
+                     <!-- end Motor -->
+                     <div id="NS3" class="tab-pane fade in">
+                                        <!-- agency -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                <div align="center"><strong>NS3</strong></div>
+                                </header>
+                                <div class="panel-body">
+                                <div class="row">
+                                       <div class="col-md-12"> 
+                                        <table id="kamador_table_NS3" align="center">
+                                                    <tr>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_NS3">Name</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="kamador_row1_NS3" style="text-align: center;">
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_NS3[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-1">
+                                                            <button type="button" onclick="add_kamador_NS3();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+                                                        </td>
+                                                    </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                             <!-- <div class="row">
+                            <div class="col-md-12">
+                            <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
+                            </div>
+                            </div> -->
+                            </section>
+                     </div>
+                </div>
+                <!-- end Motor -->
+                   </div>
+                     <!-- end Motor -->
+                     <div id="NS4" class="tab-pane fade in">
+                                        <!-- agency -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                <div align="center"><strong>NS4</strong></div>
+                                </header>
+                                <div class="panel-body">
+                                <div class="row">
+                                       <div class="col-md-12"> 
+                                        <table id="kamador_table_NS4" align="center">
+                                                    <tr>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_NS4">Name</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="kamador_row1_NS4" style="text-align: center;">
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_NS4[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-1">
+                                                            <button type="button" onclick="add_kamador_NS4();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+                                                        </td>
+                                                    </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--  <div class="row">
+                            <div class="col-md-12">
+                            <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
+                            </div>
+                            </div> -->
+                            </section>
+                     </div>
+                </div>
+                <!-- end Motor -->
+                        </div>
+                        <!-- truckanddriver -->
+                     <div id="TruckingDriver" class="tab-pane fade in">
+                                        <!-- agency -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                <div align="center"><strong>Trucking/Driver</strong></div>
+                                </header>
+                                <div class="panel-body">
+                                <div class="row">
+                                       <div class="col-md-12"> 
+                                        <table id="kamador_table_TruckingDriver" align="center">
+                                                    <tr>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_TruckingDriver">TCS 740</label>
+                                                        </td>
+                                                         <td class="col-md-2">
+                                                            <label for="kamador_name_TruckingDriver">RMF 145</label>
+                                                        </td>
+                                                    </tr>
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_TruckingDriver[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_TruckingDriver[]" class="form-control input_type" autofocus></td>    
+                                        </table>
+                                          <table id="kamador_table_TruckingDriver" align="center">
+                                                    <tr>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_TruckingDriver">TED 347</label>
+                                                        </td>
+                                                         <td class="col-md-2">
+                                                            <label for="kamador_name_TruckingDriver">PSU 357</label>
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_TruckingDriver">HOWO</label>
+                                                        </td>
+                                                    </tr>
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_TruckingDriver[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_TruckingDriver[]" class="form-control input_type" autofocus></td>  
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_TruckingDriver[]" class="form-control input_type" autofocus></td>  
+                                        </table>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <!--  <div class="row">
+                            <div class="col-md-12">
+                            <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
+                            </div>
+                            </div> -->
+                            </section>
+                     </div>
+                </div>
+                <!-- truckanddriver -->
+                   </div>
+                  <!-- driver -->
+                     <div id="Drivers" class="tab-pane fade in">
+                                        <!-- agency -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                <div align="center"><strong>Driver</strong></div>
+                                </header>
+                                <div class="panel-body">
+                                <div class="row">
+                                       <div class="col-md-12"> 
+                                        <table id="kamador_table_Drivers" align="center">
+                                                    <tr>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_Drivers">Name</label>
+                                                        </td>
+                                                          <td class="col-md-2">
+                                                            <label for="kamador_name_Drivers">Comment</label>
+                                                        </td>
+                                                          <td class="col-md-2">
+                                                            <label for="kamador_name_Drivers">Name</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="kamador_row1_Drivers" style="text-align: center;">
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_Drivers[]" class="form-control input_type" autofocus></td>
+                                                         <td class="col-md-2"><input type="text" name="kamador_name_Drivers[]" class="form-control input_type" autofocus></td>
+                                                         <td class="col-md-2"><input type="text" name="kamador_name_Drivers[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-1">
+                                                            <button type="button" onclick="add_kamador_Drivers();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+                                                        </td>
+                                                    </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--  <div class="row">
+                            <div class="col-md-12">
+                            <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
+                            </div>
+                            </div> -->
+                            </section>
+                     </div>
+                </div>
+                <!-- driver -->
+                    </div>
+                       <!-- pahinante -->
+                     <div id="Pahinante" class="tab-pane fade in">
+                                        <!-- agency -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                <div align="center"><strong>Pahinante1</strong></div>
+                                </header>
+                                <div class="panel-body">
+                                <div class="row">
+                                       <div class="col-md-12"> 
+                                        <table id="kamador_table_Pahinante" align="center">
+                                                    <tr>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_Pahinante">Name</label>
+                                                        </td>
+                                                          <td class="col-md-2">
+                                                            <label for="kamador_name_Pahinante">Comment</label>
+                                                        </td>
+                                                          <td class="col-md-2">
+                                                            <label for="kamador_name_Pahinante">Name</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="kamador_row1_Pahinante" style="text-align: center;">
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_Pahinante[]" class="form-control input_type" autofocus></td>
+                                                         <td class="col-md-2"><input type="text" name="kamador_name_Pahinante[]" class="form-control input_type" autofocus></td>
+                                                         <td class="col-md-2"><input type="text" name="kamador_name_Pahinante[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-1">
+                                                            <button type="button" onclick="add_kamador_Pahinante();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+                                                        </td>
+                                                    </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--  <div class="row">
+                            <div class="col-md-12">
+                            <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
+                            </div>
+                            </div> -->
+                            </section>
+                     </div>
+                </div>
+                <!-- pahinante -->
+                    </div>
+                        <!-- pahinante2 -->
+                     <div id="Pahinante2" class="tab-pane fade in">
+                                        <!-- agency -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                <div align="center"><strong>Pahinante2</strong></div>
+                                </header>
+                                <div class="panel-body">
+                                <div class="row">
+                                       <div class="col-md-12"> 
+                                        <table id="kamador_table_Pahinante2" align="center">
+                                                    <tr>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_Pahinante2">Name</label>
+                                                        </td>
+                                                          <td class="col-md-2">
+                                                            <label for="kamador_name_Pahinante2">Comment</label>
+                                                        </td>
+                                                          <td class="col-md-2">
+                                                            <label for="kamador_name_Pahinante2">Name</label>
+                                                        </td>
+                                                    </tr>
+                                                    <tr id="kamador_row1_Pahinante2" style="text-align: center;">
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_Pahinante2[]" class="form-control input_type" autofocus></td>
+                                                         <td class="col-md-2"><input type="text" name="kamador_name_Pahinante2[]" class="form-control input_type" autofocus></td>
+                                                         <td class="col-md-2"><input type="text" name="kamador_name_Pahinante2[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-1">
+                                                            <button type="button" onclick="add_kamador_Pahinante2();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+                                                        </td>
+                                                    </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--  <div class="row">
+                            <div class="col-md-12">
+                            <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
+                            </div>
+                            </div> -->
+                            </section>
+                     </div>
+                </div>
+                <!-- pahinante2 -->
+                    </div>
+                     <!-- forklift -->
+                     <div id="Forklift" class="tab-pane fade in">
+                                        <!-- agency -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <section class="panel">
+                                <header class="panel-heading">
+                                <div align="center"><strong>Forklift</strong></div>
+                                </header>
+                                <div class="panel-body">
+                                <div class="row">
+                                       <div class="col-md-12"> 
+                                        <table id="kamador_table_Forklift" align="center">
+                                                <tr>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_Forklift">TCM 2. forklift</label>
+                                                        </td>
+                                                         <td class="col-md-2">
+                                                            <label for="kamador_name_Forklift">TCM 3. forklift</label>
+                                                        </td>
+                                                         <td class="col-md-2">
+                                                            <label for="kamador_name_Forklift">TCM 4. forklift</label>
+                                                        </td>
+                                                        
+                                                    </tr>
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_Forklift[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_Forklift[]" class="form-control input_type" autofocus></td>
+                                                         <td class="col-md-2"><input type="text" name="kamador_name_Forklift[]" class="form-control input_type" autofocus></td>     
+                                        </table>
+                                         <table id="kamador_table_Forklift" align="center">
+                                                <tr>
+                                                        <td class="col-md-2">
+                                                            <label for="kamador_name_Forklift">TCM 5. forklift</label>
+                                                        </td>
+                                                         <td class="col-md-2">
+                                                            <label for="kamador_name_Forklift">H-6. new</label>
+                                                        </td>
+                                                         <td class="col-md-2">
+                                                            <label for="kamador_name_Forklift">H-7. new</label>
+                                                        </td>
+                                                        
+                                                    </tr>
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_Forklift[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-2"><input type="text" name="kamador_name_Forklift[]" class="form-control input_type" autofocus></td>
+                                                         <td class="col-md-2"><input type="text" name="kamador_name_Forklift[]" class="form-control input_type" autofocus></td>     
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--  <div class="row">
+                            <div class="col-md-12">
+                            <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
+                            </div>
+                            </div> -->
+                            </section>
+                     </div>
+                </div>
+                <!-- forklift -->
+                    </div>
+                <!-- endtab 2-->
 
             </section>
         </section>
