@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<meta charset="utf-8">
+    <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
     <meta name="author" content="GeeksLabs">
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="../img/favicon.png">
 
-    <title>Employee Attendance</title>
+    <title>Home</title>
 
     <!-- Firebase App is always required and must be first -->
     <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
@@ -83,9 +83,11 @@
 
 <script>
 
-    var plant = "";
+    var plant = getUrlParameter('plant');
 
     $(document).ready(function(){
+
+        tableData(plant);
 
         firebase.auth().onAuthStateChanged(function(user) {
             if (user != null) {
@@ -93,36 +95,22 @@
                 var uid = user.uid;
         
                 firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
-
-                    plant = snapshot.val().office;
-
-                    if(plant == 'Head Office'){
-                        window.location.href = '../headoffice/index.html';
+                    if(snapshot.val().office != 'Head Office'){
+                        window.location.href = '../plant/index.html';
                     }
 
-                    tableData();
-                    
-                    if(plant == 'Bravo'){
-                        plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
-                    }else{
-                        plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
-                    }
-
-                    document.getElementById('id_plant_name').innerHTML = plant_name;
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
 
+                    $(".se-pre-con").fadeOut("slow");
                 },(error) => {
                     console.log(error);
                 });
             } else {
                 window.location.href = '../login.html';
             }
-
-            document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
-
-            
         });
 
+        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
     function tableData(){
@@ -132,11 +120,13 @@
         var myTableRow3 = "";
         var myTableRow4 = "";
         var myTableRow5 = "";
+        var myTableRow6 = "";
+        var input_date = document.getElementById('input_date').value;
         var option = {year: "numeric", month: "long", day: "numeric"}
         var currentDate = new Date().toLocaleDateString('en', option);
         // var currentDate = "July 26, 2018";
 
-        document.getElementById('id_date').innerHTML = currentDate;
+        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + "</th>";
 
         firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine1').once('value', function(machine1Data){
             firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine3').once('value', function(machine3Data){
@@ -229,60 +219,77 @@
 
         firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/kamador').once('value', function(kamadorData){
             firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/loader').once('value', function(loaderData){
-                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/others').once('value', function(othersData){
-                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/absent').once('value', function(absentData){
+                
 
-                        myTableRow4 += "<tr><td>";
+                    myTableRow4 += "<tr><td colspan='2'>";
 
-                        kamadorData.forEach(function(kamadorChildData){
-                            myTableRow4 += "<div class='row'><div class='col-md-12'>" + kamadorChildData.val().employee_name + "</div></div>";
-                        });
-
-                        myTableRow4 += "</td><td>";
-                        loaderData.forEach(function(loaderChildData){
-                            myTableRow4 += "<div class='row'><div class='col-md-12'>" + loaderChildData.val().employee_name + "</div></div>";
-                        });
-
-                        myTableRow4 += "</td><td>";
-                        othersData.forEach(function(othersChildData){
-                            myTableRow4 += "<div class='row'><div class='col-md-12'>" + othersChildData.val().employee_name + "</div></div>";
-                        });
-
-                        myTableRow4 += "</td><td>";
-                        absentData.forEach(function(absentChildData){
-                            myTableRow4 += "<div class='row'><div class='col-md-12'>" + absentChildData.val().employee_name + "</div></div>";
-                        });
-
-                        myTableRow4 += "</td></tr>";
-
-                        document.getElementById('row4_list').innerHTML = myTableRow4;
-                        
+                    kamadorData.forEach(function(kamadorChildData){
+                        myTableRow4 += "<div class='row'><div class='col-md-12'>" + kamadorChildData.val().employee_name + "</div></div>";
                     });
+
+                    myTableRow4 += "</td><td colspan='2'>";
+                    loaderData.forEach(function(loaderChildData){
+                        myTableRow4 += "<div class='row'><div class='col-md-12'>" + loaderChildData.val().employee_name + "</div></div>";
+                    });
+
+
+
+                    myTableRow4 += "</td></tr>";
+
+                    document.getElementById('row4_list').innerHTML = myTableRow4;
+                        
+            });
+        });
+
+        firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/absent').once('value', function(absentData){
+            firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/others').once('value', function(othersData){
+
+                myTableRow5 += "<tr><td colspan='2'>";
+
+                othersData.forEach(function(othersChildData){
+                    myTableRow5 += "<div class='row'><div class='col-md-12'>" + othersChildData.val().employee_name + "</div></div>";
                 });
+
+                myTableRow5 += "</td><td colspan='2'>";
+                absentData.forEach(function(absentChildData){
+                    myTableRow5 += "<div class='row'><div class='col-md-4'>" + absentChildData.val().employee_name + "</div><div class='col-md-1'>-</div><div class='col-md-7'>" + absentChildData.val().reason + "</div></div>";
+                });
+
+                myTableRow5 += "</td></tr>";
+
+                document.getElementById('row5_list').innerHTML = myTableRow5;
+
             });
         });
 
         firebase.database().ref('plant_attendance/'+plant+'/'+currentDate).once('value', function(commentData){
 
-            myTableRow5 += "<tr><td colspan='4'>" + commentData.val().comment + "</td></tr>";
+            myTableRow6 += "<tr><td colspan='4'>" + commentData.val().comment + "</td></tr>";
 
-            document.getElementById('row5_list').innerHTML = myTableRow5;
+            document.getElementById('row6_list').innerHTML = myTableRow6;
         });
     }
 
+    function tablePrint(){
+
+        var date = document.getElementById('input_date').value;
+
+        window.open("attendance_print.html?plant="+plant+"&date="+date, "_blank");
+    }
+    
 </script>
 <style>
 .header_line{
     background-color: #00a3cc;
 }
 
-.table .header_line td{
+.table .header_line th{
     color: white;
-    font-weight: bold;
 }
 </style>
 </head>
 <body>
+    <!-- <div class="se-pre-con"></div> -->
     <section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -292,7 +299,7 @@
             <!--logo start-->
 
             <!--logo end-->
-            <span id="id_plant_name"></span>
+            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
             <div class="top-nav notification-row">                
                 <!-- notificatoin dropdown start-->
                 <ul class="nav pull-right top-menu">
@@ -318,8 +325,6 @@
             </div>
         </header>  
         <!--sidebar start-->
-
-        <!--sidebar start-->
         <aside>
             <div id="sidebar"  class="nav-collapse ">
                 <!-- sidebar menu start-->
@@ -329,24 +334,36 @@
                             <i class="icon_house"></i>
                             <span>Dashboard</span>
                         </a>
-                    </li>
-                    <li class="">
+                    </li> 
+                    <li>
                         <a class="" href="transaction_log.html">
                             <i class="fa fa-list"></i>
                             <span>Transaction Log</span>
                         </a>
                     </li>
-                    <li class="">
-                        <a class="" href="diesel.html">
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
                             <i class="fa fa-building"></i>
-                            <span>Diesel</span>
+                            <span>Bravo</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
                         </a>
-                    </li>
-                    <li class="">
-                        <a class="" href="diesel_category.html">
+                        <ul class="sub">
+                            <li><a class="" href="diesel.html?plant=Bravo">Diesel</a></li>
+                            <li><a class="" href="diesel_category.html?plant=Bravo">Oil</a></li>
+                            <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
+                        </ul>
+                    </li>  
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
                             <i class="fa fa-building"></i>
-                            <span>Oil</span>
+                            <span>Delta</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
                         </a>
+                        <ul class="sub">
+                            <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
+                            <li><a class="" href="diesel_category.html?plant=Delta">Oil</a></li>
+                            <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
+                        </ul>
                     </li>  
                 </ul>
                 <!-- sidebar menu end-->
@@ -367,51 +384,75 @@
                     <div class="col-md-12">
                         <section class="panel">
                             <header class="panel-heading">
-                                Date: <span id="id_date"></span>
+                                <div class="row">
+                                    <div class="form-group" style="margin-top: 5px; margin-bottom: 5px;">
+                                        <label for="date" class="col-md-1 control-label" style="margin-right: -10px;">Date:</label>
+                                        <div class="col-md-2" style="margin-right: -25px;">
+                                            <input type="date" id="input_date" name="input_date" class="form-control">
+                                            
+                                        </div>
+                                        <div class="col-md-1" style="margin-right: 25px;">
+                                            <button class="btn btn-info" type="submit" name="search_table">
+                                                <i class="fa fa-search"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-md-1">
+                                            <button class="btn btn-info" onclick="tablePrint();">
+                                                <span class="fa fa-print"></span> <strong>Print Preview</strong>
+                                            </button>
+                                        </div>
+                                    </div>                                  
+                                </div>
                             </header>
                             <div class="panel-body">
                                 <div class="table-responsive">
                                     <table class="table table-bordered table-stripped">
                                         <thead>
+                                            <tr id="id_date" class="header_line"></tr>
                                             <tr class="header_line">
-                                                <td class="col-md-3">MACHINE 1</td>
-                                                <td class="col-md-3">MACHINE 3</td>
-                                                <td class="col-md-3">FORKLIFT OPERATOR</td>
-                                                <td class="col-md-3">MECHANIC</td>
+                                                <th class="col-md-3">MACHINE 1</th>
+                                                <th class="col-md-3">MACHINE 3</th>
+                                                <th class="col-md-3">FORKLIFT OPERATOR</th>
+                                                <th class="col-md-3">MECHANIC</th>
                                             </tr>
                                         </thead>
                                         <tbody id="row1_list"></tbody>
                                         <thead>
                                             <tr class="header_line">
-                                                <td class="col-md-3">NON SKID 1</td>
-                                                <td class="col-md-3">NON SKID 2</td>
-                                                <td class="col-md-3">NON SKID 3</td>
-                                                <td class="col-md-3">NON SKID 4</td>
+                                                <th class="col-md-3">NON SKID 1</th>
+                                                <th class="col-md-3">NON SKID 2</th>
+                                                <th class="col-md-3">NON SKID 3</th>
+                                                <th class="col-md-3">NON SKID 4</th>
                                             </tr>
                                         </thead>
                                         <tbody id="row2_list"></tbody>
                                         <thead>
                                             <tr class="header_line">
-                                                <td colspan="2">TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG</td>
-                                                <td colspan="2">CHECKER / FOREMAN / BATCHER / SUPERVISOR</td>
+                                                <th colspan="2">TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG</th>
+                                                <th colspan="2">CHECKER / FOREMAN / BATCHER / SUPERVISOR</th>
                                             </tr>
                                         </thead>
                                         <tbody id="row3_list"></tbody>
                                         <thead>
                                             <tr class="header_line">
-                                                <td class="col-md-3">KAMADOR</td>
-                                                <td class="col-md-3">LOADER</td>
-                                                <td class="col-md-3">OTHER</td>
-                                                <td class="col-md-3">ABSENT</td>
+                                                <th colspan="2">KAMADOR</th>
+                                                <th colspan="2">LOADER</th>
                                             </tr>
                                         </thead>
                                         <tbody id="row4_list"></tbody>
-                                        <thead>
+                                         <thead>
                                             <tr class="header_line">
-                                                <td colspan="4">COMMENT</td>
+                                                <th colspan="2">OTHER</th>
+                                                <th colspan="2">ABSENT</th>
                                             </tr>
                                         </thead>
                                         <tbody id="row5_list"></tbody>
+                                        <thead>
+                                            <tr class="header_line">
+                                                <th colspan="4">COMMENT</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="row6_list"></tbody>
                                     </table>
                                 </div>
                             </div>

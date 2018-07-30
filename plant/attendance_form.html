@@ -1,0 +1,1434 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+    <link rel="shortcut icon" href="../img/favicon.png">
+
+    <title>Employee Attendance Form</title>
+
+    <!-- Firebase App is always required and must be first -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-app.js"></script>
+
+    <!-- Add additional services you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+    <script src="../js_config/firebase_config.js"></script>
+
+    <!-- Bootstrap CSS -->    
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="../css/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="../css/elegant-icons-style.css" rel="stylesheet" />
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
+    <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="../css/fullcalendar.css">
+    <link href="../css/widgets.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/style-responsive.css" rel="stylesheet" />
+    <link href="../css/xcharts.min.css" rel=" stylesheet">  
+    <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+
+    <!-- javascripts -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery-ui-1.10.4.min.js"></script>
+    <script src="../js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+    <!-- bootstrap -->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- nice scroll -->
+    <script src="../js/jquery.scrollTo.min.js"></script>
+    <script src="../js/jquery.nicescroll.js" type="text/javascript"></script>
+    <!-- charts scripts -->
+    <script src="../assets/jquery-knob/js/jquery.knob.js"></script>
+    <script src="../js/jquery.sparkline.js" type="text/javascript"></script>
+    <script src="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+    <script src="../js/owl.carousel.js" ></script>
+    <!-- jQuery full calendar -->
+    <script src="../js/fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
+    <script src="../assets/fullcalendar/fullcalendar/fullcalendar.js"></script>
+    <!--script for this page only-->
+    <script src="../js/calendar-custom.js"></script>
+    <script src="../js/jquery.rateit.min.js"></script>
+    <!-- custom select -->
+    <script src="../js/jquery.customSelect.min.js" ></script>
+    <script src="../assets/chart-master/Chart.js"></script>
+
+    <!--custome script for all page-->
+    <script src="../js/scripts.js"></script>
+    <!-- custom script for this page-->
+    <script src="../js/sparkline-chart.js"></script>
+    <script src="../js/easy-pie-chart.js"></script>
+    <script src="../js/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="../js/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="../js/xcharts.min.js"></script>
+    <script src="../js/jquery.autosize.min.js"></script>
+    <script src="../js/jquery.placeholder.min.js"></script>
+    <script src="../js/gdp-data.js"></script>  
+    <script src="../js/morris.min.js"></script>
+    <script src="../js/sparklines.js"></script>    
+    <script src="../js/charts.js"></script>
+    <script src="../js/jquery.slimscroll.min.js"></script>
+    <script src="../js_config/function.js"></script>
+    <script src="../js_config/attendance.js"></script>
+
+<script>
+	
+	var plant = "";
+
+	$(document).ready(function(){
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user != null) {
+
+                var uid = user.uid;
+        
+                firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+
+                    plant = snapshot.val().office;
+
+                    if(plant == 'Head Office'){
+                        window.location.href = '../headoffice/index.html';
+                    }
+
+                    // tableData();
+                    
+                    if(plant == 'Bravo'){
+                        plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
+                    }else{
+                        plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
+                    }
+
+                    document.getElementById('id_plant_name').innerHTML = plant_name;
+                    document.getElementById('username').innerHTML = snapshot.val().firstname; 
+
+                },(error) => {
+                    console.log(error);
+                });
+            } else {
+                window.location.href = '../login.html';
+            }
+
+            document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+
+        	
+        });
+
+        
+        
+    });
+
+  //   function add_employee(){
+
+  //   	event.preventDefault();
+
+  //   	$rowno=$("#employee_table tr").length;
+  //       $rowno=$rowno+1;
+
+  //       $("#employee_table tr:last").after("<tr id='employee_row" + $rowno + "' style='text-align: center;'><div class='form-group'><td class='col-md-5'><input type='text' name='employee_name[]' class='form-control input_type' ></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "') style='font-weight: bold;'><span class='fa fa-minus'></span></button></td></div></tr>");
+  //   }
+
+  //   function remove_employee_row(rowno){
+		// $('#'+rowno).remove();
+  //   }
+
+   // function saveEmployee(){
+
+    // 	event.preventDefault();
+
+    // 	var position = document.getElementById('position').value;
+    // 	var input_employee_name = $("input[name='employee_name[]']").map(function(){return $(this).val().toUpperCase() || "";}).get();
+
+    // 	count = 0;
+    // 	for(var i = 0; i < input_employee_name.length; i++){
+
+    // 		var employeeData = {
+    // 			employee_name: input_employee_name[i]
+    // 		}
+
+    // 		firebase.database().ref('employee/'+plant+'/'+position).push(employeeData);
+    // 		count++;
+    // 	}
+
+    // 	if(count == input_employee_name.length){
+    // 		alert('Employee has been added..');
+    // 		window.location='attendance.html';
+    // 	}
+    // }
+
+    function submitForm(){
+
+    	event.preventDefault();
+
+    	count = 0;
+    	var input_date = document.getElementById('date_selected').value;
+    	var option = {year: "numeric", month: "long", day: "numeric"}
+    	input_date = new Date(input_date).toLocaleDateString('en', option);
+
+    	var input_machine1_name = $("input[name='machine1_name[]']").map(function(){return $(this).val();}).get();
+    	var input_machine3_name = $("input[name='machine3_name[]']").map(function(){return $(this).val();}).get();
+    	var input_nonskid1_name = $("input[name='nonskid1_name[]']").map(function(){return $(this).val();}).get();
+    	var input_nonskid2_name = $("input[name='nonskid2_name[]']").map(function(){return $(this).val();}).get();
+    	var input_nonskid3_name = $("input[name='nonskid3_name[]']").map(function(){return $(this).val();}).get();
+    	var input_nonskid4_name = $("input[name='nonskid4_name[]']").map(function(){return $(this).val();}).get();
+    	var input_tagapukpok_name = $("input[name='tagapukpok_name[]']").map(function(){return $(this).val();}).get();
+    	var input_checker_name = $("input[name='checker_name[]']").map(function(){return $(this).val();}).get();
+    	var input_forklift_operator_name = $("input[name='forklift_operator_name[]']").map(function(){return $(this).val();}).get();
+    	var input_mechanic_name = $("input[name='mechanic_name[]']").map(function(){return $(this).val();}).get();
+    	var input_loader_name = $("input[name='loader_name[]']").map(function(){return $(this).val();}).get();
+    	var input_kamador_name = $("input[name='kamador_name[]']").map(function(){return $(this).val();}).get();
+    	var input_others_name = $("input[name='others_name[]']").map(function(){return $(this).val();}).get();
+    	var input_absent_name = $("input[name='absent_name[]']").map(function(){return $(this).val();}).get();
+    	var input_absent_reason = $("textarea[name='absent_reason[]']").map(function(){return $(this).val();}).get();
+    	var input_comment = document.getElementById('comment').value || "N/A";
+
+    	var commentData = {
+    		comment: input_comment.toUpperCase()
+    	}
+
+    	firebase.database().ref('plant_attendance/'+plant+'/'+input_date).set(commentData);
+
+		for(var a = 0; a < input_machine1_name.length; a++){
+
+			if(input_machine1_name.length == 1 && input_machine1_name[a] == ""){
+				var machine1Data = {
+	    			employee_name: "N/A"
+	    		}
+			}else{
+				var machine1Data = {
+	    			employee_name: input_machine1_name[a].toUpperCase()
+	    		}
+			}
+    		
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/machine1').push(machine1Data);
+    	}
+    	
+		for(var a = 0; a < input_machine3_name.length; a++){
+
+			if(input_machine3_name.length == 1 && input_machine3_name[a] == ""){
+				var machine3Data = {
+	    			employee_name: "N/A"
+	    		}
+			}else{
+				var machine3Data = {
+	    			employee_name: input_machine3_name[a].toUpperCase()
+	    		}
+			}
+    		
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/machine3').push(machine3Data);
+    	}
+
+		for(var a = 0; a < input_nonskid1_name.length; a++){
+
+			if(input_nonskid1_name.length == 1 && input_nonskid1_name[a] == ""){
+				var nonskid1Data = {
+	    			employee_name: "N/A"
+	    		}
+			}else{
+				var nonskid1Data = {
+	    			employee_name: input_nonskid1_name[a].toUpperCase()
+	    		}
+			}
+    		
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/nonskid1').push(nonskid1Data);
+    	}
+
+		for(var a = 0; a < input_nonskid2_name.length; a++){
+
+			if(input_nonskid2_name.length == 1 && input_nonskid2_name[a] == ""){
+				var nonskid2Data = {
+	    			employee_name: "N/A"
+	    		}
+			}else{
+				var nonskid2Data = {
+	    			employee_name: input_nonskid2_name[a].toUpperCase()
+	    		}	
+			}
+    		
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/nonskid2').push(nonskid2Data);
+    	}
+
+		for(var a = 0; a < input_nonskid3_name.length; a++){
+
+			if(input_nonskid3_name.length == 1 && input_nonskid3_name[a] == ""){
+				var nonskid3Data = {
+	    			employee_name: "N/A"
+	    		}
+			}else{
+				var nonskid3Data = {
+	    			employee_name: input_nonskid3_name[a].toUpperCase()
+	    		}	
+			}
+    		
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/nonskid3').push(nonskid3Data);
+    	}
+
+		for(var a = 0; a < input_nonskid4_name.length; a++){
+
+			if(input_nonskid4_name.length == 1 && input_nonskid4_name[a] == ""){
+				var nonskid4Data = {
+	    			employee_name: "N/A"
+	    		}
+			}else{
+				var nonskid4Data = {
+	    			employee_name: input_nonskid4_name[a].toUpperCase()
+	    		}	
+			}
+    		
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/nonskid4').push(nonskid4Data);
+    	}
+
+		for(var a = 0; a < input_kamador_name.length; a++){
+
+			if(input_kamador_name.length == 1 && input_kamador_name[a] == ""){
+				var kamadorData = {
+	    			employee_name: "N/A"
+	    		}
+			}else{
+				var kamadorData = {
+	    			employee_name: input_kamador_name[a].toUpperCase()
+	    		}	
+			}
+    
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/kamador').push(kamadorData);
+    	}
+
+		for(var a = 0; a < input_forklift_operator_name.length; a++){
+
+			if(input_forklift_operator_name.length == 1 && input_forklift_operator_name[a] == ""){
+				var forkliftOperatorData = {
+	    			employee_name: "N/A"
+	    		}
+			}else{
+				var forkliftOperatorData = {
+	    			employee_name: input_forklift_operator_name[a].toUpperCase()
+	    		}	
+			}
+    		
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/forklift_operator').push(forkliftOperatorData);
+    	}
+
+		for(var a = 0; a < input_mechanic_name.length; a++){
+
+			if(input_mechanic_name.length == 1 && input_mechanic_name[a] == ""){
+				var mechanicData = {
+	    			employee_name: "N/A"
+	    		}
+			}else{
+				var mechanicData = {
+	    			employee_name: input_mechanic_name[a].toUpperCase()
+	    		}	
+			}
+
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/mechanic').push(mechanicData);
+    	}
+
+		for(var a = 0; a < input_tagapukpok_name.length; a++){
+
+			if(input_tagapukpok_name.length == 1 && input_tagapukpok_name[a] == ""){
+				var tagapukpokData = {
+	    			employee_name: "N/A"
+	    		}
+			}else{
+				var tagapukpokData = {
+	    			employee_name: input_tagapukpok_name[a].toUpperCase()
+	    		}
+			}
+    		
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/tagapukpok').push(tagapukpokData);
+    	}
+
+		for(var a = 0; a < input_checker_name.length; a++){
+
+			if(input_checker_name.length == 1 && input_checker_name[a] == ""){
+				var checkerData = {
+	    			employee_name: "N/A"
+	    		}
+			}else{
+				var checkerData = {
+	    			employee_name: input_checker_name[a].toUpperCase()
+	    		}	
+			}
+    		
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/checker').push(checkerData);
+    	}
+
+		for(var a = 0; a < input_loader_name.length; a++){
+
+			if(input_loader_name.length == 1 && input_loader_name[a] == ""){
+				var loaderData = {
+	    			employee_name: "N/A"
+	    		}
+			}else{
+				var loaderData = {
+	    			employee_name: input_loader_name[a].toUpperCase()
+	    		}
+			}
+    		
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/loader').push(loaderData);
+    	}
+
+		for(var a = 0; a < input_others_name.length; a++){
+
+			if(input_others_name.length == 1 && input_others_name[a] == ""){
+				var othersData = {
+	    			employee_name: ""
+	    		}
+			}else{
+				var othersData = {
+	    			employee_name: input_others_name[a].toUpperCase()
+	    		}
+			}
+
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/others').push(othersData);
+    	}
+
+		for(var a = 0; a < input_absent_name.length; a++){
+
+			if(input_absent_name.length == 1 && input_absent_name[a] == ""){
+				var absentData = {
+	    			employee_name: "N/A",
+	    			reason: "N/A"
+	    		}
+			}else{
+				var absentData = {
+	    			employee_name: input_absent_name[a].toUpperCase(),
+	    			reason: input_absent_reason[a].toUpperCase() || "N/A"
+	    		}
+			}
+    	
+    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/absent').push(absentData);
+    		count++;
+    	}
+
+    	if(count == input_absent_name.length){
+    		alert("Attendance recorded");
+    		window.location='attendance_form.html';
+
+    	}
+    }
+
+</script>
+<style>
+.input_type{
+	text-transform: uppercase;
+}
+.panel-heading{
+	text-align: center;
+}
+</style>
+</head>
+<body>
+	<section id="container" class="">
+        <header class="header dark-bg">
+            <div class="toggle-nav">
+            <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
+            </div>
+
+            <!--logo start-->
+
+            <!--logo end-->
+            <span id="id_plant_name"></span>
+            <div class="top-nav notification-row">                
+                <!-- notificatoin dropdown start-->
+                <ul class="nav pull-right top-menu">
+                    <!-- user login dropdown start-->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <!--  <span class="profile-ava">
+                        <img alt="" src="img/avatar1_small.jpg">
+                        </span> -->
+                            <span class="username" id="username"></span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <div class="log-arrow-up"></div>
+                            <li>
+                                <a href="" id="logoutBtn"><i class="icon_key_alt"></i> Log Out</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->
+                </ul>
+                <!-- notificatoin dropdown end-->
+            </div>
+        </header>  
+        <!--sidebar start-->
+
+        <!--sidebar start-->
+        <aside>
+            <div id="sidebar"  class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu">                
+                    <li class="active">
+                        <a class="" href="index.html">
+                            <i class="icon_house"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a class="" href="transaction_log.html">
+                            <i class="fa fa-list"></i>
+                            <span>Transaction Log</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a class="" href="diesel.html">
+                            <i class="fa fa-building"></i>
+                            <span>Diesel</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a class="" href="diesel_category.html">
+                            <i class="fa fa-building"></i>
+                            <span>Oil</span>
+                        </a>
+                    </li>  
+                </ul>
+                <!-- sidebar menu end-->
+            </div>
+        </aside>
+        <!--sidebar end-->
+
+        <section id="main-content">
+            <section class="wrapper">            
+                <!--overview start-->
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb">
+                            <li><i class="icon_document"></i><a href="attendance.html">Employee Attendance Form</a></li>                       
+                        </ol>
+                    </div>
+                </div>
+               <!--  <div class="row">
+                	<div class="col-md-12">
+                		<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#employeeModal">
+                			<strong>Add Employee <span class="fa fa-plus"></span></strong>
+                		</button>
+
+                		<div class="modal fade" id="employeeModal">
+                			<div class="modal-dialog">
+                				<div class="modal-content">
+                					
+                					<div class="modal-header">
+                						<h4 class="modal-title"><strong>Employee</strong> <button type="button" class="close" data-dismiss="modal"><span class="fa fa-times"></span></button></h4>
+                						
+                					</div>
+
+                					<div class="modal-body">
+                						<div class="row">
+                							<div class="col-md-12">
+        										<div class="row">
+        											<div class="col-md-3">
+	                                                    <label for="category">For Category</label>
+	                                                </div>
+	                                                <div class="col-md-9">
+	                                                	<select name="position" id="position" class="form-control">
+	                                                		<option value="machine">MACHINE 1 / MACHINE 3</option>
+	                                                		<option value="non-skid1">NON-SKID 1</option>
+	                                                		<option value="non-skid2">NON-SKID 2</option>
+	                                                		<option value="non-skid3">NON-SKID 3</option>
+	                                                		<option value="non-skid4">NON-SKID 4</option>
+	                                                		<option value="kamador">KAMADOR</option>
+	                                                		<option value="forklift_operator">FORKLIFT OPERATOR</option>
+	                                                		<option value="mechanic">MECHANIC</option>
+	                                                		<option value="tagapukpok">TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG</option>
+	                                                		<option value="checker">CHECKER / FOREMAN / BATCHER / SUPERVISOR</option>
+	                                                		<option value="loader">LOADER</option>
+	                                                		<option value="other">OTHER</option>
+	                                                	</select>
+	                                                </div>
+        										</div>
+        										<div class="row" style="margin: 5px;">
+        											<table id="employee_table" align="center">
+        												<tr>
+        													
+			                                                <td class="col-md-5">
+			                                                    <label for="employee_name">Name</label>
+			                                                </td>
+			                                                <td class="col-md-1">
+			                                                    <label for=""></label>
+			                                                </td>
+			                                            </tr>
+			                                            <tr id="employee_row" style="text-align: center;">
+			                                                <div class="form-group">
+				                                                <td class="col-md-5">
+				                                                    <input type="text" name="employee_name[]" class="form-control input_type" >
+				                                                </td>
+				                                                <td class="col-md-1">
+				                                                    <button type="button" onclick="add_employee();" class='btn btn-primary btn-md' autocomplete="off" style="font-weight: bold;"><span class="fa fa-plus"></span></button> 
+			                                                     </td>
+		                                                    </div>
+			                                            </tr>
+        											</table>
+        										</div>
+                							</div>
+                						</div>
+                					</div>
+
+                					<div class="modal-footer">
+                						<button type="button" class="btn btn-success" onclick="if(confirm('Proceed?')){saveEmployee();}else{ event.preventDefault();}"><strong>Save</strong></button>
+                						<button type="button" class="btn btn-danger" data-dismiss="modal"><strong>Close</strong></button>
+                					</div>
+                				</div>
+                			</div>
+                		</div>
+                	</div>
+                </div> -->
+            	<section class="panel">
+            		<header class="panel-heading">
+                        <div class="row">
+                        	<div class="col-md-offset-5 col-md-2">
+                        		<h4><strong>PLANT LINE UP</strong></h4>
+                        	</div>
+                        </div>
+                    </header>
+                    <form id="form" name="form" class="form-horizontal" onsubmit="if(confirm('Proceed?')){submitForm();}else{ event.preventDefault();}">
+                    	<header class="panel-heading">
+                    		<div class="row" style="padding-bottom: 10px; padding-top: 10px;">
+                				<div class="col-md-1">
+                					Date:
+                				</div>
+                				<div class="col-md-2">
+                					<input type="date" name="date_selected" id="date_selected" class="form-control" required>
+                				</div>
+                			</div>
+                    	</header>
+                		<div class="panel-body">
+                			
+                			<div class="row">
+                				<div class="col-md-12">
+                					<ul class="nav nav-tabs">
+                						<li class="active"><a data-toggle="tab" href="#machine1"><strong>MACHINE 1</strong></a></li>
+                                    	<li><a data-toggle="tab" href="#machine3"><strong>MACHINE 3</strong></a></li>
+                					</ul>
+                					<div class="tab-content">
+                                		<div id="machine1" class="tab-pane fade in active">
+                                			<div class="row">
+							                    <div class="col-md-12">
+						                            <section class="panel">
+						                                <header class="panel-heading">
+						                                    <strong>MACHINE 1</strong>
+						                                </header>
+						                                <div class="panel-body">
+						                                	<div class="row">
+						                                        <table id="machine1_table" align="center">
+						                                            <tr>
+						                                                <td class="col-md-5">
+						                                                    <label for="machine1_name">Name</label>
+						                                                </td>
+						                                            </tr>
+						                                            <tr id="machine1_row1" style="text-align: center;">
+						                                            	<td class="col-md-5">
+						                                                    <input type="text" name="machine1_name[]" class="form-control input_type">
+						                                            	</td>
+						                                            	<td class="col-md-1">
+						                                                    <button type="button" onclick="add_machine1_employee();" class='btn btn-primary btn-md'><span class="fa fa-plus"></span></button> 
+						                                            	</td>
+						                                            </tr>
+						                                        </table>
+							                                </div>
+							                            </div>
+						                            </section>
+							                    </div>
+							                </div>
+                                		</div>
+                                		<div id="machine3" class="tab-pane fade in">
+                                			<div class="row">
+                                				<div class="col-md-12">
+							                		<section class="panel">
+							                			<header class="panel-heading">
+							                				<strong>MACHINE 3</strong>
+							                			</header>
+							                			<div class="panel-body">
+							                				<div class="row">
+							                					<table id="machine3_table" align="center">
+							                						<tr>
+							                							<td class="col-md-5">
+							                								<label for="machine3_name">Name</label>
+							                							</td>
+							                						</tr>
+							                						<tr id="machine3_row1" style="text-align: center;">
+							                							<td class="col-md-5"><input type="text" name="machine3_name[]" class="form-control input_type"></td>
+							                							<td class="col-md-1">
+							                								<button type="button" onclick="add_machine3_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+							                							</td>
+							                						</tr>
+							                					</table>
+							                				</div>
+							                			</div>
+							                		</section>
+							                	</div>
+                                			</div>
+                                		</div>
+                                	</div>
+                				</div>
+                			</div>
+                			<div class="row">
+                				<div class="col-md-12">
+                					<ul class="nav nav-tabs">
+                						<li class="active"><a data-toggle="tab" href="#nonskid1"><strong>NON-SKID 1</strong></a></li>
+                                    	<li><a data-toggle="tab" href="#nonskid2"><strong>NON-SKID 2</strong></a></li>
+                                    	<li><a data-toggle="tab" href="#nonskid3"><strong>NON-SKID 3</strong></a></li>
+                                    	<li><a data-toggle="tab" href="#nonskid4"><strong>NON-SKID 4</strong></a></li>
+                					</ul>
+                					<div class="tab-content">
+                                		<div id="nonskid1" class="tab-pane fade in active">
+                                			<div class="row">
+							                	<div class="col-md-12">
+							                		<section class="panel">
+							                			<header class="panel-heading">
+							                				<strong>NON-SKID 1</strong>
+							                			</header>
+							                			<div class="panel-body">
+							                				<div class="row">
+							                					<table id="nonskid1_table" align="center">
+							                						<tr>
+							                							<td class="col-md-5">
+							                								<label for="nonskid1_name">Name</label>
+							                							</td>
+							                						</tr>
+							                						<tr id="nonskid1_row1" style="text-align: center;">
+							                							<td class="col-md-5"><input type="text" name="nonskid1_name[]" class="form-control input_type"></td>
+							                							<td class="col-md-1">
+							                								<button type="button" onclick="add_nonskid1_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+							                							</td>
+							                						</tr>
+							                					</table>
+							                				</div>
+							                			</div>
+							                		</section>
+							                	</div>
+							                </div>
+                                		</div>
+                                		<div id="nonskid2" class="tab-pane fade in">
+                                			<div class="row">
+                                				<div class="col-md-12">
+							                		<section class="panel">
+							                			<header class="panel-heading">
+							                				<strong>NON-SKID 2</strong>
+							                			</header>
+							                			<div class="panel-body">
+							                				<div class="row">
+							                					<table id="nonskid2_table" align="center">
+							                						<tr>
+							                							<td class="col-md-5">
+							                								<label for="nonskid2_name">Name</label>
+							                							</td>
+							                						</tr>
+							                						<tr id="nonskid2_row1" style="text-align: center;">
+							                							<td class="col-md-5"><input type="text" name="nonskid2_name[]" class="form-control input_type"></td>
+							                							<td class="col-md-1">
+							                								<button type="button" onclick="add_nonskid2_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+							                							</td>
+							                						</tr>
+							                					</table>
+							                				</div>
+							                			</div>
+							                		</section>
+							                	</div>
+                                			</div>
+                                		</div>
+                                		<div id="nonskid3" class="tab-pane fade in">
+                                			<div class="row">
+                                				<div class="col-md-12">
+							                		<section class="panel">
+							                			<header class="panel-heading">
+							                				<strong>NON-SKID 3</strong>
+							                			</header>
+							                			<div class="panel-body">
+							                				<div class="row">
+							                					<table id="nonskid3_table" align="center">
+							                						<tr>
+							                							<td class="col-md-5">
+							                								<label for="nonskid3_name">Name</label>
+							                							</td>
+							                						</tr>
+							                						<tr id="nonskid3_row1" style="text-align: center;">
+							                							<td class="col-md-5"><input type="text" name="nonskid3_name[]" class="form-control input_type"></td>
+							                							<td class="col-md-1">
+							                								<button type="button" onclick="add_nonskid3_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+							                							</td>
+							                						</tr>
+							                					</table>
+							                				</div>
+							                			</div>
+							                		</section>
+							                	</div>
+                                			</div>
+                                		</div>
+                                		<div id="nonskid4" class="tab-pane fade in">
+                                			<div class="row">
+                                				<div class="col-md-12">
+							                		<section class="panel">
+							                			<header class="panel-heading">
+							                				<strong>NON-SKID 4</strong>
+							                			</header>
+							                			<div class="panel-body">
+							                				<div class="row">
+							                					<table id="nonskid4_table" align="center">
+							                						<tr>
+							                							<td class="col-md-5">
+							                								<label for="nonskid4_name">Name</label>
+							                							</td>
+							                						</tr>
+							                						<tr id="nonskid4_row1" style="text-align: center;">
+							                							<td class="col-md-5"><input type="text" name="nonskid4_name[]" class="form-control input_type"></td>
+							                							<td class="col-md-1">
+							                								<button type="button" onclick="add_nonskid4_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+							                							</td>
+							                						</tr>
+							                					</table>
+							                				</div>
+							                			</div>
+							                		</section>
+							                	</div>
+                                			</div>
+                                		</div>
+                                	</div>
+                				</div>
+                			</div>
+                			<div class="row">
+                				<div class="col-md-12">
+                					<ul class="nav nav-tabs">
+                						<li class="active"><a data-toggle="tab" href="#tagapukpok"><strong>TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG</strong></a></li>
+                						<li><a data-toggle="tab" href="#checker"><strong>CHECKER / FOREMAN / BATCHER / SUPERVISOR</strong></a></li>
+                					</ul>
+                					<div class="tab-content">
+                						<div id="tagapukpok" class="tab-pane fade in active">
+                							<div class="row">
+                								<div class="col-md-12">
+							                		<section class="panel">
+							                			<header class="panel-heading">
+							                				<strong>TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG</strong>
+							                			</header>
+							                			<div class="panel-body">
+							                				<div class="row">
+							                					<table id="tagapukpok_table" align="center">
+							                						<tr>
+							                							<td class="col-md-5">
+							                								<label for="tagapukpok_name">Name</label>
+							                							</td>
+							                						</tr>
+							                						<tr id="tagapukpok_row1" style="text-align: center;">
+							                							<td class="col-md-5"><input type="text" name="tagapukpok_name[]" class="form-control input_type"></td>
+							                							<td class="col-md-1">
+							                								<button type="button" onclick="add_tagapukpok_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+							                							</td>
+							                						</tr>
+							                					</table>
+							                				</div>
+							                			</div>
+							                		</section>
+							                	</div>
+                							</div>
+                						</div>
+                						<div id="checker" class="tab-pane fade in">
+                							<div class="row">
+                								<div class="col-md-12">
+							                		<section class="panel">
+							                			<header class="panel-heading">
+							                				<strong>CHECKER / FOREMAN / BATCHER / SUPERVISOR</strong>
+							                			</header>
+							                			<div class="panel-body">
+							                				<div class="row">
+							                					<table id="checker_table" align="center">
+							                						<tr>
+							                							<td class="col-md-5">
+							                								<label for="checker_name">Name</label>
+							                							</td>
+							                						</tr>
+							                						<tr id="checker_row1" style="text-align: center;">
+							                							<td class="col-md-5"><input type="text" name="checker_name[]" class="form-control input_type"></td>
+							                							<td class="col-md-1">
+							                								<button type="button" onclick="add_checker_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+							                							</td>
+							                						</tr>
+							                					</table>
+							                				</div>
+							                			</div>
+							                		</section>
+							                	</div>
+                							</div>
+                						</div>
+                					</div>
+                				</div>
+                			</div>
+                			<div class="row">
+                				<div class="col-md-12">
+                					<ul class="nav nav-tabs">
+                						<li class="active"><a data-toggle="tab" href="#forklift"><strong>FORKLIFT OPERATOR</strong></a></li>
+                						<li><a data-toggle="tab" href="#mechanic"><strong>MECHANIC</strong></a></li>
+                						<li><a data-toggle="tab" href="#loader"><strong>LOADER</strong></a></li>
+                						<li><a data-toggle="tab" href="#kamador"><strong>KAMADOR</strong></a></li>
+                						<li><a data-toggle="tab" href="#others"><strong>OTHERS</strong></a></li>
+                						<li><a data-toggle="tab" href="#absent"><strong>ABSENT</strong></a></li>
+                					</ul>
+                					<div class="tab-content">
+                						<div id="forklift" class="tab-pane fade in active">
+                							<div class="row">
+                								<div class="col-md-12">
+							                    	<section class="panel">
+							                    		<header class="panel-heading">
+							                    			FORKLIFT OPERATOR
+							                    		</header>
+							                    		<div class="panel-body">
+							                    			<div class="row">
+							                    				<table id="forklift_operator_table" align="center">
+							                    					<tr>
+							                    						<td class="col-md-5">
+							                    							<label for="forklift_operator_name">Name</label>
+							                    						</td>
+							                    					</tr>
+							                    					<tr id="forklift_operator_row1" style="text-align: center;">
+							                    						<td class="col-md-5">
+							                    							<input type="text" name="forklift_operator_name[]" class="form-control input_type">
+							                    						</td>
+							                    						<td class="col-md-1">
+							                    							<button type="button" onclick="add_forklift_operator_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+							                    						</td>
+							                    					</tr>
+							                    				</table>
+							                    			</div>
+							                    		</div>
+							                    	</section>
+							                    </div>
+                							</div>
+                						</div>
+                						<div id="mechanic" class="tab-pane fade in">
+                							<div class="row">
+                								<div class="col-md-12">
+							                		<section class="panel">
+							                			<header class="panel-heading">
+							                				MECHANIC
+							                			</header>
+							                			<div class="panel-body">
+						                					<div class="row">
+						                						<table id="mechanic_table" align="center">
+						                							<tr>
+						                								<td class="col-md-5">
+						                									<label for="mechanic_name">Name</label>
+						                								</td>
+						                							</tr>
+						                							<tr id="mechanic_row1" style="text-align: center;">
+							                							<td class="col-md-5"><input type="text" name="mechanic_name[]" class="form-control input_type"></td>
+							                							<td class="col-md-1">
+							                								<button type="button" onclick="add_mechanic_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+							                							</td>
+							                						</tr>
+						                						</table>
+						                					</div>
+						                				</div>
+							                		</section>
+							                	</div>
+							                </div>
+							            </div>
+                						<div id="loader" class="tab-pane fade in">
+                							<div class="row">
+                								<div class="col-md-12">
+							                		<section class="panel">
+							                			<header class="panel-heading">
+							                				LOADER
+							                			</header>
+							                			<div class="panel-body">
+							                				<div class="row">
+							                					<table id="loader_table" align="center">
+							                						<tr>
+							                							<td class="col-md-5">
+							                								<label for="loader_name">Name</label>
+							                							</td>
+							                						</tr>
+							                						<tr id="loader_row1" style="text-align: center;">
+							                							<td class="col-md-5"><input type="text" name="loader_name[]" class="form-control input_type"></td>
+							                							<td class="col-md-1">
+							                								<button type="button" onclick="add_loader_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+							                							</td>
+							                						</tr>
+							                					</table>
+							                				</div>
+							                			</div>
+							                		</section>
+							                	</div>
+                							</div>
+                						</div>
+                						<div id="kamador" class="tab-pane fade in">
+                							<div class="row">
+                								<div class="col-md-12">
+							                		<section class="panel">
+							                			<header class="panel-heading">
+							                				KAMADOR
+							                			</header>
+							                			<div class="panel-body">
+							                				<div class="row">
+							                					<table id="kamador_table" align="center">
+							                						<tr>
+							                							<td class="col-md-5">
+							                								<label for="kamador_name">Name</label>
+							                							</td>
+							                						</tr>
+							                						<tr id="kamador_row1" style="text-align: center;">
+							                							<td class="col-md-5"><input type="text" name="kamador_name[]" class="form-control input_type"></td>
+							                							<td class="col-md-1">
+							                								<button type="button" onclick="add_kamador_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+							                							</td>
+							                						</tr>
+							                					</table>
+							                				</div>
+							                			</div>
+							                		</section>
+							                	</div>
+                							</div>
+                						</div>
+                						<div id="others" class="tab-pane fade in">
+                							<div class="row">
+                								<div class="col-md-12">
+							                		<section class="panel">
+							                			<header class="panel-heading">
+							                				OTHERS
+							                			</header>
+							                			<div class="panel-body">
+							                				<div class="row">
+							                					<table id="others_table" align="center">
+							                						<tr>
+							                							<td class="col-md-5">
+							                								<label for="other_name">Name</label>
+							                							</td>
+							                						</tr>
+							                						<tr id="other_row1" style="text-align: center;">
+							                							<td class="col-md-5"><input type="text" name="others_name[]" class="form-control input_type"></td>
+							                							<td class="col-md-1">
+							                								<button type="button" onclick="add_others_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+							                							</td>
+							                						</tr>
+							                					</table>
+							                				</div>
+							                			</div>
+							                		</section>
+							                	</div>
+                							</div>
+                						</div>
+                						<div id="absent" class="tab-pane fade in">
+                							<div class="row">
+                								<div class="col-md-12">
+							                		<section class="panel">
+							                			<header class="panel-heading">
+							                				ABSENT
+							                			</header>
+							                			<div class="panel-body">
+							                				<div class="row">
+							                					<table id="absent_table" align="center">
+							                						<tr>
+							                							<td class="col-md-5">
+							                								<label for="absent_name">Name</label>
+							                							</td>
+							                							<td class="col-md-4">
+							                								<label for="absent_name">Reason</label>
+							                							</td>
+							                						</tr>
+							                						<tr id="absent_row1" style="text-align: center;">
+							                							<td class="col-md-5"><input type="text" name="absent_name[]" class="form-control input_type"></td>
+							                							<td class="col-md-4"><textarea name="absent_reason[]" class="form-control input_type" rows="2"></textarea></td>
+							                							<td class="col-md-1">
+							                								<button type="button" onclick="add_absent_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+							                							</td>
+							                						</tr>
+							                					</table>
+							                				</div>
+							                			</div>
+							                		</section>
+							                	</div>
+                							</div>
+                						</div>
+                					</div>
+                				</div>
+                			</div>
+                			<div class="row">
+                				<div class="col-md-12">
+                					<textarea name="comment" id="comment" class="form-control input_type" rows="5" placeholder="Comment here..."></textarea>
+                				</div>
+                			</div>
+                			
+                			<!-- <div class="row">
+			                    <div class="col-md-6">
+		                            <section class="panel">
+		                                <header class="panel-heading">
+		                                    MACHINE 1
+		                                </header>
+		                                <div class="panel-body">
+		                                	<div class="row">
+		                                        <table id="machine1_table" align="center">
+		                                            <tr>
+		                                                <td class="col-md-5">
+		                                                    <label for="machine1_name">Name</label>
+		                                                </td>
+		                                            </tr>
+		                                            <tr id="machine1_row1" style="text-align: center;">
+		                                            	<td class="col-md-5">
+		                                                    <input type="text" name="machine1_name[]" class="form-control input_type" >
+		                                            	</td>
+		                                            	<td class="col-md-1">
+		                                                    <button type="button" onclick="add_machine1_employee();" class='btn btn-primary btn-md'><span class="fa fa-plus"></span></button> 
+		                                            	</td>
+		                                            </tr>
+		                                        </table>
+			                                </div>
+			                            </div>
+		                            </section>
+			                    </div>
+			                    <div class="col-md-6">
+			                    	<section class="panel">
+			                    		<header class="panel-heading">
+			                    			FORKLIFT OPERATOR
+			                    		</header>
+			                    		<div class="panel-body">
+			                    			<div class="row">
+			                    				<table id="forklift_operator_table" align="center">
+			                    					<tr>
+			                    						<td class="col-md-5">
+			                    							<label for="forklift_operator_name">Name</label>
+			                    						</td>
+			                    					</tr>
+			                    					<tr id="forklift_operator_row1" style="text-align: center;">
+			                    						<td class="col-md-5">
+			                    							<input type="text" name="forklift_operator_name[]" class="form-control input_type" >
+			                    						</td>
+			                    						<td class="col-md-1">
+			                    							<button type="button" onclick="add_forklift_operator_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                    						</td>
+			                    					</tr>
+			                    				</table>
+			                    			</div>
+			                    		</div>
+			                    	</section>
+			                    </div>
+			                </div>
+			                <div class="row">
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				MACHINE 3
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="machine3_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="machine3_name">Name</label>
+			                							</td>
+			                						</tr>
+			                						<tr id="machine3_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="machine3_name[]" class="form-control input_type" ></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_machine3_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				MECHANIC
+			                			</header>
+			                			<div class="panel-body">
+		                					<div class="row">
+		                						<table id="mechanic_table" align="center">
+		                							<tr>
+		                								<td class="col-md-5">
+		                									<label for="mechanic_name">Name</label>
+		                								</td>
+		                							</tr>
+		                							<tr id="mechanic_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="mechanic_name[]" class="form-control input_type" ></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_mechanic_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+		                						</table>
+		                					</div>
+		                				</div>
+			                		</section>
+			                	</div>
+			                </div>
+			                <div class="row">
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				NON-SKID 1
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="nonskid1_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="nonskid1_name">Name</label>
+			                							</td>
+			                						</tr>
+			                						<tr id="nonskid1_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="nonskid1_name[]" class="form-control input_type" ></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_nonskid1_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="tagapukpok_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="tagapukpok_name">Name</label>
+			                							</td>
+			                						</tr>
+			                						<tr id="tagapukpok_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="tagapukpok_name[]" class="form-control input_type" ></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_tagapukpok_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                </div>
+			                <div class="row">
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				NON-SKID 2
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="nonskid2_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="nonskid2_name">Name</label>
+			                							</td>
+			                						</tr>
+			                						<tr id="nonskid2_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="nonskid2_name[]" class="form-control input_type" ></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_nonskid2_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				CHECKER / FOREMAN / BATCHER / SUPERVISOR
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="checker_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="checker_name">Name</label>
+			                							</td>
+			                						</tr>
+			                						<tr id="checker_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="checker_name[]" class="form-control input_type" ></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_checker_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                </div>
+			                <div class="row">
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				NON-SKID 3
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="nonskid3_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="nonskid3_name">Name</label>
+			                							</td>
+			                						</tr>
+			                						<tr id="nonskid3_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="nonskid3_name[]" class="form-control input_type" ></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_nonskid3_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				LOADER
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="loader_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="loader_name">Name</label>
+			                							</td>
+			                						</tr>
+			                						<tr id="loader_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="loader_name[]" class="form-control input_type" ></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_loader_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                </div>
+			                <div class="row">
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				NON-SKID 4
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="nonskid4_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="nonskid4_name"></label>
+			                							</td>
+			                						</tr>
+			                						<tr id="nonskid4_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="nonskid4_name[]" class="form-control input_type" ></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_nonskid4_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				KAMADOR
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="kamador_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="kamador_name"></label>
+			                							</td>
+			                						</tr>
+			                						<tr id="kamador_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="kamador_name[]" class="form-control input_type" ></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_kamador_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                </div>
+			                <div class="row">
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				OTHERS
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="other_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="other_name">Name</label>
+			                							</td>
+			                						</tr>
+			                						<tr id="other_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="other_name[]" class="form-control input_type" ></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_other_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                	<div class="col-md-6">
+			                		<section class="panel">
+			                			<header class="panel-heading">
+			                				ABSENT
+			                			</header>
+			                			<div class="panel-body">
+			                				<div class="row">
+			                					<table id="absent_table" align="center">
+			                						<tr>
+			                							<td class="col-md-5">
+			                								<label for="absent_name">Name</label>
+			                							</td>
+			                							<td class="col-md-4">
+			                								<label for="absent_name">Reason</label>
+			                							</td>
+			                						</tr>
+			                						<tr id="absent_row1" style="text-align: center;">
+			                							<td class="col-md-5"><input type="text" name="absent_name[]" class="form-control input_type" ></td>
+			                							<td class="col-md-4"><textarea name="absent_reason[]" class="form-control input_type" rows="2"></textarea></td>
+			                							<td class="col-md-1">
+			                								<button type="button" onclick="add_absent_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+			                							</td>
+			                						</tr>
+			                					</table>
+			                				</div>
+			                			</div>
+			                		</section>
+			                	</div>
+			                </div>
+			                <div class="row">
+			                	<div class="col-md-12">
+			                		<textarea name="comments" class="form-control" rows="5" placeholder="Comment Here..."></textarea>
+			                	</div>
+			                </div> -->
+                		</div>
+                		<footer class="panel-footer">
+	            			<button type="submit" class="btn btn-primary btn-block"><strong>Submit</strong></button>
+	            		</footer>
+            		</form>
+            	</section>
+            </section>
+        </section>
+    </section>
+</body>
+</html>
