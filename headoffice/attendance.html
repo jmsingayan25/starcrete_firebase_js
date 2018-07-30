@@ -252,7 +252,7 @@
 
                 myTableRow5 += "</td><td colspan='2'>";
                 absentData.forEach(function(absentChildData){
-                    myTableRow5 += "<div class='row'><div class='col-md-4'>" + absentChildData.val().employee_name + "</div><div class='col-md-1'>-</div><div class='col-md-7'>" + absentChildData.val().reason + "</div></div>";
+                    myTableRow5 += "<div class='row'><div class='col-md-12'>" + absentChildData.val().employee_name + " - " + absentChildData.val().reason + "</div></div>";
                 });
 
                 myTableRow5 += "</td></tr>";
