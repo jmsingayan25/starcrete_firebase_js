@@ -194,7 +194,7 @@ function Go()
         var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
         var searchDate = new Date(date).toLocaleDateString('en', options);
 
-        firebase.database().ref('incoming_diesel/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
+        firebase.database().ref('incoming_diesel/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
         DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
                  if(GetStringDate == dieselChildSnapshot.val().Date_Input)
@@ -253,7 +253,7 @@ function Go()
         }else
         {
              document.getElementById("Search_day").innerHTML = "";
-            firebase.database().ref('incoming_diesel/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
+            firebase.database().ref('incoming_diesel/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
         DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
                 var date = dieselChildSnapshot.val().Date_Input;
@@ -322,7 +322,7 @@ function DisplayCurrentData()
     var myTbody = "";
     //start
     count = 1;
-    firebase.database().ref('incoming_diesel/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
+    firebase.database().ref('incoming_diesel/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
         DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
                 var date = dieselChildSnapshot.val().Date_Input;
