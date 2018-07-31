@@ -8,7 +8,7 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="../img/favicon.png">
 
-    <title>Employee Attendance Form</title>
+    <title>Line Up Form</title>
 
     <!-- Firebase App is always required and must be first -->
     <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
@@ -382,7 +382,7 @@
 
 			if(input_others_name.length == 1 && input_others_name[a] == ""){
 				var othersData = {
-	    			employee_name: ""
+	    			employee_name: "N/A"
 	    		}
 			}else{
 				var othersData = {
@@ -412,7 +412,7 @@
     	}
 
     	if(count == input_absent_name.length){
-    		alert("Attendance recorded");
+    		alert("Line up recorded");
     		window.location='attendance_form.html';
 
     	}
@@ -506,7 +506,8 @@
                 <div class="row">
                     <div class="col-md-12">
                         <ol class="breadcrumb">
-                            <li><i class="icon_document"></i><a href="attendance.html">Employee Attendance Form</a></li>                       
+                            <li><i class="icon_document"></i><a href="attendance.html">Line Up</a></li>                       
+                            <li><i class="icon_document"></i>Line Up Form</li>                       
                         </ol>
                     </div>
                 </div>
@@ -607,7 +608,7 @@
                 		<div class="panel-body">
                 			
                 			<div class="row">
-                				<div class="col-md-12">
+                				<div class="col-md-offset-2 col-md-8">
                 					<ul class="nav nav-tabs">
                 						<li class="active"><a data-toggle="tab" href="#machine1"><strong>MACHINE 1</strong></a></li>
                                     	<li><a data-toggle="tab" href="#machine3"><strong>MACHINE 3</strong></a></li>
@@ -675,7 +676,7 @@
                 				</div>
                 			</div>
                 			<div class="row">
-                				<div class="col-md-12">
+                				<div class="col-md-offset-2 col-md-8">
                 					<ul class="nav nav-tabs">
                 						<li class="active"><a data-toggle="tab" href="#nonskid1"><strong>NON-SKID 1</strong></a></li>
                                     	<li><a data-toggle="tab" href="#nonskid2"><strong>NON-SKID 2</strong></a></li>
@@ -799,7 +800,7 @@
                 				</div>
                 			</div>
                 			<div class="row">
-                				<div class="col-md-12">
+                				<div class="col-md-offset-2 col-md-8">
                 					<ul class="nav nav-tabs">
                 						<li class="active"><a data-toggle="tab" href="#tagapukpok"><strong>TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG</strong></a></li>
                 						<li><a data-toggle="tab" href="#checker"><strong>CHECKER / FOREMAN / BATCHER / SUPERVISOR</strong></a></li>
@@ -865,7 +866,7 @@
                 				</div>
                 			</div>
                 			<div class="row">
-                				<div class="col-md-12">
+                				<div class="col-md-offset-2 col-md-8">
                 					<ul class="nav nav-tabs">
                 						<li class="active"><a data-toggle="tab" href="#forklift"><strong>FORKLIFT OPERATOR</strong></a></li>
                 						<li><a data-toggle="tab" href="#mechanic"><strong>MECHANIC</strong></a></li>
@@ -910,7 +911,7 @@
                 								<div class="col-md-12">
 							                		<section class="panel">
 							                			<header class="panel-heading">
-							                				MECHANIC
+							                				<strong>MECHANIC</strong>
 							                			</header>
 							                			<div class="panel-body">
 						                					<div class="row">
@@ -938,7 +939,7 @@
                 								<div class="col-md-12">
 							                		<section class="panel">
 							                			<header class="panel-heading">
-							                				LOADER
+							                				<strong>LOADER</strong>
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -966,7 +967,7 @@
                 								<div class="col-md-12">
 							                		<section class="panel">
 							                			<header class="panel-heading">
-							                				KAMADOR
+							                				<strong>KAMADOR</strong>
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -994,7 +995,7 @@
                 								<div class="col-md-12">
 							                		<section class="panel">
 							                			<header class="panel-heading">
-							                				OTHERS
+							                				<strong>OTHERS</strong>
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -1022,7 +1023,7 @@
                 								<div class="col-md-12">
 							                		<section class="panel">
 							                			<header class="panel-heading">
-							                				ABSENT
+							                				<strong>ABSENT</strong>
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -1053,7 +1054,7 @@
                 				</div>
                 			</div>
                 			<div class="row">
-                				<div class="col-md-12">
+                				<div class="col-md-offset-2 col-md-8">
                 					<textarea name="comment" id="comment" class="form-control input_type" rows="5" placeholder="Comment here..."></textarea>
                 				</div>
                 			</div>
