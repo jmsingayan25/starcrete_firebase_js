@@ -252,7 +252,7 @@ function displaycurrentCategory(getCurrentCategory)
     $(".se-pre-con").fadeIn("fast");
     var myTbody = "";
 
-      firebase.database().ref('incoming_diesel_category/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
+      firebase.database().ref('incoming_diesel_category/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
         DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
                 var getdataCurrentCategory = dieselChildSnapshot.val().PickCategoryName;
@@ -403,7 +403,7 @@ function Go()
     }else if(document.getElementById('date_view').value == "" && document.getElementById('selectsys').value != "")
     {
         document.getElementById("Search_day").innerHTML = "";
-    firebase.database().ref('incoming_diesel_category/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
+    firebase.database().ref('incoming_diesel_category/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
     DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
             var getdataCurrentCategory = dieselChildSnapshot.val().PickCategoryName;
@@ -453,7 +453,7 @@ function Go()
     else if(document.getElementById('date_view').value != "" && document.getElementById('selectsys').value != "")
     {
              date = dateFormat(document.getElementById('date_view').value);
-    firebase.database().ref('incoming_diesel_category/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselSnapshotTransaction) {
+    firebase.database().ref('incoming_diesel_category/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
     DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
             var getdataCurrentCategory = dieselChildSnapshot.val().PickCategoryName;
