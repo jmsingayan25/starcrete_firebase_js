@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+    <link rel="shortcut icon" href="../img/favicon.png">
+
+    <title>Line Up</title>
+
+    <!-- Firebase App is always required and must be first -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-app.js"></script>
+
+    <!-- Add additional services you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+    <script src="../js_config/firebase_config.js"></script>
+
+    <!-- Bootstrap CSS -->    
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="../css/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="../css/elegant-icons-style.css" rel="stylesheet" />
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
+    <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="../css/fullcalendar.css">
+    <link href="../css/widgets.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/style-responsive.css" rel="stylesheet" />
+    <link href="../css/xcharts.min.css" rel=" stylesheet">  
+    <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+
+    <!-- javascripts -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery-ui-1.10.4.min.js"></script>
+    <script src="../js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+    <!-- bootstrap -->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- nice scroll -->
+    <script src="../js/jquery.scrollTo.min.js"></script>
+    <script src="../js/jquery.nicescroll.js" type="text/javascript"></script>
+    <!-- charts scripts -->
+    <script src="../assets/jquery-knob/js/jquery.knob.js"></script>
+    <script src="../js/jquery.sparkline.js" type="text/javascript"></script>
+    <script src="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+    <script src="../js/owl.carousel.js" ></script>
+    <!-- jQuery full calendar -->
+    <script src="../js/fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
+    <script src="../assets/fullcalendar/fullcalendar/fullcalendar.js"></script>
+    <!--script for this page only-->
+    <script src="../js/calendar-custom.js"></script>
+    <script src="../js/jquery.rateit.min.js"></script>
+    <!-- custom select -->
+    <script src="../js/jquery.customSelect.min.js" ></script>
+    <script src="../assets/chart-master/Chart.js"></script>
+
+    <!--custome script for all page-->
+    <script src="../js/scripts.js"></script>
+    <!-- custom script for this page-->
+    <script src="../js/sparkline-chart.js"></script>
+    <script src="../js/easy-pie-chart.js"></script>
+    <script src="../js/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="../js/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="../js/xcharts.min.js"></script>
+    <script src="../js/jquery.autosize.min.js"></script>
+    <script src="../js/jquery.placeholder.min.js"></script>
+    <script src="../js/gdp-data.js"></script>  
+    <script src="../js/morris.min.js"></script>
+    <script src="../js/sparklines.js"></script>    
+    <script src="../js/charts.js"></script>
+    <script src="../js/jquery.slimscroll.min.js"></script>
+    <script src="../js_config/function.js"></script>
+
+<script>
+
+	var option = getUrlParameter('option');
+	var plant = getUrlParameter('plant');
+	var getCurrentDate = getUrlParameter('date');
+
+	var date_option = {year: "numeric", month: "long", day: "numeric"}
+	var currentDate = new Date(getCurrentDate).toLocaleDateString('en', date_option);
+	var machine1Table = "";
+	var machine3Table = "";
+	var forkliftTable = "";
+	var mechanicTable = "";
+	var nonskid1Table = "";
+	var nonskid2Table = "";
+	var nonskid3Table = "";
+	var nonskid4Table = "";
+
+	$(document).ready(function(){
+
+		firebase.auth().onAuthStateChanged(function(user) {
+            if (user != null) {
+
+                var uid = user.uid;
+        
+                firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+                    if(snapshot.val().office != 'Head Office'){
+                        window.location.href = '../plant/index.html';
+                    }
+
+                    document.getElementById('username').innerHTML = snapshot.val().firstname; 
+
+                    $(".se-pre-con").fadeOut("slow");
+                },(error) => {
+                    console.log(error);
+                });
+            } else {
+                window.location.href = '../login.html';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+
+        document.getElementById('li_attendance').innerHTML = "<i class='icon_document'></i><a href='attendance.html?plant=" + plant + "'>Line Up</a>";
+        document.getElementById('li_attendance_update').innerHTML = "<i class='icon_document'></i>Line Up Form";
+
+		if(option == "machine1"){
+			console.log(option);
+
+			firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine1').once('value', function(machine1Snapshot){
+
+				machine1Snapshot.forEach(function(machine1ChildSnapshot){
+                    machine1Table += "<div class='row'><div class='col-md-8'><input type='text' value='" + machine1ChildSnapshot.val().employee_name + "' class='form-control'></div><div class='col-md-4'><button type='button' onclick='if(confirm(\"Proceed?\")){removeMachine1Employee(\"" + machine1ChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></div></div><br>";
+                });
+
+                document.getElementById('id_fields').innerHTML = machine1Table;
+			});
+
+		}else if(option == "machine3"){
+
+			firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine3').once('value', function(machine3Snapshot){
+
+				machine3Snapshot.forEach(function(machine3ChildSnapshot){
+                    machine3Table += "<div class='row'><div class='col-md-8'><input type='text' value='" + machine3ChildSnapshot.val().employee_name + "' class='form-control'></div><div class='col-md-4'><button type='button' onclick='if(confirm(\"Proceed?\")){removeMachine3Employee(\"" + machine3ChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></div></div><br>";
+                });
+
+                document.getElementById('id_fields').innerHTML = machine3Table;
+			});
+
+		}else if(option == "forklift"){
+
+			firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/forklift_operator').once('value', function(forkliftSnapshot){
+
+				forkliftSnapshot.forEach(function(forkliftChildSnapshot){
+                    forkliftTable += "<div class='row'><div class='col-md-8'><input type='text' value='" + forkliftChildSnapshot.val().employee_name + "' class='form-control'></div><div class='col-md-4'><button type='button' onclick='if(confirm(\"Proceed?\")){removeforkliftEmployee(\"" + forkliftChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></div></div><br>";
+                });
+
+                document.getElementById('id_fields').innerHTML = forkliftTable;
+			});
+
+		}else if(option == "mechanic"){
+
+			firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/mechanic').once('value', function(mechanicSnapshot){
+
+				mechanicSnapshot.forEach(function(mechanicChildSnapshot){
+                    mechanicTable += "<div class='row'><div class='col-md-8'><input type='text' value='" + mechanicChildSnapshot.val().employee_name + "' class='form-control'></div><div class='col-md-4'><button type='button' onclick='if(confirm(\"Proceed?\")){removemechanicEmployee(\"" + mechanicChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></div></div><br>";
+                });
+
+                document.getElementById('id_fields').innerHTML = mechanicTable;
+			});
+
+		}else if(option == "nonskid1"){
+
+			firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/nonskid1').once('value', function(nonskid1Snapshot){
+
+				nonskid1Snapshot.forEach(function(nonskid1ChildSnapshot){
+                    nonskid1Table += "<div class='row'><div class='col-md-8'><input type='text' value='" + nonskid1ChildSnapshot.val().employee_name + "' class='form-control'></div><div class='col-md-4'><button type='button' onclick='if(confirm(\"Proceed?\")){removenonskid1Employee(\"" + nonskid1ChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></div></div><br>";
+                });
+
+                document.getElementById('id_fields').innerHTML = nonskid1Table;
+			});
+
+		}
+	});
+
+	function removeMachine1Employee(key){
+
+		event.preventDefault();
+
+		if(firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine1/'+key).remove()){
+
+			firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine1').once('value', function(machine1Snapshot){
+				if(machine1Snapshot.val() == null){
+
+					var machine1Data = {
+						employee_name: "N/A"
+					}
+
+					firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine1').push(machine1Data);
+					alert("Data has been removed");
+					window.location.href='attendance.html?plant='+plant;
+
+				}else{
+					alert("Data has been removed");
+					location.reload();
+				}
+			});
+			
+		}
+	}
+
+</script>
+</head>
+<body>
+	 <!-- <div class="se-pre-con"></div> -->
+    <section id="container" class="">
+        <header class="header dark-bg">
+            <div class="toggle-nav">
+            <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
+            </div>
+
+            <!--logo start-->
+
+            <!--logo end-->
+            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+            <div class="top-nav notification-row">                
+                <!-- notificatoin dropdown start-->
+                <ul class="nav pull-right top-menu">
+                    <!-- user login dropdown start-->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <!--  <span class="profile-ava">
+                        <img alt="" src="img/avatar1_small.jpg">
+                        </span> -->
+                            <span class="username" id="username"></span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <div class="log-arrow-up"></div>
+                            <li>
+                                <a href="" id="logoutBtn"><i class="icon_key_alt"></i> Log Out</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->
+                </ul>
+                <!-- notificatoin dropdown end-->
+            </div>
+        </header>  
+        <!--sidebar start-->
+        <aside>
+            <div id="sidebar"  class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu">                
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Bravo</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="attendance.html?plant=Bravo">Line Up</a></li>
+                        </ul>
+                    </li>  
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Delta</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="attendance.html?plant=Delta">Line Up</a></li>
+                        </ul>
+                    </li>  
+                </ul>
+                <!-- sidebar menu end-->
+            </div>
+        </aside>
+        <!--sidebar end-->
+
+        <section id="main-content">
+            <section class="wrapper">  
+            	<div class="row">
+                    <div class="col-md-12">
+                        <!-- <h3 class="page-header"><i class="fa fa-building"></i> Purchase Order Update</h3> -->
+                        <ol class="breadcrumb" id="id_breadcrumb">
+                        	<li id="li_attendance"></li>
+                        	<li id="li_attendance_update"></li>
+                        </ol>
+                        <div class="row">
+							<div class="col-md-offset-3 col-md-6">
+								<section class="panel">
+									<header class="panel-heading">
+									Update Form
+									</header>
+									<div class="panel-body">
+										<form class="form-horizontal" role="form" id="form" onsubmit="return submitForm();">
+											<div id="id_fields"></div>
+										</form>
+									</div>
+								</section>
+							</div>
+						</div>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </section>
+</body>
+</html>

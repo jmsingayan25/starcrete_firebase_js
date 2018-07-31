@@ -8,7 +8,7 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="../img/favicon.png">
 
-    <title>Home</title>
+    <title>Attendance</title>
 
     <!-- Firebase App is always required and must be first -->
     <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
@@ -215,7 +215,7 @@ function CurrentDate()
 }
 
 
-    function add_kamador_employee(){
+    function add_office_employee(){
 
         event.preventDefault();
 
@@ -524,82 +524,71 @@ function CurrentDate()
                     </div>
                 </div>
 
-               <!--      <section class="panel">
-                        <header class="panel-heading">
-                            <div align="center"><strong>OFFICE</strong></div>
-                                </header>
+                <input type="date" id = "date_view" name="date_view" class="form-control"> 
 
-                    </section> -->
-                    <input type="date" id = "date_view" name="date_view" class="form-control"> 
-
-                    <div class="row">
-                        <div class="col-md-12">
-                            <section class="panel">
-                                <header class="panel-heading">
+                <div class="row">
+                    <div class="col-md-12">
+                        <section class="panel">
+                            <header class="panel-heading">
                                 <div align="center"><strong>OFFICE</strong></div>
-                                </header>
-                                <div class="panel-body">
+                            </header>
+                            <div class="panel-body">
                                 <div class="row">
-                                       <div class="col-md-12"> 
+                                    <div class="col-md-12"> 
                                         <table id="kamador_table" align="center">
-                                         
-                                                    <tr>
-                                                        <td class="col-md-2">
-                                                            <label for="kamador_name">Name</label>
-                                                        </td>
-                                                        <td class="col-md-2">
-                                                            <label for="kamador_name">Time In</label>
-                                                        </td>
-                                                        <td class="col-md-2">
-                                                            <label for="kamador_name">Time Out</label>
-                                                        </td>
-                                                    </tr>
-                                                    <tr id="kamador_row1" style="text-align: center;">
-                                                        <td class="col-md-2"><input type="text" name="kamador_name[]" class="form-control input_type" autofocus></td>
-                                                         <td class="col-md-2"><input type="text" name="kamador_name[]" class="form-control input_type" autofocus></td>
-                                                          <td class="col-md-2"><input type="text" name="kamador_name[]" class="form-control input_type" autofocus></td>
-                                                        <td class="col-md-1">
-                                                            <button type="button" onclick="add_kamador_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
-                                                        </td>
-                                                         
-                                                    </tr>
-
+                                            <tr>
+                                                <td class="col-md-2">
+                                                    <label for="employee_name">Name</label>
+                                                </td>
+                                                <td class="col-md-2">
+                                                    <label for="employee_timein">Time In</label>
+                                                </td>
+                                                <td class="col-md-2">
+                                                    <label for="employee_timeout">Time Out</label>
+                                                </td>
+                                            </tr>
+                                            <tr id="kamador_row1" style="text-align: center;">
+                                                <td class="col-md-2">
+                                                    <input type="text" name="employee_name[]" class="form-control input_type" autofocus>
+                                                </td>
+                                                <td class="col-md-2">
+                                                    <input type="text" name="employee_timein[]" class="form-control input_type" autofocus>
+                                                </td>
+                                                <td class="col-md-2">
+                                                    <input type="text" name="employee_timeout[]" class="form-control input_type" autofocus>
+                                                </td>
+                                                <td class="col-md-1">
+                                                    <button type="button" onclick="add_office_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
+                                                </td>
+                                            </tr>
                                         </table>
                                     </div>
                                 </div>
                             </div>
-                             <!--  <div class="row">
-                            <div class="col-md-12">
-                            <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
-                            </div>
-                            </div> -->
-                            </section>
-                          
-            
+                        </section>
                      </div>
                 </div>
                 <!-- tab -->
                 <input type="date" id = "date_view" name="date_view" class="form-control"> 
                 <ul class="nav nav-tabs">
-                                    <li class="active"><a data-toggle="tab" href="#tabbravo"><strong>Agency</strong></a></li>
-                                    <li><a data-toggle="tab" href="#plant"><strong>Plant</strong></a></li>
-                                    <li><a data-toggle="tab" href="#Motor"><strong>Motor Pool</strong></a></li>
-                                    <li><a data-toggle="tab" href="#Trucking"><strong>Trucking</strong></a></li>
-                                </ul>
-                                <div class="tab-content">
-                                <div id="tabbravo" class="tab-pane fade in active">
+                    <li class="active"><a data-toggle="tab" href="#tabbravo"><strong>Agency</strong></a></li>
+                    <li><a data-toggle="tab" href="#plant"><strong>Plant</strong></a></li>
+                    <li><a data-toggle="tab" href="#Motor"><strong>Motor Pool</strong></a></li>
+                    <li><a data-toggle="tab" href="#Trucking"><strong>Trucking</strong></a></li>
+                </ul>
+                <div class="tab-content">
+                    <div id="tabbravo" class="tab-pane fade in active">
                                         <!-- agency -->
-                    <div class="row">
-                        <div class="col-md-12">
-                            <section class="panel">
-                                <header class="panel-heading">
-                                <div align="center"><strong>Agency</strong></div>
-                                </header>
-                                <div class="panel-body">
-                                <div class="row">
-                                       <div class="col-md-12"> 
-                                        <table id="kamador_table_agency" align="center">
-                                         
+                        <div class="row">
+                            <div class="col-md-12">
+                                <section class="panel">
+                                    <header class="panel-heading">
+                                        <div align="center"><strong>Agency</strong></div>
+                                    </header>
+                                    <div class="panel-body">
+                                        <div class="row">
+                                           <div class="col-md-12"> 
+                                                <table id="kamador_table_agency" align="center">
                                                     <tr>
                                                         <td class="col-md-2">
                                                             <label for="kamador_name_agency">Name</label>
@@ -609,29 +598,26 @@ function CurrentDate()
                                                         </td>
                                                     </tr>
                                                     <tr id="kamador_row1_agency" style="text-align: center;">
-                                                        <td class="col-md-2"><input type="text" name="kamador_name_agency[]" class="form-control input_type" autofocus></td>
-                                                         <td class="col-md-2"><input type="text" name="kamador_name_agency[]" class="form-control input_type" autofocus></td>
+                                                        <td class="col-md-2">
+                                                            <input type="text" name="kamador_name_agency[]" class="form-control input_type" autofocus>
+                                                        </td>
+                                                        <td class="col-md-2">
+                                                            <input type="text" name="kamador_name_agency[]" class="form-control input_type" autofocus>
+                                                        </td>
                                                         <td class="col-md-1">
                                                             <button type="button" onclick="add_kamador_agency();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
                                                         </td>
-                                                         
                                                     </tr>
-
-                                        </table>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </div>
-                           <!--   <div class="row">
-                            <div class="col-md-12">
-                            <button type="button"class="btn btn-primary btn-md btn-block"><span>Submit</span></span></button>
-                            </div>
-                            </div> -->
-                            </section>
-                     </div>
-                </div>
-                <!-- end agency -->
+                                </section>
+                             </div>
                         </div>
-                        <div id="plant" class="tab-pane fade in">
+                    </div>
+                                       <!-- end agency -->
+                    <div id="plant" class="tab-pane fade in">
                                         <!-- agency -->
                     <div class="row">
                         <div class="col-md-12">
