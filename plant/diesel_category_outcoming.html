@@ -172,23 +172,24 @@
      function submitForm()
     {
          event.preventDefault();
-         count = 0;
+        var count=0;
          firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(CheckSnapshot)
             {
                firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
                 {
-                 firebase.database().ref().child("available_seperate_category/" + plant).on('child_added',function(SeperateSnapshots)
+                 firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(SeperateSnapshots)
                     {
+                        SeperateSnapshots.forEach(function(SeperateChildSnapshot){
                         pickcategory = Snapshot.val().CurrentCategory;
 
-                        if (pickcategory == SeperateSnapshots.val().CategoryName) 
+                        if (pickcategory == SeperateChildSnapshot.val().CategoryName) 
                         {
                             count++;
                         }
-                            
-                    });
-                    if (count > 0) 
-                    {
+                    
+                          }); 
+                           if (count > 0) 
+                    {  
                        SeperateSnapshots.forEach(function(SeperateChildSnapshot){
 
                              var quantity_out = document.getElementById('quantity_out').value;
@@ -281,13 +282,14 @@
                                 });
                                     window.location.reload();       
                                 }
-                        });  
-                        
+                            }); 
                     }
                     else
                     {
                         alert("Fill Incoming Required");
-                    }    
+                    }       
+                    }); 
+                      
                 });               
             });
     }
