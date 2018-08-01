@@ -154,20 +154,102 @@
 
         });
     }
-    function submitForm()
+    // start test
+     function submitForm()
     {
-        event.preventDefault();
-        firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(CheckSnapshots)
+         event.preventDefault();
+        var count=0;
+         firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(CheckSnapshots)
         {
-            if(CheckSnapshots.val() == null){
+         firebase.database().ref().child("incoming_diesel_category/" + plant).once('value',function(CheckSnapshot)
+            {
+               firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
+                {
+                 firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(SeperateSnapshots)
+                    {
+                        SeperateSnapshots.forEach(function(SeperateChildSnapshot){
+                        pickcategory = Snapshot.val().CurrentCategory;
 
-                firebase.database().ref().child("incoming_diesel_category/" + plant).once('value',function(CheckSnapshot)
-                {
-                firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
-                {
-                firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(SeperateSnapshots)
-                {            
-                var po_no = document.getElementById('po_no').value;
+                        if (pickcategory == SeperateChildSnapshot.val().CategoryName) 
+                        {
+                            count++;
+                        }
+                    
+                    }); 
+                        if (count > 0){  //START MERON
+                             SeperateSnapshots.forEach(function(SeperateChildSnapshot){//start loop
+
+                        var po_no = document.getElementById('po_no').value;
+                        var dr_no = document.getElementById('dr_no').value;
+                        var quantity_in = document.getElementById('quantity_in').value;
+                        quantity_in = quantity_in.replace(",","");
+                        var supplier = document.getElementById('supplier').value;
+                        var truck_no = document.getElementById('truck_no').value;
+                        var date = new Date().toLocaleDateString('en');
+                        var time = new Date().toLocaleTimeString('en');
+                        var date_input = dateFormat(document.getElementById('date_input').value);
+                        var time_input = startTime(document.getElementById('time_input').value);
+                        //
+                        var get_liters = CheckSnapshots.val().Liters;
+                        var total_int_liters = Number(quantity_in) + Number(get_liters);
+                        var total_string_liters = total_int_liters.toString();
+                        var new_liters = total_string_liters;
+                        var stock_available  ={Liters: new_liters};
+                        firebase.database().ref().child("available_diesel_category/" + plant).set(stock_available );
+                        //
+                        //
+                        var currentStockCopy = new_liters;
+                        pickcategory = Snapshot.val().CurrentCategory;
+                        transactionType = "In";
+                         //sep
+                        var get_categorySeperate = SeperateChildSnapshot.val().CategoryName;
+                                if (get_categorySeperate == pickcategory) 
+                                {   var get_textCategory = pickcategory;
+                                    var get_ValueSeperate = SeperateChildSnapshot.val().Liters;
+                                    var get_quantityInSeperate = quantity_in;
+                                    var NewTotalSeperate = Number(get_ValueSeperate) + Number(get_quantityInSeperate);
+                                    var NewStringTotal = NewTotalSeperate.toString();
+
+                                    var stock_seperate_available  = {CategoryName: get_textCategory,
+                                                                    Liters: NewStringTotal};
+                                     firebase.database().ref().child("available_seperate_category/" + plant + "/" + SeperateChildSnapshot.key).set(stock_seperate_available);
+                                     var currentStockHolder = {
+                                     po_no: po_no, dr_no: dr_no, 
+                                     quantity_in: quantity_in,
+                                     supplier: supplier.toUpperCase(), 
+                                     truck_no: truck_no.toUpperCase(),
+                                     reverseDate: firebase.database.ServerValue.TIMESTAMP,
+                                     date: date,time: time,
+                                     currentstockCopy: currentStockCopy,
+                                     TransactionType: transactionType,
+                                     PickCategoryName: pickcategory,
+                                     Date_Input: date_input,
+                                     time_input: time_input,
+                                     seperateCurrentStock: NewStringTotal};
+
+                                     var postData = firebase.database().ref('incoming_diesel_category/' + plant);
+                                     var newPostRef = postData.push();
+                                     newPostRef.set(currentStockHolder);
+                                     var postId = newPostRef.key;
+                                     //alert("Incoming diesel complete.");
+                                     //window.location.reload();
+                                 }
+                                      firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot){
+                        var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
+                        var UpdateReverseDate = {reverseDate: StartReverseDate};
+
+                         if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
+
+                            window.location.reload();
+                        }
+                        });//end loop
+
+                        });
+                    }//END MERON NA
+                    else
+                    {//START PAG WALAPA
+
+                       var po_no = document.getElementById('po_no').value;
                 var dr_no = document.getElementById('dr_no').value;
                 var quantity_in = document.getElementById('quantity_in').value;
                 quantity_in = quantity_in.replace(",","");
@@ -224,167 +306,252 @@
                     {
                     var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
                     var UpdateReverseDate = {reverseDate: StartReverseDate};
-                    /*firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
-                    console.log(StartReverseDate);*/
+     
                      if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
-                        //alert("Incoming diesel complete.");
+
                         window.location.reload();
                         }
                     });
-                    });
-                 
-                });
+                    }//END PAG WALAPA   
+
+                    });     
+                });               
             });
+          });  
+    }
+    // end test
+    // function submitForm()
+    // {
+    //     event.preventDefault();
+    //     firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(CheckSnapshots)
+    //     {
+    //         if(CheckSnapshots.val() == null){
+
+    //             firebase.database().ref().child("incoming_diesel_category/" + plant).once('value',function(CheckSnapshot)
+    //             {
+    //             firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
+    //             {
+    //             firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(SeperateSnapshots)
+    //             {            
+    //             var po_no = document.getElementById('po_no').value;
+    //             var dr_no = document.getElementById('dr_no').value;
+    //             var quantity_in = document.getElementById('quantity_in').value;
+    //             quantity_in = quantity_in.replace(",","");
+    //             var supplier = document.getElementById('supplier').value;
+    //             var truck_no = document.getElementById('truck_no').value;
+    //             var date = new Date().toLocaleDateString('en');
+    //             var time = new Date().toLocaleTimeString('en');
+    //             var date_input = dateFormat(document.getElementById('date_input').value);
+    //             var time_input = startTime(document.getElementById('time_input').value);
+                
+    //             //
+    //             var liters_bravo = quantity_in;
+    //             var stock_available = {Liters: liters_bravo};
+    //             firebase.database().ref().child("available_diesel_category/" + plant).set(stock_available );
+    //             //
+    //             var currentStockCopy = liters_bravo;
+    //             pickcategory =Snapshot.val().CurrentCategory;
+    //             transactionType = "In";
+    //             //sep
+    //                         var get_textCategory = pickcategory;
+    //                         var get_quantityIn = quantity_in;
+
+        
+    //                         var stock_seperate_available  ={CategoryName: get_textCategory,Liters: get_quantityIn};
+
+    //                          var postData = firebase.database().ref("available_seperate_category/" + plant);
+    //                          var newPostRef = postData.push();
+    //                          newPostRef.set(stock_seperate_available);
+
+    //                          var postId = newPostRef.key;
+    //                          //window.location.reload();
+    //             //endsep
+    //             var currentStockHolder = {
+    //                 po_no: po_no, 
+    //                 dr_no: dr_no, 
+    //                 quantity_in: quantity_in,
+    //                 supplier: supplier.toUpperCase(), truck_no: truck_no.toUpperCase(),
+    //                 reverseDate:firebase.database.ServerValue.TIMESTAMP,
+    //                 date: date,time: time,
+    //                 currentstockCopy: currentStockCopy,
+    //                 TransactionType: transactionType,
+    //                 PickCategoryName: pickcategory,
+    //                 Date_Input: date_input,
+    //                 time_input: time_input,
+    //                 seperateCurrentStock: get_quantityIn};
+
+    //             var postData = firebase.database().ref('incoming_diesel_category/' + plant);
+    //             var newPostRef = postData.push();
+    //             newPostRef.set(currentStockHolder);
+
+    //             var postId = newPostRef.key;
+                
+    //             firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot)
+    //                 {
+    //                 var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
+    //                 var UpdateReverseDate = {reverseDate: StartReverseDate};
+    //                 /*firebase.database().ref().child("incoming_diesel/" + plant +"/" + postId).update(UpdateReverseDate);
+    //                 console.log(StartReverseDate);*/
+    //                  if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
+    //                     //alert("Incoming diesel complete.");
+    //                     window.location.reload();
+    //                     }
+    //                 });
+    //                 });
                  
-            }else
-            {
-              firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
-              {
-                firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(SeperateSnapshots)
-                {
-                    SeperateSnapshots.forEach(function(SeperateChildSnapshot){
+    //             });
+    //         });
+                 
+    //         }else
+    //         {
+    //           firebase.database().ref().child("diesel_current_category/" + plant).once('value',function(Snapshot)
+    //           {
+    //             firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(SeperateSnapshots)
+    //             {
+    //                 SeperateSnapshots.forEach(function(SeperateChildSnapshot){
 
-                        var po_no = document.getElementById('po_no').value;
-                        var dr_no = document.getElementById('dr_no').value;
-                        var quantity_in = document.getElementById('quantity_in').value;
-                        quantity_in = quantity_in.replace(",","");
-                        var supplier = document.getElementById('supplier').value;
-                        var truck_no = document.getElementById('truck_no').value;
-                        var date = new Date().toLocaleDateString('en');
-                        var time = new Date().toLocaleTimeString('en');
-                        var date_input = dateFormat(document.getElementById('date_input').value);
-                        var time_input = startTime(document.getElementById('time_input').value);
-                        //
-                        var get_liters = CheckSnapshots.val().Liters;
-                        var total_int_liters = Number(quantity_in) + Number(get_liters);
-                        var total_string_liters = total_int_liters.toString();
-                        var new_liters = total_string_liters;
-                        var stock_available  ={Liters: new_liters};
-                        firebase.database().ref().child("available_diesel_category/" + plant).set(stock_available );
-                        //
-                        //
-                        var currentStockCopy = new_liters;
-                        pickcategory = Snapshot.val().CurrentCategory;
-                        transactionType = "In";
-                         //sep
-                        var get_categorySeperate = SeperateChildSnapshot.val().CategoryName;
-                                if (get_categorySeperate == pickcategory) 
-                                {   var get_textCategory = pickcategory;
-                                    var get_ValueSeperate = SeperateChildSnapshot.val().Liters;
-                                    var get_quantityInSeperate = quantity_in;
-                                    var NewTotalSeperate = Number(get_ValueSeperate) + Number(get_quantityInSeperate);
-                                    var NewStringTotal = NewTotalSeperate.toString();
+    //                     var po_no = document.getElementById('po_no').value;
+    //                     var dr_no = document.getElementById('dr_no').value;
+    //                     var quantity_in = document.getElementById('quantity_in').value;
+    //                     quantity_in = quantity_in.replace(",","");
+    //                     var supplier = document.getElementById('supplier').value;
+    //                     var truck_no = document.getElementById('truck_no').value;
+    //                     var date = new Date().toLocaleDateString('en');
+    //                     var time = new Date().toLocaleTimeString('en');
+    //                     var date_input = dateFormat(document.getElementById('date_input').value);
+    //                     var time_input = startTime(document.getElementById('time_input').value);
+    //                     //
+    //                     var get_liters = CheckSnapshots.val().Liters;
+    //                     var total_int_liters = Number(quantity_in) + Number(get_liters);
+    //                     var total_string_liters = total_int_liters.toString();
+    //                     var new_liters = total_string_liters;
+    //                     var stock_available  ={Liters: new_liters};
+    //                     firebase.database().ref().child("available_diesel_category/" + plant).set(stock_available );
+    //                     //
+    //                     //
+    //                     var currentStockCopy = new_liters;
+    //                     pickcategory = Snapshot.val().CurrentCategory;
+    //                     transactionType = "In";
+    //                      //sep
+    //                     var get_categorySeperate = SeperateChildSnapshot.val().CategoryName;
+    //                             if (get_categorySeperate == pickcategory) 
+    //                             {   var get_textCategory = pickcategory;
+    //                                 var get_ValueSeperate = SeperateChildSnapshot.val().Liters;
+    //                                 var get_quantityInSeperate = quantity_in;
+    //                                 var NewTotalSeperate = Number(get_ValueSeperate) + Number(get_quantityInSeperate);
+    //                                 var NewStringTotal = NewTotalSeperate.toString();
 
-                                    var stock_seperate_available  = {CategoryName: get_textCategory,
-                                                                    Liters: NewStringTotal};
-                                     firebase.database().ref().child("available_seperate_category/" + plant + "/" + SeperateChildSnapshot.key).set(stock_seperate_available);
-                                     var currentStockHolder = {
-                                     po_no: po_no, dr_no: dr_no, 
-                                     quantity_in: quantity_in,
-                                     supplier: supplier.toUpperCase(), 
-                                     truck_no: truck_no.toUpperCase(),
-                                     reverseDate: firebase.database.ServerValue.TIMESTAMP,
-                                     date: date,time: time,
-                                     currentstockCopy: currentStockCopy,
-                                     TransactionType: transactionType,
-                                     PickCategoryName: pickcategory,
-                                     Date_Input: date_input,
-                                     time_input: time_input,
-                                     seperateCurrentStock: NewStringTotal};
+    //                                 var stock_seperate_available  = {CategoryName: get_textCategory,
+    //                                                                 Liters: NewStringTotal};
+    //                                  firebase.database().ref().child("available_seperate_category/" + plant + "/" + SeperateChildSnapshot.key).set(stock_seperate_available);
+    //                                  var currentStockHolder = {
+    //                                  po_no: po_no, dr_no: dr_no, 
+    //                                  quantity_in: quantity_in,
+    //                                  supplier: supplier.toUpperCase(), 
+    //                                  truck_no: truck_no.toUpperCase(),
+    //                                  reverseDate: firebase.database.ServerValue.TIMESTAMP,
+    //                                  date: date,time: time,
+    //                                  currentstockCopy: currentStockCopy,
+    //                                  TransactionType: transactionType,
+    //                                  PickCategoryName: pickcategory,
+    //                                  Date_Input: date_input,
+    //                                  time_input: time_input,
+    //                                  seperateCurrentStock: NewStringTotal};
 
-                                     var postData = firebase.database().ref('incoming_diesel_category/' + plant);
-                                     var newPostRef = postData.push();
-                                     newPostRef.set(currentStockHolder);
-                                     var postId = newPostRef.key;
-                                     //alert("Incoming diesel complete.");
-                                     window.location.reload();
-                                 }
-                                      firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot){
-                        var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
-                        var UpdateReverseDate = {reverseDate: StartReverseDate};;
+    //                                  var postData = firebase.database().ref('incoming_diesel_category/' + plant);
+    //                                  var newPostRef = postData.push();
+    //                                  newPostRef.set(currentStockHolder);
+    //                                  var postId = newPostRef.key;
+    //                                  //alert("Incoming diesel complete.");
+    //                                  window.location.reload();
+    //                              }
+    //                                   firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot){
+    //                     var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
+    //                     var UpdateReverseDate = {reverseDate: StartReverseDate};;
 
-                        if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
-                    }
-                        });     
-                   });
-                        firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(NewSeperateSnapshots)
-                        {               var po_no = document.getElementById('po_no').value;
-                        var dr_no = document.getElementById('dr_no').value;
-                        var quantity_in = document.getElementById('quantity_in').value;
-                        quantity_in = quantity_in.replace(",","");
-                        var supplier = document.getElementById('supplier').value;
-                        var truck_no = document.getElementById('truck_no').value;
-                        var date = new Date().toLocaleDateString('en');
-                        var time = new Date().toLocaleTimeString('en');
-                        var date_input = dateFormat(document.getElementById('date_input').value);
-                        var time_input = startTime(document.getElementById('time_input').value);
-                        //
-                        var get_liters = CheckSnapshots.val().Liters;
-                        var total_int_liters = Number(quantity_in) + Number(get_liters);
-                        var total_string_liters = total_int_liters.toString();
-                        var new_liters = total_string_liters;
-                        var stock_available  ={Liters: new_liters};
-                        firebase.database().ref().child("available_diesel_category/" + plant).set(stock_available );
+    //                     if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
+    //                 }
+    //                     });     
+    //                });
+    //                     firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(NewSeperateSnapshots)
+    //                     {               
+    //                     var po_no = document.getElementById('po_no').value;
+    //                     var dr_no = document.getElementById('dr_no').value;
+    //                     var quantity_in = document.getElementById('quantity_in').value;
+    //                     quantity_in = quantity_in.replace(",","");
+    //                     var supplier = document.getElementById('supplier').value;
+    //                     var truck_no = document.getElementById('truck_no').value;
+    //                     var date = new Date().toLocaleDateString('en');
+    //                     var time = new Date().toLocaleTimeString('en');
+    //                     var date_input = dateFormat(document.getElementById('date_input').value);
+    //                     var time_input = startTime(document.getElementById('time_input').value);
+    //                     //
+    //                     var get_liters = CheckSnapshots.val().Liters;
+    //                     var total_int_liters = Number(quantity_in) + Number(get_liters);
+    //                     var total_string_liters = total_int_liters.toString();
+    //                     var new_liters = total_string_liters;
+    //                     var stock_available  ={Liters: new_liters};
+    //                     firebase.database().ref().child("available_diesel_category/" + plant).set(stock_available );
 
-                          var currentStockCopy = new_liters;
-                        pickcategory = Snapshot.val().CurrentCategory;
-                        transactionType = "In"
-                                        //
-                                        pickcategory = Snapshot.val().CurrentCategory;
-                                        var get_categorySeperate = NewSeperateSnapshots.val().CategoryName;
-                                        if(get_categorySeperate != pickcategory){
+    //                       var currentStockCopy = new_liters;
+    //                     pickcategory = Snapshot.val().CurrentCategory;
+    //                     transactionType = "In"
+    //                                     //
+    //                                     pickcategory = Snapshot.val().CurrentCategory;
+    //                                     var get_categorySeperate = NewSeperateSnapshots.val().CategoryName;
+    //                                     if(get_categorySeperate != pickcategory){
                     
-                                        var get_textCategory = pickcategory;
-                                        var get_quantityIn = quantity_in;
+    //                                     var get_textCategory = pickcategory;
+    //                                     var get_quantityIn = quantity_in;
 
                         
-                                        var stock_seperate_available  = {CategoryName: get_textCategory,Liters: get_quantityIn};
+    //                                     var stock_seperate_available  = {CategoryName: get_textCategory,Liters: get_quantityIn};
 
-                                        var postData = firebase.database().ref("available_seperate_category/" + plant);
-                                        var newPostRef = postData.push();
-                                        newPostRef.set(stock_seperate_available);
+    //                                     var postData = firebase.database().ref("available_seperate_category/" + plant);
+    //                                     var newPostRef = postData.push();
+    //                                     newPostRef.set(stock_seperate_available);
 
-                                        var postId = newPostRef.key;
+    //                                     var postId = newPostRef.key;
 
-                                        var currentStockHolder = {
-                                        po_no: po_no, dr_no: dr_no, 
-                                        quantity_in: quantity_in,
-                                        supplier: supplier.toUpperCase(), 
-                                        truck_no: truck_no.toUpperCase(),
-                                        reverseDate: firebase.database.ServerValue.TIMESTAMP,
-                                        date: date,time: time,
-                                        currentstockCopy: currentStockCopy,
-                                        TransactionType: transactionType,
-                                        PickCategoryName: pickcategory,
-                                        Date_Input: date_input,
-                                        time_input: time_input,
-                                        seperateCurrentStock: get_quantityIn};
+    //                                     var currentStockHolder = {
+    //                                     po_no: po_no, dr_no: dr_no, 
+    //                                     quantity_in: quantity_in,
+    //                                     supplier: supplier.toUpperCase(), 
+    //                                     truck_no: truck_no.toUpperCase(),
+    //                                     reverseDate: firebase.database.ServerValue.TIMESTAMP,
+    //                                     date: date,time: time,
+    //                                     currentstockCopy: currentStockCopy,
+    //                                     TransactionType: transactionType,
+    //                                     PickCategoryName: pickcategory,
+    //                                     Date_Input: date_input,
+    //                                     time_input: time_input,
+    //                                     seperateCurrentStock: get_quantityIn};
 
-                                        var postData = firebase.database().ref('incoming_diesel_category/' + plant);
-                                        var newPostRef = postData.push();
-                                        newPostRef.set(currentStockHolder);
-                                        var postId = newPostRef.key;
-                                        //alert("Incoming diesel complete.");
-                                        window.location.reload();
-                        }
-                            });  
-                    //
-                    firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot){
-                        var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
-                        var UpdateReverseDate = {reverseDate: StartReverseDate};;
+    //                                     var postData = firebase.database().ref('incoming_diesel_category/' + plant);
+    //                                     var newPostRef = postData.push();
+    //                                     newPostRef.set(currentStockHolder);
+    //                                     var postId = newPostRef.key;
+    //                                     //alert("Incoming diesel complete.");
+    //                                     window.location.reload();
+    //                     }
+    //                         });  
+    //                 //
+    //                 firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot){
+    //                     var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
+    //                     var UpdateReverseDate = {reverseDate: StartReverseDate};;
 
-                        if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
-                        alert("Incoming diesel complete.");
-                        // window.location.reload();
-                    }
-                        });
-                    //separate total      
-                   //endloop     
-                });    
-              });  
-            }
-        });
-    }
+    //                     if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
+    //                     alert("Incoming diesel complete.");
+    //                     // window.location.reload();
+    //                 }
+    //                     });
+    //                 //separate total      
+    //                //endloop     
+    //             });    
+    //           });  
+    //         }
+    //     });
+    // }
 
     function totalCountBadge(){
 
