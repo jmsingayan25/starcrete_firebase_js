@@ -84,6 +84,7 @@
 <script>
 
     var plant = getUrlParameter('plant');
+    var backDate = getUrlParameter('date') || "";
 
     $(document).ready(function(){
 
@@ -111,6 +112,7 @@
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='icon_document'></i><a href='attendance.html?plant=" + plant + "'>Line Up</a></li>";
 
     });
 
@@ -122,9 +124,17 @@
         var myTableRow4 = "";
         var myTableRow5 = "";
         var myTableRow6 = "";
-        var input_date = document.getElementById('input_date').value;
         var option = {year: "numeric", month: "long", day: "numeric"}
-        var currentDate = new Date().toLocaleDateString('en', option);
+
+        if(backDate != ""){
+            var input_date = backDate;
+            var currentDate = new Date(input_date).toLocaleDateString('en', option);
+        }else{
+            var input_date = document.getElementById('input_date').value;
+            var currentDate = new Date().toLocaleDateString('en', option);
+        }
+
+        console.log(input_date, currentDate);
 
         if(input_date != ''){
             var passcurrentDate = new Date(input_date).toLocaleDateString('en');
@@ -136,7 +146,7 @@
 
         document.getElementById('link_machine1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine1&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_machine3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine3&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_forklift_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=forklift&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_forklift_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=forklift_operator&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_mechanic_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=mechanic&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_nonskid1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid1&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_nonskid2_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid2&date=" + passcurrentDate + "'>Update</a>";
@@ -151,7 +161,7 @@
 
         firebase.database().ref('plant_attendance/'+plant+'/'+currentDate).once('value', function(tableContentSnapshot){
 
-            console.log(tableContentSnapshot.val());
+            // console.log(tableContentSnapshot.val());
 
             if(tableContentSnapshot.val() != null){
 
@@ -335,7 +345,7 @@
 
         document.getElementById('link_machine1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine1&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_machine3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine3&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_forklift_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=forklift&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_forklift_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=forklift_operator&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_mechanic_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=mechanic&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_nonskid1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid1&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_nonskid2_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid2&date=" + passcurrentDate + "'>Update</a>";
@@ -602,8 +612,8 @@
             <section class="wrapper">  
                 <div class="row">
                     <div class="col-md-12">
-                        <ol class="breadcrumb">
-                            <li><i class="icon_document"></i>Line Up</li>                       
+                        <ol class="breadcrumb" id="id_breadcrumb">
+                                                  
                         </ol>
                     </div>
                 </div>
@@ -616,7 +626,7 @@
                                         <div class="form-group" style="margin-top: 5px; margin-bottom: 5px;">
                                             <label for="date" class="col-md-1 control-label" style="margin-right: -10px;">Date:</label>
                                             <div class="col-md-2" style="margin-right: -25px;">
-                                                <input type="date" id="input_date" name="input_date" class="form-control" required>
+                                                <input type="date" id="input_date" name="input_date" class="form-control">
                                                 
                                             </div>
                                             <div class="col-md-1" style="margin-right: 25px;">

@@ -89,14 +89,7 @@
 
 	var date_option = {year: "numeric", month: "long", day: "numeric"}
 	var currentDate = new Date(getCurrentDate).toLocaleDateString('en', date_option);
-	var machine1Table = "";
-	var machine3Table = "";
-	var forkliftTable = "";
-	var mechanicTable = "";
-	var nonskid1Table = "";
-	var nonskid2Table = "";
-	var nonskid3Table = "";
-	var nonskid4Table = "";
+	var optionTable = "";
 
 	$(document).ready(function(){
 
@@ -123,82 +116,49 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
-        document.getElementById('li_attendance').innerHTML = "<i class='icon_document'></i><a href='attendance.html?plant=" + plant + "'>Line Up</a>";
+        document.getElementById('li_attendance').innerHTML = "<i class='icon_document'></i><a href='attendance.html?plant=" + plant + "&date=" + getCurrentDate + "'>Line Up</a>";
         document.getElementById('li_attendance_update').innerHTML = "<i class='icon_document'></i>Line Up Form";
 
-		if(option == "machine1"){
-			console.log(option);
+		if(option != "absent"){
+	
+			// document.getElementById('id_option').innerHTML = "<strong>MACHINE1</strong>";
 
-			firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine1').once('value', function(machine1Snapshot){
+			firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/'+option).once('value', function(optionSnapshot){
 
-				machine1Snapshot.forEach(function(machine1ChildSnapshot){
-                    machine1Table += "<div class='row'><div class='col-md-8'><input type='text' value='" + machine1ChildSnapshot.val().employee_name + "' class='form-control'></div><div class='col-md-4'><button type='button' onclick='if(confirm(\"Proceed?\")){removeMachine1Employee(\"" + machine1ChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></div></div><br>";
+				optionSnapshot.forEach(function(optionChildSnapshot){
+                    optionTable += "<div class='form-group'><div class='row'><div class='col-md-offset-1 col-md-7'><input type='text' name='update_employee_name[]' value='" + optionChildSnapshot.val().employee_name + "' class='form-control'></div><div class='col-md-4'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></div></div></div>";
                 });
 
-                document.getElementById('id_fields').innerHTML = machine1Table;
+                document.getElementById('id_fields').innerHTML = optionTable;
 			});
 
-		}else if(option == "machine3"){
+		}else if(option == "absent"){
 
-			firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine3').once('value', function(machine3Snapshot){
+			firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/'+option).once('value', function(optionSnapshot){
 
-				machine3Snapshot.forEach(function(machine3ChildSnapshot){
-                    machine3Table += "<div class='row'><div class='col-md-8'><input type='text' value='" + machine3ChildSnapshot.val().employee_name + "' class='form-control'></div><div class='col-md-4'><button type='button' onclick='if(confirm(\"Proceed?\")){removeMachine3Employee(\"" + machine3ChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></div></div><br>";
+				optionSnapshot.forEach(function(optionChildSnapshot){
+                    optionTable += "<div class='form-group'><div class='row'><div class='col-md-5'><input type='text' name='update_employee_name[]' value='" + optionChildSnapshot.val().employee_name + "' class='form-control'></div><div class='col-md-4'><textarea name='update_employee_reason[]' rows='3' class='form-control'>" + optionChildSnapshot.val().reason + "</textarea></div><div class='col-md-1'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></div></div></div>";
                 });
 
-                document.getElementById('id_fields').innerHTML = machine3Table;
+                document.getElementById('id_fields').innerHTML = optionTable;
 			});
-
-		}else if(option == "forklift"){
-
-			firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/forklift_operator').once('value', function(forkliftSnapshot){
-
-				forkliftSnapshot.forEach(function(forkliftChildSnapshot){
-                    forkliftTable += "<div class='row'><div class='col-md-8'><input type='text' value='" + forkliftChildSnapshot.val().employee_name + "' class='form-control'></div><div class='col-md-4'><button type='button' onclick='if(confirm(\"Proceed?\")){removeforkliftEmployee(\"" + forkliftChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></div></div><br>";
-                });
-
-                document.getElementById('id_fields').innerHTML = forkliftTable;
-			});
-
-		}else if(option == "mechanic"){
-
-			firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/mechanic').once('value', function(mechanicSnapshot){
-
-				mechanicSnapshot.forEach(function(mechanicChildSnapshot){
-                    mechanicTable += "<div class='row'><div class='col-md-8'><input type='text' value='" + mechanicChildSnapshot.val().employee_name + "' class='form-control'></div><div class='col-md-4'><button type='button' onclick='if(confirm(\"Proceed?\")){removemechanicEmployee(\"" + mechanicChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></div></div><br>";
-                });
-
-                document.getElementById('id_fields').innerHTML = mechanicTable;
-			});
-
-		}else if(option == "nonskid1"){
-
-			firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/nonskid1').once('value', function(nonskid1Snapshot){
-
-				nonskid1Snapshot.forEach(function(nonskid1ChildSnapshot){
-                    nonskid1Table += "<div class='row'><div class='col-md-8'><input type='text' value='" + nonskid1ChildSnapshot.val().employee_name + "' class='form-control'></div><div class='col-md-4'><button type='button' onclick='if(confirm(\"Proceed?\")){removenonskid1Employee(\"" + nonskid1ChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></div></div><br>";
-                });
-
-                document.getElementById('id_fields').innerHTML = nonskid1Table;
-			});
-
 		}
 	});
 
-	function removeMachine1Employee(key){
+	function removeEmployee(position, key){
 
 		event.preventDefault();
 
-		if(firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine1/'+key).remove()){
+		if(firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/'+position+'/'+key).remove()){
 
-			firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine1').once('value', function(machine1Snapshot){
-				if(machine1Snapshot.val() == null){
+			firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/'+position).once('value', function(snapshot){
+				if(snapshot.val() == null){
 
-					var machine1Data = {
+					var data = {
 						employee_name: "N/A"
 					}
 
-					firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine1').push(machine1Data);
+					firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/'+position).push(data);
 					alert("Data has been removed");
 					window.location.href='attendance.html?plant='+plant;
 
@@ -209,6 +169,41 @@
 			});
 			
 		}
+	}
+
+	function submitForm(){
+
+		event.preventDefault();
+
+		count = 0;
+		var input_employee_name = $("input[name='update_employee_name[]']").map(function(){return $(this).val();}).get();
+
+		if(option == "absent"){
+
+			var input_employee_reason = $("input[name='update_employee_reason[]']").map(function(){return $(this).val();}).get();
+
+			console.log(input_employee_name, input_employee_reason);
+
+			for(i = 0; i < input_employee_name.length; i++){
+
+				var employeeData = {
+					employee_name: input_employee_name[i],
+					reason: input_employee_reason[i],
+
+				}
+			}
+
+		}else{
+
+			for(i = 0; i < input_employee_name.length; i++){
+
+				var employeeData = {
+					employee_name: input_employee_name[i]
+				}
+			}
+		}
+
+		
 	}
 
 </script>
@@ -295,9 +290,20 @@
 									<header class="panel-heading">
 									Update Form
 									</header>
+									<header class="panel-heading" id="id_option" style="text-align: center;"></header>
 									<div class="panel-body">
-										<form class="form-horizontal" role="form" id="form" onsubmit="return submitForm();">
-											<div id="id_fields"></div>
+										<div id="id_fields"></div>
+<form class="form-horizontal" role="form" id="form" onsubmit='if(confirm("Proceed?")){submitForm();}else{ event.preventDefault();}'>
+											<div class="form-group">
+												<div class="row">
+													<!-- <div class="form-group"> -->
+													<div class="col-md-offset-7 col-md-5">
+														<input type="submit" name="submit" id="submit" value="Update" class="btn btn-primary" style="font-weight: bold;">
+		                                            	<button type="button" class="btn btn-default" onclick="window.history.back();"><strong>Cancel</strong></button>
+													<!-- </div> -->
+													</div>
+												</div>
+											</div>
 										</form>
 									</div>
 								</section>
