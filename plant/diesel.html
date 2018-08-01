@@ -227,7 +227,25 @@ function Go()
                 {
                     quantityoutholder = quantityout + " liter(s)";
                 }
-                myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+                if (dieselChildSnapshot.val().TransactionType == "In") 
+                {
+                    myTbody += "<tr style ='background-color:#006080'>";
+                      myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + suppliername + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + quantityholder  + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + quantityoutholder  + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + address + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + time + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + drno + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + dates + "</strong></td>";
+                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>";
+             
+                $(".se-pre-con").fadeOut("slow");
+                }else
+                {
+                     myTbody += "<tr>";
+                       myTbody += "<td><strong>" + truckno + "</strong></td>";
                 myTbody += "<td><strong>" + suppliername + "</strong></td>";
                 myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
                 myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
@@ -236,9 +254,10 @@ function Go()
                 myTbody += "<td><strong>" + time + "</strong></td>";
                 myTbody += "<td><strong>" + drno + "</strong></td>";
                 myTbody += "<td><strong>" + dates + "</strong></td>";
-                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>" 
-                document.getElementById("DieselList").innerHTML = myTbody; 
-                 $(".se-pre-con").fadeOut("slow");
+                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>";
+             
+                $(".se-pre-con").fadeOut("slow");
+                }
                 }
         });
         if (myTbody == ""){
@@ -278,7 +297,25 @@ function Go()
                 if (quantityout == "NaN"){quantityoutholder = "";}
                 else{quantityoutholder = quantityout + " liter(s)";}
                 
-                myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+                 if (dieselChildSnapshot.val().TransactionType == "In") 
+                {
+                    myTbody += "<tr style ='background-color:#006080'>";
+                      myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + suppliername + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + quantityholder  + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + quantityoutholder  + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + address + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + time + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + drno + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + dates + "</strong></td>";
+                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>";
+             
+                $(".se-pre-con").fadeOut("slow");
+                }else
+                {
+                     myTbody += "<tr>";
+                       myTbody += "<td><strong>" + truckno + "</strong></td>";
                 myTbody += "<td><strong>" + suppliername + "</strong></td>";
                 myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
                 myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
@@ -288,6 +325,9 @@ function Go()
                 myTbody += "<td><strong>" + drno + "</strong></td>";
                 myTbody += "<td><strong>" + dates + "</strong></td>";
                 myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>";
+             
+                $(".se-pre-con").fadeOut("slow");
+                }
              
                 $(".se-pre-con").fadeOut("slow");
             //}
