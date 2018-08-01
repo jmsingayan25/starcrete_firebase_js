@@ -84,6 +84,7 @@
 <script>
 
     var plant = "";
+    var backDate = getUrlParameter('date') || "";
 
     $(document).ready(function(){
 
@@ -120,12 +121,6 @@
 
             document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
         });
-
-        var option = {year: "numeric", month: "long", day: "numeric"}
-        var currentDate = new Date().toLocaleDateString('en', option);
-
-        document.getElementById('id_date').innerHTML = "<th colspan='3'>Date: " + currentDate + " <br> Result: <span id='id_record'></span></th><th colspan='1'> <button class='btn btn-success' onclick='window.location.href=\"attendance_form.html\";' style='float: right;'><span class='fa fa-plus'></span> <strong>Line Up Form</strong></button></th>";
-
     });
 
     function tableData(){
@@ -136,12 +131,40 @@
         var myTableRow4 = "";
         var myTableRow5 = "";
         var myTableRow6 = "";
-        var input_date = document.getElementById('input_date').value;
         var option = {year: "numeric", month: "long", day: "numeric"}
         var currentDate = new Date().toLocaleDateString('en', option);
         // var currentDate = "July 29, 2018";
 
+        if(backDate != ""){
+            var input_date = backDate;
+            var currentDate = new Date(input_date).toLocaleDateString('en', option);
+        }else{
+            var input_date = document.getElementById('input_date').value;
+            var currentDate = new Date().toLocaleDateString('en', option);
+        }
+
+        if(input_date != ''){
+            var passcurrentDate = new Date(input_date).toLocaleDateString('en');
+        }else{
+            var passcurrentDate = new Date().toLocaleDateString('en');
+        }
+
         document.getElementById('id_date').innerHTML = "<th colspan='3'>Date: " + currentDate + " <br> Result: <span id='id_record'></span></th><th colspan='1'> <button class='btn btn-success' onclick='window.location.href=\"attendance_form.html\";' style='float: right;'><span class='fa fa-plus'></span> <strong>Line Up Form</strong></button></th>";
+
+        document.getElementById('link_machine1_update').innerHTML = "<a href='attendance_update.html?option=machine1&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_machine3_update').innerHTML = "<a href='attendance_update.html?option=machine3&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_forklift_update').innerHTML = "<a href='attendance_update.html?option=forklift_operator&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_mechanic_update').innerHTML = "<a href='attendance_update.html?option=mechanic&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_nonskid1_update').innerHTML = "<a href='attendance_update.html?option=nonskid1&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_nonskid2_update').innerHTML = "<a href='attendance_update.html?option=nonskid2&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_nonskid3_update').innerHTML = "<a href='attendance_update.html?option=nonskid3&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_nonskid4_update').innerHTML = "<a href='attendance_update.html?option=nonskid4&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_tagapukpok_update').innerHTML = "<a href='attendance_update.html?option=tagapukpok&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_checker_update').innerHTML = "<a href='attendance_update.html?option=checker&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_kamador_update').innerHTML = "<a href='attendance_update.html?option=kamador&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_loader_update').innerHTML = "<a href='attendance_update.html?option=loader&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_others_update').innerHTML = "<a href='attendance_update.html?option=others&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_absent_update').innerHTML = "<a href='attendance_update.html?option=absent&date=" + passcurrentDate + "'>Update</a>";
 
         firebase.database().ref('plant_attendance/'+plant+'/'+currentDate).once('value', function(tableContentData){
 
@@ -317,9 +340,31 @@
         var myTableRow6 = "";
         var input_date = document.getElementById('input_date').value;
         var option = {year: "numeric", month: "long", day: "numeric"}
-        var currentDate = new Date(input_date).toLocaleDateString('en', option);
+
+        if(input_date != ''){
+            var passcurrentDate = new Date(input_date).toLocaleDateString('en');
+            var currentDate = new Date(input_date).toLocaleDateString('en', option);
+        }else{
+            var passcurrentDate = new Date().toLocaleDateString('en');
+            var currentDate = new Date().toLocaleDateString('en', option);
+        }
 
         document.getElementById('id_date').innerHTML = "<th colspan='3'>Date: " + currentDate + " <br> Result: <span id='id_record'></span></th><th colspan='1'> <button class='btn btn-success' onclick='window.location.href=\"attendance_form.html\";' style='float: right;'><span class='fa fa-plus'></span> <strong>Line Up Form</strong></button></th>";
+
+        document.getElementById('link_machine1_update').innerHTML = "<a href='attendance_update.html?option=machine1&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_machine3_update').innerHTML = "<a href='attendance_update.html?option=machine3&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_forklift_update').innerHTML = "<a href='attendance_update.html?option=forklift_operator&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_mechanic_update').innerHTML = "<a href='attendance_update.html?option=mechanic&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_nonskid1_update').innerHTML = "<a href='attendance_update.html?option=nonskid1&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_nonskid2_update').innerHTML = "<a href='attendance_update.html?option=nonskid2&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_nonskid3_update').innerHTML = "<a href='attendance_update.html?option=nonskid3&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_nonskid4_update').innerHTML = "<a href='attendance_update.html?option=nonskid4&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_tagapukpok_update').innerHTML = "<a href='attendance_update.html?option=tagapukpok&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_checker_update').innerHTML = "<a href='attendance_update.html?option=checker&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_kamador_update').innerHTML = "<a href='attendance_update.html?option=kamador&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_loader_update').innerHTML = "<a href='attendance_update.html?option=loader&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_others_update').innerHTML = "<a href='attendance_update.html?option=others&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_absent_update').innerHTML = "<a href='attendance_update.html?option=absent&date=" + passcurrentDate + "'>Update</a>";
 
         firebase.database().ref('plant_attendance/'+plant+'/'+currentDate).once('value', function(tableContentData){
 
@@ -534,12 +579,70 @@
             <div id="sidebar"  class="nav-collapse ">
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu">                
-                    <li class="active">
+                    <li class="">
                         <a class="" href="index.html">
                             <i class="icon_house"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a class="" href="transaction_log.html">
+                            <i class="fa fa-list"></i>
+                            <span>Transaction Log</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a class="" href="attendance.html">
+                            <i class="fa fa-list"></i>
                             <span>Line Up</span>
                         </a>
                     </li>
+                    <li class="">
+                        <a class="" href="diesel.html">
+                            <i class="fa fa-building"></i>
+                            <span>Diesel</span>
+                        </a>
+                    </li>
+                    <li class="">
+                        <a class="" href="diesel_category.html">
+                            <i class="fa fa-building"></i>
+                            <span>Oil</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Purchase Order</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order.html">Pending P.O.</a></li>
+                            <li><a class="" href="purchase_order_closed.html">Closed P.O.</a></li>
+                        </ul>
+                    </li>  
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Delivery Order</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="delivery_pending_order.html">Existing P.O. <span id="id_count_existing_po"></span></a></li>    
+                            <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span id="id_count_ongoing_order"></span></a></li>                          
+                            <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
+                            <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
+                        </ul>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Summary Report</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="summaryreport_deliveredorder.html">Delivered Order</a></li>
+                        </ul>
+                    </li>  
                 </ul>
                 <!-- sidebar menu end-->
             </div>
@@ -564,7 +667,7 @@
                                         <div class="form-group" style="margin-top: 5px; margin-bottom: 5px;">
                                             <label for="date" class="col-md-1 control-label" style="margin-right: -10px;">Date:</label>
                                             <div class="col-md-2" style="margin-right: -25px;">
-                                                <input type="date" id="input_date" name="input_date" class="form-control" required>
+                                                <input type="date" id="input_date" name="input_date" class="form-control">
                                                 
                                             </div>
                                             <div class="col-md-1" style="margin-right: 25px;">
@@ -582,40 +685,180 @@
                                         <thead>
                                             <tr id="id_date" class="header_line"></tr>
                                             <tr class="header_line">
-                                                <th class="col-md-3">MACHINE 1</th>
-                                                <th class="col-md-3">MACHINE 3</th>
-                                                <th class="col-md-3">FORKLIFT OPERATOR</th>
-                                                <th class="col-md-3">MECHANIC</th>
+                                                <th class="col-md-3">
+                                                    MACHINE 1 
+                                                    <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_machine1_update"></li>
+                                                        </ul>
+                                                    </div>
+                                                </th>
+                                                <th class="col-md-3">
+                                                    MACHINE 3
+                                                    <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_machine3_update"></li>
+                                                        </ul>
+                                                    </div>
+                                                </th>
+                                                <th class="col-md-3">
+                                                    FORKLIFT OPERATOR
+                                                    <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_forklift_update"></li>
+                                                        </ul>
+                                                    </div>
+                                                </th>
+                                                <th class="col-md-3">
+                                                    MECHANIC
+                                                    <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_mechanic_update"></li>
+                                                        </ul>
+                                                    </div>
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody id="row1_list"></tbody>
                                         <thead>
                                             <tr class="header_line">
-                                                <th class="col-md-3">NON SKID 1</th>
-                                                <th class="col-md-3">NON SKID 2</th>
-                                                <th class="col-md-3">NON SKID 3</th>
-                                                <th class="col-md-3">NON SKID 4</th>
+                                                <th class="col-md-3">
+                                                    NON SKID 1
+                                                    <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_nonskid1_update"></li>
+                                                        </ul>
+                                                    </div>
+                                                </th>
+                                                <th class="col-md-3">
+                                                    NON SKID 2
+                                                    <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_nonskid2_update"></li>
+                                                        </ul>
+                                                    </div>
+                                                </th>
+                                                <th class="col-md-3">
+                                                    NON SKID 3
+                                                    <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_nonskid3_update"></li>
+                                                        </ul>
+                                                    </div>
+                                                </th>
+                                                <th class="col-md-3">
+                                                    NON SKID 4
+                                                    <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_nonskid4_update"></li>
+                                                        </ul>
+                                                    </div>
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody id="row2_list"></tbody>
                                         <thead>
                                             <tr class="header_line">
-                                                <th colspan="2">TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG</th>
-                                                <th colspan="2">CHECKER / FOREMAN / BATCHER / SUPERVISOR</th>
+                                                <th colspan="2">
+                                                    TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG
+                                                    <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_tagapukpok_update"></li>
+                                                        </ul>
+                                                    </div>
+                                                </th>
+                                                <th colspan="2">
+                                                    CHECKER / FOREMAN / BATCHER / SUPERVISOR
+                                                    <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_checker_update"></li>
+                                                        </ul>
+                                                    </div>
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody id="row3_list"></tbody>
                                         <thead>
                                             <tr class="header_line">
-                                                <th colspan="2">KAMADOR</th>
-                                                <th colspan="2">LOADER</th>
+                                                <th colspan="2">
+                                                    KAMADOR
+                                                    <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_kamador_update"></li>
+                                                        </ul>
+                                                    </div>
+                                                </th>
+                                                <th colspan="2">
+                                                    LOADER
+                                                    <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_loader_update"></li>
+                                                        </ul>
+                                                    </div>
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody id="row4_list"></tbody>
                                          <thead>
                                             <tr class="header_line">
-                                                <th colspan="2">OTHER</th>
-                                                <th colspan="2">ABSENT</th>
+                                                <th colspan="2">
+                                                    OTHERS
+                                                    <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_others_update"></li>
+                                                        </ul>
+                                                    </div>
+                                                </th>
+                                                <th colspan="2">
+                                                    ABSENT
+                                                    <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_absent_update"></li>
+                                                        </ul>
+                                                    </div>
+                                                </th>
                                             </tr>
                                         </thead>
                                         <tbody id="row5_list"></tbody>
