@@ -237,7 +237,11 @@
                                       firebase.database().ref().child("incoming_diesel_category/" + plant + "/" + postId ).once('value',function(UpdateReverseDateSnapshot){
                         var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
                         var UpdateReverseDate = {reverseDate: StartReverseDate};
-                        window.location.reload();
+
+                         if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
+
+                            window.location.reload();
+                        }
                         });//end loop
 
                         });
@@ -303,10 +307,10 @@
                     var StartReverseDate = UpdateReverseDateSnapshot.val().reverseDate * -1;
                     var UpdateReverseDate = {reverseDate: StartReverseDate};
      
-                     // if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
+                     if(firebase.database().ref().child("incoming_diesel_category/" + plant +"/" + postId).update(UpdateReverseDate)){
 
                         window.location.reload();
-                        // }
+                        }
                     });
                     }//END PAG WALAPA   
 
