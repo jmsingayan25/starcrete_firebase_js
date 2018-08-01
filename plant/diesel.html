@@ -322,7 +322,7 @@ function DisplayCurrentData()
     var myTbody = "";
     //start
     count = 1;
-    firebase.database().ref('incoming_diesel/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
+    firebase.database().ref('incoming_diesel/'+ plant).orderByChild("reverseDate").once('value').then(function(DieselSnapshotTransaction) {
         DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
                 var date = dieselChildSnapshot.val().Date_Input;
@@ -346,8 +346,26 @@ function DisplayCurrentData()
                 else{quantityholder = quantityin + " liter(s)" ;}
                 if (quantityout == "NaN"){quantityoutholder = "";}
                 else{quantityoutholder = quantityout + " liter(s)";}
-                
-                myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+
+                if (dieselChildSnapshot.val().TransactionType == "In") 
+                {
+                    myTbody += "<tr style ='background-color:#006080'>";
+                      myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + suppliername + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + quantityholder  + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + quantityoutholder  + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + address + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + time + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + drno + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + dates + "</strong></td>";
+                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>";
+             
+                $(".se-pre-con").fadeOut("slow");
+                }else
+                {
+                     myTbody += "<tr>";
+                       myTbody += "<td><strong>" + truckno + "</strong></td>";
                 myTbody += "<td><strong>" + suppliername + "</strong></td>";
                 myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
                 myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
@@ -359,6 +377,8 @@ function DisplayCurrentData()
                 myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>";
              
                 $(".se-pre-con").fadeOut("slow");
+                }
+              
             //}
 
         });
@@ -745,7 +765,7 @@ function DeleteRowData(key,plant)
                                 </header>
                             </form>
                             <div class="table-responsive filterable">
-                        		<table class="table table-striped table-bordered table-hover" id = "mainTable">
+                        		<table class="table table-bordered " id = "mainTable">
                         			<thead>
                         				<tr class="filterable">
                         					<th colspan="10">
@@ -755,7 +775,7 @@ function DeleteRowData(key,plant)
                                                 	<button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button></span>
                         					</th>
                         				</tr>
-                        				<tr class="filters" style="background-color: #00a3cc;">
+                        				<tr class="filters" style="background-color: #00111a;">
 											<th class="col-md-1"><input type="text" class="form-control" placeholder="Truck No." disabled></th>
 											<th class="col-md-2"><input type="text" class="form-control" placeholder="Driver / Operator / Supplier" disabled></th>
 											<th class="col-md-1" style="text-align:center; color:white">Quantity(IN)</th>
