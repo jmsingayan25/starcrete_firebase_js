@@ -202,6 +202,7 @@ function Go()
                 var truckno = dieselChildSnapshot.val().truck_no;
                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
+                var pondo = Number(dieselChildSnapshot.val().pondo_Input).toLocaleString("en");
                 var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
                 var time = dieselChildSnapshot.val().time_input;
                 var drno = dieselChildSnapshot.val().dr_no || "";
@@ -211,28 +212,19 @@ function Go()
                 //var operator =  || "";
                 var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
                 var address = dieselChildSnapshot.val().destination || "";
-                if (quantityin == "NaN") 
-                {
-                    quantityholder = "";
-                }
-                else
-                {
-                    quantityholder = quantityin + " liter(s)" ;
-                }
-                if (quantityout == "NaN") 
-                {
-                    quantityoutholder = "";
-                }
-                else
-                {
-                    quantityoutholder = quantityout + " liter(s)";
-                }
+                if (quantityin == "NaN"){quantityholder = "";}
+                else{quantityholder = quantityin + " liter(s)";}
+                if (quantityout == "NaN"){quantityoutholder = "";}
+                else{quantityoutholder = quantityout + " liter(s)";}
+                if (pondo == "NaN"){pondo= "";}
+                else{pondo = pondo + " liter(s)";}
                 if (dieselChildSnapshot.val().TransactionType == "In") 
                 {
                     myTbody += "<tr style ='background-color:#006080'>";
                       myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
                 myTbody += "<td style ='color: white'><strong>" + suppliername + "</strong></td>";
                 myTbody += "<td style ='color: white'><strong>" + quantityholder  + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + pondo  + "</strong></td>";
                 myTbody += "<td style ='color: white'><strong>" + quantityoutholder  + "</strong></td>";
                 myTbody += "<td style ='color: white'><strong>" + availablestock + " liter(s)" + "</strong></td>";
                 myTbody += "<td style ='color: white'><strong>" + address + "</strong></td>";
@@ -248,6 +240,7 @@ function Go()
                        myTbody += "<td><strong>" + truckno + "</strong></td>";
                 myTbody += "<td><strong>" + suppliername + "</strong></td>";
                 myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+                myTbody += "<td><strong>" + pondo  + "</strong></td>";
                 myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
                 myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
                 myTbody += "<td><strong>" + address + "</strong></td>";
@@ -282,6 +275,7 @@ function Go()
                 var truckno = dieselChildSnapshot.val().truck_no;
                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
+                var pondo = Number(dieselChildSnapshot.val().pondo_Input).toLocaleString("en");
                 var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
                 var time = dieselChildSnapshot.val().time_input;
                 var drno = dieselChildSnapshot.val().dr_no || "";
@@ -296,6 +290,8 @@ function Go()
                 else{quantityholder = quantityin + " liter(s)" ;}
                 if (quantityout == "NaN"){quantityoutholder = "";}
                 else{quantityoutholder = quantityout + " liter(s)";}
+                if (pondo == "NaN"){pondo= "";}
+                else{pondo = pondo + " liter(s)";}
                 
                  if (dieselChildSnapshot.val().TransactionType == "In") 
                 {
@@ -303,6 +299,7 @@ function Go()
                       myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
                 myTbody += "<td style ='color: white'><strong>" + suppliername + "</strong></td>";
                 myTbody += "<td style ='color: white'><strong>" + quantityholder  + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + pondo  + "</strong></td>";
                 myTbody += "<td style ='color: white'><strong>" + quantityoutholder  + "</strong></td>";
                 myTbody += "<td style ='color: white'><strong>" + availablestock + " liter(s)" + "</strong></td>";
                 myTbody += "<td style ='color: white'><strong>" + address + "</strong></td>";
@@ -318,6 +315,7 @@ function Go()
                        myTbody += "<td><strong>" + truckno + "</strong></td>";
                 myTbody += "<td><strong>" + suppliername + "</strong></td>";
                 myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+                myTbody += "<td><strong>" + pondo  + "</strong></td>";
                 myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
                 myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
                 myTbody += "<td><strong>" + address + "</strong></td>";
@@ -372,6 +370,7 @@ function DisplayCurrentData()
                 var truckno = dieselChildSnapshot.val().truck_no;
                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
+                var pondo = Number(dieselChildSnapshot.val().pondo_Input).toLocaleString("en");
                 var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
                 var time = dieselChildSnapshot.val().time_input;
                 var drno = dieselChildSnapshot.val().dr_no || "";
@@ -386,6 +385,8 @@ function DisplayCurrentData()
                 else{quantityholder = quantityin + " liter(s)" ;}
                 if (quantityout == "NaN"){quantityoutholder = "";}
                 else{quantityoutholder = quantityout + " liter(s)";}
+                if (pondo == "NaN"){pondo= "";}
+                else{pondo = pondo + " liter(s)";}
 
                 if (dieselChildSnapshot.val().TransactionType == "In") 
                 {
@@ -393,6 +394,7 @@ function DisplayCurrentData()
                       myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
                 myTbody += "<td style ='color: white'><strong>" + suppliername + "</strong></td>";
                 myTbody += "<td style ='color: white'><strong>" + quantityholder  + "</strong></td>";
+                myTbody += "<td style ='color: white'><strong>" + pondo  + "</strong></td>";
                 myTbody += "<td style ='color: white'><strong>" + quantityoutholder  + "</strong></td>";
                 myTbody += "<td style ='color: white'><strong>" + availablestock + " liter(s)" + "</strong></td>";
                 myTbody += "<td style ='color: white'><strong>" + address + "</strong></td>";
@@ -408,6 +410,7 @@ function DisplayCurrentData()
                        myTbody += "<td><strong>" + truckno + "</strong></td>";
                 myTbody += "<td><strong>" + suppliername + "</strong></td>";
                 myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+                myTbody += "<td><strong>" + pondo  + "</strong></td>";
                 myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
                 myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
                 myTbody += "<td><strong>" + address + "</strong></td>";
@@ -819,7 +822,7 @@ function DeleteRowData(key,plant)
 											<th class="col-md-1"><input type="text" class="form-control" placeholder="Truck No." disabled></th>
 											<th class="col-md-2"><input type="text" class="form-control" placeholder="Driver / Operator / Supplier" disabled></th>
 											<th class="col-md-1" style="text-align:center; color:white">Quantity(IN)</th>
-                                            <!-- <th class="col-md-1" style="text-align:center; color:white">Pondo</th> -->
+                                            <th class="col-md-1" style="text-align:center; color:white">Pondo</th>
 											<th class="col-md-1" style="text-align:center; color:white">Quantity(OUT)</th>
 											<th class="col-md-1" style="text-align:center; color:white">Current Stock</th>
 											<th class="col-md-1"><input type="text" class="form-control" placeholder="Address" disabled ></th>
