@@ -470,7 +470,7 @@
             <div id="sidebar"  class="nav-collapse ">
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu">                
-                    <li class="active">
+                    <li class="">
                         <a class="" href="index.html">
                             <i class="icon_house"></i>
                             <span>Dashboard</span>
@@ -480,6 +480,12 @@
                         <a class="" href="transaction_log.html">
                             <i class="fa fa-list"></i>
                             <span>Transaction Log</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a class="" href="attendance.html">
+                            <i class="fa fa-list"></i>
+                            <span>Line Up</span>
                         </a>
                     </li>
                     <li class="">
@@ -493,6 +499,40 @@
                             <i class="fa fa-building"></i>
                             <span>Oil</span>
                         </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Purchase Order</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order.html">Pending P.O.</a></li>
+                            <li><a class="" href="purchase_order_closed.html">Closed P.O.</a></li>
+                        </ul>
+                    </li>  
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Delivery Order</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="delivery_pending_order.html">Existing P.O. <span id="id_count_existing_po"></span></a></li>    
+                            <li><a class="" href="delivery_ongoing_order.html">Ongoing Delivery <span id="id_count_ongoing_order"></span></a></li>                          
+                            <li><a class="" href="delivery_delivered_order.html">Delivered Order</a></li>
+                            <li><a class="" href="delivery_backloaded_order.html">Backloaded Order</a></li>
+                        </ul>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Summary Report</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="summaryreport_deliveredorder.html">Delivered Order</a></li>
+                        </ul>
                     </li>  
                 </ul>
                 <!-- sidebar menu end-->
