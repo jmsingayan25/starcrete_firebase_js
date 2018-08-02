@@ -196,25 +196,37 @@
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
     });
 
-function Go()
-{
-     $(".se-pre-con").fadeIn("fast");
+    function Go()
+{//start
+    $(".se-pre-con").fadeIn("fast");
    event.preventDefault();
    var myTbody = "";
 
-        if (document.getElementById('date_view').value != "") 
-        {
-            date = dateFormat(document.getElementById('date_view').value);
-            var GetStringDate = date.toString();
-        var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
-        var searchDate = new Date(date).toLocaleDateString('en', options);
+     
+        console.log(fromDate,endDate);
+       
+                if(fromDate == '' && endDate == ''){
+                 //startif
+                
+                 //endif
+                }
+                else{//startelse
 
-        firebase.database().ref('incoming_diesel/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
-        DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
+                     firebase.database().ref('incoming_diesel/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
+                        DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){//startloop
 
-                 if(GetStringDate == dieselChildSnapshot.val().Date_Input)
-                {
-                var truckno = dieselChildSnapshot.val().truck_no;
+                        newFromDate = new Date(fromDate).toLocaleDateString('en');
+                        fromDate = new Date(newFromDate);
+
+                        newEndDate = new Date(endDate).toLocaleDateString('en');
+                        endDate = new Date(newEndDate);
+
+                        getDate = new Date(dieselChildSnapshot.val().Date_Input);
+
+                        if (getDate.getTime() >= fromDate.getTime() && getDate.getTime() <= endDate.getTime())
+                        {//startdate
+                           
+                           var truckno = dieselChildSnapshot.val().truck_no;
                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
                 var pondo = Number(dieselChildSnapshot.val().pondo_Input).toLocaleString("en");
@@ -266,107 +278,193 @@ function Go()
              
                 $(".se-pre-con").fadeOut("slow");
                 }
-                }
-        });
-        if (myTbody == ""){
-            myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-            document.getElementById("DieselList").innerHTML = myTbody;
-            $(".se-pre-con").fadeOut("slow");
-        }else{
-            document.getElementById("DieselList").innerHTML = myTbody;
-        }
-            document.getElementById("Search_day").innerHTML = searchDate;
-    });
-        }else
-        {
-             document.getElementById("Search_day").innerHTML = "";
-            firebase.database().ref('incoming_diesel/'+ plant).orderByChild("reverseDate").once('value').then(function(DieselSnapshotTransaction) {
-        DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
-                var date = dieselChildSnapshot.val().Date_Input;
-                var CurrentDate = new Date();
-                 //if(dateFormat(CurrentDate) == date)
-                //{
-                var truckno = dieselChildSnapshot.val().truck_no;
-                var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
-                var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
-                var pondo = Number(dieselChildSnapshot.val().pondo_Input).toLocaleString("en");
-                var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
-                var time = dieselChildSnapshot.val().time_input;
-                var drno = dieselChildSnapshot.val().dr_no || "";
-                var key = dieselChildSnapshot.key;
-                var dates= dieselChildSnapshot.val().Date_Input;
-                console.log(quantityin);
+                        }//enddate
 
-                var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
-                var address = dieselChildSnapshot.val().destination || "";
+                        });//endloop
+                                        if (myTbody == ""){
+                                myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+                                document.getElementById("DieselList").innerHTML = myTbody;
+                                $(".se-pre-con").fadeOut("slow");
+                            }else{
+                                document.getElementById("DieselList").innerHTML = myTbody;
+                            }
+                    });//endfirebase
+
+                    }//endelse
+}//end
+
+// function Go()
+// {
+//    $(".se-pre-con").fadeIn("fast");
+//    event.preventDefault();
+//    var myTbody = "";
+
+//         if (document.getElementById('date_view').value != "") 
+//         {
+//             date = dateFormat(document.getElementById('date_view').value);
+//             var GetStringDate = date.toString();
+//         var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+//         var searchDate = new Date(date).toLocaleDateString('en', options);
+
+//         firebase.database().ref('incoming_diesel/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
+//         DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
+
+//                  if(GetStringDate == dieselChildSnapshot.val().Date_Input)
+//                 {
+//                 var truckno = dieselChildSnapshot.val().truck_no;
+//                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
+//                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
+//                 var pondo = Number(dieselChildSnapshot.val().pondo_Input).toLocaleString("en");
+//                 var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
+//                 var time = dieselChildSnapshot.val().time_input;
+//                 var drno = dieselChildSnapshot.val().dr_no || "";
+//                 var key = dieselChildSnapshot.key;
+//                 var dates= dieselChildSnapshot.val().Date_Input;
+//                 console.log(quantityin);
+//                 //var operator =  || "";
+//                 var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
+//                 var address = dieselChildSnapshot.val().destination || "";
+//                 if (quantityin == "NaN"){quantityholder = "";}
+//                 else{quantityholder = quantityin + " liter(s)";}
+//                 if (quantityout == "NaN"){quantityoutholder = "";}
+//                 else{quantityoutholder = quantityout + " liter(s)";}
+//                 if (pondo == "NaN"){pondo= "";}
+//                 else{pondo = pondo + " liter(s)";}
+//                 if (dieselChildSnapshot.val().TransactionType == "In") 
+//                 {
+//                     myTbody += "<tr style ='background-color:#006080'>";
+//                       myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + suppliername + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + quantityholder  + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + pondo  + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + quantityoutholder  + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + availablestock + " liter(s)" + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + address + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + time + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + drno + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + dates + "</strong></td>";
+//                 myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>";
+             
+//                 $(".se-pre-con").fadeOut("slow");
+//                 }else
+//                 {
+//                      myTbody += "<tr>";
+//                        myTbody += "<td><strong>" + truckno + "</strong></td>";
+//                 myTbody += "<td><strong>" + suppliername + "</strong></td>";
+//                 myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+//                 myTbody += "<td><strong>" + pondo  + "</strong></td>";
+//                 myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
+//                 myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
+//                 myTbody += "<td><strong>" + address + "</strong></td>";
+//                 myTbody += "<td><strong>" + time + "</strong></td>";
+//                 myTbody += "<td><strong>" + drno + "</strong></td>";
+//                 myTbody += "<td><strong>" + dates + "</strong></td>";
+//                 myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>";
+             
+//                 $(".se-pre-con").fadeOut("slow");
+//                 }
+//                 }
+//         });
+//         if (myTbody == ""){
+//             myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+//             document.getElementById("DieselList").innerHTML = myTbody;
+//             $(".se-pre-con").fadeOut("slow");
+//         }else{
+//             document.getElementById("DieselList").innerHTML = myTbody;
+//         }
+//             document.getElementById("Search_day").innerHTML = searchDate;
+//     });
+//         }else
+//         {
+//              document.getElementById("Search_day").innerHTML = "";
+//             firebase.database().ref('incoming_diesel/'+ plant).orderByChild("reverseDate").once('value').then(function(DieselSnapshotTransaction) {
+//         DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
+
+//                 var date = dieselChildSnapshot.val().Date_Input;
+//                 var CurrentDate = new Date();
+//                  //if(dateFormat(CurrentDate) == date)
+//                 //{
+//                 var truckno = dieselChildSnapshot.val().truck_no;
+//                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
+//                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
+//                 var pondo = Number(dieselChildSnapshot.val().pondo_Input).toLocaleString("en");
+//                 var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
+//                 var time = dieselChildSnapshot.val().time_input;
+//                 var drno = dieselChildSnapshot.val().dr_no || "";
+//                 var key = dieselChildSnapshot.key;
+//                 var dates= dieselChildSnapshot.val().Date_Input;
+//                 console.log(quantityin);
+
+//                 var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
+//                 var address = dieselChildSnapshot.val().destination || "";
                 
-                if (quantityin == "NaN"){quantityholder = "";}
-                else{quantityholder = quantityin + " liter(s)" ;}
-                if (quantityout == "NaN"){quantityoutholder = "";}
-                else{quantityoutholder = quantityout + " liter(s)";}
-                if (pondo == "NaN"){pondo= "";}
-                else{pondo = pondo + " liter(s)";}
+//                 if (quantityin == "NaN"){quantityholder = "";}
+//                 else{quantityholder = quantityin + " liter(s)" ;}
+//                 if (quantityout == "NaN"){quantityoutholder = "";}
+//                 else{quantityoutholder = quantityout + " liter(s)";}
+//                 if (pondo == "NaN"){pondo= "";}
+//                 else{pondo = pondo + " liter(s)";}
                 
-                 if (dieselChildSnapshot.val().TransactionType == "In") 
-                {
-                    myTbody += "<tr style ='background-color:#006080'>";
-                      myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
-                myTbody += "<td style ='color: white'><strong>" + suppliername + "</strong></td>";
-                myTbody += "<td style ='color: white'><strong>" + quantityholder  + "</strong></td>";
-                myTbody += "<td style ='color: white'><strong>" + pondo  + "</strong></td>";
-                myTbody += "<td style ='color: white'><strong>" + quantityoutholder  + "</strong></td>";
-                myTbody += "<td style ='color: white'><strong>" + availablestock + " liter(s)" + "</strong></td>";
-                myTbody += "<td style ='color: white'><strong>" + address + "</strong></td>";
-                myTbody += "<td style ='color: white'><strong>" + time + "</strong></td>";
-                myTbody += "<td style ='color: white'><strong>" + drno + "</strong></td>";
-                myTbody += "<td style ='color: white'><strong>" + dates + "</strong></td>";
-                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>";
+//                  if (dieselChildSnapshot.val().TransactionType == "In") 
+//                 {
+//                     myTbody += "<tr style ='background-color:#006080'>";
+//                       myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + suppliername + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + quantityholder  + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + pondo  + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + quantityoutholder  + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + availablestock + " liter(s)" + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + address + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + time + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + drno + "</strong></td>";
+//                 myTbody += "<td style ='color: white'><strong>" + dates + "</strong></td>";
+//                 myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>";
              
-                $(".se-pre-con").fadeOut("slow");
-                }else
-                {
-                     myTbody += "<tr>";
-                       myTbody += "<td><strong>" + truckno + "</strong></td>";
-                myTbody += "<td><strong>" + suppliername + "</strong></td>";
-                myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
-                myTbody += "<td><strong>" + pondo  + "</strong></td>";
-                myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
-                myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
-                myTbody += "<td><strong>" + address + "</strong></td>";
-                myTbody += "<td><strong>" + time + "</strong></td>";
-                myTbody += "<td><strong>" + drno + "</strong></td>";
-                myTbody += "<td><strong>" + dates + "</strong></td>";
-                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>";
+//                 $(".se-pre-con").fadeOut("slow");
+//                 }else
+//                 {
+//                      myTbody += "<tr>";
+//                        myTbody += "<td><strong>" + truckno + "</strong></td>";
+//                 myTbody += "<td><strong>" + suppliername + "</strong></td>";
+//                 myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+//                 myTbody += "<td><strong>" + pondo  + "</strong></td>";
+//                 myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
+//                 myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
+//                 myTbody += "<td><strong>" + address + "</strong></td>";
+//                 myTbody += "<td><strong>" + time + "</strong></td>";
+//                 myTbody += "<td><strong>" + drno + "</strong></td>";
+//                 myTbody += "<td><strong>" + dates + "</strong></td>";
+//                 myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>";
              
-                $(".se-pre-con").fadeOut("slow");
-                }
+//                 $(".se-pre-con").fadeOut("slow");
+//                 }
              
-                $(".se-pre-con").fadeOut("slow");
-            //}
+//                 $(".se-pre-con").fadeOut("slow");
+//             //}
 
-        });
-        if (myTbody == "") 
-        {
-            myTbody ="<tr><td colspan='9' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-            document.getElementById("DieselList").innerHTML = myTbody;
-            $(".se-pre-con").fadeOut("slow"); 
-        }else{document.getElementById("DieselList").innerHTML = myTbody; }
-    });
-    //end
-     firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot)
-     {
-        var get_totalStock = totalstockSnapshot.val().Liters;
-        document.getElementById("id_stock").innerHTML = Number(get_totalStock).toLocaleString("en") + " Liter(s)"; 
+//         });
+//         if (myTbody == "") 
+//         {
+//             myTbody ="<tr><td colspan='9' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+//             document.getElementById("DieselList").innerHTML = myTbody;
+//             $(".se-pre-con").fadeOut("slow"); 
+//         }else{document.getElementById("DieselList").innerHTML = myTbody; }
+//     });
+//     //end
+//      firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot)
+//      {
+//         var get_totalStock = totalstockSnapshot.val().Liters;
+//         document.getElementById("id_stock").innerHTML = Number(get_totalStock).toLocaleString("en") + " Liter(s)"; 
 
-        if(get_totalStock <= 3500)
-        {
-            document.getElementById("id_stock").style.color ="red";
-        }
-    });
+//         if(get_totalStock <= 3500)
+//         {
+//             document.getElementById("id_stock").style.color ="red";
+//         }
+//     });
 
-        }    
-}
+//         }    
+// }
  
 function DisplayCurrentData()
 {
