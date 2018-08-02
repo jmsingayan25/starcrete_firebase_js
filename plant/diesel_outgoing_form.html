@@ -208,6 +208,7 @@
              var date = new Date().toLocaleDateString('en');
              var time = new Date().toLocaleTimeString('en');
              var date_input = dateFormat(document.getElementById('date_input').value);
+             var pondo_input = document.getElementById('pondo').value;
 
              if(document.getElementById('time_input').value != ""){
                 var time_input = startTime(document.getElementById('time_input').value);
@@ -235,7 +236,8 @@
                  currentstockCopy: currentStockCopy,
                  TransactionType: transactionType,
                  Date_Input: date_input,
-                 time_input: time_input};
+                 time_input: time_input,
+                 pondo_Input: pondo_input};
 
                 var postData = firebase.database().ref('incoming_diesel/' + plant);
                 var newPostRef = postData.push();
@@ -280,6 +282,7 @@
              var date = new Date().toLocaleDateString('en');
              var time = new Date().toLocaleTimeString('en');
              var date_input = dateFormat(document.getElementById('date_input').value);
+             var pondo_input = document.getElementById('pondo').value;
 
              if(document.getElementById('time_input').value != ""){
                 var time_input = startTime(document.getElementById('time_input').value);
@@ -307,7 +310,8 @@
                  currentstockCopy: currentStockCopy,
                  TransactionType: transactionType,
                  Date_Input: date_input,
-                 time_input: time_input};
+                 time_input: time_input,
+                 pondo_Input: pondo_input};
 
                 var postData = firebase.database().ref('incoming_diesel/' + plant);
                 var newPostRef = postData.push();
@@ -572,7 +576,7 @@
 
                                             <!-- <input type="text" name="truck_no" id="truck_no" class="form-control" autocomplete="off" style="text-transform: uppercase;"> -->
                                         </div>
-                                         <div class="col-md-1">
+                                         <div >
                                                  <button type="addcateg" id = "addcateg" class="btn btn-md btn-info" style=""  data-toggle="modal" data-target="#myModal"><span class="fa fa-plus"></span><strong></strong></button>
                                                  <!-- <form class="form-inline" onsubmit="if(confirm('Proceed?')){submitcategory();}else{ event.preventDefault();}"> -->
                                                  <div id="myModal" class="modal fade" role="dialog">
@@ -618,6 +622,12 @@
                                         <label for="time_input" class="col-md-4 control-label">Time<span class="required" style="color: red;"></span></label>
                                         <div class="col-md-5">
                                             <input type="time" name="time_input" id="time_input" class="form-control" autocomplete="off" style="text-transform: uppercase;">
+                                        </div>
+                                    </div>
+                                     <div class="form-group">
+                                        <label for="operator" class="col-md-4 control-label">Pondo<span class="required" style="color: red;"></span></label>
+                                        <div class="col-md-5">
+                                            <input type="text" name="pondo" id="pondo"class="form-control" autocomplete="off" style="text-transform: uppercase;">
                                         </div>
                                     </div>
                                     <div class="form-group">
