@@ -134,6 +134,7 @@
                     }
                     
                     // tableData(plant);
+                    DropdownCategory();
                     AvailableStock();
                     totalCountBadge();
 
@@ -148,6 +149,49 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);     
     });
+
+     function clearclose()
+ {
+     event.preventDefault();
+     var clearText = document.getElementById("textcategory");
+     clearText.value = "";
+ }
+
+    function submitcategory()
+    {
+        event.preventDefault();
+        firebase.database().ref().child("Main_diesel_category/" + plant).once('value',function(Snapshot)
+        {
+          var textcategory = document.getElementById('textcategory').value; 
+
+          var text_category  = {CategoryName: textcategory.toUpperCase()};
+
+          var postData = firebase.database().ref('Main_diesel_category/' + plant);
+          var newPostRef = postData.push();
+              newPostRef.set(text_category);
+          var postId = newPostRef.key;
+
+          var clearText = document.getElementById("textcategory");
+          clearText.value = "";
+          window.location.reload();
+        });    
+    }
+
+    function DropdownCategory()
+    {
+    var dd_category = "<option value=''>Select</option>"
+    firebase.database().ref().child("Main_diesel_category/" + plant).once('value',function(Snapshot)
+    {
+        Snapshot.forEach(function(ChildSnapshot){
+
+            dd_category += "<option value ='" + ChildSnapshot.val().CategoryName  + "'>" + ChildSnapshot.val().CategoryName +"</option>";
+            document.getElementById("selectsys").innerHTML = dd_category;
+        })
+        
+    });
+
+    }
+
     function submitForm()
     {
         event.preventDefault();
@@ -159,11 +203,12 @@
                 var quantity_out = document.getElementById('quantity_out').value;
              quantity_out = quantity_out.replace(",","");
              var destination = document.getElementById('destination').value;
-             var truck_no = document.getElementById('truck_no').value;
+             var truck_no = document.getElementById('selectsys').value;
              var operator = document.getElementById('operator').value;
              var date = new Date().toLocaleDateString('en');
              var time = new Date().toLocaleTimeString('en');
              var date_input = dateFormat(document.getElementById('date_input').value);
+             var pondo_input = document.getElementById('pondo').value;
 
              if(document.getElementById('time_input').value != ""){
                 var time_input = startTime(document.getElementById('time_input').value);
@@ -191,7 +236,8 @@
                  currentstockCopy: currentStockCopy,
                  TransactionType: transactionType,
                  Date_Input: date_input,
-                 time_input: time_input};
+                 time_input: time_input,
+                 pondo_Input: pondo_input};
 
                 var postData = firebase.database().ref('incoming_diesel/' + plant);
                 var newPostRef = postData.push();
@@ -231,11 +277,12 @@
              var quantity_out = document.getElementById('quantity_out').value;
              quantity_out = quantity_out.replace(",","");
              var destination = document.getElementById('destination').value;
-             var truck_no = document.getElementById('truck_no').value;
+             var truck_no = document.getElementById('selectsys').value;
              var operator = document.getElementById('operator').value;
              var date = new Date().toLocaleDateString('en');
              var time = new Date().toLocaleTimeString('en');
              var date_input = dateFormat(document.getElementById('date_input').value);
+             var pondo_input = document.getElementById('pondo').value;
 
              if(document.getElementById('time_input').value != ""){
                 var time_input = startTime(document.getElementById('time_input').value);
@@ -263,7 +310,8 @@
                  currentstockCopy: currentStockCopy,
                  TransactionType: transactionType,
                  Date_Input: date_input,
-                 time_input: time_input};
+                 time_input: time_input,
+                 pondo_Input: pondo_input};
 
                 var postData = firebase.database().ref('incoming_diesel/' + plant);
                 var newPostRef = postData.push();
@@ -528,8 +576,41 @@
                                     <div class="form-group">
                                         <label for="truck_no" class="col-md-4 control-label">Truck No.<span class="required" style="color: red;"></span></label>
                                         <div class="col-md-5">
-                                            <input type="text" name="truck_no" id="truck_no" class="form-control" autocomplete="off" style="text-transform: uppercase;">
+
+                                                <select id="selectsys" class ="form-control">
+                                                </select>
+
+                                            <!-- <input type="text" name="truck_no" id="truck_no" class="form-control" autocomplete="off" style="text-transform: uppercase;"> -->
                                         </div>
+                                         <div >
+                                                 <button type="addcateg" id = "addcateg" class="btn btn-md btn-info" style=""  data-toggle="modal" data-target="#myModal"><span class="fa fa-plus"></span><strong></strong></button>
+                                                 <!-- <form class="form-inline" onsubmit="if(confirm('Proceed?')){submitcategory();}else{ event.preventDefault();}"> -->
+                                                 <div id="myModal" class="modal fade" role="dialog">
+                                                  <div class="modal-dialog">
+
+                                                    <!-- Modal content-->
+                                                    <div class="modal-content">
+                                                      <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                                        <h4 class="modal-title">ADD CATEGORY</h4>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                          <div class="col-md-12 form-group">
+                                        <label for="supplier" class=" control-label" style="font-size:15px">New Truck No. Name</label>
+                                        <div>
+                                            <input type="text" name="textcategory" id="textcategory" class="form-control" autocomplete="off" style="text-transform: uppercase;">
+                                                            </div>
+                                                                </div> 
+                                                                    </div>
+                                                      <div class="modal-footer">
+                                                         <button type="button" id = "submitcateg" class="btn btn-md btn-info" style="" onclick="submitcategory()"><strong>Add</strong></button>
+                                                        <button type="button" onclick ="clearclose()" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+                                            <!-- </form> -->
+                                            </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="operator" class="col-md-4 control-label">Operator / Driver<span class="required" style="color: red;">*</span></label>
@@ -547,6 +628,12 @@
                                         <label for="time_input" class="col-md-4 control-label">Time<span class="required" style="color: red;"></span></label>
                                         <div class="col-md-5">
                                             <input type="time" name="time_input" id="time_input" class="form-control" autocomplete="off" style="text-transform: uppercase;">
+                                        </div>
+                                    </div>
+                                     <div class="form-group">
+                                        <label for="operator" class="col-md-4 control-label">Pondo<span class="required" style="color: red;"></span></label>
+                                        <div class="col-md-5">
+                                            <input type="text" name="pondo" id="pondo"class="form-control" autocomplete="off" style="text-transform: uppercase;">
                                         </div>
                                     </div>
                                     <div class="form-group">
