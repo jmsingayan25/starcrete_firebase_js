@@ -265,7 +265,7 @@ function Go()
         }else
         {
              document.getElementById("Search_day").innerHTML = "";
-            firebase.database().ref('incoming_diesel/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
+            firebase.database().ref('incoming_diesel/'+ plant).orderByChild("reverseDate").once('value').then(function(DieselSnapshotTransaction) {
         DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
                 var date = dieselChildSnapshot.val().Date_Input;
