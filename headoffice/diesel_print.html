@@ -83,7 +83,11 @@
 <script>
 	
     var plant = getUrlParameter("plant");
-    var date_pass = getUrlParameter("date");
+    var date = getUrlParameter("fromdate");
+    var date1 = getUrlParameter("enddate");
+
+    var fromDate = new Date(date);
+    var endDate = new Date(date1);
 
 	$(document).ready(function(){
 
@@ -165,87 +169,161 @@
         
 // }
  
+    // function DisplayCurrentData(){
+
+    //     var myTbody = "";
+    //     //start
+    //     firebase.database().ref('diesel_current_date_print/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselPrintransaction) {
+    //         firebase.database().ref('incoming_diesel/'+ plant).orderByChild('Date_Input').once('value').then(function(DieselSnapshotTransaction) {
+    //             DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
+
+    //                 var Date_Input = dieselChildSnapshot.val().Date_Input;
+    //                 var CurrentDate = new Date();
+    //                 console.log(Date_Input, date_pass);
+    //                 if(Date_Input == date_pass){
+
+    //                     var truckno = dieselChildSnapshot.val().truck_no;
+    //                     var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
+    //                     var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
+    //                     var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
+    //                     var time = dieselChildSnapshot.val().time_input;
+    //                     var date = dieselChildSnapshot.val().Date_Input;
+    //                     var drno = dieselChildSnapshot.val().dr_no || "";
+    //                     console.log(quantityin);
+
+    //                     var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
+    //                     var address = dieselChildSnapshot.val().destination || "";
+                        
+    //                     if (quantityin == "NaN"){quantityholder = "";}
+    //                     else{quantityholder = quantityin + " liter(s)" ;}
+    //                     if (quantityout == "NaN"){quantityoutholder = "";}
+    //                     else{quantityoutholder = quantityout + " liter(s)";}
+                        
+    //                     myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+    //                     myTbody += "<td><strong>" + suppliername + "</strong></td>";
+    //                     myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+    //                     myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
+    //                     myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
+    //                     myTbody += "<td><strong>" + address + "</strong></td>";
+    //                     myTbody += "<td><strong>" + time + "</strong></td>";
+    //                     myTbody += "<td><strong>" + date + "</strong></td>";
+    //                     myTbody += "<td><strong>" + drno + "</strong></td></tr>";
+
+    //                 }else if(date_pass == ""){
+
+    //                     var truckno = dieselChildSnapshot.val().truck_no;
+    //                     var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
+    //                     var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
+    //                     var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
+    //                     var time = dieselChildSnapshot.val().time_input;
+    //                     var date = dieselChildSnapshot.val().Date_Input;
+    //                     var drno = dieselChildSnapshot.val().dr_no || "";
+    //                     console.log(quantityin);
+
+    //                     var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
+    //                     var address = dieselChildSnapshot.val().destination || "";
+                        
+    //                     if (quantityin == "NaN"){quantityholder = "";}
+    //                     else{quantityholder = quantityin + " liter(s)" ;}
+    //                     if (quantityout == "NaN"){quantityoutholder = "";}
+    //                     else{quantityoutholder = quantityout + " liter(s)";}
+                        
+    //                     myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+    //                     myTbody += "<td><strong>" + suppliername + "</strong></td>";
+    //                     myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+    //                     myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
+    //                     myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
+    //                     myTbody += "<td><strong>" + address + "</strong></td>";
+    //                     myTbody += "<td><strong>" + time + "</strong></td>";
+    //                     myTbody += "<td><strong>" + date + "</strong></td>";
+    //                     myTbody += "<td><strong>" + drno + "</strong></td></tr>";
+    //                 }
+
+    //             });
+    //             if (myTbody == ""){
+    //                 myTbody ="<tr><td colspan='9' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+    //                 document.getElementById("DieselList").innerHTML = myTbody; 
+    //             }else{document.getElementById("DieselList").innerHTML = myTbody; }
+                
+    //         });
+
+    //         $(".se-pre-con").fadeOut("slow");
+    //     });
+    //     //end
+    //     firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot){
+    //         var get_totalStock = Number(totalstockSnapshot.val().Liters).toLocaleString('en');
+    //         document.getElementById("id_stock").innerHTML = get_totalStock + " liter(s)";
+
+    //         if(get_totalStock <= 3500)
+    //         {
+    //             document.getElementById("id_stock").style.color ="red";
+    //         }
+    //     });
+    //      //
+    //       firebase.database().ref().child("incoming_diesel/" + plant).orderByChild("date").limitToLast(1).on('child_added',function(lastDaySnapshot){
+    //         var options = { year: "numeric", month: "long", day: "numeric" };
+    //         var LastDayHolder = new Date (lastDaySnapshot.val().Date_Input).toLocaleDateString("en",options); 
+    //         // document.getElementById("last_day").innerHTML = LastDayHolder;
+    //      });
+
+    //     // document.getElementById("stateDate").innerHTML = "Date: " + date + " <br>";
+
+
+    // }
+
     function DisplayCurrentData(){
 
         var myTbody = "";
-        //start
-        firebase.database().ref('diesel_current_date_print/'+ plant).orderByChild('reverseDate').once('value').then(function(DieselPrintransaction) {
-            firebase.database().ref('incoming_diesel/'+ plant).orderByChild('Date_Input').once('value').then(function(DieselSnapshotTransaction) {
-                DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
-                    var Date_Input = dieselChildSnapshot.val().Date_Input;
-                    var CurrentDate = new Date();
-                    console.log(Date_Input, date_pass);
-                    if(Date_Input == date_pass){
+        firebase.database().ref('incoming_diesel/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
+            DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
-                        var truckno = dieselChildSnapshot.val().truck_no;
-                        var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
-                        var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
-                        var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
-                        var time = dieselChildSnapshot.val().time_input;
-                        var date = dieselChildSnapshot.val().Date_Input;
-                        var drno = dieselChildSnapshot.val().dr_no || "";
-                        console.log(quantityin);
+                dieselChildDate = new Date(dieselChildSnapshot.val().Date_Input);
+                dieselDate = new Date(dieselChildDate);
 
-                        var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
-                        var address = dieselChildSnapshot.val().destination || "";
-                        
-                        if (quantityin == "NaN"){quantityholder = "";}
-                        else{quantityholder = quantityin + " liter(s)" ;}
-                        if (quantityout == "NaN"){quantityoutholder = "";}
-                        else{quantityoutholder = quantityout + " liter(s)";}
-                        
-                        myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
-                        myTbody += "<td><strong>" + suppliername + "</strong></td>";
-                        myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
-                        myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
-                        myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
-                        myTbody += "<td><strong>" + address + "</strong></td>";
-                        myTbody += "<td><strong>" + time + "</strong></td>";
-                        myTbody += "<td><strong>" + date + "</strong></td>";
-                        myTbody += "<td><strong>" + drno + "</strong></td></tr>";
+                // console.log(dieselDate.getTime(), fromDate.getTime(), endDate.getTime());
 
-                    }else if(date_pass == ""){
+                if(dieselDate.getTime() >= fromDate.getTime() && dieselDate.getTime() <= endDate.getTime()){
 
-                        var truckno = dieselChildSnapshot.val().truck_no;
-                        var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
-                        var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
-                        var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
-                        var time = dieselChildSnapshot.val().time_input;
-                        var date = dieselChildSnapshot.val().Date_Input;
-                        var drno = dieselChildSnapshot.val().dr_no || "";
-                        console.log(quantityin);
+                    var truckno = dieselChildSnapshot.val().truck_no;
+                    var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
+                    var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
+                    var availablestock = Number(dieselChildSnapshot.val().currentstockCopy).toLocaleString("en");
+                    var time = dieselChildSnapshot.val().time_input;
+                    var date = dieselChildSnapshot.val().Date_Input;
+                    var drno = dieselChildSnapshot.val().dr_no || "";
+                    // console.log(quantityin);
 
-                        var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
-                        var address = dieselChildSnapshot.val().destination || "";
-                        
-                        if (quantityin == "NaN"){quantityholder = "";}
-                        else{quantityholder = quantityin + " liter(s)" ;}
-                        if (quantityout == "NaN"){quantityoutholder = "";}
-                        else{quantityoutholder = quantityout + " liter(s)";}
-                        
-                        myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
-                        myTbody += "<td><strong>" + suppliername + "</strong></td>";
-                        myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
-                        myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
-                        myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
-                        myTbody += "<td><strong>" + address + "</strong></td>";
-                        myTbody += "<td><strong>" + time + "</strong></td>";
-                        myTbody += "<td><strong>" + date + "</strong></td>";
-                        myTbody += "<td><strong>" + drno + "</strong></td></tr>";
-                    }
-
-                });
-                if (myTbody == ""){
-                    myTbody ="<tr><td colspan='9' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
-                    document.getElementById("DieselList").innerHTML = myTbody; 
-                }else{document.getElementById("DieselList").innerHTML = myTbody; }
+                    var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
+                    var address = dieselChildSnapshot.val().destination || "";
                 
+                    if (quantityin == "NaN"){quantityholder = "";}
+                    else{quantityholder = quantityin + " liter(s)" ;}
+                    if (quantityout == "NaN"){quantityoutholder = "";}
+                    else{quantityoutholder = quantityout + " liter(s)";}
+                
+                    myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+                    myTbody += "<td><strong>" + suppliername + "</strong></td>";
+                    myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+                    myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
+                    myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                    myTbody += "<td><strong>" + address + "</strong></td>";
+                    myTbody += "<td><strong>" + time + "</strong></td>";
+                    myTbody += "<td><strong>" + date + "</strong></td>";
+                    myTbody += "<td><strong>" + drno + "</strong></td></tr>";
+                }
             });
+
+            if(myTbody == ""){
+                 myTbody ="<tr><td colspan='9' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+                document.getElementById("DieselList").innerHTML = myTbody; 
+            }else{
+                document.getElementById("DieselList").innerHTML = myTbody; 
+            }
 
             $(".se-pre-con").fadeOut("slow");
         });
-        //end
+
         firebase.database().ref().child("available_stock/" + plant).once('value',function(totalstockSnapshot){
             var get_totalStock = Number(totalstockSnapshot.val().Liters).toLocaleString('en');
             document.getElementById("id_stock").innerHTML = get_totalStock + " liter(s)";
@@ -264,7 +342,6 @@
 
         // document.getElementById("stateDate").innerHTML = "Date: " + date + " <br>";
 
-
     }
 
 
@@ -278,7 +355,6 @@
   #printPageButton{
     display: none;
   }
-
 }
 </style>
 </head>

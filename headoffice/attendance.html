@@ -142,22 +142,22 @@
             var passcurrentDate = new Date().toLocaleDateString('en');
         }
 
-        document.getElementById('id_date').innerHTML = "<th colspan='3'>Date: " + currentDate + " <br> Result: <span id='id_record'></span></th><th colspan='1'> <div class='row'><div class='col-md-12'><button class='btn btn-success btn-md' onclick='tablePrint();' style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button></div></div></th>";
+        document.getElementById('id_date').innerHTML = "<th colspan='3'>Date: " + currentDate + " <br> Plant: " + plant + " <br> Result: <span id='id_record'></span></th><th colspan='1'> <div class='row'><div class='col-md-12'><button class='btn btn-success btn-md' onclick='tablePrint();' style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button></div></div></th>";
 
-        document.getElementById('link_machine1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine1&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_machine3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine3&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_forklift_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=forklift_operator&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_mechanic_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=mechanic&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_nonskid1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid1&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_nonskid2_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid2&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_nonskid3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid3&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_nonskid4_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid4&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_tagapukpok_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=tagapukpok&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_checker_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=checker&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_kamador_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=kamador&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_loader_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=loader&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_others_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=others&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_absent_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=absent&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_machine1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine1&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_machine3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine3&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_forklift_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=forklift_operator&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_mechanic_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=mechanic&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_nonskid1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid1&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_nonskid2_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid2&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_nonskid3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid3&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_nonskid4_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid4&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_tagapukpok_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=tagapukpok&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_checker_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=checker&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_kamador_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=kamador&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_loader_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=loader&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_others_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=others&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_absent_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=absent&date=" + passcurrentDate + "'>Update</a>";
 
         firebase.database().ref('plant_attendance/'+plant+'/'+currentDate).once('value', function(tableContentSnapshot){
 
@@ -341,22 +341,22 @@
             var passcurrentDate = new Date().toLocaleDateString('en');
         }
 
-        document.getElementById('id_date').innerHTML = "<th colspan='3'>Date: " + currentDate + " <br> Result: <span id='id_record'></span></th><th colspan='1'> <button class='btn btn-success' onclick='tablePrint();' style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button></th>";
+        document.getElementById('id_date').innerHTML = "<th colspan='3'>Date: " + currentDate + " <br> Plant: " + plant + " <br> Result: <span id='id_record'></span></th><th colspan='1'> <div class='row'><div class='col-md-12'><button class='btn btn-success btn-md' onclick='tablePrint();' style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button></div></div></th>";
 
-        document.getElementById('link_machine1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine1&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_machine3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine3&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_forklift_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=forklift_operator&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_mechanic_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=mechanic&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_nonskid1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid1&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_nonskid2_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid2&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_nonskid3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid3&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_nonskid4_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid4&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_tagapukpok_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=tagapukpok&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_checker_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=checker&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_kamador_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=kamador&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_loader_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=loader&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_others_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=others&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_absent_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=absent&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_machine1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine1&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_machine3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine3&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_forklift_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=forklift_operator&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_mechanic_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=mechanic&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_nonskid1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid1&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_nonskid2_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid2&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_nonskid3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid3&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_nonskid4_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid4&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_tagapukpok_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=tagapukpok&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_checker_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=checker&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_kamador_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=kamador&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_loader_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=loader&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_others_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=others&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_absent_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=absent&date=" + passcurrentDate + "'>Update</a>";
 
         firebase.database().ref('plant_attendance/'+plant+'/'+currentDate).once('value', function(tableContentSnapshot){
 
@@ -582,6 +582,24 @@
             <div id="sidebar"  class="nav-collapse ">
                 <!-- sidebar menu start-->
                 <ul class="sidebar-menu">                
+                    <li class="">
+                        <a class="" href="index.html">
+                            <i class="icon_house"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li> 
+                    <li>
+                        <a class="" href="transaction_log.html">
+                            <i class="fa fa-list"></i>
+                            <span>Transaction Log</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a class="" href="client.html">
+                            <i class="fa fa-address-book"></i>
+                            <span>Clients</span>
+                        </a>
+                    </li>
                     <li class="sub-menu">
                         <a href="javascript:;" class="">
                             <i class="fa fa-building"></i>
@@ -589,6 +607,11 @@
                             <span class="menu-arrow arrow_carrot-down"></span>
                         </a>
                         <ul class="sub">
+                            <li><a class="" href="purchase_order.html?plant=Bravo">Purchase Order</a></li>                          
+                            <li><a class="" href="delivery_ongoing_order.html?plant=Bravo">Delivery Page</a></li>
+                            <li><a class="" href="diesel.html?plant=Bravo">Diesel</a></li>
+                            <li><a class="" href="diesel_category.html?plant=Bravo">Oil</a></li>
+                            <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
                             <li><a class="" href="attendance.html?plant=Bravo">Line Up</a></li>
                         </ul>
                     </li>  
@@ -599,9 +622,24 @@
                             <span class="menu-arrow arrow_carrot-down"></span>
                         </a>
                         <ul class="sub">
+                            <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>                          
+                            <li><a class="" href="delivery_ongoing_order.html?plant=Delta">Delivery Page</a></li>
+                            <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
+                            <li><a class="" href="diesel_category.html?plant=Delta">Oil</a></li>
+                            <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
                             <li><a class="" href="attendance.html?plant=Delta">Line Up</a></li>
                         </ul>
-                    </li>  
+                    </li>    
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-file"></i>
+                            <span>Forms</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order_form.html">Add New P.O.</a></li>
+                        </ul>
+                    </li>      
                 </ul>
                 <!-- sidebar menu end-->
             </div>
@@ -646,47 +684,47 @@
                                             <tr class="header_line">
                                                 <th class="col-md-3">
                                                     MACHINE 1 
-                                                    <div class="btn-group pull-right">
+                                                    <!-- <div class="btn-group pull-right">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
                                                             <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
                                                         </a>
                                                         <ul class="dropdown-menu">
                                                             <li id="link_machine1_update"></li>
                                                         </ul>
-                                                    </div>
+                                                    </div> -->
                                                 </th>
                                                 <th class="col-md-3">
                                                     MACHINE 3
-                                                    <div class="btn-group pull-right">
+                                                    <!-- <div class="btn-group pull-right">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
                                                             <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
                                                         </a>
                                                         <ul class="dropdown-menu">
                                                             <li id="link_machine3_update"></li>
                                                         </ul>
-                                                    </div>
+                                                    </div> -->
                                                 </th>
                                                 <th class="col-md-3">
                                                     FORKLIFT OPERATOR
-                                                    <div class="btn-group pull-right">
+                                                    <!-- <div class="btn-group pull-right">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
                                                             <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
                                                         </a>
                                                         <ul class="dropdown-menu">
                                                             <li id="link_forklift_update"></li>
                                                         </ul>
-                                                    </div>
+                                                    </div> -->
                                                 </th>
                                                 <th class="col-md-3">
                                                     MECHANIC
-                                                    <div class="btn-group pull-right">
+                                                    <!-- <div class="btn-group pull-right">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
                                                             <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
                                                         </a>
                                                         <ul class="dropdown-menu">
                                                             <li id="link_mechanic_update"></li>
                                                         </ul>
-                                                    </div>
+                                                    </div> -->
                                                 </th>
                                             </tr>
                                         </thead>
@@ -695,47 +733,47 @@
                                             <tr class="header_line">
                                                 <th class="col-md-3">
                                                     NON SKID 1
-                                                    <div class="btn-group pull-right">
+                                                    <!-- <div class="btn-group pull-right">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
                                                             <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
                                                         </a>
                                                         <ul class="dropdown-menu">
                                                             <li id="link_nonskid1_update"></li>
                                                         </ul>
-                                                    </div>
+                                                    </div> -->
                                                 </th>
                                                 <th class="col-md-3">
                                                     NON SKID 2
-                                                    <div class="btn-group pull-right">
+                                                    <!-- <div class="btn-group pull-right">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
                                                             <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
                                                         </a>
                                                         <ul class="dropdown-menu">
                                                             <li id="link_nonskid2_update"></li>
                                                         </ul>
-                                                    </div>
+                                                    </div> -->
                                                 </th>
                                                 <th class="col-md-3">
                                                     NON SKID 3
-                                                    <div class="btn-group pull-right">
+                                                    <!-- <div class="btn-group pull-right">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
                                                             <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
                                                         </a>
                                                         <ul class="dropdown-menu">
                                                             <li id="link_nonskid3_update"></li>
                                                         </ul>
-                                                    </div>
+                                                    </div> -->
                                                 </th>
                                                 <th class="col-md-3">
                                                     NON SKID 4
-                                                    <div class="btn-group pull-right">
+                                                    <!-- <div class="btn-group pull-right">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
                                                             <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
                                                         </a>
                                                         <ul class="dropdown-menu">
                                                             <li id="link_nonskid4_update"></li>
                                                         </ul>
-                                                    </div>
+                                                    </div> -->
                                                 </th>
                                             </tr>
                                         </thead>
@@ -744,25 +782,25 @@
                                             <tr class="header_line">
                                                 <th colspan="2">
                                                     TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG
-                                                    <div class="btn-group pull-right">
+                                                    <!-- <div class="btn-group pull-right">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
                                                             <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
                                                         </a>
                                                         <ul class="dropdown-menu">
                                                             <li id="link_tagapukpok_update"></li>
                                                         </ul>
-                                                    </div>
+                                                    </div> -->
                                                 </th>
                                                 <th colspan="2">
                                                     CHECKER / FOREMAN / BATCHER / SUPERVISOR
-                                                    <div class="btn-group pull-right">
+                                                    <!-- <div class="btn-group pull-right">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
                                                             <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
                                                         </a>
                                                         <ul class="dropdown-menu">
                                                             <li id="link_checker_update"></li>
                                                         </ul>
-                                                    </div>
+                                                    </div> -->
                                                 </th>
                                             </tr>
                                         </thead>
@@ -771,52 +809,52 @@
                                             <tr class="header_line">
                                                 <th colspan="2">
                                                     KAMADOR
-                                                    <div class="btn-group pull-right">
+                                                    <!-- <div class="btn-group pull-right">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
                                                             <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
                                                         </a>
                                                         <ul class="dropdown-menu">
                                                             <li id="link_kamador_update"></li>
                                                         </ul>
-                                                    </div>
+                                                    </div> -->
                                                 </th>
                                                 <th colspan="2">
                                                     LOADER
-                                                    <div class="btn-group pull-right">
+                                                    <!-- <div class="btn-group pull-right">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
                                                             <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
                                                         </a>
                                                         <ul class="dropdown-menu">
                                                             <li id="link_loader_update"></li>
                                                         </ul>
-                                                    </div>
+                                                    </div> -->
                                                 </th>
                                             </tr>
                                         </thead>
                                         <tbody id="row4_list"></tbody>
-                                         <thead>
+                                        <thead>
                                             <tr class="header_line">
                                                 <th colspan="2">
                                                     OTHERS
-                                                    <div class="btn-group pull-right">
+                                                    <!-- <div class="btn-group pull-right">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
                                                             <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
                                                         </a>
                                                         <ul class="dropdown-menu">
                                                             <li id="link_others_update"></li>
                                                         </ul>
-                                                    </div>
+                                                    </div> -->
                                                 </th>
                                                 <th colspan="2">
                                                     ABSENT
-                                                    <div class="btn-group pull-right">
+                                                    <!-- <div class="btn-group pull-right">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
                                                             <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
                                                         </a>
                                                         <ul class="dropdown-menu">
                                                             <li id="link_absent_update"></li>
                                                         </ul>
-                                                    </div>
+                                                    </div> -->
                                                 </th>
                                             </tr>
                                         </thead>
