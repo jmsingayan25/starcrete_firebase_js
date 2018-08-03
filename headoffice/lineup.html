@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+    <meta name="author" content="GeeksLabs">
+    <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+    <link rel="shortcut icon" href="../img/favicon.png">
+
+    <title>Line Up</title>
+
+    <!-- Firebase App is always required and must be first -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.3/firebase-app.js"></script>
+
+    <!-- Add additional services you want to use -->
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-database.js"></script>
+    <script src="../js_config/firebase_config.js"></script>
+
+    <!-- Bootstrap CSS -->    
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <!-- bootstrap theme -->
+    <link href="../css/bootstrap-theme.css" rel="stylesheet">
+    <!--external css-->
+    <!-- font icon -->
+    <link href="../css/elegant-icons-style.css" rel="stylesheet" />
+    <link href="../css/font-awesome.min.css" rel="stylesheet" />    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- owl carousel -->
+    <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
+    <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="../css/fullcalendar.css">
+    <link href="../css/widgets.css" rel="stylesheet">
+    <link href="../css/style.css" rel="stylesheet">
+    <link href="../css/style-responsive.css" rel="stylesheet" />
+    <link href="../css/xcharts.min.css" rel=" stylesheet">  
+    <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+
+    <!-- javascripts -->
+    <script src="../js/jquery.js"></script>
+    <script src="../js/jquery-ui-1.10.4.min.js"></script>
+    <script src="../js/jquery-1.8.3.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+    <!-- bootstrap -->
+    <script src="../js/bootstrap.min.js"></script>
+    <!-- nice scroll -->
+    <script src="../js/jquery.scrollTo.min.js"></script>
+    <script src="../js/jquery.nicescroll.js" type="text/javascript"></script>
+    <!-- charts scripts -->
+    <script src="../assets/jquery-knob/js/jquery.knob.js"></script>
+    <script src="../js/jquery.sparkline.js" type="text/javascript"></script>
+    <script src="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+    <script src="../js/owl.carousel.js" ></script>
+    <!-- jQuery full calendar -->
+    <script src="../js/fullcalendar.min.js"></script> <!-- Full Google Calendar - Calendar -->
+    <script src="../assets/fullcalendar/fullcalendar/fullcalendar.js"></script>
+    <!--script for this page only-->
+    <script src="../js/calendar-custom.js"></script>
+    <script src="../js/jquery.rateit.min.js"></script>
+    <!-- custom select -->
+    <script src="../js/jquery.customSelect.min.js" ></script>
+    <script src="../assets/chart-master/Chart.js"></script>
+
+    <!--custome script for all page-->
+    <script src="../js/scripts.js"></script>
+    <!-- custom script for this page-->
+    <script src="../js/sparkline-chart.js"></script>
+    <script src="../js/easy-pie-chart.js"></script>
+    <script src="../js/jquery-jvectormap-1.2.2.min.js"></script>
+    <script src="../js/jquery-jvectormap-world-mill-en.js"></script>
+    <script src="../js/xcharts.min.js"></script>
+    <script src="../js/jquery.autosize.min.js"></script>
+    <script src="../js/jquery.placeholder.min.js"></script>
+    <script src="../js/gdp-data.js"></script>  
+    <script src="../js/morris.min.js"></script>
+    <script src="../js/sparklines.js"></script>    
+    <script src="../js/charts.js"></script>
+    <script src="../js/jquery.slimscroll.min.js"></script>
+    <script src="../js_config/function.js"></script>
+
+<script>
+
+    var plant = getUrlParameter('plant');
+    var backDate = getUrlParameter('date') || "";
+
+    $(document).ready(function(){
+
+        tableData(plant);
+
+        firebase.auth().onAuthStateChanged(function(user) {
+            if (user != null) {
+
+                var uid = user.uid;
+        
+                firebase.database().ref('users/'+uid).once('value').then(function(snapshot) {
+                    if(snapshot.val().office != 'Head Office'){
+                        window.location.href = '../plant/index.html';
+                    }
+
+                    document.getElementById('username').innerHTML = snapshot.val().firstname; 
+
+                    $(".se-pre-con").fadeOut("slow");
+                },(error) => {
+                    console.log(error);
+                });
+            } else {
+                window.location.href = '../login.html';
+            }
+        });
+
+        document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
+        document.getElementById('id_breadcrumb').innerHTML = "<li><i class='icon_document'></i><a href='attendance.html?plant=" + plant + "'>Line Up</a></li>";
+
+    });
+
+    function tableData(){
+
+        var myTableRow1 = "";
+        var myTableRow2 = "";
+        var myTableRow3 = "";
+        var myTableRow4 = "";
+        var myTableRow5 = "";
+        var myTableRow6 = "";
+        var option = {year: "numeric", month: "long", day: "numeric"}
+
+        if(backDate != ""){
+            var input_date = backDate;
+            var currentDate = new Date(input_date).toLocaleDateString('en', option);
+        }else{
+            var input_date = document.getElementById('input_date').value;
+            var currentDate = new Date().toLocaleDateString('en', option);
+        }
+
+        console.log(input_date, currentDate);
+
+        if(input_date != ''){
+            var passcurrentDate = new Date(input_date).toLocaleDateString('en');
+        }else{
+            var passcurrentDate = new Date().toLocaleDateString('en');
+        }
+
+        document.getElementById('id_date').innerHTML = "<th colspan='3'>Date: " + currentDate + " <br> Plant: " + plant + " <br> Result: <span id='id_record'></span></th><th colspan='1'> <div class='row'><div class='col-md-12'><button class='btn btn-success btn-md' onclick='tablePrint();' style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button></div></div></th>";
+
+        // document.getElementById('link_machine1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine1&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_machine3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine3&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_forklift_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=forklift_operator&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_mechanic_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=mechanic&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_nonskid1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid1&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_nonskid2_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid2&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_nonskid3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid3&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_nonskid4_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid4&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_tagapukpok_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=tagapukpok&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_checker_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=checker&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_kamador_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=kamador&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_loader_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=loader&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_others_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=others&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_absent_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=absent&date=" + passcurrentDate + "'>Update</a>";
+
+        firebase.database().ref('plant_attendance/'+plant+'/'+currentDate).once('value', function(tableContentSnapshot){
+
+            // console.log(tableContentSnapshot.val());
+
+            if(tableContentSnapshot.val() != null){
+
+                document.getElementById('id_record').innerHTML = "RECORD FOUND";
+
+                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine1').once('value', function(machine1Snapshot){
+                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine3').once('value', function(machine3Snapshot){
+                        firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/forklift_operator').once('value', function(forkliftSnapshot){
+                            firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/mechanic').once('value', function(mechanicSnapshot){
+                        
+                                myTableRow1 += "<tr><td>";
+
+                                machine1Snapshot.forEach(function(machine1ChildSnapshot){
+                                    myTableRow1 += "<div class='row'><div class='col-md-12'>" + machine1ChildSnapshot.val().employee_name + "</div></div>";
+                                });
+
+                                myTableRow1 += "</td><td>";
+                                machine3Snapshot.forEach(function(machine3ChildSnapshot){
+                                    myTableRow1 += "<div class='row'><div class='col-md-12'>" + machine3ChildSnapshot.val().employee_name + "</div></div>";
+                                });
+
+                                myTableRow1 += "</td><td>";
+                                forkliftSnapshot.forEach(function(forkliftChildSnapshot){
+                                    myTableRow1 += "<div class='row'><div class='col-md-12'>" + forkliftChildSnapshot.val().employee_name + "</div></div>";
+                                });
+
+                                myTableRow1 += "</td><td>";
+                                mechanicSnapshot.forEach(function(mechanicChildSnapshot){
+                                    myTableRow1 += "<div class='row'><div class='col-md-12'>" + mechanicChildSnapshot.val().employee_name + "</div></div>";
+                                });
+
+                                myTableRow1 += "</td></tr>";
+
+                                document.getElementById('row1_list').innerHTML = myTableRow1;
+                            });
+                        });
+                    });
+                });
+
+                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/nonskid1').once('value', function(nonskid1Snapshot){
+                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/nonskid2').once('value', function(nonskid2Snapshot){
+                        firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/nonskid3').once('value', function(nonskid3Snapshot){
+                            firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/nonskid4').once('value', function(nonskid4Snapshot){
+
+                                myTableRow2 += "<tr><td>";
+
+                                nonskid1Snapshot.forEach(function(nonskid1ChildSnapshot){
+                                    myTableRow2 += "<div class='row'><div class='col-md-12'>" + nonskid1ChildSnapshot.val().employee_name + "</div></div>";
+                                });
+
+                                myTableRow2 += "</td><td>";
+                                nonskid2Snapshot.forEach(function(nonskid2ChildSnapshot){
+                                    myTableRow2 += "<div class='row'><div class='col-md-12'>" + nonskid2ChildSnapshot.val().employee_name + "</div></div>";
+                                });
+
+                                myTableRow2 += "</td><td>";
+                                nonskid3Snapshot.forEach(function(nonskid3ChildSnapshot){
+                                    myTableRow2 += "<div class='row'><div class='col-md-12'>" + nonskid3ChildSnapshot.val().employee_name + "</div></div>";
+                                });
+
+                                myTableRow2 += "</td><td>";
+                                nonskid4Snapshot.forEach(function(nonskid4ChildSnapshot){
+                                    myTableRow2 += "<div class='row'><div class='col-md-12'>" + nonskid4ChildSnapshot.val().employee_name + "</div></div>";
+                                });
+
+                                myTableRow2 += "</td></tr>";
+
+                                document.getElementById('row2_list').innerHTML = myTableRow2;
+                            });
+                        });
+                    });
+                });
+
+                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/tagapukpok').once('value', function(tagapukpokSnapshot){
+                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/checker').once('value', function(checkerSnapshot){
+
+                        myTableRow3 += "<tr><td colspan='2'>";
+
+                        tagapukpokSnapshot.forEach(function(tagapukpokChildSnapshot){
+                            myTableRow3 += "<div class='row'><div class='col-md-12'>" + tagapukpokChildSnapshot.val().employee_name + "</div></div>";
+                        });
+
+                        myTableRow3 += "</td><td colspan='2'>";
+                        checkerSnapshot.forEach(function(checkerChildSnapshot){
+                            myTableRow3 += "<div class='row'><div class='col-md-12'>" + checkerChildSnapshot.val().employee_name + "</div></div>";
+                        });
+
+                        myTableRow3 += "</td></tr>";
+
+                        document.getElementById('row3_list').innerHTML = myTableRow3;
+
+                    });
+                });
+
+                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/kamador').once('value', function(kamadorSnapshot){
+                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/loader').once('value', function(loaderSnapshot){
+                        
+
+                            myTableRow4 += "<tr><td colspan='2'>";
+
+                            kamadorSnapshot.forEach(function(kamadorChildSnapshot){
+                                myTableRow4 += "<div class='row'><div class='col-md-12'>" + kamadorChildSnapshot.val().employee_name + "</div></div>";
+                            });
+
+                            myTableRow4 += "</td><td colspan='2'>";
+                            loaderSnapshot.forEach(function(loaderChildSnapshot){
+                                myTableRow4 += "<div class='row'><div class='col-md-12'>" + loaderChildSnapshot.val().employee_name + "</div></div>";
+                            });
+
+
+
+                            myTableRow4 += "</td></tr>";
+
+                            document.getElementById('row4_list').innerHTML = myTableRow4;
+                                
+                    });
+                });
+
+                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/absent').once('value', function(absentSnapshot){
+                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/others').once('value', function(othersSnapshot){
+
+                        myTableRow5 += "<tr><td colspan='2'>";
+
+                        othersSnapshot.forEach(function(othersChildSnapshot){
+                            myTableRow5 += "<div class='row'><div class='col-md-12'>" + othersChildSnapshot.val().employee_name + "</div></div>";
+                        });
+
+                        myTableRow5 += "</td><td colspan='2'>";
+                        absentSnapshot.forEach(function(absentChildSnapshot){
+                            myTableRow5 += "<div class='row'><div class='col-md-12'>" + absentChildSnapshot.val().employee_name + " - " + absentChildSnapshot.val().reason + "</div></div>";
+                        });
+
+                        myTableRow5 += "</td></tr>";
+
+                        document.getElementById('row5_list').innerHTML = myTableRow5;
+
+                    });
+                });
+
+                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate).once('value', function(commentSnapshot){
+
+                    myTableRow6 += "<tr><td colspan='4'><strong>COMMENT: </strong>" + commentSnapshot.val().comment + "</td></tr>";
+
+                    document.getElementById('row6_list').innerHTML = myTableRow6;
+                    
+                });
+
+            }else{
+                document.getElementById('id_record').innerHTML = "NO RECORD FOUND";
+                document.getElementById('row1_list').innerHTML = "";
+                document.getElementById('row2_list').innerHTML = "";
+                document.getElementById('row3_list').innerHTML = "";
+                document.getElementById('row4_list').innerHTML = "";
+                document.getElementById('row5_list').innerHTML = "";
+                document.getElementById('row6_list').innerHTML = "";
+            }
+        });
+    }
+
+    function submitForm(){
+
+        event.preventDefault();
+
+        var myTableRow1 = "";
+        var myTableRow2 = "";
+        var myTableRow3 = "";
+        var myTableRow4 = "";
+        var myTableRow5 = "";
+        var myTableRow6 = "";
+        var input_date = document.getElementById('input_date').value;
+        var option = {year: "numeric", month: "long", day: "numeric"}
+        var currentDate = new Date(input_date).toLocaleDateString('en', option);
+        
+        if(input_date != ''){
+            var passcurrentDate = new Date(input_date).toLocaleDateString('en');
+        }else{
+            var passcurrentDate = new Date().toLocaleDateString('en');
+        }
+
+        document.getElementById('id_date').innerHTML = "<th colspan='3'>Date: " + currentDate + " <br> Plant: " + plant + " <br> Result: <span id='id_record'></span></th><th colspan='1'> <div class='row'><div class='col-md-12'><button class='btn btn-success btn-md' onclick='tablePrint();' style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button></div></div></th>";
+
+        // document.getElementById('link_machine1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine1&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_machine3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine3&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_forklift_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=forklift_operator&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_mechanic_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=mechanic&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_nonskid1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid1&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_nonskid2_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid2&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_nonskid3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid3&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_nonskid4_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=nonskid4&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_tagapukpok_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=tagapukpok&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_checker_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=checker&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_kamador_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=kamador&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_loader_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=loader&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_others_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=others&date=" + passcurrentDate + "'>Update</a>";
+        // document.getElementById('link_absent_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=absent&date=" + passcurrentDate + "'>Update</a>";
+
+        firebase.database().ref('plant_attendance/'+plant+'/'+currentDate).once('value', function(tableContentSnapshot){
+
+            console.log(tableContentSnapshot.val());
+
+            if(tableContentSnapshot.val() != null){
+
+                document.getElementById('id_record').innerHTML = "RECORD FOUND";
+
+                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine1').once('value', function(machine1Snapshot){
+                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine3').once('value', function(machine3Snapshot){
+                        firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/forklift_operator').once('value', function(forkliftSnapshot){
+                            firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/mechanic').once('value', function(mechanicSnapshot){
+                        
+                                myTableRow1 += "<tr><td>";
+
+                                machine1Snapshot.forEach(function(machine1ChildSnapshot){
+                                    myTableRow1 += "<div class='row'><div class='col-md-12'>" + machine1ChildSnapshot.val().employee_name + "</div></div>";
+                                });
+
+                                myTableRow1 += "</td><td>";
+                                machine3Snapshot.forEach(function(machine3ChildSnapshot){
+                                    myTableRow1 += "<div class='row'><div class='col-md-12'>" + machine3ChildSnapshot.val().employee_name + "</div></div>";
+                                });
+
+                                myTableRow1 += "</td><td>";
+                                forkliftSnapshot.forEach(function(forkliftChildSnapshot){
+                                    myTableRow1 += "<div class='row'><div class='col-md-12'>" + forkliftChildSnapshot.val().employee_name + "</div></div>";
+                                });
+
+                                myTableRow1 += "</td><td>";
+                                mechanicSnapshot.forEach(function(mechanicChildSnapshot){
+                                    myTableRow1 += "<div class='row'><div class='col-md-12'>" + mechanicChildSnapshot.val().employee_name + "</div></div>";
+                                });
+
+                                myTableRow1 += "</td></tr>";
+
+                                document.getElementById('row1_list').innerHTML = myTableRow1;
+                            });
+                        });
+                    });
+                });
+
+                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/nonskid1').once('value', function(nonskid1Snapshot){
+                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/nonskid2').once('value', function(nonskid2Snapshot){
+                        firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/nonskid3').once('value', function(nonskid3Snapshot){
+                            firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/nonskid4').once('value', function(nonskid4Snapshot){
+
+                                myTableRow2 += "<tr><td>";
+
+                                nonskid1Snapshot.forEach(function(nonskid1ChildSnapshot){
+                                    myTableRow2 += "<div class='row'><div class='col-md-12'>" + nonskid1ChildSnapshot.val().employee_name + "</div></div>";
+                                });
+
+                                myTableRow2 += "</td><td>";
+                                nonskid2Snapshot.forEach(function(nonskid2ChildSnapshot){
+                                    myTableRow2 += "<div class='row'><div class='col-md-12'>" + nonskid2ChildSnapshot.val().employee_name + "</div></div>";
+                                });
+
+                                myTableRow2 += "</td><td>";
+                                nonskid3Snapshot.forEach(function(nonskid3ChildSnapshot){
+                                    myTableRow2 += "<div class='row'><div class='col-md-12'>" + nonskid3ChildSnapshot.val().employee_name + "</div></div>";
+                                });
+
+                                myTableRow2 += "</td><td>";
+                                nonskid4Snapshot.forEach(function(nonskid4ChildSnapshot){
+                                    myTableRow2 += "<div class='row'><div class='col-md-12'>" + nonskid4ChildSnapshot.val().employee_name + "</div></div>";
+                                });
+
+                                myTableRow2 += "</td></tr>";
+
+                                document.getElementById('row2_list').innerHTML = myTableRow2;
+                            });
+                        });
+                    });
+                });
+
+                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/tagapukpok').once('value', function(tagapukpokSnapshot){
+                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/checker').once('value', function(checkerSnapshot){
+
+                        myTableRow3 += "<tr><td colspan='2'>";
+
+                        tagapukpokSnapshot.forEach(function(tagapukpokChildSnapshot){
+                            myTableRow3 += "<div class='row'><div class='col-md-12'>" + tagapukpokChildSnapshot.val().employee_name + "</div></div>";
+                        });
+
+                        myTableRow3 += "</td><td colspan='2'>";
+                        checkerSnapshot.forEach(function(checkerChildSnapshot){
+                            myTableRow3 += "<div class='row'><div class='col-md-12'>" + checkerChildSnapshot.val().employee_name + "</div></div>";
+                        });
+
+                        myTableRow3 += "</td></tr>";
+
+                        document.getElementById('row3_list').innerHTML = myTableRow3;
+
+                    });
+                });
+
+                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/kamador').once('value', function(kamadorSnapshot){
+                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/loader').once('value', function(loaderSnapshot){
+                        
+
+                            myTableRow4 += "<tr><td colspan='2'>";
+
+                            kamadorSnapshot.forEach(function(kamadorChildSnapshot){
+                                myTableRow4 += "<div class='row'><div class='col-md-12'>" + kamadorChildSnapshot.val().employee_name + "</div></div>";
+                            });
+
+                            myTableRow4 += "</td><td colspan='2'>";
+                            loaderSnapshot.forEach(function(loaderChildSnapshot){
+                                myTableRow4 += "<div class='row'><div class='col-md-12'>" + loaderChildSnapshot.val().employee_name + "</div></div>";
+                            });
+
+
+
+                            myTableRow4 += "</td></tr>";
+
+                            document.getElementById('row4_list').innerHTML = myTableRow4;
+                                
+                    });
+                });
+
+                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/absent').once('value', function(absentSnapshot){
+                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/others').once('value', function(othersSnapshot){
+
+                        myTableRow5 += "<tr><td colspan='2'>";
+
+                        othersSnapshot.forEach(function(othersChildSnapshot){
+                            myTableRow5 += "<div class='row'><div class='col-md-12'>" + othersChildSnapshot.val().employee_name + "</div></div>";
+                        });
+
+                        myTableRow5 += "</td><td colspan='2'>";
+                        absentSnapshot.forEach(function(absentChildSnapshot){
+                            myTableRow5 += "<div class='row'><div class='col-md-12'>" + absentChildSnapshot.val().employee_name + " - " + absentChildSnapshot.val().reason + "</div></div>";
+                        });
+
+                        myTableRow5 += "</td></tr>";
+
+                        document.getElementById('row5_list').innerHTML = myTableRow5;
+
+                    });
+                });
+
+                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate).once('value', function(commentSnapshot){
+
+                    myTableRow6 += "<tr><td colspan='4'><strong>COMMENT: </strong>" + commentSnapshot.val().comment + "</td></tr>";
+
+                    document.getElementById('row6_list').innerHTML = myTableRow6;
+                });
+            }else{
+                document.getElementById('id_record').innerHTML = "NO RECORD";
+                document.getElementById('row1_list').innerHTML = "";
+                document.getElementById('row2_list').innerHTML = "";
+                document.getElementById('row3_list').innerHTML = "";
+                document.getElementById('row4_list').innerHTML = "";
+                document.getElementById('row5_list').innerHTML = "";
+                document.getElementById('row6_list').innerHTML = "";
+            }
+        });
+    }
+
+    function tablePrint(){
+
+
+        if(document.getElementById('input_date').value != ""){
+            var date = document.getElementById('input_date').value;
+        }else{
+            var date = new Date().toLocaleDateString('en');
+        }
+
+        window.open("attendance_print.html?plant="+plant+"&date="+date, "_blank");
+    }
+    
+</script>
+<style>
+.header_line{
+    background-color: #00a3cc;
+}
+
+.table .header_line th{
+    color: white;
+}
+</style>
+</head>
+<body>
+    <!-- <div class="se-pre-con"></div> -->
+    <section id="container" class="">
+        <header class="header dark-bg">
+            <div class="toggle-nav">
+            <div class="icon-reorder tooltips" data-original-title="Toggle Navigation" data-placement="bottom"><i class="icon_menu"></i></div>
+            </div>
+
+            <!--logo start-->
+
+            <!--logo end-->
+            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+            <div class="top-nav notification-row">                
+                <!-- notificatoin dropdown start-->
+                <ul class="nav pull-right top-menu">
+                    <!-- user login dropdown start-->
+                    <li class="dropdown">
+                        <a data-toggle="dropdown" class="dropdown-toggle" href="#">
+                        <!--  <span class="profile-ava">
+                        <img alt="" src="img/avatar1_small.jpg">
+                        </span> -->
+                            <span class="username" id="username"></span>
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu extended logout">
+                            <div class="log-arrow-up"></div>
+                            <li>
+                                <a href="" id="logoutBtn"><i class="icon_key_alt"></i> Log Out</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- user login dropdown end -->
+                </ul>
+                <!-- notificatoin dropdown end-->
+            </div>
+        </header>  
+        <!--sidebar start-->
+        <aside>
+            <div id="sidebar"  class="nav-collapse ">
+                <!-- sidebar menu start-->
+                <ul class="sidebar-menu">                
+                    <li class="">
+                        <a class="" href="index.html">
+                            <i class="icon_house"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li> 
+                    <li>
+                        <a class="" href="transaction_log.html">
+                            <i class="fa fa-list"></i>
+                            <span>Transaction Log</span>
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a class="" href="client.html">
+                            <i class="fa fa-address-book"></i>
+                            <span>Clients</span>
+                        </a>
+                    </li>
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Bravo</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order.html?plant=Bravo">Purchase Order</a></li>                          
+                            <li><a class="" href="delivery_ongoing_order.html?plant=Bravo">Delivery Page</a></li>
+                            <li><a class="" href="diesel.html?plant=Bravo">Diesel</a></li>
+                            <li><a class="" href="diesel_category.html?plant=Bravo">Oil</a></li>
+                            <li><a class="" href="parts.html?plant=Bravo">Parts</a></li>
+                            <li><a class="" href="attendance.html?plant=Bravo">Line Up</a></li>
+                        </ul>
+                    </li>  
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-building"></i>
+                            <span>Delta</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order.html?plant=Delta">Purchase Order</a></li>                          
+                            <li><a class="" href="delivery_ongoing_order.html?plant=Delta">Delivery Page</a></li>
+                            <li><a class="" href="diesel.html?plant=Delta">Diesel</a></li>
+                            <li><a class="" href="diesel_category.html?plant=Delta">Oil</a></li>
+                            <li><a class="" href="parts.html?plant=Delta">Parts</a></li>
+                            <li><a class="" href="attendance.html?plant=Delta">Line Up</a></li>
+                        </ul>
+                    </li>    
+                    <li class="sub-menu">
+                        <a href="javascript:;" class="">
+                            <i class="fa fa-file"></i>
+                            <span>Forms</span>
+                            <span class="menu-arrow arrow_carrot-down"></span>
+                        </a>
+                        <ul class="sub">
+                            <li><a class="" href="purchase_order_form.html">Add New P.O.</a></li>
+                        </ul>
+                    </li>      
+                </ul>
+                <!-- sidebar menu end-->
+            </div>
+        </aside>
+        <!--sidebar end-->
+
+        <section id="main-content">
+            <section class="wrapper">  
+                <div class="row">
+                    <div class="col-md-12">
+                        <ol class="breadcrumb" id="id_breadcrumb">
+                                                  
+                        </ol>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <section class="panel">
+                            <form onsubmit="return submitForm();">
+                                <header class="panel-heading">
+                                    <div class="row">
+                                        <div class="form-group" style="margin-top: 5px; margin-bottom: 5px;">
+                                            <label for="date" class="col-md-1 control-label" style="margin-right: -10px;">Date:</label>
+                                            <div class="col-md-2" style="margin-right: -25px;">
+                                                <input type="date" id="input_date" name="input_date" class="form-control">
+                                                
+                                            </div>
+                                            <div class="col-md-1" style="margin-right: 25px;">
+                                                <button class="btn btn-info" type="submit" name="search_table">
+                                                    <i class="fa fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>                                  
+                                    </div>
+                                </header>
+                            </form>
+                            <div class="panel-body">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-stripped">
+                                        <thead>
+                                            <tr id="id_date" class="header_line"></tr>
+                                            <tr class="header_line">
+                                                <th class="col-md-3">
+                                                    MACHINE 1 
+                                                    <!-- <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_machine1_update"></li>
+                                                        </ul>
+                                                    </div> -->
+                                                </th>
+                                                <th class="col-md-3">
+                                                    MACHINE 3
+                                                    <!-- <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_machine3_update"></li>
+                                                        </ul>
+                                                    </div> -->
+                                                </th>
+                                                <th class="col-md-3">
+                                                    FORKLIFT OPERATOR
+                                                    <!-- <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_forklift_update"></li>
+                                                        </ul>
+                                                    </div> -->
+                                                </th>
+                                                <th class="col-md-3">
+                                                    MECHANIC
+                                                    <!-- <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_mechanic_update"></li>
+                                                        </ul>
+                                                    </div> -->
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="row1_list"></tbody>
+                                        <thead>
+                                            <tr class="header_line">
+                                                <th class="col-md-3">
+                                                    NON SKID 1
+                                                    <!-- <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_nonskid1_update"></li>
+                                                        </ul>
+                                                    </div> -->
+                                                </th>
+                                                <th class="col-md-3">
+                                                    NON SKID 2
+                                                    <!-- <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_nonskid2_update"></li>
+                                                        </ul>
+                                                    </div> -->
+                                                </th>
+                                                <th class="col-md-3">
+                                                    NON SKID 3
+                                                    <!-- <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_nonskid3_update"></li>
+                                                        </ul>
+                                                    </div> -->
+                                                </th>
+                                                <th class="col-md-3">
+                                                    NON SKID 4
+                                                    <!-- <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_nonskid4_update"></li>
+                                                        </ul>
+                                                    </div> -->
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="row2_list"></tbody>
+                                        <thead>
+                                            <tr class="header_line">
+                                                <th colspan="2">
+                                                    TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG
+                                                    <!-- <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_tagapukpok_update"></li>
+                                                        </ul>
+                                                    </div> -->
+                                                </th>
+                                                <th colspan="2">
+                                                    CHECKER / FOREMAN / BATCHER / SUPERVISOR
+                                                    <!-- <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_checker_update"></li>
+                                                        </ul>
+                                                    </div> -->
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="row3_list"></tbody>
+                                        <thead>
+                                            <tr class="header_line">
+                                                <th colspan="2">
+                                                    KAMADOR
+                                                    <!-- <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_kamador_update"></li>
+                                                        </ul>
+                                                    </div> -->
+                                                </th>
+                                                <th colspan="2">
+                                                    LOADER
+                                                    <!-- <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_loader_update"></li>
+                                                        </ul>
+                                                    </div> -->
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="row4_list"></tbody>
+                                        <thead>
+                                            <tr class="header_line">
+                                                <th colspan="2">
+                                                    OTHERS
+                                                    <!-- <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_others_update"></li>
+                                                        </ul>
+                                                    </div> -->
+                                                </th>
+                                                <th colspan="2">
+                                                    ABSENT
+                                                    <!-- <div class="btn-group pull-right">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_absent_update"></li>
+                                                        </ul>
+                                                    </div> -->
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="row5_list"></tbody>
+                                        <tbody id="row6_list"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </section>
+    </section>
+</body>
+</html>
