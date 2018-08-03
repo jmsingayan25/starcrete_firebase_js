@@ -244,6 +244,13 @@
                     quantity_out = dieselChildSnapshot.val().quantity_out || "";
                     address = dieselChildSnapshot.val().destination || "";
                     operator = dieselChildSnapshot.val().operator || "";
+                    pondo = dieselChildSnapshot.val().pondo_Input || "";
+
+                    if(pondo != ""){
+                        pondo_string = Number(pondo).toLocaleString('en') + " liter(s)";
+                    }else{
+                        pondo_string = "";
+                    }
 
                     if(quantity_in != ""){
                         quantity_in_string = Number(quantity_in).toLocaleString('en') +  " liter(s)";
@@ -268,6 +275,7 @@
                         myTbody += "<tr style='background-color: #006080;'><td style='color: white;'><strong>" + truck_no + "</strong></td>";
                         myTbody += "<td style='color: white;'><strong>" + person + "</strong></td>";
                         myTbody += "<td style='color: white;'><strong>" + quantity_in_string + "</strong></td>";
+                        myTbody += "<td style='color: white;'><strong>" + pondo_string + "</strong></td>";
                         myTbody += "<td style='color: white;'><strong>" + quantity_out_string + "</strong></td>";
                         myTbody += "<td style='color: white;'><strong>" + currentstockCopy + "</strong></td>";
                         myTbody += "<td style='color: white;'><strong>" + address + "</strong></td>";
@@ -280,6 +288,7 @@
                         myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
                         myTbody += "<td><strong>" + person + "</strong></td>";
                         myTbody += "<td><strong>" + quantity_in_string + "</strong></td>";
+                        myTbody += "<td><strong>" + pondo_string + "</strong></td>";
                         myTbody += "<td><strong>" + quantity_out_string + "</strong></td>";
                         myTbody += "<td><strong>" + currentstockCopy + "</strong></td>";
                         myTbody += "<td><strong>" + address + "</strong></td>";
@@ -320,6 +329,13 @@
                         quantity_out = dieselChildSnapshot.val().quantity_out || "";
                         address = dieselChildSnapshot.val().destination || "";
                         operator = dieselChildSnapshot.val().operator || "";
+                        pondo = dieselChildSnapshot.val().pondo_Input || "";
+
+                        if(pondo != ""){
+                            pondo_string = Number(pondo).toLocaleString('en') + " liter(s)";
+                        }else{
+                            pondo_string = "";
+                        }
 
                         if(quantity_in != ""){
                             quantity_in_string = Number(quantity_in).toLocaleString('en') +  " liter(s)";
@@ -344,6 +360,7 @@
                             myTbody += "<tr style='background-color: #006080;'><td style='color: white;'><strong>" + truck_no + "</strong></td>";
                             myTbody += "<td style='color: white;'><strong>" + person + "</strong></td>";
                             myTbody += "<td style='color: white;'><strong>" + quantity_in_string + "</strong></td>";
+                            myTbody += "<td style='color: white;'><strong>" + pondo_string + "</strong></td>";
                             myTbody += "<td style='color: white;'><strong>" + quantity_out_string + "</strong></td>";
                             myTbody += "<td style='color: white;'><strong>" + currentstockCopy + "</strong></td>";
                             myTbody += "<td style='color: white;'><strong>" + address + "</strong></td>";
@@ -356,6 +373,7 @@
                             myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
                             myTbody += "<td><strong>" + person + "</strong></td>";
                             myTbody += "<td><strong>" + quantity_in_string + "</strong></td>";
+                            myTbody += "<td><strong>" + pondo_string + "</strong></td>";
                             myTbody += "<td><strong>" + quantity_out_string + "</strong></td>";
                             myTbody += "<td><strong>" + currentstockCopy + "</strong></td>";
                             myTbody += "<td><strong>" + address + "</strong></td>";
@@ -429,6 +447,13 @@
                     quantity_out = dieselChildSnapshot.val().quantity_out || "";
                     address = dieselChildSnapshot.val().destination || "";
                     operator = dieselChildSnapshot.val().operator || "";
+                    pondo = dieselChildSnapshot.val().pondo_Input || "";
+
+                    if(pondo != ""){
+                        pondo_string = Number(pondo).toLocaleString('en') + " liter(s)";
+                    }else{
+                        pondo_string = "";
+                    }
 
                     if(quantity_in != ""){
                         quantity_in_string = Number(quantity_in).toLocaleString('en') +  " liter(s)";
@@ -453,6 +478,7 @@
                         myTbody += "<tr style='background-color: #006080;'><td style='color: white;'><strong>" + truck_no + "</strong></td>";
                         myTbody += "<td style='color: white;'><strong>" + person + "</strong></td>";
                         myTbody += "<td style='color: white;'><strong>" + quantity_in_string + "</strong></td>";
+                        myTbody += "<td style='color: white;'><strong>" + pondo_string + "</strong></td>";
                         myTbody += "<td style='color: white;'><strong>" + quantity_out_string + "</strong></td>";
                         myTbody += "<td style='color: white;'><strong>" + currentstockCopy + "</strong></td>";
                         myTbody += "<td style='color: white;'><strong>" + address + "</strong></td>";
@@ -465,6 +491,7 @@
                         myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
                         myTbody += "<td><strong>" + person + "</strong></td>";
                         myTbody += "<td><strong>" + quantity_in_string + "</strong></td>";
+                        myTbody += "<td><strong>" + pondo_string + "</strong></td>";
                         myTbody += "<td><strong>" + quantity_out_string + "</strong></td>";
                         myTbody += "<td><strong>" + currentstockCopy + "</strong></td>";
                         myTbody += "<td><strong>" + address + "</strong></td>";
@@ -749,7 +776,7 @@ function datePrint(){
                                             </th>
                                         </tr> -->
                         				<tr class="filterable">
-                        					<th colspan="9">
+                        					<th colspan="10">
                                                 <input type="hidden" id="hidden_stock">
                                                 <button type="button" class="btn btn-info btn-md" id="datePrint" onclick= "datePrint()" style="float: left;"><span class="fa fa-print"></span> <strong>Print Preview</strong></button>
                         						<button class="btn btn-default btn-xs btn-filter" style="float: right;"><span class="fa fa-filter"></span> Filter</button></span><br>
@@ -759,7 +786,8 @@ function datePrint(){
                         				<tr class="filters" style="background-color: #00111a;">
 											<th class="col-md-1"><input type="text" class="form-control" id="input_truck_no" placeholder="Truck No." disabled></th>
 											<th class="col-md-2"><input type="text" class="form-control" id="input_driver" placeholder="Driver / Optr. / Supplier" disabled></th>
-											<th class="col-md-1" style="color: white;">Quantity (IN)</th>
+                                            <th class="col-md-1" style="color: white;">Quantity (IN)</th>
+											<th class="col-md-1" style="color: white;">Pondo</th>
 											<th class="col-md-1" style="color: white;">Quantity (OUT)</th>
 											<th class="col-md-1" style="color: white;">Current Stock</th>
 											<th class="col-md-2"><input type="text" class="form-control" id="input_address" placeholder="Address" disabled></th>

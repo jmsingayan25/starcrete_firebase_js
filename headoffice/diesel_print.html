@@ -296,7 +296,10 @@
 
                     var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
                     var address = dieselChildSnapshot.val().destination || "";
-                
+                    var pondo = dieselChildSnapshot.val().pondo_Input || "";
+
+                    if (pondo == ""){pondo_string = ""}
+                    else{pondo_string = Number(pondo).toLocaleString('en') + " liter(s)"}
                     if (quantityin == "NaN"){quantityholder = "";}
                     else{quantityholder = quantityin + " liter(s)" ;}
                     if (quantityout == "NaN"){quantityoutholder = "";}
@@ -305,6 +308,7 @@
                     myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
                     myTbody += "<td><strong>" + suppliername + "</strong></td>";
                     myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+                    myTbody += "<td><strong>" + pondo_string + "</strong></td>";
                     myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
                     myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
                     myTbody += "<td><strong>" + address + "</strong></td>";
@@ -430,7 +434,7 @@
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
-                                        <th colspan="9">
+                                        <th colspan="10">
                                             <button class="btn btn-info btn-md" id="printPageButton" onclick="return window.print();" style="float: right;"><strong><span class="fa fa-print"></span> Print</strong></button>
                                             Available stock as of today: <span id="id_stock"></span><br>
                                             Report: DIESEL TRANSACTION <br>
@@ -441,6 +445,7 @@
                                         <th class="col-md-1">Truck No.</th>
                                         <th class="col-md-1">Driver/Operator/Supplier</th>
                                         <th class="col-md-1">Quantity (IN)</th>
+                                        <th class="col-md-1">Pondo</th>
                                         <th class="col-md-1">Quantity (OUT)</th>
                                         <th class="col-md-1">Current Stock</th>
                                         <th class="col-md-1">Address</th>
