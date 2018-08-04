@@ -107,16 +107,16 @@
 
 		document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-info btn-md' id='printPageButton' onclick='return window.print();' style='float: right;'><span class='fa fa-print'></span> <strong>Print</strong></button></th>";
 
-        firebase.database().ref('plant_attendance/'+plant+'/'+currentDate).once('value', function(tableContentData){
+        firebase.database().ref('lineup/'+plant+'/'+currentDate).once('value', function(tableContentData){
 
             console.log(tableContentData.val());
 
             if(tableContentData.val() != null){
 
-                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine1').once('value', function(machine1Data){
-                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/machine3').once('value', function(machine3Data){
-                        firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/forklift_operator').once('value', function(forkliftData){
-                            firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/mechanic').once('value', function(mechanicData){
+                firebase.database().ref('lineup/'+plant+'/'+currentDate+'/machine1').once('value', function(machine1Data){
+                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/machine3').once('value', function(machine3Data){
+                        firebase.database().ref('lineup/'+plant+'/'+currentDate+'/forklift_operator').once('value', function(forkliftData){
+                            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/mechanic').once('value', function(mechanicData){
                         
                                 myTableRow1 += "<tr><td>";
 
@@ -147,10 +147,10 @@
                     });
                 });
 
-                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/nonskid1').once('value', function(nonskid1Data){
-                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/nonskid2').once('value', function(nonskid2Data){
-                        firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/nonskid3').once('value', function(nonskid3Data){
-                            firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/nonskid4').once('value', function(nonskid4Data){
+                firebase.database().ref('lineup/'+plant+'/'+currentDate+'/nonskid1').once('value', function(nonskid1Data){
+                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/nonskid2').once('value', function(nonskid2Data){
+                        firebase.database().ref('lineup/'+plant+'/'+currentDate+'/nonskid3').once('value', function(nonskid3Data){
+                            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/nonskid4').once('value', function(nonskid4Data){
 
                                 myTableRow2 += "<tr><td>";
 
@@ -181,8 +181,8 @@
                     });
                 });
 
-                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/tagapukpok').once('value', function(tagapukpokData){
-                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/checker').once('value', function(checkerData){
+                firebase.database().ref('lineup/'+plant+'/'+currentDate+'/tagapukpok').once('value', function(tagapukpokData){
+                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/checker').once('value', function(checkerData){
 
                         myTableRow3 += "<tr><td colspan='2'>";
 
@@ -202,8 +202,8 @@
                     });
                 });
 
-                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/kamador').once('value', function(kamadorData){
-                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/loader').once('value', function(loaderData){
+                firebase.database().ref('lineup/'+plant+'/'+currentDate+'/kamador').once('value', function(kamadorData){
+                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/loader').once('value', function(loaderData){
                         
 
                             myTableRow4 += "<tr><td colspan='2'>";
@@ -226,8 +226,8 @@
                     });
                 });
 
-                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/absent').once('value', function(absentData){
-                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/others').once('value', function(othersData){
+                firebase.database().ref('lineup/'+plant+'/'+currentDate+'/absent').once('value', function(absentData){
+                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/others').once('value', function(othersData){
 
                         myTableRow5 += "<tr><td colspan='2'>";
 
@@ -247,7 +247,7 @@
                     });
                 });
 
-                firebase.database().ref('plant_attendance/'+plant+'/'+currentDate).once('value', function(commentData){
+                firebase.database().ref('lineup/'+plant+'/'+currentDate).once('value', function(commentData){
 
                     myTableRow6 += "<tr><td colspan='4'><strong>COMMENT:</strong> " + commentData.val().comment + "</td></tr>";
 

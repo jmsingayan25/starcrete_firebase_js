@@ -162,7 +162,7 @@
 
     // 	if(count == input_employee_name.length){
     // 		alert('Employee has been added..');
-    // 		window.location='attendance.html';
+    // 		window.location='lineup.html';
     // 	}
     // }
 
@@ -196,7 +196,7 @@
     		comment: input_comment.toUpperCase()
     	}
 
-    	firebase.database().ref('plant_attendance/'+plant+'/'+input_date).set(commentData);
+    	firebase.database().ref('lineup/'+plant+'/'+input_date).set(commentData);
 
 		for(var a = 0; a < input_machine1_name.length; a++){
 
@@ -210,7 +210,7 @@
 	    		}
 			}
     		
-    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/machine1').push(machine1Data);
+    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/machine1').push(machine1Data);
     	}
     	
 		for(var a = 0; a < input_machine3_name.length; a++){
@@ -225,7 +225,7 @@
 	    		}
 			}
     		
-    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/machine3').push(machine3Data);
+    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/machine3').push(machine3Data);
     	}
 
 		for(var a = 0; a < input_nonskid1_name.length; a++){
@@ -240,7 +240,7 @@
 	    		}
 			}
     		
-    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/nonskid1').push(nonskid1Data);
+    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid1').push(nonskid1Data);
     	}
 
 		for(var a = 0; a < input_nonskid2_name.length; a++){
@@ -255,7 +255,7 @@
 	    		}	
 			}
     		
-    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/nonskid2').push(nonskid2Data);
+    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid2').push(nonskid2Data);
     	}
 
 		for(var a = 0; a < input_nonskid3_name.length; a++){
@@ -270,7 +270,7 @@
 	    		}	
 			}
     		
-    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/nonskid3').push(nonskid3Data);
+    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid3').push(nonskid3Data);
     	}
 
 		for(var a = 0; a < input_nonskid4_name.length; a++){
@@ -285,7 +285,7 @@
 	    		}	
 			}
     		
-    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/nonskid4').push(nonskid4Data);
+    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid4').push(nonskid4Data);
     	}
 
 		for(var a = 0; a < input_kamador_name.length; a++){
@@ -300,7 +300,7 @@
 	    		}	
 			}
     
-    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/kamador').push(kamadorData);
+    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/kamador').push(kamadorData);
     	}
 
 		for(var a = 0; a < input_forklift_operator_name.length; a++){
@@ -315,7 +315,7 @@
 	    		}	
 			}
     		
-    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/forklift_operator').push(forkliftOperatorData);
+    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/forklift_operator').push(forkliftOperatorData);
     	}
 
 		for(var a = 0; a < input_mechanic_name.length; a++){
@@ -330,7 +330,7 @@
 	    		}	
 			}
 
-    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/mechanic').push(mechanicData);
+    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/mechanic').push(mechanicData);
     	}
 
 		for(var a = 0; a < input_tagapukpok_name.length; a++){
@@ -345,7 +345,7 @@
 	    		}
 			}
     		
-    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/tagapukpok').push(tagapukpokData);
+    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/tagapukpok').push(tagapukpokData);
     	}
 
 		for(var a = 0; a < input_checker_name.length; a++){
@@ -360,7 +360,7 @@
 	    		}	
 			}
     		
-    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/checker').push(checkerData);
+    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/checker').push(checkerData);
     	}
 
 		for(var a = 0; a < input_loader_name.length; a++){
@@ -375,7 +375,7 @@
 	    		}
 			}
     		
-    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/loader').push(loaderData);
+    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/loader').push(loaderData);
     	}
 
 		for(var a = 0; a < input_others_name.length; a++){
@@ -390,7 +390,7 @@
 	    		}
 			}
 
-    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/others').push(othersData);
+    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/others').push(othersData);
     	}
 
 		for(var a = 0; a < input_absent_name.length; a++){
@@ -403,17 +403,17 @@
 			}else{
 				var absentData = {
 	    			employee_name: input_absent_name[a].toUpperCase(),
-	    			reason: input_absent_reason[a].toUpperCase() || "N/A"
+	    			reason: input_absent_reason[a].toUpperCase()
 	    		}
 			}
     	
-    		firebase.database().ref('plant_attendance/'+plant+'/'+input_date+'/absent').push(absentData);
+    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/absent').push(absentData);
     		count++;
     	}
 
     	if(count == input_absent_name.length){
     		alert("Line up recorded");
-    		window.location='attendance_form.html';
+    		window.location='lineup_form.html';
 
     	}
     }
@@ -546,7 +546,7 @@
                 <div class="row">
                     <div class="col-md-12">
                         <ol class="breadcrumb">
-                            <li><i class="icon_document"></i><a href="attendance.html">Line Up</a></li>                       
+                            <li><i class="icon_document"></i><a href="lineup.html">Line Up</a></li>                       
                             <li><i class="icon_document"></i>Line Up Form</li>                       
                         </ol>
                     </div>
@@ -1098,373 +1098,13 @@
                 					<textarea name="comment" id="comment" class="form-control input_type" rows="5" placeholder="Comment here..."></textarea>
                 				</div>
                 			</div>
-                			
-                			<!-- <div class="row">
-			                    <div class="col-md-6">
-		                            <section class="panel">
-		                                <header class="panel-heading">
-		                                    MACHINE 1
-		                                </header>
-		                                <div class="panel-body">
-		                                	<div class="row">
-		                                        <table id="machine1_table" align="center">
-		                                            <tr>
-		                                                <td class="col-md-5">
-		                                                    <label for="machine1_name">Name</label>
-		                                                </td>
-		                                            </tr>
-		                                            <tr id="machine1_row1" style="text-align: center;">
-		                                            	<td class="col-md-5">
-		                                                    <input type="text" name="machine1_name[]" class="form-control input_type" >
-		                                            	</td>
-		                                            	<td class="col-md-1">
-		                                                    <button type="button" onclick="add_machine1_employee();" class='btn btn-primary btn-md'><span class="fa fa-plus"></span></button> 
-		                                            	</td>
-		                                            </tr>
-		                                        </table>
-			                                </div>
-			                            </div>
-		                            </section>
-			                    </div>
-			                    <div class="col-md-6">
-			                    	<section class="panel">
-			                    		<header class="panel-heading">
-			                    			FORKLIFT OPERATOR
-			                    		</header>
-			                    		<div class="panel-body">
-			                    			<div class="row">
-			                    				<table id="forklift_operator_table" align="center">
-			                    					<tr>
-			                    						<td class="col-md-5">
-			                    							<label for="forklift_operator_name">Name</label>
-			                    						</td>
-			                    					</tr>
-			                    					<tr id="forklift_operator_row1" style="text-align: center;">
-			                    						<td class="col-md-5">
-			                    							<input type="text" name="forklift_operator_name[]" class="form-control input_type" >
-			                    						</td>
-			                    						<td class="col-md-1">
-			                    							<button type="button" onclick="add_forklift_operator_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
-			                    						</td>
-			                    					</tr>
-			                    				</table>
-			                    			</div>
-			                    		</div>
-			                    	</section>
-			                    </div>
-			                </div>
-			                <div class="row">
-			                	<div class="col-md-6">
-			                		<section class="panel">
-			                			<header class="panel-heading">
-			                				MACHINE 3
-			                			</header>
-			                			<div class="panel-body">
-			                				<div class="row">
-			                					<table id="machine3_table" align="center">
-			                						<tr>
-			                							<td class="col-md-5">
-			                								<label for="machine3_name">Name</label>
-			                							</td>
-			                						</tr>
-			                						<tr id="machine3_row1" style="text-align: center;">
-			                							<td class="col-md-5"><input type="text" name="machine3_name[]" class="form-control input_type" ></td>
-			                							<td class="col-md-1">
-			                								<button type="button" onclick="add_machine3_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
-			                							</td>
-			                						</tr>
-			                					</table>
-			                				</div>
-			                			</div>
-			                		</section>
-			                	</div>
-			                	<div class="col-md-6">
-			                		<section class="panel">
-			                			<header class="panel-heading">
-			                				MECHANIC
-			                			</header>
-			                			<div class="panel-body">
-		                					<div class="row">
-		                						<table id="mechanic_table" align="center">
-		                							<tr>
-		                								<td class="col-md-5">
-		                									<label for="mechanic_name">Name</label>
-		                								</td>
-		                							</tr>
-		                							<tr id="mechanic_row1" style="text-align: center;">
-			                							<td class="col-md-5"><input type="text" name="mechanic_name[]" class="form-control input_type" ></td>
-			                							<td class="col-md-1">
-			                								<button type="button" onclick="add_mechanic_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
-			                							</td>
-			                						</tr>
-		                						</table>
-		                					</div>
-		                				</div>
-			                		</section>
-			                	</div>
-			                </div>
-			                <div class="row">
-			                	<div class="col-md-6">
-			                		<section class="panel">
-			                			<header class="panel-heading">
-			                				NON-SKID 1
-			                			</header>
-			                			<div class="panel-body">
-			                				<div class="row">
-			                					<table id="nonskid1_table" align="center">
-			                						<tr>
-			                							<td class="col-md-5">
-			                								<label for="nonskid1_name">Name</label>
-			                							</td>
-			                						</tr>
-			                						<tr id="nonskid1_row1" style="text-align: center;">
-			                							<td class="col-md-5"><input type="text" name="nonskid1_name[]" class="form-control input_type" ></td>
-			                							<td class="col-md-1">
-			                								<button type="button" onclick="add_nonskid1_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
-			                							</td>
-			                						</tr>
-			                					</table>
-			                				</div>
-			                			</div>
-			                		</section>
-			                	</div>
-			                	<div class="col-md-6">
-			                		<section class="panel">
-			                			<header class="panel-heading">
-			                				TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG
-			                			</header>
-			                			<div class="panel-body">
-			                				<div class="row">
-			                					<table id="tagapukpok_table" align="center">
-			                						<tr>
-			                							<td class="col-md-5">
-			                								<label for="tagapukpok_name">Name</label>
-			                							</td>
-			                						</tr>
-			                						<tr id="tagapukpok_row1" style="text-align: center;">
-			                							<td class="col-md-5"><input type="text" name="tagapukpok_name[]" class="form-control input_type" ></td>
-			                							<td class="col-md-1">
-			                								<button type="button" onclick="add_tagapukpok_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
-			                							</td>
-			                						</tr>
-			                					</table>
-			                				</div>
-			                			</div>
-			                		</section>
-			                	</div>
-			                </div>
-			                <div class="row">
-			                	<div class="col-md-6">
-			                		<section class="panel">
-			                			<header class="panel-heading">
-			                				NON-SKID 2
-			                			</header>
-			                			<div class="panel-body">
-			                				<div class="row">
-			                					<table id="nonskid2_table" align="center">
-			                						<tr>
-			                							<td class="col-md-5">
-			                								<label for="nonskid2_name">Name</label>
-			                							</td>
-			                						</tr>
-			                						<tr id="nonskid2_row1" style="text-align: center;">
-			                							<td class="col-md-5"><input type="text" name="nonskid2_name[]" class="form-control input_type" ></td>
-			                							<td class="col-md-1">
-			                								<button type="button" onclick="add_nonskid2_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
-			                							</td>
-			                						</tr>
-			                					</table>
-			                				</div>
-			                			</div>
-			                		</section>
-			                	</div>
-			                	<div class="col-md-6">
-			                		<section class="panel">
-			                			<header class="panel-heading">
-			                				CHECKER / FOREMAN / BATCHER / SUPERVISOR
-			                			</header>
-			                			<div class="panel-body">
-			                				<div class="row">
-			                					<table id="checker_table" align="center">
-			                						<tr>
-			                							<td class="col-md-5">
-			                								<label for="checker_name">Name</label>
-			                							</td>
-			                						</tr>
-			                						<tr id="checker_row1" style="text-align: center;">
-			                							<td class="col-md-5"><input type="text" name="checker_name[]" class="form-control input_type" ></td>
-			                							<td class="col-md-1">
-			                								<button type="button" onclick="add_checker_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
-			                							</td>
-			                						</tr>
-			                					</table>
-			                				</div>
-			                			</div>
-			                		</section>
-			                	</div>
-			                </div>
-			                <div class="row">
-			                	<div class="col-md-6">
-			                		<section class="panel">
-			                			<header class="panel-heading">
-			                				NON-SKID 3
-			                			</header>
-			                			<div class="panel-body">
-			                				<div class="row">
-			                					<table id="nonskid3_table" align="center">
-			                						<tr>
-			                							<td class="col-md-5">
-			                								<label for="nonskid3_name">Name</label>
-			                							</td>
-			                						</tr>
-			                						<tr id="nonskid3_row1" style="text-align: center;">
-			                							<td class="col-md-5"><input type="text" name="nonskid3_name[]" class="form-control input_type" ></td>
-			                							<td class="col-md-1">
-			                								<button type="button" onclick="add_nonskid3_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
-			                							</td>
-			                						</tr>
-			                					</table>
-			                				</div>
-			                			</div>
-			                		</section>
-			                	</div>
-			                	<div class="col-md-6">
-			                		<section class="panel">
-			                			<header class="panel-heading">
-			                				LOADER
-			                			</header>
-			                			<div class="panel-body">
-			                				<div class="row">
-			                					<table id="loader_table" align="center">
-			                						<tr>
-			                							<td class="col-md-5">
-			                								<label for="loader_name">Name</label>
-			                							</td>
-			                						</tr>
-			                						<tr id="loader_row1" style="text-align: center;">
-			                							<td class="col-md-5"><input type="text" name="loader_name[]" class="form-control input_type" ></td>
-			                							<td class="col-md-1">
-			                								<button type="button" onclick="add_loader_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
-			                							</td>
-			                						</tr>
-			                					</table>
-			                				</div>
-			                			</div>
-			                		</section>
-			                	</div>
-			                </div>
-			                <div class="row">
-			                	<div class="col-md-6">
-			                		<section class="panel">
-			                			<header class="panel-heading">
-			                				NON-SKID 4
-			                			</header>
-			                			<div class="panel-body">
-			                				<div class="row">
-			                					<table id="nonskid4_table" align="center">
-			                						<tr>
-			                							<td class="col-md-5">
-			                								<label for="nonskid4_name"></label>
-			                							</td>
-			                						</tr>
-			                						<tr id="nonskid4_row1" style="text-align: center;">
-			                							<td class="col-md-5"><input type="text" name="nonskid4_name[]" class="form-control input_type" ></td>
-			                							<td class="col-md-1">
-			                								<button type="button" onclick="add_nonskid4_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
-			                							</td>
-			                						</tr>
-			                					</table>
-			                				</div>
-			                			</div>
-			                		</section>
-			                	</div>
-			                	<div class="col-md-6">
-			                		<section class="panel">
-			                			<header class="panel-heading">
-			                				KAMADOR
-			                			</header>
-			                			<div class="panel-body">
-			                				<div class="row">
-			                					<table id="kamador_table" align="center">
-			                						<tr>
-			                							<td class="col-md-5">
-			                								<label for="kamador_name"></label>
-			                							</td>
-			                						</tr>
-			                						<tr id="kamador_row1" style="text-align: center;">
-			                							<td class="col-md-5"><input type="text" name="kamador_name[]" class="form-control input_type" ></td>
-			                							<td class="col-md-1">
-			                								<button type="button" onclick="add_kamador_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
-			                							</td>
-			                						</tr>
-			                					</table>
-			                				</div>
-			                			</div>
-			                		</section>
-			                	</div>
-			                </div>
-			                <div class="row">
-			                	<div class="col-md-6">
-			                		<section class="panel">
-			                			<header class="panel-heading">
-			                				OTHERS
-			                			</header>
-			                			<div class="panel-body">
-			                				<div class="row">
-			                					<table id="other_table" align="center">
-			                						<tr>
-			                							<td class="col-md-5">
-			                								<label for="other_name">Name</label>
-			                							</td>
-			                						</tr>
-			                						<tr id="other_row1" style="text-align: center;">
-			                							<td class="col-md-5"><input type="text" name="other_name[]" class="form-control input_type" ></td>
-			                							<td class="col-md-1">
-			                								<button type="button" onclick="add_other_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
-			                							</td>
-			                						</tr>
-			                					</table>
-			                				</div>
-			                			</div>
-			                		</section>
-			                	</div>
-			                	<div class="col-md-6">
-			                		<section class="panel">
-			                			<header class="panel-heading">
-			                				ABSENT
-			                			</header>
-			                			<div class="panel-body">
-			                				<div class="row">
-			                					<table id="absent_table" align="center">
-			                						<tr>
-			                							<td class="col-md-5">
-			                								<label for="absent_name">Name</label>
-			                							</td>
-			                							<td class="col-md-4">
-			                								<label for="absent_name">Reason</label>
-			                							</td>
-			                						</tr>
-			                						<tr id="absent_row1" style="text-align: center;">
-			                							<td class="col-md-5"><input type="text" name="absent_name[]" class="form-control input_type" ></td>
-			                							<td class="col-md-4"><textarea name="absent_reason[]" class="form-control input_type" rows="2"></textarea></td>
-			                							<td class="col-md-1">
-			                								<button type="button" onclick="add_absent_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
-			                							</td>
-			                						</tr>
-			                					</table>
-			                				</div>
-			                			</div>
-			                		</section>
-			                	</div>
-			                </div>
-			                <div class="row">
-			                	<div class="col-md-12">
-			                		<textarea name="comments" class="form-control" rows="5" placeholder="Comment Here..."></textarea>
-			                	</div>
-			                </div> -->
                 		</div>
                 		<footer class="panel-footer">
-	            			<button type="submit" class="btn btn-primary btn-block"><strong>Submit</strong></button>
+                			<div class="row">
+                				<div class="col-md-offset-4 col-md-4">
+	            					<button type="submit" class="btn btn-primary btn-block"><strong>Submit</strong></button>
+                				</div>
+                			</div>
 	            		</footer>
             		</form>
             	</section>

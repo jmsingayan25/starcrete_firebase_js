@@ -127,7 +127,7 @@
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
-        document.getElementById('li_attendance').innerHTML = "<i class='icon_document'></i><a href='attendance.html?date=" + getCurrentDate + "'>Line Up</a>";
+        document.getElementById('li_attendance').innerHTML = "<i class='icon_document'></i><a href='lineup.html?date=" + getCurrentDate + "'>Line Up</a>";
         document.getElementById('li_attendance_update').innerHTML = "<i class='icon_document'></i>Line Up Form";
 
 
@@ -199,7 +199,7 @@
     
             document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
 
-            firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/'+option).once('value', function(optionSnapshot){
+            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).once('value', function(optionSnapshot){
 
                 optionSnapshot.forEach(function(optionChildSnapshot){
                     // optionTable += "<div class='form-group'><div class='row'><div class='col-md-offset-1 col-md-7'><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control'></div><div class='col-md-4'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></div></div></div>";
@@ -218,7 +218,7 @@
 
             document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
 
-            firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/'+option).once('value', function(optionSnapshot){
+            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).once('value', function(optionSnapshot){
 
                 optionSnapshot.forEach(function(optionChildSnapshot){
                     // optionTable += "<div class='form-group'><div class='row'><div class='col-md-5'><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control'></div><div class='col-md-4'><textarea name='update_employee_reason[]' style='text-transform: uppercase;' rows='3' class='form-control'>" + optionChildSnapshot.val().reason + "</textarea></div><div class='col-md-1'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></div></div></div>";
@@ -235,7 +235,7 @@
 
             document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
 
-            firebase.database().ref('plant_attendance/'+plant+'/'+currentDate).once('value', function(optionSnapshot){
+            firebase.database().ref('lineup/'+plant+'/'+currentDate).once('value', function(optionSnapshot){
 
 
                     // optionTable += "<div class='form-group'><div class='row'><div class='col-md-5'><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control'></div><div class='col-md-4'><textarea name='update_employee_reason[]' style='text-transform: uppercase;' rows='3' class='form-control'>" + optionChildSnapshot.val().reason + "</textarea></div><div class='col-md-1'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></div></div></div>";
@@ -251,18 +251,18 @@
 
         event.preventDefault();
 
-        if(firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/'+position+'/'+key).remove()){
+        if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+position+'/'+key).remove()){
 
-            firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/'+position).once('value', function(snapshot){
+            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+position).once('value', function(snapshot){
                 if(snapshot.val() == null){
 
                     var data = {
                         employee_name: "N/A"
                     }
 
-                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/'+position).push(data);
+                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+position).push(data);
                     alert("Data has been removed");
-                    window.location.href='attendance.html?plant='+plant;
+                    window.location.href='lineup.html?plant='+plant;
 
                 }else{
                     alert("Data has been removed");
@@ -277,75 +277,114 @@
 
         event.preventDefault();
 
-        count = 0;
-        var input_employee_name = $("input[name='update_employee_name[]']").map(function(){return $(this).val();}).get();
+       
 
         if(option == "absent"){
 
+            count = 0;
+            var input_employee_name = $("input[name='update_employee_name[]']").map(function(){return $(this).val();}).get();
             var input_employee_reason = $("textarea[name='update_employee_reason[]']").map(function(){return $(this).val();}).get();
 
-            // console.log(input_employee_name, input_employee_reason);
+            console.log(input_employee_name, input_employee_reason);
 
-            firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/'+option).once('value', function(employeeSnapshot){
+            // firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).once('value', function(employeeSnapshot){
 
-                employeeSnapshot.forEach(function(employeeChildSnapshot){
+            //     employeeSnapshot.forEach(function(employeeChildSnapshot){
+
+            if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).remove()){
+
+                for(a = 0; a < input_employee_name.length; a++){
 
                     var employeeData = {
                         employee_name: input_employee_name[count].toUpperCase(),
                         reason: input_employee_reason[count].toUpperCase()
                     }
 
-                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/'+option+'/'+employeeChildSnapshot.key).update(employeeData);
+                    console.log(employeeData);
+
+                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).push(employeeData);
 
                     count++;
-
-                });
+                }
 
                 if(count == input_employee_name.length){
                     alert("Data updated successfully");
-                    window.location.href='attendance.html?date='+currentDate;
+                    window.location.href='lineup.html?date='+currentDate;
                 }
-            });
+            }
 
         }else if(option == "comment"){
 
+            count = 0;
             var input_comment = document.getElementById('comment').value;
 
-            firebase.database().ref('plant_attendance/'+plant+'/'+currentDate).once('value', function(commentSnapshot){
+            console.log(input_comment);
+
+            firebase.database().ref('lineup/'+plant+'/'+currentDate).once('value', function(commentSnapshot){
 
                 var commentData = {
                     comment: input_comment.toUpperCase()
                 }
 
-                if(firebase.database().ref('plant_attendance/'+plant+'/'+currentDate).update(commentData)){
+                console.log(commentData);
+
+                if(firebase.database().ref('lineup/'+plant+'/'+currentDate).update(commentData)){
 
                     alert("Data updated successfully");
-                    window.location.href='attendance.html?date='+currentDate;
+                    window.location.href='lineup.html?date='+currentDate;
                 }
             });
 
-        }else{
+        }else if(option != "comment" && option != "absent"){
 
-            // console.log(input_employee_name);
+            count = 0;
+            var input_employee_name = $("input[name='update_employee_name[]']").map(function(){return $(this).val();}).get();
 
-            firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/'+option).once('value', function(employeeSnapshot){
+            console.log(input_employee_name);
 
-                employeeSnapshot.forEach(function(employeeChildSnapshot){
+            if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).remove()){
+
+                for(a = 0; a < input_employee_name.length; a++){
 
                     var employeeData = {
-                        employee_name: input_employee_name[count].toUpperCase()
+                        employee_name: input_employee_name[a].toUpperCase()
                     }
 
-                    firebase.database().ref('plant_attendance/'+plant+'/'+currentDate+'/'+option+'/'+employeeChildSnapshot.key).update(employeeData);
+                    console.log(employeeData);
+
+                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).push(employeeData);
 
                     count++;
-                });
+                }
 
                 if(count == input_employee_name.length){
                     alert("Data updated successfully");
-                    window.location.href='attendance.html?date='+currentDate;
+                    window.location.href='lineup.html?date='+currentDate;
                 }
-            });
+            }
+            // firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).once('value', function(employeeSnapshot){
+
+            //     employeeSnapshot.forEach(function(employeeChildSnapshot){
+
+            //         for(a = 0; a < input_employee_name.length; a++){
+
+            //             var employeeData = {
+            //                 employee_name: input_employee_name[a].toUpperCase()
+            //             }
+
+            //             console.log(employeeData);
+
+            //             firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).push(employeeData);
+
+            //             count++;
+            //         }
+            //     });
+
+            //     // if(count == input_employee_name.length){
+            //     //     alert("Data updated successfully");
+            //     //     window.location.href='lineup.html?date='+currentDate;
+            //     // }
+            // });
         }  
 
         
@@ -524,7 +563,7 @@
                                                             <!-- <div class="form-group"> -->
                                                             <div class="col-md-offset-7 col-md-5">
                                                                 <input type="submit" name="submit" id="submit" value="Update" class="btn btn-primary" style="font-weight: bold;">
-                                                                <button type="button" class="btn btn-default" onclick="window.location.href='attendance.html';"><strong>Cancel</strong></button>
+                                                                <button type="button" class="btn btn-default" onclick="window.location.href='lineup.html';"><strong>Cancel</strong></button>
                                                             <!-- </div> -->
                                                             </div>
                                                         </div>
