@@ -282,17 +282,33 @@ function displaycurrentCategory(getCurrentCategory)
                 else{quantityholder = quantityin + " liter(s)" ;}
                 if (quantityout == "NaN"){quantityoutholder = "";}
                 else{quantityoutholder = quantityout + " liter(s)";}
+
+                 if (dieselChildSnapshot.val().TransactionType == "In"){
+                    myTbody += "<tr style ='background-color:#006080'>";
+                    myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + suppliername + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + quantityholder  + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + quantityoutholder  + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                    //myTbody += "<td><strong>" + address + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + time + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + drno + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + date + "</strong></td>";
+                    myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"
+                }else{
+                    // myTbody += "<tr>";
+                    myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+                    myTbody += "<td><strong>" + suppliername + "</strong></td>";
+                    myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+                    myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
+                    myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                    //myTbody += "<td><strong>" + address + "</strong></td>";
+                    myTbody += "<td><strong>" + time + "</strong></td>";
+                    myTbody += "<td><strong>" + drno + "</strong></td>";
+                    myTbody += "<td><strong>" + date + "</strong></td>";
+                    myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"
+                }
                 
-                myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
-                myTbody += "<td><strong>" + suppliername + "</strong></td>";
-                myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
-                myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
-                myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
-                //myTbody += "<td><strong>" + address + "</strong></td>";
-                myTbody += "<td><strong>" + time + "</strong></td>";
-                myTbody += "<td><strong>" + drno + "</strong></td>";
-                myTbody += "<td><strong>" + date + "</strong></td>";
-                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"
             firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(DisplayStockSnapshots)
             {
                 DisplayStockSnapshots.forEach(function(SeperateChildSnapshot){
@@ -354,36 +370,7 @@ function displaycurrentCategory(getCurrentCategory)
 
                  if (document.getElementById("category_current").innerHTML == "undefined") {document.getElementById("category_current").innerHTML = "Category" }
                     else if(document.getElementById("category_current").innerHTML == ""){document.getElementById("category_current").innerHTML = "Category"}
-
-
       });
-
-    //     firebase.database().ref().child("available_diesel_category/" + plant).once('value',function(totalstockSnapshot)
-    //  {
-    //     if (totalstockSnapshot.val() != null) 
-    //     {
-    //          var get_totalStock = totalstockSnapshot.val().Liters;
-
-    //     document.getElementById("id_stock").innerHTML = Number(get_totalStock).toLocaleString("en") + " Liter(s)";
-
-    //     if(get_totalStock <= 3500)
-    //     {
-    //         document.getElementById("id_stock").style.color ="red";
-    //     }
-
-    //     }
-       
-    //     $(".se-pre-con").fadeOut("slow"); 
-    // });
-  
-     //    firebase.database().ref().child("incoming_diesel_category/" + plant).orderByChild("date").limitToLast(1).on('child_added',function(lastDaySnapshot)
-     // {
-     //    var options = { year: "numeric", month: "long", day: "numeric" };
-     //    var LastDayHolder = new Date (lastDaySnapshot.val().Date_Input).toLocaleDateString("en",options); 
-     //    document.getElementById("last_day").innerHTML = LastDayHolder;
-
-     // });
-
 }
 
 function Go()
@@ -887,7 +874,7 @@ function totalCountBadge(){
                                 </header>
                             </form>
                             <div class="table-responsive filterable">
-                        		<table class="table table-striped table-bordered table-hover">
+                        		<table class="table table-bordered table-hover">
                         			<thead>
                         				<tr class="filterable">
                         					<th colspan="9">
@@ -945,7 +932,7 @@ function totalCountBadge(){
                                             </th>
                                         </tr>
 
-                        				<tr class="filters" style="background-color: #00a3cc;">
+                        				<tr class="filters" style="background-color: #00111a;">
 											<th class="col-md-1"><input type="text" class="form-control" placeholder="Truck No." disabled></th>
 											<th class="col-md-2"><input type="text" class="form-control" placeholder="Driver / Operator / Supplier" disabled></th>
 											<th class="col-md-1" style="text-align:center; color:white">Quantity (IN)</th>
