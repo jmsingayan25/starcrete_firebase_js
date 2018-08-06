@@ -100,6 +100,7 @@
     var myTableRow4 = "";
     var myTableRow5 = "";
     var myTableRow6 = "";
+    var myTableRow7 = "";
 
 	$(document).ready(function(){
 
@@ -255,6 +256,19 @@
                     
                 });
 
+                firebase.database().ref('lineup/'+plant+'/'+currentDate+'/trucking').once('value', function(truckingSnapshot){
+
+                    myTableRow7 += "<tr><td colspan='4'><table class='table'><tbody><tr><th class='col-md-2' style='text-align: center;'>TRUCK NO.</th><th class='col-md-2' style='text-align: center;'>DRIVER</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 1</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 2</th><th class='col-md-3' style='text-align: center;'>COMMENT</th></tr></tbody><tbody></td></tr>";
+
+                    truckingSnapshot.forEach(function(truckingChildSnapshot){
+                        myTableRow7 += "<tr align='center'><td>" + truckingChildSnapshot.val().truck_no + "</td><td>" + truckingChildSnapshot.val().driver + "</td><td>" + truckingChildSnapshot.val().pahinante1 + "</td><td>" + truckingChildSnapshot.val().pahinante2 + "</td><td>" +  truckingChildSnapshot.val().comment + "</td></tr>";
+                    });
+
+                    myTableRow7 += "</tbody></table>";
+
+                    document.getElementById('row7_list').innerHTML = myTableRow7;
+                });
+
             }else{
                 document.getElementById('row1_list').innerHTML = "";
                 document.getElementById('row2_list').innerHTML = "";
@@ -262,6 +276,7 @@
                 document.getElementById('row4_list').innerHTML = "";
                 document.getElementById('row5_list').innerHTML = "";
                 document.getElementById('row6_list').innerHTML = "";
+                document.getElementById('row7_list').innerHTML = "";
             }
         });
 	});
@@ -298,7 +313,7 @@
 					<section class="panel">
 						<div>
 							<table class="table table-bordered table-stripped">
-                                <thead>
+                                <tbody>
                                     <tr id="id_date" class="header_line"></tr>
                                     <tr class="header_line">
                                         <th class="col-md-3">MACHINE 1</th>
@@ -306,38 +321,44 @@
                                         <th class="col-md-3">FORKLIFT OPERATOR</th>
                                         <th class="col-md-3">MECHANIC</th>
                                     </tr>
-                                </thead>
+                                </tbody>
                                 <tbody id="row1_list"></tbody>
-                                <thead>
+                                <tbody>
                                     <tr class="header_line">
                                         <th class="col-md-3">NON SKID 1</th>
                                         <th class="col-md-3">NON SKID 2</th>
                                         <th class="col-md-3">NON SKID 3</th>
                                         <th class="col-md-3">NON SKID 4</th>
                                     </tr>
-                                </thead>
+                                </tbody>
                                 <tbody id="row2_list"></tbody>
-                                <thead>
+                                <tbody>
                                     <tr class="header_line">
                                         <th colspan="2">TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG</th>
                                         <th colspan="2">CHECKER / FOREMAN / BATCHER / SUPERVISOR</th>
                                     </tr>
-                                </thead>
+                                </tbody>
                                 <tbody id="row3_list"></tbody>
-                                <thead>
+                                <tbody>
                                     <tr class="header_line">
                                         <th colspan="2">KAMADOR</th>
                                         <th colspan="2">LOADER</th>
                                     </tr>
-                                </thead>
+                                </tbody>
                                 <tbody id="row4_list"></tbody>
-                                <thead>
+                                <tbody>
                                     <tr class="header_line">
                                         <th colspan="2">OTHER</th>
                                         <th colspan="2">ABSENT</th>
                                     </tr>
-                                </thead>
+                                </tbody>
                                 <tbody id="row5_list"></tbody>
+                                <tbody>
+                                    <tr class="header_line">
+                                        <th colspan="4">TRUCKING</th>
+                                    </tr>
+                                </tbody>
+                                <tbody id="row7_list"></tbody>
                                 <tbody id="row6_list"></tbody>
                             </table>
 						</div>

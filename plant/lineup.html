@@ -131,6 +131,7 @@
         var myTableRow4 = "";
         var myTableRow5 = "";
         var myTableRow6 = "";
+        var myTableRow7 = "";
         var option = {year: "numeric", month: "long", day: "numeric"}
         var currentDate = new Date().toLocaleDateString('en', option);
         // var currentDate = "July 29, 2018";
@@ -166,6 +167,7 @@
         document.getElementById('link_others_update').innerHTML = "<a href='lineup_update.html?option=others&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_absent_update').innerHTML = "<a href='lineup_update.html?option=absent&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_comment_update').innerHTML = "<a href='lineup_update.html?option=comment&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_trucking_update').innerHTML = "<a href='lineup_update.html?option=trucking&date=" + passcurrentDate + "'>Update</a>";
 
         firebase.database().ref('lineup/'+plant+'/'+currentDate).once('value', function(tableContentSnapshot){
 
@@ -319,6 +321,19 @@
                     
                 });
 
+                firebase.database().ref('lineup/'+plant+'/'+currentDate+'/trucking').once('value', function(truckingSnapshot){
+
+                    myTableRow7 += "<tr><td colspan='4'><table class='table'><thead><tr><th class='col-md-2' style='text-align: center;'>TRUCK NO.</th><th class='col-md-2' style='text-align: center;'>DRIVER</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 1</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 2</th><th class='col-md-3' style='text-align: center;'>COMMENT</th></tr></thead><tbody></td></tr>";
+
+                    truckingSnapshot.forEach(function(truckingChildSnapshot){
+                        myTableRow7 += "<tr align='center'><td>" + truckingChildSnapshot.val().truck_no + "</td><td>" + truckingChildSnapshot.val().driver + "</td><td>" + truckingChildSnapshot.val().pahinante1 + "</td><td>" + truckingChildSnapshot.val().pahinante2 + "</td><td>" +  truckingChildSnapshot.val().comment + "</td></tr>";
+                    });
+
+                    myTableRow7 += "</tbody></table>";
+
+                    document.getElementById('row7_list').innerHTML = myTableRow7;
+                });
+
             }else{
 
                 $('.button-link').hide();
@@ -329,6 +344,7 @@
                 document.getElementById('row4_list').innerHTML = "";
                 document.getElementById('row5_list').innerHTML = "";
                 document.getElementById('row6_list').innerHTML = "";
+                document.getElementById('row7_list').innerHTML = "";
             }
         });
     }
@@ -343,6 +359,7 @@
         var myTableRow4 = "";
         var myTableRow5 = "";
         var myTableRow6 = "";
+        var myTableRow7 = "";
         var input_date = document.getElementById('input_date').value;
         var option = {year: "numeric", month: "long", day: "numeric"}
 
@@ -371,6 +388,7 @@
         document.getElementById('link_others_update').innerHTML = "<a href='lineup_update.html?option=others&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_absent_update').innerHTML = "<a href='lineup_update.html?option=absent&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_comment_update').innerHTML = "<a href='lineup_update.html?option=comment&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_trucking_update').innerHTML = "<a href='lineup_update.html?option=trucking&date=" + passcurrentDate + "'>Update</a>";
 
         firebase.database().ref('lineup/'+plant+'/'+currentDate).once('value', function(tableContentSnapshot){
 
@@ -522,6 +540,21 @@
 
                     document.getElementById('row6_list').innerHTML = myTableRow6;
                 });
+
+                firebase.database().ref('lineup/'+plant+'/'+currentDate+'/trucking').once('value', function(truckingSnapshot){
+
+                    myTableRow7 += "<tr><td colspan='4'><table class='table'><thead><tr><th class='col-md-2' style='text-align: center;'>TRUCK NO.</th><th class='col-md-2' style='text-align: center;'>DRIVER</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 1</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 2</th><th class='col-md-3' style='text-align: center;'>COMMENT</th></tr></thead><tbody></td></tr>";
+
+                    truckingSnapshot.forEach(function(truckingChildSnapshot){
+                        myTableRow7 += "<tr align='center'><td>" + truckingChildSnapshot.val().truck_no + "</td><td>" + truckingChildSnapshot.val().driver + "</td><td>" + truckingChildSnapshot.val().pahinante1 + "</td><td>" + truckingChildSnapshot.val().pahinante2 + "</td><td>" +  truckingChildSnapshot.val().comment + "</td></tr>";
+                    });
+
+                    myTableRow7 += "</tbody></table>";
+
+                    document.getElementById('row7_list').innerHTML = myTableRow7;
+                });
+
+
             }else{
 
                 $('.button-link').hide();
@@ -532,6 +565,7 @@
                 document.getElementById('row4_list').innerHTML = "";
                 document.getElementById('row5_list').innerHTML = "";
                 document.getElementById('row6_list').innerHTML = "";
+                document.getElementById('row7_list').innerHTML = "";
             }
         });
     }
@@ -876,6 +910,22 @@
                                             </tr>
                                         </thead>
                                         <tbody id="row5_list"></tbody>
+                                        <thead>
+                                            <tr class="header_line">
+                                                <th colspan="4">
+                                                    TRUCKING
+                                                    <div class="btn-group pull-right button-link">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_trucking_update"></li>
+                                                        </ul>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id='row7_list'></tbody>
                                         <thead>
                                             <tr class="header_line">
                                                 <th colspan="4">
