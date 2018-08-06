@@ -140,13 +140,17 @@
         $rowno = $("#employee_table tr").length;
         $rowno = $rowno + 1;
 
-        if(option != "absent"){
+        if(option != "absent" && option != "tagapukpok" && option != "checker"){
 
             $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-5'><input type='text' name='update_employee_name[]' class='form-control input_type' required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
 
         }else if(option == "absent"){
 
             $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-5'><input type='text' name='update_employee_name[]' class='form-control input_type' required></td><td class='col-md-4'><textarea name='update_employee_reason[]' style='text-transform: uppercase;' rows='3' class='form-control'></textarea></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
+
+        }else if(option == "tagapukpok" || option == "checker"){
+
+            $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-5'><input type='text' name='update_employee_name[]' class='form-control input_type' required></td><td class='col-md-5'><input type='text' name='update_employee_position[]' style='text-transform: uppercase;' class='form-control'></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
 
         }
         
@@ -191,7 +195,7 @@
             headline = "COMMENT";
         }
 
-        if(option != "absent" && option != "comment"){
+        if(option != "absent" && option != "comment" && option != "tagapukpok" && option != "checker"){
 
             document.getElementById('table_header').innerHTML = "<tr><td class='col-md-1'><label for='update_employee_name'>Name</label></td></tr>";
 
@@ -244,6 +248,23 @@
 
                 document.getElementById('id_comment_field').innerHTML = optionTable;
             });
+        }else if(option == "tagapukpok" || option == "checker"){
+
+            document.getElementById('table_header').innerHTML = "<tr><td class='col-md-1'><label for='update_employee_name'>Name</label></td><td class='col-md-1'><label for='update_employee_name'>Position</label></td></tr>";
+
+            document.getElementById('not_comment_section').style.display = "block";
+
+            document.getElementById('id_option').innerHTML = "<strong>" + headline + "</strong>";
+
+            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).once('value', function(optionSnapshot){
+
+                optionSnapshot.forEach(function(optionChildSnapshot){
+
+                    optionTable += "<tr><td class='col-md-5'><input type='text' name='update_employee_name[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_name + "' class='form-control'></td><td class='col-md-5'><input type='text' name='update_employee_position[]' style='text-transform: uppercase;' value='" + optionChildSnapshot.val().employee_position + "' class='form-control'></td><td class='col-md-1'><button type='button' onclick='if(confirm(\"Proceed?\")){removeEmployee(\"" + option + "\",\"" + optionChildSnapshot.key + "\");}else{ event.preventDefault();}' class='btn btn-danger'><strong>Remove</strong></button></td></tr>";
+                });
+
+                document.getElementById('id_fields').innerHTML = optionTable;
+            });
         }
     }
 
@@ -277,8 +298,6 @@
 
         event.preventDefault();
 
-       
-
         if(option == "absent"){
 
             count = 0;
@@ -287,17 +306,13 @@
 
             console.log(input_employee_name, input_employee_reason);
 
-            // firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).once('value', function(employeeSnapshot){
-
-            //     employeeSnapshot.forEach(function(employeeChildSnapshot){
-
             if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).remove()){
 
                 for(a = 0; a < input_employee_name.length; a++){
 
                     var employeeData = {
-                        employee_name: input_employee_name[count].toUpperCase(),
-                        reason: input_employee_reason[count].toUpperCase()
+                        employee_name: input_employee_name[a].toUpperCase(),
+                        reason: input_employee_reason[a].toUpperCase()
                     }
 
                     console.log(employeeData);
@@ -335,7 +350,36 @@
                 }
             });
 
-        }else if(option != "comment" && option != "absent"){
+        }else if(option == "tagapukpok" || option == "checker"){
+            
+            count = 0;
+
+            var input_employee_name = $("input[name='update_employee_name[]']").map(function(){return $(this).val();}).get();
+            var input_employee_position = $("input[name='update_employee_position[]']").map(function(){return $(this).val();}).get();
+
+            if(firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).remove()){
+
+                for(a = 0; a < input_employee_name.length; a++){
+
+                    var employeeData = {
+                        employee_name: input_employee_name[a].toUpperCase(),
+                        employee_position: input_employee_position[a].toUpperCase() || "N/A"
+                    }
+
+                    console.log(employeeData);
+
+                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).push(employeeData);
+
+                    count++;
+                }
+
+                if(count == input_employee_name.length){
+                    alert("Data updated successfully");
+                    window.location.href='lineup.html?date='+currentDate;
+                }
+            }
+
+        }else if(option != "comment" && option != "absent" && option != "tagapukpok" && option != "checker"){
 
             count = 0;
             var input_employee_name = $("input[name='update_employee_name[]']").map(function(){return $(this).val();}).get();
@@ -362,32 +406,7 @@
                     window.location.href='lineup.html?date='+currentDate;
                 }
             }
-            // firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).once('value', function(employeeSnapshot){
-
-            //     employeeSnapshot.forEach(function(employeeChildSnapshot){
-
-            //         for(a = 0; a < input_employee_name.length; a++){
-
-            //             var employeeData = {
-            //                 employee_name: input_employee_name[a].toUpperCase()
-            //             }
-
-            //             console.log(employeeData);
-
-            //             firebase.database().ref('lineup/'+plant+'/'+currentDate+'/'+option).push(employeeData);
-
-            //             count++;
-            //         }
-            //     });
-
-            //     // if(count == input_employee_name.length){
-            //     //     alert("Data updated successfully");
-            //     //     window.location.href='lineup.html?date='+currentDate;
-            //     // }
-            // });
         }  
-
-        
     }
 
 </script>
@@ -535,9 +554,7 @@
                                         <div class="row">                                          
                                             <form class="form-horizontal" role="form" id="form" onsubmit='if(confirm("Proceed?")){submitForm();}else{ event.preventDefault();}'>
                                                 <div id="not_comment_section" style="display: none;">
-                                                    <table id="table_header">
-                                                        
-                                                    </table>
+                                                    <table id="table_header"></table>
                                                     <div class="col-md-12">
                                                         <div class="form-group">
                                                             <table id="id_fields"></table>
@@ -572,6 +589,9 @@
                                             </form>
                                         </div>
                                     </div>
+                                    <footer class="panel-footer">
+                                        <p class="help-block">Note: Leave blank if <strong>N/A</strong>.</p>
+                                    </footer>
                                 </section>
                             </div>
                         </div>
