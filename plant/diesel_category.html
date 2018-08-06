@@ -252,7 +252,7 @@ function displaycurrentCategory(getCurrentCategory)
     $(".se-pre-con").fadeIn("fast");
     var myTbody = "";
 
-      firebase.database().ref('incoming_diesel_category/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
+      firebase.database().ref('incoming_diesel_category/'+ plant).orderByChild("reverseDate").once('value').then(function(DieselSnapshotTransaction) {
         DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
                 var getdataCurrentCategory = dieselChildSnapshot.val().PickCategoryName;
@@ -415,16 +415,33 @@ function Go()
                 if (quantityout == "NaN"){quantityoutholder = "";}
                 else{quantityoutholder = quantityout + " liter(s)";}
                 
-                myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
-                myTbody += "<td><strong>" + suppliername + "</strong></td>";
-                myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
-                myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
-                myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
-                //myTbody += "<td><strong>" + address + "</strong></td>";
-                myTbody += "<td><strong>" + time + "</strong></td>";
-                myTbody += "<td><strong>" + drno + "</strong></td>";
-                myTbody += "<td><strong>" + date + "</strong></td>";
-                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>" 
+              
+                 if (dieselChildSnapshot.val().TransactionType == "In"){
+                    myTbody += "<tr style ='background-color:#006080'>";
+                    myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + suppliername + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + quantityholder  + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + quantityoutholder  + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                    //myTbody += "<td><strong>" + address + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + time + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + drno + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + date + "</strong></td>";
+                    myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"
+                }else{
+                    // myTbody += "<tr>";
+                    myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+                    myTbody += "<td><strong>" + suppliername + "</strong></td>";
+                    myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+                    myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
+                    myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                    //myTbody += "<td><strong>" + address + "</strong></td>";
+                    myTbody += "<td><strong>" + time + "</strong></td>";
+                    myTbody += "<td><strong>" + drno + "</strong></td>";
+                    myTbody += "<td><strong>" + date + "</strong></td>";
+                    myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"
+                } 
+
                 if (myTbody == "") 
                {
                     myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
@@ -471,16 +488,33 @@ function Go()
                 if (quantityout == "NaN"){quantityoutholder = "";}
                 else{quantityoutholder = quantityout + " liter(s)";}
                 
-                myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
-                myTbody += "<td><strong>" + suppliername + "</strong></td>";
-                myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
-                myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
-                myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
-                //myTbody += "<td><strong>" + address + "</strong></td>";
-                myTbody += "<td><strong>" + time + "</strong></td>";
-                myTbody += "<td><strong>" + drno + "</strong></td>";
-                myTbody += "<td><strong>" + dates + "</strong></td>";
-                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"  
+            
+                 if (dieselChildSnapshot.val().TransactionType == "In"){
+                    myTbody += "<tr style ='background-color:#006080'>";
+                    myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + suppliername + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + quantityholder  + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + quantityoutholder  + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                    //myTbody += "<td><strong>" + address + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + time + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + drno + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + date + "</strong></td>";
+                    myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"
+                }else{
+                    // myTbody += "<tr>";
+                    myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+                    myTbody += "<td><strong>" + suppliername + "</strong></td>";
+                    myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+                    myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
+                    myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                    //myTbody += "<td><strong>" + address + "</strong></td>";
+                    myTbody += "<td><strong>" + time + "</strong></td>";
+                    myTbody += "<td><strong>" + drno + "</strong></td>";
+                    myTbody += "<td><strong>" + date + "</strong></td>";
+                    myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"
+                }
+                
                  firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(DisplayStockSnapshots)
             {
                 DisplayStockSnapshots.forEach(function(SeperateChildSnapshot){
