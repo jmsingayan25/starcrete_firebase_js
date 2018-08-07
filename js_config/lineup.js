@@ -69,7 +69,7 @@
 
         $rowno = $("#tagapukpok_table tr").length;
         $rowno = $rowno + 1;
-        $("#tagapukpok_table tr:last").after("<tr id='tagapukpok_row" + $rowno + "' style='text-align: center;'><td class='col-md-5'><input type='text' name='tagapukpok_name[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_tagapukpok_row('tagapukpok_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+        $("#tagapukpok_table tr:last").after("<tr id='tagapukpok_row" + $rowno + "' style='text-align: center;'><td class='col-md-5'><input type='text' name='tagapukpok_name[]' class='form-control input_type' autofocus required></td><td class='col-md-5'><input type='text' name='tagapukpok_position[]' class='form-control input_type'></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_tagapukpok_row('tagapukpok_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
     }
 
     function remove_tagapukpok_row(rowno){
@@ -95,7 +95,7 @@
 
         $rowno = $("#checker_table tr").length;
         $rowno = $rowno + 1;
-        $("#checker_table tr:last").after("<tr id='checker_row" + $rowno + "' style='text-align: center;'><td class='col-md-5'><input type='text' name='checker_name[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_checker_row('checker_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+        $("#checker_table tr:last").after("<tr id='checker_row" + $rowno + "' style='text-align: center;'><td class='col-md-5'><input type='text' name='checker_name[]' class='form-control input_type' autofocus required></td><td class='col-md-5'><input type='text' name='checker_position[]' class='form-control input_type'></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_checker_row('checker_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
     }
 
     function remove_checker_row(rowno){

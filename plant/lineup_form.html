@@ -102,6 +102,7 @@
                     }
 
                     // tableData();
+                    displayTruckingList();
                     
                     if(plant == 'Bravo'){
                         plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
@@ -166,6 +167,20 @@
     // 	}
     // }
 
+    function displayTruckingList(){
+
+        var truckingTbody = "";
+
+        firebase.database().ref('trucking_list/'+plant).once('value', function(truckingSnapshot){
+            truckingSnapshot.forEach(function(truckingChildSnapshot){
+
+                truckingTbody += "<tr style='text-align: center;'><td><strong>" + truckingChildSnapshot.val().item + "</strong></td><input type='hidden' name='hidden_trucking[]' value='" + truckingChildSnapshot.val().item + "'><td><input type='text' name='driver[]' class='form-control'></td><td><input type='text' name='pahinante1[]' class='form-control'></td><td><input type='text' name='pahinante2[]' class='form-control'></td><td><textarea name='trucking_reason[]' rows='2' class='form-control'></textarea></td></tr>";
+            });
+
+            document.getElementById('truckingList').innerHTML = truckingTbody;
+        });
+    }
+
     function submitForm(){
 
     	event.preventDefault();
@@ -177,19 +192,37 @@
 
     	var input_machine1_name = $("input[name='machine1_name[]']").map(function(){return $(this).val();}).get();
     	var input_machine3_name = $("input[name='machine3_name[]']").map(function(){return $(this).val();}).get();
+
     	var input_nonskid1_name = $("input[name='nonskid1_name[]']").map(function(){return $(this).val();}).get();
     	var input_nonskid2_name = $("input[name='nonskid2_name[]']").map(function(){return $(this).val();}).get();
     	var input_nonskid3_name = $("input[name='nonskid3_name[]']").map(function(){return $(this).val();}).get();
     	var input_nonskid4_name = $("input[name='nonskid4_name[]']").map(function(){return $(this).val();}).get();
+
     	var input_tagapukpok_name = $("input[name='tagapukpok_name[]']").map(function(){return $(this).val();}).get();
+    	var input_tagapukpok_position = $("input[name='tagapukpok_position[]']").map(function(){return $(this).val();}).get();
+
     	var input_checker_name = $("input[name='checker_name[]']").map(function(){return $(this).val();}).get();
+    	var input_checker_position = $("input[name='checker_position[]']").map(function(){return $(this).val();}).get();
+
     	var input_forklift_operator_name = $("input[name='forklift_operator_name[]']").map(function(){return $(this).val();}).get();
     	var input_mechanic_name = $("input[name='mechanic_name[]']").map(function(){return $(this).val();}).get();
     	var input_loader_name = $("input[name='loader_name[]']").map(function(){return $(this).val();}).get();
     	var input_kamador_name = $("input[name='kamador_name[]']").map(function(){return $(this).val();}).get();
     	var input_others_name = $("input[name='others_name[]']").map(function(){return $(this).val();}).get();
+
     	var input_absent_name = $("input[name='absent_name[]']").map(function(){return $(this).val();}).get();
     	var input_absent_reason = $("textarea[name='absent_reason[]']").map(function(){return $(this).val();}).get();
+
+    	var input_trucking_no = $("input[name='hidden_trucking[]']").map(function(){return $(this).val();}).get();
+    	var input_trucking_driver = $("input[name='driver[]']").map(function(){return $(this).val();}).get();
+    	var input_trucking_pahinante1 = $("input[name='pahinante1[]']").map(function(){return $(this).val();}).get();
+    	var input_trucking_pahinante2 = $("input[name='pahinante2[]']").map(function(){return $(this).val();}).get();
+    	var input_trucking_comment = $("textarea[name='trucking_reason[]']").map(function(){return $(this).val();}).get();
+
+    	console.log(input_trucking_no, input_trucking_driver, input_trucking_pahinante1, input_trucking_pahinante2, input_trucking_comment);
+
+
+
     	var input_comment = document.getElementById('comment').value || "N/A";
 
     	var commentData = {
@@ -337,11 +370,13 @@
 
 			if(input_tagapukpok_name.length == 1 && input_tagapukpok_name[a] == ""){
 				var tagapukpokData = {
-	    			employee_name: "N/A"
+	    			employee_name: "N/A",
+	    			employee_position: "N/A"
 	    		}
 			}else{
 				var tagapukpokData = {
-	    			employee_name: input_tagapukpok_name[a].toUpperCase()
+	    			employee_name: input_tagapukpok_name[a].toUpperCase(),
+	    			employee_position: input_tagapukpok_position[a].toUpperCase()
 	    		}
 			}
     		
@@ -352,11 +387,13 @@
 
 			if(input_checker_name.length == 1 && input_checker_name[a] == ""){
 				var checkerData = {
-	    			employee_name: "N/A"
+	    			employee_name: "N/A",
+	    			employee_position: "N/A"
 	    		}
 			}else{
 				var checkerData = {
-	    			employee_name: input_checker_name[a].toUpperCase()
+	    			employee_name: input_checker_name[a].toUpperCase(),
+	    			employee_position: input_checker_position[a].toUpperCase()
 	    		}	
 			}
     		
@@ -409,6 +446,21 @@
     	
     		firebase.database().ref('lineup/'+plant+'/'+input_date+'/absent').push(absentData);
     		count++;
+    	}
+
+  		for(var a = 0; a < input_trucking_no.length; a++){
+
+    		var truckingData = {
+    			truck_no: input_trucking_no[a].toUpperCase(),
+    			driver: input_trucking_driver[a].toUpperCase() || "N/A",
+    			pahinante1: input_trucking_pahinante1[a].toUpperCase() || "N/A",
+    			pahinante2: input_trucking_pahinante2[a].toUpperCase() || "N/A",
+    			comment: input_trucking_comment[a].toUpperCase() || "N/A"
+    		}
+
+    		console.log(truckingData);
+
+    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/trucking').push(truckingData);
     	}
 
     	if(count == input_absent_name.length){
@@ -860,9 +912,17 @@
 							                							<td class="col-md-5">
 							                								<label for="tagapukpok_name">Name</label>
 							                							</td>
+							                							<td class="col-md-5">
+							                								<label for="tagapukpok_position">Position</label>
+							                							</td>
 							                						</tr>
 							                						<tr id="tagapukpok_row1" style="text-align: center;">
-							                							<td class="col-md-5"><input type="text" name="tagapukpok_name[]" class="form-control input_type"></td>
+							                							<td class="col-md-5">
+							                								<input type="text" name="tagapukpok_name[]" class="form-control input_type">
+							                							</td>
+							                							<td class="col-md-5">
+							                								<input type="text" name="tagapukpok_position[]" class="form-control input_type">
+							                							</td>
 							                							<td class="col-md-1">
 							                								<button type="button" onclick="add_tagapukpok_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
 							                							</td>
@@ -888,9 +948,17 @@
 							                							<td class="col-md-5">
 							                								<label for="checker_name">Name</label>
 							                							</td>
+							                							<td class="col-md-5">
+							                								<label for="checker_position">Position</label>
+							                							</td>
 							                						</tr>
 							                						<tr id="checker_row1" style="text-align: center;">
-							                							<td class="col-md-5"><input type="text" name="checker_name[]" class="form-control input_type"></td>
+							                							<td class="col-md-5">
+							                								<input type="text" name="checker_name[]" class="form-control input_type">
+							                							</td>
+							                							<td class="col-md-5">
+							                								<input type="text" name="checker_position[]" class="form-control input_type">
+							                							</td>
 							                							<td class="col-md-1">
 							                								<button type="button" onclick="add_checker_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
 							                							</td>
@@ -906,7 +974,7 @@
                 				</div>
                 			</div>
                 			<div class="row">
-                				<div class="col-md-offset-2 col-md-8">
+                				<div class="col-md-offset-1 col-md-10">
                 					<ul class="nav nav-tabs">
                 						<li class="active"><a data-toggle="tab" href="#forklift"><strong>FORKLIFT OPERATOR</strong></a></li>
                 						<li><a data-toggle="tab" href="#mechanic"><strong>MECHANIC</strong></a></li>
@@ -914,6 +982,7 @@
                 						<li><a data-toggle="tab" href="#kamador"><strong>KAMADOR</strong></a></li>
                 						<li><a data-toggle="tab" href="#others"><strong>OTHERS</strong></a></li>
                 						<li><a data-toggle="tab" href="#absent"><strong>ABSENT</strong></a></li>
+                						<li><a data-toggle="tab" href="#trucking"><strong>TRUCKING</strong></a></li>
                 					</ul>
                 					<div class="tab-content">
                 						<div id="forklift" class="tab-pane fade in active">
@@ -1089,6 +1158,34 @@
 							                		</section>
 							                	</div>
                 							</div>
+                						</div>
+                						<div id="trucking" class="tab-pane fade in">
+                							<div class="row">
+                								<div class="col-md-12">
+							                		<section class="panel">
+							                			<header class="panel-heading">
+							                				<strong>TRUCKING</strong>
+							                			</header>
+							                			<div class="panel-body">
+							                				<div class="row">
+							                					<table id="trucking_table" class="table" align="center">
+							                						<thead>
+			                                                            <tr>
+			                                                                <th class="col-md-2" style="text-align: center;">TRUCK NO.</th>
+			                                                                <th class="col-md-2" style="text-align: center;">DRIVER</th>
+			                                                                <th class="col-md-2" style="text-align: center;">PAHINANTE 1</th>
+			                                                                <th class="col-md-2" style="text-align: center;">PAHINANTE 2</th>
+			                                                                <th class="col-md-3" style="text-align: center;">COMMENT</th>
+			                                                            </tr>
+			                                                        </thead>
+			                                                        <tbody id="truckingList">
+			                                                        </tbody>
+							                					</table>
+							                				</div>
+							                			</div>
+							                		</section>
+							                	</div>
+							                </div>
                 						</div>
                 					</div>
                 				</div>
