@@ -4,7 +4,7 @@
 
         $rowno = $("#machine1_table tr").length;
         $rowno = $rowno + 1;
-        $("#machine1_table tr:last").after("<tr id='machine1_row" + $rowno + "' style='text-align: center;'><td class='col-md-5'><input type='text' name='machine1_name[]' class='form-control input_type' autofocus required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_machine_1_row('machine1_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+        $("#machine1_table tr:last").after("<tr id='machine1_row" + $rowno + "' style='text-align: center;'><td class='col-md-5'><input type='text' name='machine1_name[]' class='form-control input_type' onkeyup='displayMachineList(this.value, "+$rowno+");' list='machineList"+$rowno+"' autofocus required><datalist id='machineList"+$rowno+"'></datalist></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_machine_1_row('machine1_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
     }
 
     function remove_machine_1_row(rowno){
