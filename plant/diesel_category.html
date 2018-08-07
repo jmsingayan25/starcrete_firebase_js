@@ -410,7 +410,7 @@ function Go()
                 }else{document.getElementById("DieselList").innerHTML = myTbody;}
         }else if(fromDate == '' && endDate == '' && document.getElementById('selectsys').value != "")
     {//false date true category
-        firebase.database().ref('incoming_diesel_category/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
+        firebase.database().ref('incoming_diesel_category/'+ plant).orderByChild("reverseDate").once('value').then(function(DieselSnapshotTransaction) {
         DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
             var getdataCurrentCategory = dieselChildSnapshot.val().PickCategoryName;
