@@ -4,7 +4,7 @@
 
         $rowno = $("#office_table tr").length;
         $rowno = $rowno + 1;
-        $("#office_table tr:last").after("<tr id='office_row" + $rowno + "' style='text-align: center;'><td ><input type='text' name='employee_name[]' class='form-control input_type' autofocus required></td> <td ><input type='datetime-local' name='employee_timein[]' class='form-control input_type' autofocus></td> <td ><input type='datetime-local' name='employee_timeout[]' class='form-control input_type' autofocus></td><td><button type='button' class='btn btn-danger btn-md' onclick=remove_office_row('office_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
+        $("#office_table tr:last").after("<tr id='office_row" + $rowno + "' style='text-align: center;'><td ><input type='text' name='employee_name[]' class='form-control input_type' autofocus required></td> <td ><input type='time' name='employee_timein[]' class='form-control input_type' autofocus></td> <td ><input type='time' name='employee_timeout[]' class='form-control input_type' autofocus></td><td><button type='button' class='btn btn-danger btn-md' onclick=remove_office_row('office_row" + $rowno + "')><span class='fa fa-minus'></span></button></td></tr>");
     }
 
     function remove_office_row(rowno){
