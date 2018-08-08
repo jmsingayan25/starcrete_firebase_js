@@ -327,7 +327,6 @@
 
     function tableData(plant){
 
-        $(".se-pre-con").fadeIn("fast");
     	var myTbody = "";
 
         document.getElementById("partsList").innerHTML = "<tr><td colspan='7' style='background-color: white;'><div class='spinner'><div></div></div></td></tr>";
@@ -340,6 +339,7 @@
     			myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
                 document.getElementById('partsList').innerHTML = myTbody;
+                $(".se-pre-con").fadeOut("slow");
                 
     		}
     	})
