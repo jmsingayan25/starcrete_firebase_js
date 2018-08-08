@@ -91,8 +91,11 @@
 <script>
 
 	var plant = getUrlParameter('plant');
-	var date = getUrlParameter('date');
-	var category = getUrlParameter('category');	
+	var pass_date = getUrlParameter("fromdate");
+    var pass_date1 = getUrlParameter("enddate");
+    var category = getUrlParameter('category'); 
+    var fromDate = new Date(pass_date);
+    var endDate = new Date(pass_date1);
 	category = category.replace("%20"," ");
 
 	$(document).ready(function(){
@@ -113,105 +116,163 @@
 
 		var myTbody = "";
 
-		firebase.database().ref('incoming_diesel_category/'+plant).orderByChild('reverseDate').on('child_added', function(oilSnapshot){
+		firebase.database().ref('incoming_diesel_category/'+plant).once('value', function(oilSnapshot){
+            oilSnapshot.forEach(function(oilChildSnaphot){
 
-			console.log(oilSnapshot.val().PickCategoryName, category, oilSnapshot.val().Date_Input, date);
+                if(pass_date == "" && pass_date1 == ""){
 
-            if(oilSnapshot.val().PickCategoryName == category){
+                    if(oilChildSnaphot.val().PickCategoryName == category){
 
-                if(oilSnapshot.val().Date_Input == date){
+                        // document.getElementById('search_date').innerHTML = "";
 
-                    // console.log(oilSnapshot.val().PickCategoryName, category);
-                    Date_Input = oilSnapshot.val().Date_Input;
-                    category_name = oilSnapshot.val().PickCategoryName;
-                    current_stock = Number(oilSnapshot.val().seperateCurrentStock).toLocaleString('en') + " liter(s)";
-                    dr_no = oilSnapshot.val().dr_no || "";
-                    po_no = oilSnapshot.val().po_no;
-                    quantity_in = Number(oilSnapshot.val().quantity_in).toLocaleString('en');
-                    quantity_out = Number(oilSnapshot.val().quantity_out).toLocaleString('en');
-                    supplier = oilSnapshot.val().supplier || "";
-                    operator = oilSnapshot.val().operator || "";
-                    time = oilSnapshot.val().time;
-                    truck_no = oilSnapshot.val().truck_no;
+                        date = oilChildSnaphot.val().Date_Input;
+                        category_name = oilChildSnaphot.val().PickCategoryName;
+                        current_stock = Number(oilChildSnaphot.val().seperateCurrentStock).toLocaleString('en') + " liter(s)";
+                        dr_no = oilChildSnaphot.val().dr_no || "";
+                        po_no = oilChildSnaphot.val().po_no;
+                        quantity_in = Number(oilChildSnaphot.val().quantity_in).toLocaleString('en');
+                        quantity_out = Number(oilChildSnaphot.val().quantity_out).toLocaleString('en');
+                        supplier = oilChildSnaphot.val().supplier || "";
+                        operator = oilChildSnaphot.val().operator || "";
+                        time = oilChildSnaphot.val().time_input;
+                        truck_no = oilChildSnaphot.val().truck_no;
 
-                    if(quantity_in == "NaN"){
-                        quantity_in_ext = "";
-                    }else{
-                        quantity_in_ext = quantity_in + " liter(s)";
+                        if(quantity_in == "NaN"){
+                            quantity_in_ext = "";
+                        }else{
+                            quantity_in_ext = quantity_in + " liter(s)";
+                        }
+
+                        if(quantity_out == "NaN"){
+                            quantity_out_ext = "";
+                        }else{
+                            quantity_out_ext = quantity_out + " liter(s)";
+                        }
+
+                        if(supplier != ""){
+                            person = supplier;
+                        }else if(operator != ""){
+                            person = operator
+                        }
+
+                        if(oilChildSnaphot.val().TransactionType == "In"){
+
+                            myTbody += "<tr style='background-color: #006080;'><td style='color: white;'><strong>" + truck_no + "</strong></td>";
+                            myTbody += "<td style='color: white;'><strong>" + person + "</strong></td>";
+                            myTbody += "<td style='color: white;'><strong>" + quantity_in_ext + "</strong></td>";
+                            myTbody += "<td style='color: white;'><strong>" + quantity_out_ext + "</strong></td>";
+                            myTbody += "<td style='color: white;'><strong>" + current_stock + "</strong></td>";
+                            myTbody += "<td style='color: white;'><strong>" + time + "</strong></td>";
+                            myTbody += "<td style='color: white;'><strong>" + date + "</strong></td>";
+                            myTbody += "<td style='color: white;'><strong>" + dr_no + "</strong></td></tr>";
+
+                        }else{
+
+                            myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
+                            myTbody += "<td><strong>" + person + "</strong></td>";
+                            myTbody += "<td><strong>" + quantity_in_ext + "</strong></td>";
+                            myTbody += "<td><strong>" + quantity_out_ext + "</strong></td>";
+                            myTbody += "<td><strong>" + current_stock + "</strong></td>";
+                            myTbody += "<td><strong>" + time + "</strong></td>";
+                            myTbody += "<td><strong>" + date + "</strong></td>";
+                            myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
+
+                        }
                     }
 
-                    if(quantity_out == "NaN"){
-                        quantity_out_ext = "";
-                    }else{
-                        quantity_out_ext = quantity_out + " liter(s)";
+                }else{
+
+                    document.getElementById('id_date').innerHTML = "<br> Date: " + pass_date + " - " + pass_date1;
+
+                    var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+                    var searchFromDate = new Date(fromDate).toLocaleDateString('en');
+                    var searchEndDate = new Date(endDate).toLocaleDateString('en');
+
+                    // document.getElementById('search_date').innerHTML = searchFromDate + " - " + searchEndDate;
+
+                    newFromDate = new Date(fromDate).toLocaleDateString('en');
+                    fromDate = new Date(newFromDate);
+                    newEndDate = new Date(endDate).toLocaleDateString('en');
+                    endDate = new Date(newEndDate);
+
+                    oilDate = new Date(oilChildSnaphot.val().Date_Input);
+
+                    if(oilDate.getTime() >= fromDate.getTime() && oilDate.getTime() <= endDate.getTime()){
+
+                        if(oilChildSnaphot.val().PickCategoryName == category){
+
+                            date = oilChildSnaphot.val().Date_Input;
+                            category_name = oilChildSnaphot.val().PickCategoryName;
+                            current_stock = Number(oilChildSnaphot.val().seperateCurrentStock).toLocaleString('en') + " liter(s)";
+                            dr_no = oilChildSnaphot.val().dr_no || "";
+                            po_no = oilChildSnaphot.val().po_no;
+                            quantity_in = Number(oilChildSnaphot.val().quantity_in).toLocaleString('en');
+                            quantity_out = Number(oilChildSnaphot.val().quantity_out).toLocaleString('en');
+                            supplier = oilChildSnaphot.val().supplier || "";
+                            operator = oilChildSnaphot.val().operator || "";
+                            time = oilChildSnaphot.val().time_input;
+                            truck_no = oilChildSnaphot.val().truck_no;
+
+                            if(quantity_in == "NaN"){
+                                quantity_in_ext = "";
+                            }else{
+                                quantity_in_ext = quantity_in + " liter(s)";
+                            }
+
+                            if(quantity_out == "NaN"){
+                                quantity_out_ext = "";
+                            }else{
+                                quantity_out_ext = quantity_out + " liter(s)";
+                            }
+
+                            if(supplier != ""){
+                                person = supplier;
+                            }else if(operator != ""){
+                                person = operator
+                            }
+
+                            if(oilChildSnaphot.val().TransactionType == "In"){
+
+                                myTbody += "<tr style='background-color: #006080;'><td style='color: white;'><strong>" + truck_no + "</strong></td>";
+                                myTbody += "<td style='color: white;'><strong>" + person + "</strong></td>";
+                                myTbody += "<td style='color: white;'><strong>" + quantity_in_ext + "</strong></td>";
+                                myTbody += "<td style='color: white;'><strong>" + quantity_out_ext + "</strong></td>";
+                                myTbody += "<td style='color: white;'><strong>" + current_stock + "</strong></td>";
+                                myTbody += "<td style='color: white;'><strong>" + time + "</strong></td>";
+                                myTbody += "<td style='color: white;'><strong>" + date + "</strong></td>";
+                                myTbody += "<td style='color: white;'><strong>" + dr_no + "</strong></td></tr>";
+
+                            }else{
+
+                                myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
+                                myTbody += "<td><strong>" + person + "</strong></td>";
+                                myTbody += "<td><strong>" + quantity_in_ext + "</strong></td>";
+                                myTbody += "<td><strong>" + quantity_out_ext + "</strong></td>";
+                                myTbody += "<td><strong>" + current_stock + "</strong></td>";
+                                myTbody += "<td><strong>" + time + "</strong></td>";
+                                myTbody += "<td><strong>" + date + "</strong></td>";
+                                myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
+
+                            }
+                        }
                     }
-
-                    if(supplier != ""){
-                        person = supplier;
-                    }else if(operator != ""){
-                        person = operator
-                    }
-
-                    myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
-                    myTbody += "<td><strong>" + person + "</strong></td>";
-                    myTbody += "<td><strong>" + quantity_in_ext + "</strong></td>";
-                    myTbody += "<td><strong>" + quantity_out_ext + "</strong></td>";
-                    myTbody += "<td><strong>" + current_stock + "</strong></td>";
-                    myTbody += "<td><strong>" + time + "</strong></td>";
-                    myTbody += "<td><strong>" + Date_Input + "</strong></td>";
-                    myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
-
-                    document.getElementById('oilList').innerHTML = myTbody;
-
-                }else if (date == ''){
-
-                    Date_Input = oilSnapshot.val().Date_Input;
-                    category_name = oilSnapshot.val().PickCategoryName;
-                    current_stock = Number(oilSnapshot.val().seperateCurrentStock).toLocaleString('en') + " liter(s)";
-                    dr_no = oilSnapshot.val().dr_no || "";
-                    po_no = oilSnapshot.val().po_no;
-                    quantity_in = Number(oilSnapshot.val().quantity_in).toLocaleString('en');
-                    quantity_out = Number(oilSnapshot.val().quantity_out).toLocaleString('en');
-                    supplier = oilSnapshot.val().supplier || "";
-                    operator = oilSnapshot.val().operator || "";
-                    time = oilSnapshot.val().time;
-                    truck_no = oilSnapshot.val().truck_no;
-
-                    if(quantity_in == "NaN"){
-                        quantity_in_ext = "";
-                    }else{
-                        quantity_in_ext = quantity_in + " liter(s)";
-                    }
-
-                    if(quantity_out == "NaN"){
-                        quantity_out_ext = "";
-                    }else{
-                        quantity_out_ext = quantity_out + " liter(s)";
-                    }
-
-                    if(supplier != ""){
-                        person = supplier;
-                    }else if(operator != ""){
-                        person = operator
-                    }
-
-                    myTbody += "<tr><td><strong>" + truck_no + "</strong></td>";
-                    myTbody += "<td><strong>" + person + "</strong></td>";
-                    myTbody += "<td><strong>" + quantity_in_ext + "</strong></td>";
-                    myTbody += "<td><strong>" + quantity_out_ext + "</strong></td>";
-                    myTbody += "<td><strong>" + current_stock + "</strong></td>";
-                    myTbody += "<td><strong>" + time + "</strong></td>";
-                    myTbody += "<td><strong>" + Date_Input + "</strong></td>";
-                    myTbody += "<td><strong>" + dr_no + "</strong></td></tr>";
-
-                    document.getElementById('oilList').innerHTML = myTbody;
                 }
+            });
+
+            if(myTbody != ""){
+
+                document.getElementById('oilList').innerHTML = myTbody;
+
+                $(".se-pre-con").fadeOut("slow");
+            }else{
+                
+                myTbody = "<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+
+                document.getElementById('oilList').innerHTML = myTbody;
 
                 $(".se-pre-con").fadeOut("slow");
             }
-
-            $(".se-pre-con").fadeOut("slow");
-		});
+        });
 
 		// if(myTbody == ''){
 
@@ -233,7 +294,7 @@
 		});
 
 		document.getElementById('Current_category').innerHTML = category + " <br>";
-		document.getElementById('id_date').innerHTML = date;
+		// document.getElementById('id_date').innerHTML = pass_date + " - " + pass_date1;
 	}
 
 	function availableStock(){
@@ -370,8 +431,8 @@
                                             <span>Available stock as of today: <span id="id_stock"></span></span><br>
                                             <span>Category stock as of today: <span id="id_Categorystock"></span></span><br>
                                             <span>Category: <span id ="Current_category"></span></span>
-                                            Report: OIL TRANSACTION <br>
-                                            Date: <span id="id_date"></span>
+                                            Report: OIL TRANSACTION
+                                            <span id="id_date"></span>
 
                                         </th>
                                     </tr>

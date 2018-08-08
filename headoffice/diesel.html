@@ -550,8 +550,14 @@ function datePrint(){
     // if (document.getElementById('date_view').value != "") {
 
         filter_input = document.getElementById('input_truck_no').value || document.getElementById('input_address').value || document.getElementById('input_driver').value;
-        date1 = new Date(fromDate).toLocaleDateString('en');
-        date2 = new Date(endDate).toLocaleDateString('en');
+        
+        if(fromDate == "" && endDate == ""){
+            date1 = "";
+            date2 = "";
+        }else{
+            date1 = new Date(fromDate).toLocaleDateString('en');
+            date2 = new Date(endDate).toLocaleDateString('en');
+        }
         // var GetStringDate = date;
         console.log(filter_input);
         // firebase.database().ref().child("diesel_current_date_print/" + plant).once('value',function(Snapshot){
