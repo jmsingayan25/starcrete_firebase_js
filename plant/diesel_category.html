@@ -80,9 +80,16 @@
     <script src="../js/jquery.slimscroll.min.js"></script>
     <script src="../js_config/function.js"></script>
 
+      <!-- Custom Javascript Datepicker -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
 <script>
 	
 	var timer = null;
+    var fromDate = "";
+    var endDate = "";
 
     function goAway() {
         clearTimeout(timer);
@@ -164,6 +171,13 @@
             } else {
                 window.location.href = '../login.html';
             }
+        });
+
+         $('input[name="date_view"]').daterangepicker({
+            opens: 'right'
+        }, function(start, end, label) {
+            fromDate = start.format('YYYY-MM-DD');
+            endDate = end.format('YYYY-MM-DD');
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
@@ -252,7 +266,7 @@ function displaycurrentCategory(getCurrentCategory)
     $(".se-pre-con").fadeIn("fast");
     var myTbody = "";
 
-      firebase.database().ref('incoming_diesel_category/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
+      firebase.database().ref('incoming_diesel_category/'+ plant).orderByChild("reverseDate").once('value').then(function(DieselSnapshotTransaction) {
         DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
                 var getdataCurrentCategory = dieselChildSnapshot.val().PickCategoryName;
@@ -374,24 +388,30 @@ function displaycurrentCategory(getCurrentCategory)
 }
 
 function Go()
-{
-     $(".se-pre-con").fadeIn("slow");
+{//startgo
+    $(".se-pre-con").fadeIn("slow");
     event.preventDefault();
-    //var submitValue = document.getElementById("selectsys").value;
+
     var myTbody = "";
-            console.log(document.getElementById('date_view').value);
-       if (document.getElementById('date_view').value == "" && document.getElementById('selectsys').value == "") 
-    {
-             if (myTbody == "") 
-               {myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+       if (fromDate == '' && endDate == '' && document.getElementById('selectsys').value == "") 
+    {//false date false category
+
+        if (myTbody == "") 
+            {myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
                     document.getElementById("DieselList").innerHTML = myTbody; 
                      $(".se-pre-con").fadeOut("slow");
-                }else{document.getElementById("DieselList").innerHTML = myTbody; }
-    }else if(document.getElementById('date_view').value == "" && document.getElementById('selectsys').value != "")
-    {
-        document.getElementById("Search_day").innerHTML = "";
-    firebase.database().ref('incoming_diesel_category/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
-    DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
+        }else{document.getElementById("DieselList").innerHTML = myTbody; }
+    }else if(fromDate != '' && endDate != '' && document.getElementById('selectsys').value == "")
+        {//true date false category
+              if (myTbody == "") 
+                {myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+                    document.getElementById("DieselList").innerHTML = myTbody; 
+                     $(".se-pre-con").fadeOut("slow");
+                }else{document.getElementById("DieselList").innerHTML = myTbody;}
+        }else if(fromDate == '' && endDate == '' && document.getElementById('selectsys').value != "")
+    {//false date true category
+        firebase.database().ref('incoming_diesel_category/'+ plant).orderByChild("reverseDate").once('value').then(function(DieselSnapshotTransaction) {
+        DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
 
             var getdataCurrentCategory = dieselChildSnapshot.val().PickCategoryName;
             var getCurrentCategory = document.getElementById("selectsys").value;
@@ -408,23 +428,38 @@ function Go()
                 console.log(quantityin);
 
                 var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
-                //var address = dieselChildSnapshot.val().destination || "";
                 
                 if (quantityin == "NaN"){quantityholder = "";}
                 else{quantityholder = quantityin + " liter(s)" ;}
                 if (quantityout == "NaN"){quantityoutholder = "";}
                 else{quantityoutholder = quantityout + " liter(s)";}
                 
-                myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
-                myTbody += "<td><strong>" + suppliername + "</strong></td>";
-                myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
-                myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
-                myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
-                //myTbody += "<td><strong>" + address + "</strong></td>";
-                myTbody += "<td><strong>" + time + "</strong></td>";
-                myTbody += "<td><strong>" + drno + "</strong></td>";
-                myTbody += "<td><strong>" + date + "</strong></td>";
-                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>" 
+              
+                 if (dieselChildSnapshot.val().TransactionType == "In"){
+                    myTbody += "<tr style ='background-color:#006080'>";
+                    myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + suppliername + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + quantityholder  + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + quantityoutholder  + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                    //myTbody += "<td><strong>" + address + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + time + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + drno + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + date + "</strong></td>";
+                    myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"
+                }else{
+                    // myTbody += "<tr>";
+                    myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+                    myTbody += "<td><strong>" + suppliername + "</strong></td>";
+                    myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+                    myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
+                    myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                    //myTbody += "<td><strong>" + address + "</strong></td>";
+                    myTbody += "<td><strong>" + time + "</strong></td>";
+                    myTbody += "<td><strong>" + drno + "</strong></td>";
+                    myTbody += "<td><strong>" + date + "</strong></td>";
+                    myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"
+                } 
                 if (myTbody == "") 
                {
                     myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
@@ -432,24 +467,29 @@ function Go()
                      $(".se-pre-con").fadeOut("slow");
                 }else{document.getElementById("DieselList").innerHTML = myTbody; } 
                  $(".se-pre-con").fadeOut("slow");
-                }
+    }
         });
      $(".se-pre-con").fadeOut("slow");
     });
-    }
-    else if(document.getElementById('date_view').value != "" && document.getElementById('selectsys').value != "")
-    {
-             date = dateFormat(document.getElementById('date_view').value);
+
+    }else if(fromDate != '' && endDate != '' && document.getElementById('selectsys').value != "")
+    {//all true
     firebase.database().ref('incoming_diesel_category/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
     DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
+                newFromDate = new Date(fromDate).toLocaleDateString('en');
+                fromDate = new Date(newFromDate);
 
-            var getdataCurrentCategory = dieselChildSnapshot.val().PickCategoryName;
-            var getCurrentCategory = document.getElementById("selectsys").value;
-            var GetStringDate = date.toString();
-            var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
-            var searchDate = new Date(date).toLocaleDateString('en', options);
-           
-                if(GetStringDate == dieselChildSnapshot.val().Date_Input)
+                newEndDate = new Date(endDate).toLocaleDateString('en');
+                endDate = new Date(newEndDate);
+
+                fromDateDisplay = new Date(newFromDate).toLocaleDateString('en');
+                endDateDisplay = new Date(newEndDate).toLocaleDateString('en');
+
+                getDate = new Date(dieselChildSnapshot.val().Date_Input);
+                var getdataCurrentCategory = dieselChildSnapshot.val().PickCategoryName;
+                var getCurrentCategory = document.getElementById("selectsys").value;
+             
+                if(getDate.getTime() >= fromDate.getTime() && getDate.getTime() <= endDate.getTime())
                 {
                 if (getCurrentCategory ==  getdataCurrentCategory) 
                 {
@@ -464,23 +504,38 @@ function Go()
                 console.log(quantityin);
 
                 var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
-                //var address = dieselChildSnapshot.val().destination || "";
                 
                 if (quantityin == "NaN"){quantityholder = "";}
                 else{quantityholder = quantityin + " liter(s)" ;}
                 if (quantityout == "NaN"){quantityoutholder = "";}
                 else{quantityoutholder = quantityout + " liter(s)";}
                 
-                myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
-                myTbody += "<td><strong>" + suppliername + "</strong></td>";
-                myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
-                myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
-                myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
-                //myTbody += "<td><strong>" + address + "</strong></td>";
-                myTbody += "<td><strong>" + time + "</strong></td>";
-                myTbody += "<td><strong>" + drno + "</strong></td>";
-                myTbody += "<td><strong>" + dates + "</strong></td>";
-                myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"  
+                 if (dieselChildSnapshot.val().TransactionType == "In"){
+                    myTbody += "<tr style ='background-color:#006080'>";
+                    myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + suppliername + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + quantityholder  + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + quantityoutholder  + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                    //myTbody += "<td><strong>" + address + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + time + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + drno + "</strong></td>";
+                    myTbody += "<td style ='color: white'><strong>" + dates + "</strong></td>";
+                    myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"
+                }else{
+                    // myTbody += "<tr>";
+                    myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+                    myTbody += "<td><strong>" + suppliername + "</strong></td>";
+                    myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+                    myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
+                    myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
+                    //myTbody += "<td><strong>" + address + "</strong></td>";
+                    myTbody += "<td><strong>" + time + "</strong></td>";
+                    myTbody += "<td><strong>" + drno + "</strong></td>";
+                    myTbody += "<td><strong>" + dates + "</strong></td>";
+                    myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"
+                }
+                
                  firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(DisplayStockSnapshots)
             {
                 DisplayStockSnapshots.forEach(function(SeperateChildSnapshot){
@@ -490,25 +545,194 @@ function Go()
                 document.getElementById("id_Categorystock").innerHTML = Number(SeperateChildSnapshot.val().Liters).toLocaleString("en") + " Liter(s)"; 
             }
 
-            });
+                });
             }); 
                  $(".se-pre-con").fadeOut("slow");
                 }
                 }
-        });
-          var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
-            var searchDate = new Date(date).toLocaleDateString('en', options);
+        });//endloop
          if (myTbody == "") 
                {
                     myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
                     document.getElementById("DieselList").innerHTML = myTbody; 
                      $(".se-pre-con").fadeOut("slow");
                 }else{document.getElementById("DieselList").innerHTML = myTbody; } 
-                 document.getElementById("Search_day").innerHTML = searchDate;
+                 document.getElementById("Search_day").innerHTML = fromDateDisplay + "-" + endDateDisplay;
     });
-    }
 
-}
+    }//last process
+
+}//endgo
+
+// function Go()
+// {
+//      $(".se-pre-con").fadeIn("slow");
+//     event.preventDefault();
+//     //var submitValue = document.getElementById("selectsys").value;
+//     var myTbody = "";
+//             console.log(document.getElementById('date_view').value);
+//        if (document.getElementById('date_view').value == "" && document.getElementById('selectsys').value == "") 
+//     {
+//              if (myTbody == "") 
+//                {myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+//                     document.getElementById("DieselList").innerHTML = myTbody; 
+//                      $(".se-pre-con").fadeOut("slow");
+//                 }else{document.getElementById("DieselList").innerHTML = myTbody; }
+//     }else if(document.getElementById('date_view').value == "" && document.getElementById('selectsys').value != "")
+//     {
+//         document.getElementById("Search_day").innerHTML = "";
+//     firebase.database().ref('incoming_diesel_category/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
+//     DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
+
+//             var getdataCurrentCategory = dieselChildSnapshot.val().PickCategoryName;
+//             var getCurrentCategory = document.getElementById("selectsys").value;
+//                 if (getCurrentCategory ==  getdataCurrentCategory) 
+//                 {
+//                 var truckno = dieselChildSnapshot.val().truck_no;
+//                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
+//                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
+//                 var availablestock = Number(dieselChildSnapshot.val().seperateCurrentStock).toLocaleString("en");
+//                 var time = dieselChildSnapshot.val().time_input;
+//                 var drno = dieselChildSnapshot.val().dr_no || "";
+//                 var date= dieselChildSnapshot.val().Date_Input;
+//                 var key = dieselChildSnapshot.key;
+//                 console.log(quantityin);
+
+//                 var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
+//                 //var address = dieselChildSnapshot.val().destination || "";
+                
+//                 if (quantityin == "NaN"){quantityholder = "";}
+//                 else{quantityholder = quantityin + " liter(s)" ;}
+//                 if (quantityout == "NaN"){quantityoutholder = "";}
+//                 else{quantityoutholder = quantityout + " liter(s)";}
+                
+              
+//                  if (dieselChildSnapshot.val().TransactionType == "In"){
+//                     myTbody += "<tr style ='background-color:#006080'>";
+//                     myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
+//                     myTbody += "<td style ='color: white'><strong>" + suppliername + "</strong></td>";
+//                     myTbody += "<td style ='color: white'><strong>" + quantityholder  + "</strong></td>";
+//                     myTbody += "<td style ='color: white'><strong>" + quantityoutholder  + "</strong></td>";
+//                     myTbody += "<td style ='color: white'><strong>" + availablestock + " liter(s)" + "</strong></td>";
+//                     //myTbody += "<td><strong>" + address + "</strong></td>";
+//                     myTbody += "<td style ='color: white'><strong>" + time + "</strong></td>";
+//                     myTbody += "<td style ='color: white'><strong>" + drno + "</strong></td>";
+//                     myTbody += "<td style ='color: white'><strong>" + date + "</strong></td>";
+//                     myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"
+//                 }else{
+//                     // myTbody += "<tr>";
+//                     myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+//                     myTbody += "<td><strong>" + suppliername + "</strong></td>";
+//                     myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+//                     myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
+//                     myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
+//                     //myTbody += "<td><strong>" + address + "</strong></td>";
+//                     myTbody += "<td><strong>" + time + "</strong></td>";
+//                     myTbody += "<td><strong>" + drno + "</strong></td>";
+//                     myTbody += "<td><strong>" + date + "</strong></td>";
+//                     myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"
+//                 } 
+
+//                 if (myTbody == "") 
+//                {
+//                     myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+//                     document.getElementById("DieselList").innerHTML = myTbody; 
+//                      $(".se-pre-con").fadeOut("slow");
+//                 }else{document.getElementById("DieselList").innerHTML = myTbody; } 
+//                  $(".se-pre-con").fadeOut("slow");
+//             }
+//         });
+//      $(".se-pre-con").fadeOut("slow");
+//     });
+//     }
+//     else if(document.getElementById('date_view').value != "" && document.getElementById('selectsys').value != "")
+//     {
+//              date = dateFormat(document.getElementById('date_view').value);
+//     firebase.database().ref('incoming_diesel_category/'+ plant).once('value').then(function(DieselSnapshotTransaction) {
+//     DieselSnapshotTransaction.forEach(function(dieselChildSnapshot){
+
+//             var getdataCurrentCategory = dieselChildSnapshot.val().PickCategoryName;
+//             var getCurrentCategory = document.getElementById("selectsys").value;
+//             var GetStringDate = date.toString();
+//             var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+//             var searchDate = new Date(date).toLocaleDateString('en', options);
+           
+//                 if(GetStringDate == dieselChildSnapshot.val().Date_Input)
+//                 {
+//                 if (getCurrentCategory ==  getdataCurrentCategory) 
+//                 {
+//                 var truckno = dieselChildSnapshot.val().truck_no;
+//                 var suppliername = dieselChildSnapshot.val().supplier || dieselChildSnapshot.val().operator;
+//                 var quantityin = Number(dieselChildSnapshot.val().quantity_in).toLocaleString("en");
+//                 var availablestock = Number(dieselChildSnapshot.val().seperateCurrentStock).toLocaleString("en");
+//                 var time = dieselChildSnapshot.val().time_input;
+//                 var drno = dieselChildSnapshot.val().dr_no || "";
+//                 var dates= dieselChildSnapshot.val().Date_Input;
+//                 var key = dieselChildSnapshot.key;
+//                 console.log(quantityin);
+
+//                 var quantityout = Number(dieselChildSnapshot.val().quantity_out).toLocaleString("en");
+//                 //var address = dieselChildSnapshot.val().destination || "";
+                
+//                 if (quantityin == "NaN"){quantityholder = "";}
+//                 else{quantityholder = quantityin + " liter(s)" ;}
+//                 if (quantityout == "NaN"){quantityoutholder = "";}
+//                 else{quantityoutholder = quantityout + " liter(s)";}
+                
+            
+//                  if (dieselChildSnapshot.val().TransactionType == "In"){
+//                     myTbody += "<tr style ='background-color:#006080'>";
+//                     myTbody += "<td style ='color: white'><strong>" + truckno + "</strong></td>";
+//                     myTbody += "<td style ='color: white'><strong>" + suppliername + "</strong></td>";
+//                     myTbody += "<td style ='color: white'><strong>" + quantityholder  + "</strong></td>";
+//                     myTbody += "<td style ='color: white'><strong>" + quantityoutholder  + "</strong></td>";
+//                     myTbody += "<td style ='color: white'><strong>" + availablestock + " liter(s)" + "</strong></td>";
+//                     //myTbody += "<td><strong>" + address + "</strong></td>";
+//                     myTbody += "<td style ='color: white'><strong>" + time + "</strong></td>";
+//                     myTbody += "<td style ='color: white'><strong>" + drno + "</strong></td>";
+//                     myTbody += "<td style ='color: white'><strong>" + date + "</strong></td>";
+//                     myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"
+//                 }else{
+//                     // myTbody += "<tr>";
+//                     myTbody += "<tr><td><strong>" + truckno + "</strong></td>";
+//                     myTbody += "<td><strong>" + suppliername + "</strong></td>";
+//                     myTbody += "<td><strong>" + quantityholder  + "</strong></td>";
+//                     myTbody += "<td><strong>" + quantityoutholder  + "</strong></td>";
+//                     myTbody += "<td><strong>" + availablestock + " liter(s)" + "</strong></td>";
+//                     //myTbody += "<td><strong>" + address + "</strong></td>";
+//                     myTbody += "<td><strong>" + time + "</strong></td>";
+//                     myTbody += "<td><strong>" + drno + "</strong></td>";
+//                     myTbody += "<td><strong>" + date + "</strong></td>";
+//                     myTbody += "<td><form onsubmit=\"if(confirm('Proceed?')){DeleteRowData(\'" + key + "\',\'" + plant + "\');}else{ event.preventDefault();}\"><button type='submit' class='fa fa-trash btn btn-danger btn-md btn-block'><strong> Delete</strong></button></form></td></tr>"
+//                 }
+                
+//                  firebase.database().ref().child("available_seperate_category/" + plant).once('value',function(DisplayStockSnapshots)
+//             {
+//                 DisplayStockSnapshots.forEach(function(SeperateChildSnapshot){
+
+//             if (dieselChildSnapshot.val().PickCategoryName == SeperateChildSnapshot.val().CategoryName) 
+//             {
+//                 document.getElementById("id_Categorystock").innerHTML = Number(SeperateChildSnapshot.val().Liters).toLocaleString("en") + " Liter(s)"; 
+//             }
+
+//             });
+//             }); 
+//                  $(".se-pre-con").fadeOut("slow");
+//                 }
+//                 }
+//         });
+//           var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
+//             var searchDate = new Date(date).toLocaleDateString('en', options);
+//          if (myTbody == "") 
+//                {
+//                     myTbody ="<tr><td colspan='8' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+//                     document.getElementById("DieselList").innerHTML = myTbody; 
+//                      $(".se-pre-con").fadeOut("slow");
+//                 }else{document.getElementById("DieselList").innerHTML = myTbody; } 
+//                  document.getElementById("Search_day").innerHTML = searchDate;
+//     });
+//     }
+// }
 
 function datePrint()
 {
@@ -788,7 +1012,7 @@ function totalCountBadge(){
                                                     <div class="col-md-12" style=" white-space: nowrap;">
                                                         <label for="date_view" class="col-md-3 control-label" style="white-space: nowrap;"><strong>Select Date:</strong></label>
                                                         <div class="col-md-7">
-                                                            <input type="date" id = "date_view" name="date_view" class="form-control">   
+                                                            <input type="text" id = "date_view" name="date_view" class="form-control">   
                                                             <button type="submit" id = "submitGo" class="btn btn-md btn-info" style=""><strong>Go</strong></button>                      
                                                         </div> 
                                                     </div>
