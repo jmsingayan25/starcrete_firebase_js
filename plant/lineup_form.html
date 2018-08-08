@@ -188,26 +188,26 @@
         });
     }
 
-    function displayMachineList(val, num){
+    // function displayMachineList(val, num){
 
-    	var machineDatalist = "";
-    	var input_machine1_name = $("input[name='machine1_name[]']").map(function(){return $(this).val();}).get(); 
+    // 	var machineDatalist = "";
+    // 	var input_machine1_name = $("input[name='machine1_name[]']").map(function(){return $(this).val();}).get(); 
 
-    	firebase.database().ref('employee/'+plant+'/machine').once('value', function(machineListSnapshot){
-    		machineListSnapshot.forEach(function(machineListChildSnapshot){
+    // 	firebase.database().ref('employee/'+plant+'/machine').once('value', function(machineListSnapshot){
+    // 		machineListSnapshot.forEach(function(machineListChildSnapshot){
 
-    			search = searchMatch(val, machineListChildSnapshot.val().employee_name);
+    // 			search = searchMatch(val, machineListChildSnapshot.val().employee_name);
 
-    			if(search != null){
-    				machineDatalist += "<option value='" + machineListChildSnapshot.val().employee_name + "'>" + machineListChildSnapshot.val().employee_name + "</option>";
-    			}
-    		});
+    // 			if(search != null){
+    // 				machineDatalist += "<option value='" + machineListChildSnapshot.val().employee_name + "'>" + machineListChildSnapshot.val().employee_name + "</option>";
+    // 			}
+    // 		});
 
-    		view = "machineList"+num;
+    // 		view = "machineList"+num;
 
-    		document.getElementById(view).innerHTML = machineDatalist;
-    	});
-    }
+    // 		document.getElementById(view).innerHTML = machineDatalist;
+    // 	});
+    // }
 
     function submitForm(){
 
@@ -740,7 +740,7 @@
 						                            <section class="panel">
 						                                <header class="panel-heading">
 						                                    <strong>MACHINE 1</strong>
-						                                    <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="machine1" data-position-title="MACHINE 1"><span class="fa fa-plus"></span> Add Employee</button>
+						                                    <!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="machine1" data-position-title="MACHINE 1"><span class="fa fa-plus"></span> Add Employee</button> -->
 						                                </header>
 						                                <div class="panel-body">
 						                                	<div class="row">
@@ -752,8 +752,7 @@
 						                                            </tr>
 						                                            <tr id="machine1_row1" style="text-align: center;">
 						                                            	<td class="col-md-5">
-						                                                    <input type="text" name="machine1_name[]" class="form-control input_type" onkeyup="displayMachineList(this.value, '1');" list="machineList1">
-						                                                    <datalist id="machineList1"></datalist>
+						                                                    <input type="text" name="machine1_name[]" class="form-control input_type">
 						                                            	</td>
 						                                            	<td class="col-md-1">
 						                                                    <button type="button" onclick="add_machine1_employee();" class='btn btn-primary btn-md'><span class="fa fa-plus"></span></button> 
@@ -772,7 +771,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>MACHINE 3</strong>
-							                				<button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="machine3" data-position-title="MACHINE 3"><span class="fa fa-plus"></span> Add Employee</button>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="machine3" data-position-title="MACHINE 3"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -813,7 +812,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>NON-SKID 1</strong>
-							                				<button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="nonskid1" data-position-title="NON-SKID 1"><span class="fa fa-plus"></span> Add Employee</button>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="nonskid1" data-position-title="NON-SKID 1"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -842,7 +841,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>NON-SKID 2</strong>
-							                				<button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="nonskid2" data-position-title="NON-SKID 2"><span class="fa fa-plus"></span> Add Employee</button>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="nonskid2" data-position-title="NON-SKID 2"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -871,7 +870,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>NON-SKID 3</strong>
-							                				<button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="nonskid3" data-position-title="NON-SKID 3"><span class="fa fa-plus"></span> Add Employee</button>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="nonskid3" data-position-title="NON-SKID 3"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -900,7 +899,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>NON-SKID 4</strong>
-							                				<button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="nonskid4" data-position-title="NON-SKID 4"><span class="fa fa-plus"></span> Add Employee</button>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="nonskid4" data-position-title="NON-SKID 4"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -939,7 +938,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG</strong>
-							                				<button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="tagapukpok" data-position-title="TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG"><span class="fa fa-plus"></span> Add Employee</button>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="tagapukpok" data-position-title="TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -976,7 +975,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>CHECKER / FOREMAN / BATCHER / SUPERVISOR</strong>
-							                				<button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="checker" data-position-title="CHECKER / FOREMAN / BATCHER / SUPERVISOR"><span class="fa fa-plus"></span> Add Employee</button>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="checker" data-position-title="CHECKER / FOREMAN / BATCHER / SUPERVISOR"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -1028,7 +1027,7 @@
 							                    	<section class="panel">
 							                    		<header class="panel-heading">
 							                    			<strong>FORKLIFT OPERATOR</strong>
-							                    			<button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="forklift_operator" data-position-title="FORKLIFT OPERATOR"><span class="fa fa-plus"></span> Add Employee</button>
+							                    			<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="forklift_operator" data-position-title="FORKLIFT OPERATOR"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                    		</header>
 							                    		<div class="panel-body">
 							                    			<div class="row">
@@ -1059,7 +1058,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>MECHANIC</strong>
-							                				<button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="mechanic" data-position-title="MECHANIC"><span class="fa fa-plus"></span> Add Employee</button>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="mechanic" data-position-title="MECHANIC"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 						                					<div class="row">
@@ -1088,7 +1087,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>LOADER</strong>
-							                				<button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="loader" data-position-title="LOADER"><span class="fa fa-plus"></span> Add Employee</button>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="loader" data-position-title="LOADER"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
