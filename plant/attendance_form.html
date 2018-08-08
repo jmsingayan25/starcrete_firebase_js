@@ -136,7 +136,7 @@
             forkliftSnapshot.forEach(function(forkliftChildSnapshot){
 
                 // console.log(forkliftChildSnapshot.val());
-                forkliftTbody += "<tr><td class='col-md-3' style='text-align: center;'><strong>" + forkliftChildSnapshot.val().item + "</strong></td><input type='hidden' name='hidden_forklift[]' value='" + forkliftChildSnapshot.val().item + "'><td class='col-md-9'><input type='text' name='forklift_comment[]' class='form-control'></td></tr>";
+                forkliftTbody += "<tr><td class='col-md-3' style='text-align: center;'><strong>" + forkliftChildSnapshot.val().item + "</strong></td><input type='hidden' name='hidden_forklift[]' value='" + forkliftChildSnapshot.val().item + "'><td class='col-md-9'><input type='text' name='forklift_comment[]' class='form-control input_type'></td></tr>";
             });
 
             document.getElementById('forkliftList').innerHTML = forkliftTbody;
@@ -150,7 +150,7 @@
         firebase.database().ref('trucking_list/'+plant).once('value', function(truckingSnapshot){
             truckingSnapshot.forEach(function(truckingChildSnapshot){
 
-                truckingTbody += "<tr style='text-align: center;'><td><strong>" + truckingChildSnapshot.val().item + "</strong></td><input type='hidden' name='hidden_trucking[]' value='" + truckingChildSnapshot.val().item + "'><td><input type='text' name='driver[]' class='form-control'></td><td><input type='text' name='pahinante1[]' class='form-control'></td><td><input type='text' name='pahinante2[]' class='form-control'></td><td><textarea name='trucking_reason[]' rows='2' class='form-control'></textarea></td></tr>";
+                truckingTbody += "<tr style='text-align: center;'><td><strong>" + truckingChildSnapshot.val().item + "</strong></td><input type='hidden' name='hidden_trucking[]' value='" + truckingChildSnapshot.val().item + "'><td><textarea name='driver[]' rows='2' class='form-control input_type'></textarea></td><td><textarea name='pahinante1[]'rows='2' class='form-control input_type'></textarea></td><td><textarea name='pahinante2[]'rows='2' class='form-control input_type'></textarea></td><td><textarea name='trucking_reason[]' rows='2' class='form-control input_type'></textarea></td></tr>";
             });
 
             document.getElementById('truckingList').innerHTML = truckingTbody;
@@ -168,7 +168,11 @@
         var time_start = document.getElementById('time_start_selected').value;
         var time_end = document.getElementById('time_end_selected').value;
         var time_option = { hour: 'numeric', minute: 'numeric', hour12: true };
-        var input_schedule = new Date(time_start).toLocaleString('en', time_option) + " - " + new Date(time_end).toLocaleString('en', time_option);
+
+        var time_start_date = date_of_attendance + " " +  time_start;
+        var time_end_date = date_of_attendance + " " +  time_end;
+
+        var input_schedule = new Date(time_start_date).toLocaleString('en', time_option) + " - " + new Date(time_end_date).toLocaleString('en', time_option);
 
         var input_employee_name = $("input[name='employee_name[]']").map(function(){return $(this).val() || "";}).get();
         var input_employee_timein = $("input[name='employee_timein[]']").map(function(){return $(this).val() || "";}).get();
@@ -194,18 +198,19 @@
         var input_ns4_helper = document.getElementById('nonskid4_helper_name').value;
 
         var input_trucking_no = $("input[name='hidden_trucking[]']").map(function(){return $(this).val() || "";}).get();
-        var input_trucking_driver = $("input[name='driver[]']").map(function(){return $(this).val() || "";}).get();
-        var input_trucking_pahinante1 = $("input[name='pahinante1[]']").map(function(){return $(this).val() || "";}).get();
-        var input_trucking_pahinante2 = $("input[name='pahinante2[]']").map(function(){return $(this).val() || "";}).get();
+        var input_trucking_driver = $("textarea[name='driver[]']").map(function(){return $(this).val() || "";}).get();
+        var input_trucking_pahinante1 = $("textarea[name='pahinante1[]']").map(function(){return $(this).val() || "";}).get();
+        var input_trucking_pahinante2 = $("textarea[name='pahinante2[]']").map(function(){return $(this).val() || "";}).get();
+        var input_trucking_reason = $("textarea[name='trucking_reason[]']").map(function(){return $(this).val() || "";}).get();
 
         var input_forklift = $("input[name='hidden_forklift[]']").map(function(){return $(this).val() || "";}).get();
         var input_forklift_comment = $("input[name='forklift_comment[]']").map(function(){return $(this).val() || "";}).get();
 
         var input_guard_agency_name = document.getElementById('guard_agency_name').value;
-        var input_dayshift = $("input[name='guard_day_name[]']").map(function(){return $(this).val() || "";}).get();
-        var input_dayshift = $("input[name='guard_day_position[]']").map(function(){return $(this).val() || "";}).get();
-        var input_nightshift = $("input[name='guard_night_name[]']").map(function(){return $(this).val() || "";}).get();
-        var input_nightshift = $("input[name='guard_night_position[]']").map(function(){return $(this).val() || "";}).get();
+        var input_dayshift_name = $("input[name='guard_day_name[]']").map(function(){return $(this).val() || "";}).get();
+        var input_dayshift_position = $("input[name='guard_day_position[]']").map(function(){return $(this).val() || "";}).get();
+        var input_nightshift_name = $("input[name='guard_night_name[]']").map(function(){return $(this).val() || "";}).get();
+        var input_nightshift_position = $("input[name='guard_night_position[]']").map(function(){return $(this).val() || "";}).get();
 
         var input_note = document.getElementById('note').value;
 
@@ -219,29 +224,251 @@
 
         firebase.database().ref('attendance/'+plant+'/'+date_of_attendance).set(scheduleData);
 
+        var commentData = {
+            comment_plant: input_note.toUpperCase() || "N/A"
+        }
+
+        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/comment').push(commentData);
+
+        /*OFFICE EMPLOYEE*/
         for(a = 0; a < input_employee_name.length; a++){
-
             if(input_employee_name.length == 1 && input_employee_name[a] == ""){
-
                 var employeeData = {
                     employee_name: "N/A",
                     employee_timein: "N/A",
                     employee_timeout: "N/A"
                 }
-
             }else{
-
                 var employeeData = {
                     employee_name: input_employee_name[a].toUpperCase(),
                     employee_timein: input_employee_timein[a],
                     employee_timeout: input_employee_timeout[a]
                 }
             }
-
             firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/office').push(employeeData);
         }
+        /*END OFFICE EMPLOYEE*/
 
+        /*ABSENT AGENCY EMPLOYEE*/
+        for(a = 0; a < input_agency_name.length; a++){
+            if(input_agency_name.length == 1 && input_agency_name[a] == ""){
+                var employeeData = {
+                    employee_name: "N/A",
+                    employee_comment: "N/A"
+                }
+            }else{
+                var employeeData = {
+                    employee_name: input_agency_name[a].toUpperCase(),
+                    employee_comment: input_agency_comment[a].toUpperCase()
+                }
+            }
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/absent/agency').push(employeeData);
+        }
+        /*END ABSENT AGENCY EMPLOYEE*/
 
+        /*ABSENT PLANT EMPLOYEE*/
+        for(a = 0; a < input_plant_name.length; a++){
+            if(input_plant_name.length == 1 && input_plant_name[a] == ""){
+                var employeeData = {
+                    employee_name: "N/A",
+                    employee_comment: "N/A"
+                }
+            }else{
+                var employeeData = {
+                    employee_name: input_plant_name[a].toUpperCase(),
+                    employee_comment: input_plant_comment[a].toUpperCase()
+                }
+            }
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/absent/plant').push(employeeData);
+        }
+        /*END ABSENT PLANT EMPLOYEE*/
+
+        /*ABSENT MOTORPOOL EMPLOYEE*/
+        for(a = 0; a < input_motorpool_name.length; a++){
+            if(input_motorpool_name.length == 1 && input_motorpool_name[a] == ""){
+                var employeeData = {
+                    employee_name: "N/A",
+                    employee_comment: "N/A"
+                }
+            }else{
+                var employeeData = {
+                    employee_name: input_motorpool_name[a].toUpperCase(),
+                    employee_comment: input_motorpool_comment[a].toUpperCase()
+                }
+            }
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/absent/motorpool').push(employeeData);
+        }
+        /*END ABSENT MOTORPOOL EMPLOYEE*/
+
+        /*ABSENT TRUCKING EMPLOYEE*/
+        for(a = 0; a < input_trucking_name.length; a++){
+            if(input_trucking_name.length == 1 && input_trucking_name[a] == ""){
+                var employeeData = {
+                    employee_name: "N/A",
+                    employee_comment: "N/A"
+                }
+            }else{
+                var employeeData = {
+                    employee_name: input_trucking_name[a].toUpperCase(),
+                    employee_comment: input_trucking_comment[a].toUpperCase()
+                }
+            }
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/absent/trucking').push(employeeData);
+        }
+        /*END ABSENT TRUCKING EMPLOYEE*/
+
+        /*NEW EMPLOYEE*/
+        for(a = 0; a < input_new_employee.length; a++){
+            if(input_new_employee.length == 1 && input_new_employee[a] == ""){
+                var employeeData = {
+                    employee_name: "N/A"
+                }
+            }else{
+                var employeeData = {
+                    employee_name: input_new_employee[a].toUpperCase()
+                }
+            }
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/new_employee').push(employeeData);
+        }
+        /*END NEW EMPLOYEE*/
+
+        /*NON-SKID 1 EMPLOYEE*/
+        for(a = 0; a < input_ns1_name.length; a++){
+            if(input_ns1_name.length == 1 && input_ns1_name[a] == ""){
+                var employeeData = {
+                    employee_name: "N/A"
+                }
+            }else{
+                var employeeData = {
+                    employee_name: input_ns1_name[a].toUpperCase()
+                }
+            }
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid1').push(employeeData);
+        }
+
+        var helper1Data = {
+            helper_name: input_ns1_helper.toUpperCase() || "N/A"
+        }
+
+        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid1/helper').push(helper1Data);
+        /*END NON-SKID 1 EMPLOYEE*/
+
+        /*NON-SKID 2 EMPLOYEE*/
+        for(a = 0; a < input_ns2_name.length; a++){
+            if(input_ns2_name.length == 1 && input_ns2_name[a] == ""){
+                var employeeData = {
+                    employee_name: "N/A"
+                }
+            }else{
+                var employeeData = {
+                    employee_name: input_ns2_name[a].toUpperCase()
+                }
+            }
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid2').push(employeeData);
+        }
+
+        var helper2Data = {
+            helper_name: input_ns2_helper.toUpperCase() || "N/A"
+        }
+
+        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid2/helper').push(helper2Data);
+        /*END NON-SKID 2 EMPLOYEE*/
+
+        /*NON-SKID 3 EMPLOYEE*/
+        for(a = 0; a < input_ns3_name.length; a++){
+            if(input_ns3_name.length == 1 && input_ns3_name[a] == ""){
+                var employeeData = {
+                    employee_name: "N/A"
+                }
+            }else{
+                var employeeData = {
+                    employee_name: input_ns3_name[a].toUpperCase()
+                }
+            }
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid3').push(employeeData);
+        }
+
+        var helper3Data = {
+            helper_name: input_ns3_helper.toUpperCase() || "N/A"
+        }
+
+        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid3/helper').push(helper3Data);
+        /*END NON-SKID 3 EMPLOYEE*/
+
+        /*NON-SKID 4 EMPLOYEE*/
+        for(a = 0; a < input_ns4_name.length; a++){
+            if(input_ns4_name.length == 1 && input_ns4_name[a] == ""){
+                var employeeData = {
+                    employee_name: "N/A"
+                }
+            }else{
+                var employeeData = {
+                    employee_name: input_ns4_name[a].toUpperCase()
+                }
+            }
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid4').push(employeeData);
+        }
+
+        var helper4Data = {
+            helper_name: input_ns4_helper.toUpperCase() || "N/A"
+        }
+
+        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid4/helper').push(helper4Data);
+        /*END NON-SKID 4 EMPLOYEE*/
+
+        /*TRUCKING*/
+        for(var a = 0; a < input_trucking_no.length; a++){
+            var truckingData = {
+                truck_no: input_trucking_no[a].toUpperCase(),
+                driver: input_trucking_driver[a].toUpperCase() || "N/A",
+                pahinante1: input_trucking_pahinante1[a].toUpperCase() || "N/A",
+                pahinante2: input_trucking_pahinante2[a].toUpperCase() || "N/A",
+                comment: input_trucking_reason[a].toUpperCase() || "N/A"
+            }
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/trucking').push(truckingData);
+        }
+        /*END TRUCKING*/
+
+        /*FORKLIFT EMPLOYEE*/
+        for(var a = 0; a < input_forklift.length; a++){
+            var forkliftData = {
+                forklift_no: input_forklift[a].toUpperCase(),
+                operator: input_forklift_comment[a].toUpperCase() || "N/A"
+            }
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/forklift').push(forkliftData);
+        }
+        /*END FORKLIFT EMPLOYEE*/
+
+        /*GUARD EMPLOYEE*/
+        var agencyData = {
+            agency_name: input_guard_agency_name.toUpperCase() || "N/A"
+        }
+
+        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/guard').set(agencyData);
+
+        for(a = 0; a < input_dayshift_name.length; a++){
+            var dayshiftGuardData = {
+                guard_name: input_dayshift_name[a].toUpperCase() || "N/A",
+                guard_position: input_dayshift_position[a].toUpperCase() || "N/A"
+            }
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/guard/dayshift').push(dayshiftGuardData);
+        }
+
+        count = 0;
+        for(a = 0; a < input_nightshift_name.length; a++){
+            var nightshiftGuardData = {
+                guard_name: input_nightshift_name[a].toUpperCase() || "N/A",
+                guard_position: input_nightshift_position[a].toUpperCase() || "N/A"
+            }
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/guard/nightshift').push(nightshiftGuardData);
+            count++;
+        }
+        /*END GUARD EMPLOYEE*/
+
+        if(count == input_nightshift_name.length){
+            alert("Attendance recorded");
+            window.location='attendance.html';
+        }
     }
 
 </script>
@@ -406,26 +633,22 @@
                                     <input type="date" name="date_selected" id="date_selected" class="form-control" required>
                                 </div>
                             </div>
-                            <div class="row" style="padding-bottom: 10px; padding-top: 10px;">
-                                <!-- <div class="col-md-2">
-                                    Time of Schedule:
-                                </div>
-                                <div class="col-md-2">
-                                    <input type="time" name="time_start_selected" id="time_start_selected" class="form-control" required> - <input type="time" name="time_end_selected" id="time_end_selected" class="form-control" required>
-                                </div> -->
-                                <div class="form-group" style="margin-top: 5px; margin-bottom: 5px;">
-                                            <label for="date" class="col-md-2 control-label" style="margin-right: -80px;">Time of Schedule:</label>
-                                            <div class="col-md-2" style="">
-                                                <input type="time" name="time_start_selected" id="time_start_selected" class="form-control" required>
-                                            </div>
-                                            <div class="col-md-1"><span>-</span></div>
-                                            <div class="col-md-2" style="margin-left: -65px;">
-                                                <input type="time" name="time_end_selected" id="time_end_selected" class="form-control" required>
-                                            </div>
-                                        </div> 
-                            </div>
                         </header>
                         <div class="panel-body">
+                            <div class="row" style="margin-bottom: 10px;">
+                                <div class="col-md-offset-1 col-md-12">
+                                    <div class="form-group">
+                                        <label for="date" class="col-md-2 control-label" style="margin-right: -70px;">Time of Schedule:</label>
+                                        <div class="col-md-2" style="">
+                                            <input type="time" name="time_start_selected" id="time_start_selected" class="form-control" required>
+                                        </div>
+                                        <div class="col-md-1"><span>-</span></div>
+                                        <div class="col-md-2" style="margin-left: -65px;">
+                                            <input type="time" name="time_end_selected" id="time_end_selected" class="form-control" required>
+                                        </div>
+                                    </div> 
+                                </div>
+                            </div>
                             <div class="row">
                                 <div class="col-md-offset-1 col-md-10">
                                     <section class="panel">
@@ -710,8 +933,7 @@
                                                                             <td>
                                                                                 <input type="text" id="nonskid1_helper_name" class="form-control input_type" autofocus>
                                                                             </td>
-                                                                        </tr>
-                                                                        
+                                                                        </tr>                                            
                                                                     </table>
                                                                 </div>
                                                             </div>
@@ -896,7 +1118,7 @@
                                         <div class="panel-body">
                                             <div class="row" style="margin-bottom: 5px;">
                                                 <div class="col-md-6">
-                                                    Name of Agency: <input type="text" id="guard_agency_name" class="form-control">
+                                                    Name of Agency: <input type="text" id="guard_agency_name" class="form-control input_type">
                                                 </div>
                                                 <!-- <div class="col-md-2">
                                                     Date Start: <input type="date" name="guard_agency_started" class="form-control">
