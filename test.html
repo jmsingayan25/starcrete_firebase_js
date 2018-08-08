@@ -53,58 +53,9 @@
 	$(document).ready(function(){
 
 
-        var db = firebase.database();
-        var ref = db.ref('delivery_ongoing_order');
 
-        reload_count = 0;
-        reload_remove = 0;
-        // ref.on('child_added', function(snapshot){
-        //     tableData('Bravo')
-        // });
-
-        // ref.on('child_removed', function(snapshot){
-        //     tableData('Bravo')
-        // });
-
-        firebase.database().ref('delivery_ongoing_order').orderByKey().limitToLast(1).on('child_added', function(){
-            // snapshot.forEach(function(childSnapshot){
-                $(".se-pre-con").fadeIn("fast");
-
-                setTimeout(function() {
-                   reload_count++;
-                    tableData('Bravo');
-
-                    console.log('Changed:' + reload_count);
-                }, 1000);
-                // return true;
-            // });
-        });
-
-        firebase.database().ref('delivery_ongoing_order').on('child_removed', function(){
-            // snapshot.forEach(function(childSnapshot){
-                $(".se-pre-con").fadeIn("fast");
-                setTimeout(function() {
-                   reload_remove++;
-                    tableData('Bravo');
-
-                    console.log('Remove:' + reload_remove);
-                }, 1000);
-                // return true;
-            // });
-        });
-
-        firebase.database().ref('available_stock/'+plant).on('child_changed' function(){
-            setTimeout(function() {
-               reload_count++;
-                tableData();
-
-                console.log('Changed:' + reload_count);
-            }, 1000);
-        });
-
-
-		// var itemData = {
-		// 	item: "1A",
+		var itemData = {
+			item: "HOWO",
 		// 	item: "1B",
 		// 	item: "1C",
 		// 	item: "1X",
@@ -129,9 +80,9 @@
 		// 	item: "NS",
 		// 	item: "SE"
 		// 	// quantity: "0"
-		// }
+		}
 
-		// if(firebase.database().ref('item').push(itemData)){
+		// if(firebase.database().ref('trucking_list/Bravo').push(itemData)){
 		// 	alert("YES");
 		// }
 	
@@ -153,7 +104,7 @@
 		// 	endDate = end.format('YYYY-MM-DD');
 		// 	// console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
 		// });
-		tableData('Bravo');
+		// tableData('Bravo');
 	});
 
     // function updateDiv()
@@ -356,111 +307,111 @@
 
 	//}
 
-	function tableData(plant){
+	// function tableData(plant){
  
        
-        var myTbody = "";
-    	var count = 1;
-    	var table = $('#myTable').DataTable();
-    	table.clear().draw();
+ //        var myTbody = "";
+ //    	var count = 1;
+ //    	var table = $('#myTable').DataTable();
+ //    	table.clear().draw();
 
-        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).once('value').then(function(drSnapshot){
-            // console.log(drSnapshot.val());
-            if(drSnapshot.val() == null){
+ //        firebase.database().ref('delivery_ongoing_order').orderByChild('issued_dr_plant').equalTo(plant).once('value').then(function(drSnapshot){
+ //            // console.log(drSnapshot.val());
+ //            if(drSnapshot.val() == null){
 
-                // myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
+ //                // myTbody = "<tr><td colspan='10' style='height: 100%; background: white; text-align:center; vertical-align:middle;'><h4><p class='text-muted'>No data found</p></h4></td></tr>";
 
-                // document.getElementById("orderList").innerHTML = myTbody;
+ //                // document.getElementById("orderList").innerHTML = myTbody;
 
-                table.draw( {
-                    "language": {
-                      "emptyTable": "No data available in table"
-                    }
-                } );
+ //                table.draw( {
+ //                    "language": {
+ //                      "emptyTable": "No data available in table"
+ //                    }
+ //                } );
 
-                $(".se-pre-con").fadeOut("slow");
-            }
-        });
+ //                $(".se-pre-con").fadeOut("slow");
+ //            }
+ //        });
 
-    	firebase.database().ref('delivery_ongoing_order').orderByChild('reverseDate').on('child_added', function(orderSnapshot){
+ //    	firebase.database().ref('delivery_ongoing_order').orderByChild('reverseDate').on('child_added', function(orderSnapshot){
     	
-            if(orderSnapshot.val().issued_dr_plant == plant){
-        		firebase.database().ref('delivery_ongoing_order/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
-        			projectSnapshot.forEach(function(projectChildSnapshot){
+ //            if(orderSnapshot.val().issued_dr_plant == plant){
+ //        		firebase.database().ref('delivery_ongoing_order/'+orderSnapshot.key+'/project_detail').once('value', function(projectSnapshot){
+ //        			projectSnapshot.forEach(function(projectChildSnapshot){
 
-        				contact_array = []
-                        dr_no = orderSnapshot.val().dr_no;
-                        po_no = orderSnapshot.val().po_no;
-                        item_no = orderSnapshot.val().item_no;
-                        psi = orderSnapshot.val().psi;
+ //        				contact_array = []
+ //                        dr_no = orderSnapshot.val().dr_no;
+ //                        po_no = orderSnapshot.val().po_no;
+ //                        item_no = orderSnapshot.val().item_no;
+ //                        psi = orderSnapshot.val().psi;
 
-                        if(psi != ""){
-                            psi_ext = " (" + psi + " psi)";
-                        }else{
-                            psi_ext = "";
-                        }
+ //                        if(psi != ""){
+ //                            psi_ext = " (" + psi + " psi)";
+ //                        }else{
+ //                            psi_ext = "";
+ //                        }
 
-                        quantity = Number(orderSnapshot.val().quantity).toLocaleString('en');
-                        project_name = projectChildSnapshot.val().project_name;
-                        project_address = projectChildSnapshot.val().project_address;
-                        date = dateFormat(orderSnapshot.val().date);
-                        status = orderSnapshot.val().status;
+ //                        quantity = Number(orderSnapshot.val().quantity).toLocaleString('en');
+ //                        project_name = projectChildSnapshot.val().project_name;
+ //                        project_address = projectChildSnapshot.val().project_address;
+ //                        date = dateFormat(orderSnapshot.val().date);
+ //                        status = orderSnapshot.val().status;
 
-                        myTbody += "<tr><td><strong>" + count + "</strong></td>";
-                        myTbody += "<td><strong>" + dr_no + "</strong></td>";
-                        myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
-                        myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
-                        myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
-                        myTbody += "<td><strong>" + project_name + "</strong></td>";
-                        myTbody += "<td><strong>" + project_address + "</strong></td>";
-                        myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
+ //                        myTbody += "<tr><td><strong>" + count + "</strong></td>";
+ //                        myTbody += "<td><strong>" + dr_no + "</strong></td>";
+ //                        myTbody += "<td style='cursor: pointer;'><div class='tooltips' data-original-title='Click for more details about P.O. No. " + po_no + "' data-placement='top' onclick=\"window.location='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "&plant=" + plant + "'\"><strong>" + po_no + "</strong></div></td>";
+ //                        myTbody += "<td><strong>" + item_no + psi_ext + "</strong></td>";
+ //                        myTbody += "<td><strong>" + quantity + " pcs</strong></td>";
+ //                        myTbody += "<td><strong>" + project_name + "</strong></td>";
+ //                        myTbody += "<td><strong>" + project_address + "</strong></td>";
+ //                        myTbody += "<td><a data-toggle='collapse' data-target='#contacts"+count+"' style='cursor: default; color: inherit;'>Click to view</a><div id='contacts"+count+"' class='collapse'>";
 
-                        firebase.database().ref('delivery_ongoing_order/'+orderSnapshot.key+'/contact').once('value', function(contactSnapshot){
-                            contactSnapshot.forEach(function(contactChildSnapshot){
+ //                        firebase.database().ref('delivery_ongoing_order/'+orderSnapshot.key+'/contact').once('value', function(contactSnapshot){
+ //                            contactSnapshot.forEach(function(contactChildSnapshot){
 
-                                contact_name = contactChildSnapshot.val().contact_name;
-                                contact_no = contactChildSnapshot.val().contact_no;
-                                myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
+ //                                contact_name = contactChildSnapshot.val().contact_name;
+ //                                contact_no = contactChildSnapshot.val().contact_no;
+ //                                myTbody += "<div class='row' style='margin-bottom: 2px;'><div class='col-md-12'><strong>" + contact_name + "<br> (" + contact_no + ") <br><br></strong></div></div>";
 
-                                 	var array_value = {
-				                        contact_name: contact_name,
-				                        contact_no: contact_no
-				                    }
+ //                                 	var array_value = {
+	// 			                        contact_name: contact_name,
+	// 			                        contact_no: contact_no
+	// 			                    }
 
-				                    contact_array.push(array_value);
-                            }); 
-                        });
+	// 			                    contact_array.push(array_value);
+ //                            }); 
+ //                        });
 
                         
-                        myTbody += "</td>";
-                        myTbody += "<td><strong>" + date + "</strong></td>";
-                        myTbody += "<td><span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
-                        // myTbody += "<td style='color: #388e3c;'><strong>" + status + "</strong></td></tr>";
-                        // document.getElementById('orderList').innerHTML = myTbody;
+ //                        myTbody += "</td>";
+ //                        myTbody += "<td><strong>" + date + "</strong></td>";
+ //                        myTbody += "<td><span class='label' style='background-color: #388e3c; font-size: 12px;'><strong>" + status + "</strong></span></td></tr>";
+ //                        // myTbody += "<td style='color: #388e3c;'><strong>" + status + "</strong></td></tr>";
+ //                        // document.getElementById('orderList').innerHTML = myTbody;
 
-                        for (var i = 0; i < contact_array.length; i++) {
+ //                        for (var i = 0; i < contact_array.length; i++) {
 
-                        	if(i == 0){
-		                        contact = contact_array[i].contact_name + " (" + contact_array[i].contact_no + ")";
-		                    }else if(i == (contact_array.length - 1)){
-		                        contact += " and " + contact_array[i].contact_name + " (" + contact_array[i].contact_no + ")";
-		                    }else{
-		                        contact += ", " + contact_array[i].contact_name + " (" + contact_array[i].contact_no + ")";
-		                    }
-                        }
+ //                        	if(i == 0){
+	// 	                        contact = contact_array[i].contact_name + " (" + contact_array[i].contact_no + ")";
+	// 	                    }else if(i == (contact_array.length - 1)){
+	// 	                        contact += " and " + contact_array[i].contact_name + " (" + contact_array[i].contact_no + ")";
+	// 	                    }else{
+	// 	                        contact += ", " + contact_array[i].contact_name + " (" + contact_array[i].contact_no + ")";
+	// 	                    }
+ //                        }
 
-                        view_detail = "<a href='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "&plant=" + plant + "'>Click for more details about P.O. No. " + po_no + "</a>";
+ //                        view_detail = "<a href='delivery_po_summary.html?po_no_key=" + orderSnapshot.val().po_no_key + "&plant=" + plant + "'>Click for more details about P.O. No. " + po_no + "</a>";
 
-                        table.row.add( [ count, dr_no, po_no, item_no, quantity, project_name, project_address, contact, date, status, view_detail ] ).draw();
+ //                        table.row.add( [ count, dr_no, po_no, item_no, quantity, project_name, project_address, contact, date, status, view_detail ] ).draw();
                         
-                        count++;
+ //                        count++;
                     
-                        $(".se-pre-con").fadeOut("slow");
-        			});
-        		});
-         	}
-    	});       
-    }
+ //                        $(".se-pre-con").fadeOut("slow");
+ //        			});
+ //        		});
+ //         	}
+ //    	});       
+ //    }
 
 	// function countItemOngoingDelivery(itemKey, callback){
 

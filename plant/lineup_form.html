@@ -120,12 +120,19 @@
                 window.location.href = '../login.html';
             }
 
-            document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
-
-        	
+            document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);        	
         });
 
-        
+        $('#employeeModal').on('show.bs.modal', function (event) {
+			var button = $(event.relatedTarget) // Button that triggered the modal
+			var position = button.data('position-type') // Extract info from data-* attributes
+			var title = button.data('position-title') // Extract info from data-* attributes
+			// If necessary, you could initiate an AJAX request here (and then do the updating in a callback).
+			// Update the modal's content. We'll use jQuery here, but you could use a data binding library or other methods instead.
+			var modal = $(this)
+			modal.find('.modal-title').text(title)
+			modal.find('.modal-body input').val(position)
+		});
         
     });
 
@@ -180,6 +187,27 @@
             document.getElementById('truckingList').innerHTML = truckingTbody;
         });
     }
+
+    // function displayMachineList(val, num){
+
+    // 	var machineDatalist = "";
+    // 	var input_machine1_name = $("input[name='machine1_name[]']").map(function(){return $(this).val();}).get(); 
+
+    // 	firebase.database().ref('employee/'+plant+'/machine').once('value', function(machineListSnapshot){
+    // 		machineListSnapshot.forEach(function(machineListChildSnapshot){
+
+    // 			search = searchMatch(val, machineListChildSnapshot.val().employee_name);
+
+    // 			if(search != null){
+    // 				machineDatalist += "<option value='" + machineListChildSnapshot.val().employee_name + "'>" + machineListChildSnapshot.val().employee_name + "</option>";
+    // 			}
+    // 		});
+
+    // 		view = "machineList"+num;
+
+    // 		document.getElementById(view).innerHTML = machineDatalist;
+    // 	});
+    // }
 
     function submitForm(){
 
@@ -712,6 +740,7 @@
 						                            <section class="panel">
 						                                <header class="panel-heading">
 						                                    <strong>MACHINE 1</strong>
+						                                    <!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="machine1" data-position-title="MACHINE 1"><span class="fa fa-plus"></span> Add Employee</button> -->
 						                                </header>
 						                                <div class="panel-body">
 						                                	<div class="row">
@@ -742,6 +771,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>MACHINE 3</strong>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="machine3" data-position-title="MACHINE 3"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -782,6 +812,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>NON-SKID 1</strong>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="nonskid1" data-position-title="NON-SKID 1"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -810,6 +841,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>NON-SKID 2</strong>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="nonskid2" data-position-title="NON-SKID 2"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -838,6 +870,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>NON-SKID 3</strong>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="nonskid3" data-position-title="NON-SKID 3"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -866,6 +899,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>NON-SKID 4</strong>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="nonskid4" data-position-title="NON-SKID 4"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -904,6 +938,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG</strong>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="tagapukpok" data-position-title="TAGAPUKPOK / WELDER / BISTAYAN / TAGADILIG"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -940,6 +975,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>CHECKER / FOREMAN / BATCHER / SUPERVISOR</strong>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="checker" data-position-title="CHECKER / FOREMAN / BATCHER / SUPERVISOR"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -990,7 +1026,8 @@
                 								<div class="col-md-12">
 							                    	<section class="panel">
 							                    		<header class="panel-heading">
-							                    			FORKLIFT OPERATOR
+							                    			<strong>FORKLIFT OPERATOR</strong>
+							                    			<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="forklift_operator" data-position-title="FORKLIFT OPERATOR"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                    		</header>
 							                    		<div class="panel-body">
 							                    			<div class="row">
@@ -1021,6 +1058,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>MECHANIC</strong>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="mechanic" data-position-title="MECHANIC"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 						                					<div class="row">
@@ -1049,6 +1087,7 @@
 							                		<section class="panel">
 							                			<header class="panel-heading">
 							                				<strong>LOADER</strong>
+							                				<!-- <button type="button" class="btn btn-link pull-right" data-toggle="modal" data-target="#employeeModal" data-position-type="loader" data-position-title="LOADER"><span class="fa fa-plus"></span> Add Employee</button> -->
 							                			</header>
 							                			<div class="panel-body">
 							                				<div class="row">
@@ -1204,6 +1243,27 @@
                 			</div>
 	            		</footer>
             		</form>
+            		<div class="modal fade" id="employeeModal" tabindex="-1" role="dialog" aria-labelledby="employeeModalLabel" aria-hidden="true">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<strong><h5 class="modal-title" id="employeeModalLabel"></h5></strong>
+								</div>
+								<div class="modal-body">
+									<form>
+										<div class="form-group">
+											<label for="recipient-name" class="col-form-label">Recipient:</label>
+											<input type="text" class="form-control" id="recipient-name">
+										</div>
+									</form>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal"><strong>Close</strong></button>
+									<button type="button" class="btn btn-primary"><strong>Save</strong></button>
+								</div>
+							</div>
+						</div>
+					</div>
             	</section>
             </section>
         </section>

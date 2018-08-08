@@ -8,7 +8,7 @@
     <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
     <link rel="shortcut icon" href="../img/favicon.png">
 
-    <title>Attendance</title>
+    <title>Attendance Form</title>
 
     <!-- Firebase App is always required and must be first -->
     <!-- <script src="https://www.gstatic.com/firebasejs/5.0.1/firebase-app.js"></script> -->
@@ -84,23 +84,7 @@
 
 <script>
     
-    var timer = null;
     var plant = "";
-
-    function goAway() {
-        clearTimeout(timer);
-        timer = setTimeout(function() {
-            // window.location.reload(true);
-            // tableData();
-        }, 60000);
-    }
-
-    window.addEventListener('mousemove', goAway, true);
-    window.addEventListener('keypress', goAway, true);
-
-    // goAway();
-
-    var samplinput = 1000;
 
     $(document).ready(function(){
 
@@ -123,7 +107,7 @@
                     displayTruckingList();
 
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
-                    document.getElementById('id_hidden_plant').innerHTML = "<input type='hidden' id='hidden_plant' value='" + plant + "'>";
+                    // document.getElementById('id_hidden_plant').innerHTML = "<input type='hidden' id='hidden_plant' value='" + plant + "'>";
                 },(error) => {
                     console.log(error);
                 });
@@ -166,7 +150,7 @@
         firebase.database().ref('trucking_list/'+plant).once('value', function(truckingSnapshot){
             truckingSnapshot.forEach(function(truckingChildSnapshot){
 
-                truckingTbody += "<tr style='text-align: center;'><td><strong>" + truckingChildSnapshot.val().item + "</strong></td><input type='hidden' name='hidden_trucking[]' value='" + truckingChildSnapshot.val().item + "'><td><input type='text' name='driver[]' class='form-control'></td><td><input type='text' name='pahinante1[]' class='form-control'></td><td><input type='text' name='pahinante2[]' class='form-control'></td></tr>";
+                truckingTbody += "<tr style='text-align: center;'><td><strong>" + truckingChildSnapshot.val().item + "</strong></td><input type='hidden' name='hidden_trucking[]' value='" + truckingChildSnapshot.val().item + "'><td><input type='text' name='driver[]' class='form-control'></td><td><input type='text' name='pahinante1[]' class='form-control'></td><td><input type='text' name='pahinante2[]' class='form-control'></td><td><textarea name='trucking_reason[]' rows='2' class='form-control'></textarea></td></tr>";
             });
 
             document.getElementById('truckingList').innerHTML = truckingTbody;
@@ -178,14 +162,28 @@
         event.preventDefault();
 
         var date_of_attendance = document.getElementById('date_selected').value;
-        var time_of_attendance = document.getElementById('time_selected').value;
+        var option = {year: "numeric", month: "long", day: "numeric"};
+        date_of_attendance = new Date(date_of_attendance).toLocaleDateString('en', option);
+
+        var time_start = document.getElementById('time_start_selected').value;
+        var time_end = document.getElementById('time_end_selected').value;
+        var time_option = { hour: 'numeric', minute: 'numeric', hour12: true };
+        var input_schedule = new Date(time_start).toLocaleString('en', time_option) + " - " + new Date(time_end).toLocaleString('en', time_option);
 
         var input_employee_name = $("input[name='employee_name[]']").map(function(){return $(this).val() || "";}).get();
         var input_employee_timein = $("input[name='employee_timein[]']").map(function(){return $(this).val() || "";}).get();
         var input_employee_timeout = $("input[name='employee_timeout[]']").map(function(){return $(this).val() || "";}).get();
 
-        var input_new_employee = $("input[name='new_employee_name[]']").map(function(){return $(this).val() || "";}).get();
+        var input_agency_name = $("input[name='agency_employee_name[]']").map(function(){return $(this).val() || "";}).get();
+        var input_agency_comment = $("input[name='agency_comment[]']").map(function(){return $(this).val() || "";}).get();
+        var input_plant_name = $("input[name='plant_employee_name[]']").map(function(){return $(this).val() || "";}).get();
+        var input_plant_comment = $("input[name='plant_comment[]']").map(function(){return $(this).val() || "";}).get();
+        var input_motorpool_name = $("input[name='motorpool_employee_name[]']").map(function(){return $(this).val() || "";}).get();
+        var input_motorpool_comment = $("input[name='motorpool_comment[]']").map(function(){return $(this).val() || "";}).get();
+        var input_trucking_name = $("input[name='trucking_employee_name[]']").map(function(){return $(this).val() || "";}).get();
+        var input_trucking_comment = $("input[name='trucking_comment[]']").map(function(){return $(this).val() || "";}).get();
 
+        var input_new_employee = $("input[name='new_employee_name[]']").map(function(){return $(this).val() || "";}).get();
         var input_ns1_name = $("input[name='nonskid1_name[]']").map(function(){return $(this).val() || "";}).get();
         var input_ns1_helper = document.getElementById('nonskid1_helper_name').value;
         var input_ns2_name = $("input[name='nonskid2_name[]']").map(function(){return $(this).val() || "";}).get();
@@ -194,18 +192,6 @@
         var input_ns3_helper = document.getElementById('nonskid3_helper_name').value;
         var input_ns4_name = $("input[name='nonskid4_name[]']").map(function(){return $(this).val() || "";}).get();
         var input_ns4_helper = document.getElementById('nonskid4_helper_name').value;
-
-        var input_agency_name = $("input[name='agency_employee_name[]']").map(function(){return $(this).val() || "";}).get();
-        var input_agency_comment = $("input[name='agency_comment[]']").map(function(){return $(this).val() || "";}).get();
-
-        var input_plant_name = $("input[name='plant_employee_name[]']").map(function(){return $(this).val() || "";}).get();
-        var input_plant_comment = $("input[name='plant_comment[]']").map(function(){return $(this).val() || "";}).get();
-
-        var input_motorpool_name = $("input[name='motorpool_employee_name[]']").map(function(){return $(this).val() || "";}).get();
-        var input_motorpool_comment = $("input[name='motorpool_comment[]']").map(function(){return $(this).val() || "";}).get();
-
-        var input_trucking_name = $("input[name='trucking_employee_name[]']").map(function(){return $(this).val() || "";}).get();
-        var input_trucking_comment = $("input[name='trucking_comment[]']").map(function(){return $(this).val() || "";}).get();
 
         var input_trucking_no = $("input[name='hidden_trucking[]']").map(function(){return $(this).val() || "";}).get();
         var input_trucking_driver = $("input[name='driver[]']").map(function(){return $(this).val() || "";}).get();
@@ -223,9 +209,39 @@
 
         var input_note = document.getElementById('note').value;
 
-        
+        // console.log(input_employee_name, input_employee_timein, input_employee_timeout);
 
-        console.log(input_forklift);
+        // console.log(input_employee_name.length);
+
+        var scheduleData = {
+            schedule: input_schedule
+        }
+
+        firebase.database().ref('attendance/'+plant+'/'+date_of_attendance).set(scheduleData);
+
+        for(a = 0; a < input_employee_name.length; a++){
+
+            if(input_employee_name.length == 1 && input_employee_name[a] == ""){
+
+                var employeeData = {
+                    employee_name: "N/A",
+                    employee_timein: "N/A",
+                    employee_timeout: "N/A"
+                }
+
+            }else{
+
+                var employeeData = {
+                    employee_name: input_employee_name[a].toUpperCase(),
+                    employee_timein: input_employee_timein[a],
+                    employee_timeout: input_employee_timeout[a]
+                }
+            }
+
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/office').push(employeeData);
+        }
+
+
     }
 
 </script>
@@ -235,6 +251,9 @@
     float: right; 
     margin-right: -15px; 
     margin-top: -25px;
+}
+.input_type{
+    text-transform: uppercase;
 }
 </style>
 </head>
@@ -363,7 +382,8 @@
                     <div class="col-md-12">
                         <!-- <h3 class="page-header"><i class="fa fa-home"></i> History</h3> -->
                         <ol class="breadcrumb">
-                            <li><i class="fa fa-home"></i>Attendance</li>                          
+                            <li><i class="fa fa-home"></i><a href="attendance.html">Attendance</a></li>                          
+                            <li><i class="icon_document"></i>Attendance Form</li>                          
                         </ol>
                     </div>
                 </div>
@@ -376,7 +396,7 @@
                             </div>
                         </div>
                     </header>
-                    <form id="form" name="form" class="form-horizontal" onsubmit="if(confirm('Proceed?')){submitForm();}else{ event.preventDefault();}">
+                    <form id="form" name="form" onsubmit="if(confirm('Proceed?')){submitForm();}else{ event.preventDefault();}">
                         <header class="panel-heading">
                             <div class="row" style="padding-bottom: 10px; padding-top: 10px;">
                                 <div class="col-md-1">
@@ -387,12 +407,22 @@
                                 </div>
                             </div>
                             <div class="row" style="padding-bottom: 10px; padding-top: 10px;">
-                                <div class="col-md-2">
+                                <!-- <div class="col-md-2">
                                     Time of Schedule:
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="time" name="time_selected" id="time_selected" class="form-control" required>
-                                </div>
+                                    <input type="time" name="time_start_selected" id="time_start_selected" class="form-control" required> - <input type="time" name="time_end_selected" id="time_end_selected" class="form-control" required>
+                                </div> -->
+                                <div class="form-group" style="margin-top: 5px; margin-bottom: 5px;">
+                                            <label for="date" class="col-md-2 control-label" style="margin-right: -80px;">Time of Schedule:</label>
+                                            <div class="col-md-2" style="">
+                                                <input type="time" name="time_start_selected" id="time_start_selected" class="form-control" required>
+                                            </div>
+                                            <div class="col-md-1"><span>-</span></div>
+                                            <div class="col-md-2" style="margin-left: -65px;">
+                                                <input type="time" name="time_end_selected" id="time_end_selected" class="form-control" required>
+                                            </div>
+                                        </div> 
                             </div>
                         </header>
                         <div class="panel-body">
@@ -407,7 +437,7 @@
                                                 <div class="col-md-12"> 
                                                     <table id="office_table" align="center">
                                                         <tr>
-                                                            <td class="col-md-8">
+                                                            <td class="col-md-7">
                                                                 <label for="employee_name">Name</label>
                                                             </td>
                                                             <td class="col-md-1">
@@ -678,7 +708,7 @@
                                                                                 <button type="button" onclick="add_nonskid1();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
                                                                             </td>
                                                                             <td>
-                                                                                <input type="text" name="nonskid1_helper_name" class="form-control input_type" autofocus>
+                                                                                <input type="text" id="nonskid1_helper_name" class="form-control input_type" autofocus>
                                                                             </td>
                                                                         </tr>
                                                                         
@@ -716,7 +746,7 @@
                                                                                 <button type="button" onclick="add_nonskid2();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
                                                                             </td>
                                                                             <td>
-                                                                                <input type="text" name="nonskid2_helper_name" class="form-control input_type" autofocus>
+                                                                                <input type="text" id="nonskid2_helper_name" class="form-control input_type" autofocus>
                                                                             </td>
                                                                         </tr>
                                                                         
@@ -754,7 +784,7 @@
                                                                                 <button type="button" onclick="add_nonskid3();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
                                                                             </td>
                                                                             <td>
-                                                                                <input type="text" name="nonskid3_helper_name" class="form-control input_type" autofocus>
+                                                                                <input type="text" id="nonskid3_helper_name" class="form-control input_type" autofocus>
                                                                             </td>
                                                                         </tr>
                                                                     </table>
@@ -791,7 +821,7 @@
                                                                                 <button type="button" onclick="add_nonskid4();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
                                                                             </td>
                                                                             <td>
-                                                                                <input type="text" name="nonskid4_helper_name" class="form-control input_type" autofocus>
+                                                                                <input type="text" id="nonskid4_helper_name" class="form-control input_type" autofocus>
                                                                             </td>
                                                                         </tr>
                                                                     </table>
@@ -817,10 +847,11 @@
                                                     <table class="table">
                                                         <thead>
                                                             <tr>
-                                                                <th class="col-md-3" style="text-align: center;">TRUCK NO.</th>
-                                                                <th class="col-md-3" style="text-align: center;">DRIVER</th>
-                                                                <th class="col-md-3" style="text-align: center;">PAHINANTE 1</th>
-                                                                <th class="col-md-3" style="text-align: center;">PAHINANTE 2</th>
+                                                                <th class="col-md-2" style="text-align: center;">TRUCK NO.</th>
+                                                                <th class="col-md-2" style="text-align: center;">DRIVER</th>
+                                                                <th class="col-md-2" style="text-align: center;">PAHINANTE 1</th>
+                                                                <th class="col-md-2" style="text-align: center;">PAHINANTE 2</th>
+                                                                <th class="col-md-3" style="text-align: center;">COMMENT</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody id="truckingList">
@@ -842,6 +873,12 @@
                                             <div class="row">
                                                 <div class="col-md-12"> 
                                                     <table class="table">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="col-md-2" style="text-align: center;">FORKLIFT NO.</th>
+                                                                <th class="col-md-2" style="text-align: center;">OPERATOR / COMMENT</th>
+                                                            </tr>
+                                                        </thead>
                                                         <tbody id="forkliftList"></tbody>
                                                     </table>
                                                 </div>
@@ -859,7 +896,7 @@
                                         <div class="panel-body">
                                             <div class="row" style="margin-bottom: 5px;">
                                                 <div class="col-md-6">
-                                                    Name of Agency: <input type="text" name="guard_agency_name" class="form-control">
+                                                    Name of Agency: <input type="text" id="guard_agency_name" class="form-control">
                                                 </div>
                                                 <!-- <div class="col-md-2">
                                                     Date Start: <input type="date" name="guard_agency_started" class="form-control">
