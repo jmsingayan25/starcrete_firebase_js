@@ -150,7 +150,7 @@
             var passcurrentDate = new Date().toLocaleDateString('en');
         }
 
-        document.getElementById('id_date').innerHTML = "<th colspan='3'>Date: " + currentDate + " <br> Result: <span id='id_record'></span></th><th colspan='1'> <button class='btn btn-success' onclick='window.location.href=\"lineup_form.html\";' style='float: right;'><span class='fa fa-plus'></span> <strong>Line Up Form</strong></button></th>";
+        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-success' onclick='window.location.href=\"lineup_form.html\";' style='float: right;'><span class='fa fa-plus'></span> <strong>Line Up Form</strong></button><br> Result: <span id='id_record'></span></th>";
 
         document.getElementById('link_machine1_update').innerHTML = "<a href='lineup_update.html?option=machine1&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_machine3_update').innerHTML = "<a href='lineup_update.html?option=machine3&date=" + passcurrentDate + "'>Update</a>";
@@ -323,13 +323,13 @@
 
                 firebase.database().ref('lineup/'+plant+'/'+currentDate+'/trucking').once('value', function(truckingSnapshot){
 
-                    myTableRow7 += "<tr><td colspan='4'><table class='table'><thead><tr><th class='col-md-2' style='text-align: center;'>TRUCK NO.</th><th class='col-md-2' style='text-align: center;'>DRIVER</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 1</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 2</th><th class='col-md-3' style='text-align: center;'>COMMENT</th></tr></thead><tbody></td></tr>";
+                    myTableRow7 += "<tr><td colspan='4'><table class='table'><thead><tr><th class='col-md-2' style='text-align: center;'>TRUCK NO.</th><th class='col-md-2' style='text-align: center;'>DRIVER</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 1</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 2</th><th class='col-md-3' style='text-align: center;'>COMMENT</th></tr></thead><tbody>";
 
                     truckingSnapshot.forEach(function(truckingChildSnapshot){
                         myTableRow7 += "<tr align='center'><td>" + truckingChildSnapshot.val().truck_no + "</td><td>" + truckingChildSnapshot.val().driver + "</td><td>" + truckingChildSnapshot.val().pahinante1 + "</td><td>" + truckingChildSnapshot.val().pahinante2 + "</td><td>" +  truckingChildSnapshot.val().comment + "</td></tr>";
                     });
 
-                    myTableRow7 += "</tbody></table>";
+                    myTableRow7 += "</tbody></table></td></tr>";
 
                     document.getElementById('row7_list').innerHTML = myTableRow7;
                 });
@@ -371,7 +371,7 @@
             var currentDate = new Date().toLocaleDateString('en', option);
         }
 
-        document.getElementById('id_date').innerHTML = "<th colspan='3'>Date: " + currentDate + " <br> Result: <span id='id_record'></span></th><th colspan='1'> <button class='btn btn-success' onclick='window.location.href=\"lineup_form.html\";' style='float: right;'><span class='fa fa-plus'></span> <strong>Line Up Form</strong></button></th>";
+        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-success' onclick='window.location.href=\"lineup_form.html\";' style='float: right;'><span class='fa fa-plus'></span> <strong>Line Up Form</strong></button><br> Result: <span id='id_record'></span></th>";
 
         document.getElementById('link_machine1_update').innerHTML = "<a href='lineup_update.html?option=machine1&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_machine3_update').innerHTML = "<a href='lineup_update.html?option=machine3&date=" + passcurrentDate + "'>Update</a>";

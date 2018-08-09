@@ -102,8 +102,10 @@
                         window.location.href = '../headoffice/index.html';
                     }
 
+                    tableData();
+
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
-                    document.getElementById('id_hidden_plant').innerHTML = "<input type='hidden' id='hidden_plant' value='" + plant + "'>";
+                   
                 },(error) => {
                     console.log(error);
                 });
@@ -120,10 +122,57 @@
 
     function tableData(){
 
+    	var myTableColumn1Row1 = "";
+    	var myTableColumn2Row1 = "";
 
+
+    	var option = {year: "numeric", month: "long", day: "numeric"}
+        // var currentDate = new Date().toLocaleDateString('en', option);
+        var currentDate = "August 8, 2018";
+
+        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-success' onclick='window.location.href=\"attendance_form.html\";' style='float: right;'><span class='fa fa-plus'></span> <strong>Attendance Form</strong></button> <br> Result: <span id='id_record'></span></th>";
+
+
+    	firebase.database().ref('attendance/'+plant+'/'+currentDate).once('value', function(attendanceSnapshot){
+
+    		if(attendanceSnapshot.val() != null){
+
+    			document.getElementById('id_record').innerHTML = "RECORD FOUND";
+
+    			firebase.database().ref('attendance/'+plant+'/'+currentDate+'/office').once('value', function(officeSnapshot){
+    				firebase.database().ref('attendance/'+plant+'/'+currentDate+'/new_employee').once('value', function(newEmployeeSnapshot){
+
+    					officeSnapshot.forEach(function(officeChildSnapshot){
+
+    						myTableColumn1Row1 += "<tr align='center'><td>" + officeChildSnapshot.val().employee_name + "</td><td>" + officeChildSnapshot.val().employee_timein + "</td><td>" + officeChildSnapshot.val().employee_timeout + "</td></tr>";
+
+    					});
+
+    					document.getElementById('row1_office_list').innerHTML = myTableColumn1Row1;
+
+    					newEmployeeSnapshot.forEach(function(newEmployeeChildSnapshot){
+
+    						myTableColumn2Row1 += "<div class='row'><div class='col-md-12'>" + newEmployeeChildSnapshot.val().employee_name + "</div></div>";
+    					});
+
+    					document.getElementById('row1_new_employee_list').innerHTML = myTableColumn2Row1;
+    				});
+    			});
+    		}
+
+    	});
     }
 
 </script>
+<style>
+.header_line{
+    background-color: #00a3cc;
+}
+
+.table .header_line th{
+    color: white;
+}
+</style>
 </head>
 <body>
 	<!-- <div class="se-pre-con"></div> -->
@@ -280,8 +329,80 @@
                                     <table class="table table-bordered table-stripped">
                                         <thead>
                                         	<tr id="id_date" class="header_line"></tr>
-                                        	
+                                        	<tr class="header_line">
+                                        		<th colspan="3">
+                                        			OFFICE
+                                        		</th>
+                                        		<th colspan="1">
+                                        			NEW EMPLOYEE
+                                        		</th>
+                                        	</tr>
                                         </thead>
+                                        <tbody>
+                                        	<tr>
+                                        		<td colspan="3">
+                                        			<table class="table">
+                                        				<thead>
+                                        					<tr>
+                                        						<th style="text-align: center;">Name</th>
+                                        						<th style="text-align: center;">Time In</th>
+                                        						<th style="text-align: center;">Time Out</th>
+                                        					</tr>
+                                        				</thead>
+                                        				<tbody id="row1_office_list"></tbody>
+                                        			</table>
+                                        		</td>
+                                        		<td colspan="1" id="row1_new_employee_list"></td>
+                                        	</tr>
+                                        </tbody>
+                                        <thead>
+                                        	<tr class="header_line">
+                                        		<th colspan="4">
+                                        			ABSENT
+                                        		</th>
+                                        	</tr>
+                                        </thead>
+                                        <tbody>
+                                        	<tr>
+                                        		<td colspan="4">
+                                        			<table class="table table-bordered">
+                                        				<tbody>
+                                        					<tr>
+                                        						<th colspan="2" style="text-align: center;">Agency</th>
+                                        						<th colspan="2" style="text-align: center;">Plant</th>
+                                        						
+                                        					</tr>
+                                        					<tr>
+                                        						<td style="text-align: center;">Name</td>
+                                        						<td style="text-align: center;">Reason</td>
+                                        						<td style="text-align: center;">Name</td>
+                                        						<td style="text-align: center;">Reason</td>
+                                        					</tr>
+                                        				</tbody>
+                                        				<tbody id="row2_agency_plant_list"></tbody>
+                                        			</table>
+                                        		</td>
+                                        	</tr>
+                                        	<tr>
+                                        		<td colspan="4">
+                                        			<table class="table table-bordered">
+                                        				<tbody>
+                                        					<tr>
+                                        						<th colspan="2" style="text-align: center;">Motorpool</th>
+                                        						<th colspan="2" style="text-align: center;">Trucking</th>
+                                        					</tr>
+                                        					<tr>
+                                        						<td style="text-align: center;">Name</td>
+                                        						<td style="text-align: center;">Reason</td>
+                                        						<td style="text-align: center;">Name</td>
+                                        						<td style="text-align: center;">Reason</td>
+                                        					</tr>
+                                        				</tbody>
+                                        				<tbody id="row2_motorpool_trucking_list"></tbody>
+                                        			</table>
+                                        		</td>
+                                        	</tr>
+                                        </tbody>
                                     </table>
                                 </div>
 	                    	</div>
