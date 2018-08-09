@@ -225,7 +225,8 @@
         firebase.database().ref('attendance/'+plant+'/'+date_of_attendance).set(scheduleData);
 
         var commentData = {
-            comment_plant: input_note.toUpperCase() || "N/A"
+            comment_plant: input_note.toUpperCase() || "N/A",
+            comment_headoffice: "N/A"
         }
 
         firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/comment').push(commentData);
@@ -343,7 +344,7 @@
                     employee_name: input_ns1_name[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid1').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid1/employee').push(employeeData);
         }
 
         var helper1Data = {
@@ -364,7 +365,7 @@
                     employee_name: input_ns2_name[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid2').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid2/employee').push(employeeData);
         }
 
         var helper2Data = {
@@ -385,7 +386,7 @@
                     employee_name: input_ns3_name[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid3').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid3/employee').push(employeeData);
         }
 
         var helper3Data = {
@@ -406,7 +407,7 @@
                     employee_name: input_ns4_name[a].toUpperCase()
                 }
             }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid4').push(employeeData);
+            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/nonskid4/employee').push(employeeData);
         }
 
         var helper4Data = {
