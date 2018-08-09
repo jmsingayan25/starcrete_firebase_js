@@ -188,7 +188,45 @@
     	}
     }
 
+    function submitForm(){
+
+    	event.preventDefault();
+
+    	count = 0;
+    	if(option == "office"){
+
+    		var input_employee_name = $("input[name='update_employee_name[]']").map(function(){return $(this).val();}).get();
+    		var input_employee_timein = $("input[name='update_employee_timein[]']").map(function(){return $(this).val();}).get();
+    		var input_employee_timeout = $("input[name='update_employee_timeout[]']").map(function(){return $(this).val();}).get();
+
+    		if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+option).remove()){
+
+    			for(var a = 0; a < input_employee_name.length; a++){
+
+	    			var employeeData = {
+	    				employee_name: input_employee_name[a].toUpperCase(),
+	    				employee_timein: input_employee_timein[a],
+	    				employee_timeout: input_employee_timeout[a]
+	    			}
+
+	    			firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+option).push(employeeData);
+	    			count++;
+	    		}
+
+	    		if(count == input_employee_name.length){
+	    			alert("Data updated successfully");
+                    window.location.href='attendance.html';
+	    		}
+    		}
+    	}
+    }
+
 </script>
+<style>
+.input_type{
+    text-transform: uppercase;
+}
+</style>
 </head>
 <body>
 	<!-- <div class="se-pre-con"></div> -->
