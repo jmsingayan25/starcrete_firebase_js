@@ -393,7 +393,7 @@
 
         document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-success' onclick='return tablePrint();' style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button> <br> Result: <span id='id_record'></span></th>";
 
-        document.getElementById('link_headoffice_update').innerHTML = "<a href='attendance_update.html?option=comment_headoffice&date=" + passcurrentDate + "'>Update</a>";
+        document.getElementById('link_headoffice_update').innerHTML = "<a href='attendance_update.html?option=comment_headoffice&date=" + passcurrentDate + "&plant=" + plant + "'>Update</a>";
 
         firebase.database().ref('attendance/'+plant+'/'+currentDate).once('value', function(attendanceSnapshot){
 
