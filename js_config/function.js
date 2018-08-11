@@ -11,6 +11,26 @@
         return fulldate;
     }
 
+    function dateDashFormat(date){
+
+        var input_date = new Date(date);
+        var dd = input_date.getDate();
+        var mm = input_date.getMonth()+1;
+        var yy = input_date.getFullYear();
+
+        if(dd < 10){
+            dd = "0"+dd;
+        }
+
+        if(mm < 10){
+            mm = "0"+mm;
+        }
+
+        fulldate = yy+'-'+mm+'-'+dd;
+
+        return fulldate;
+    }
+
     function userSignOut(){
 
         firebase.auth().signOut().then(function() {
