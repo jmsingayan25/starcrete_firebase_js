@@ -85,6 +85,7 @@
 <script>
 	
 	var plant = "";
+    var date_newSet = getUrlParameter('date');
 
 	$(document).ready(function(){
 
@@ -123,6 +124,13 @@
             document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);        	
         });
 
+
+        if(date_newSet != ''){
+            console.log(date_newSet);
+        }else{
+            console.log("no data"); 
+        }
+
         $('#employeeModal').on('show.bs.modal', function (event) {
 			var button = $(event.relatedTarget) // Button that triggered the modal
 			var position = button.data('position-type') // Extract info from data-* attributes
@@ -135,44 +143,6 @@
 		});
         
     });
-
-  //   function add_employee(){
-
-  //   	event.preventDefault();
-
-  //   	$rowno=$("#employee_table tr").length;
-  //       $rowno=$rowno+1;
-
-  //       $("#employee_table tr:last").after("<tr id='employee_row" + $rowno + "' style='text-align: center;'><div class='form-group'><td class='col-md-5'><input type='text' name='employee_name[]' class='form-control input_type' ></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "') style='font-weight: bold;'><span class='fa fa-minus'></span></button></td></div></tr>");
-  //   }
-
-  //   function remove_employee_row(rowno){
-		// $('#'+rowno).remove();
-  //   }
-
-   // function saveEmployee(){
-
-    // 	event.preventDefault();
-
-    // 	var position = document.getElementById('position').value;
-    // 	var input_employee_name = $("input[name='employee_name[]']").map(function(){return $(this).val().toUpperCase() || "";}).get();
-
-    // 	count = 0;
-    // 	for(var i = 0; i < input_employee_name.length; i++){
-
-    // 		var employeeData = {
-    // 			employee_name: input_employee_name[i]
-    // 		}
-
-    // 		firebase.database().ref('employee/'+plant+'/'+position).push(employeeData);
-    // 		count++;
-    // 	}
-
-    // 	if(count == input_employee_name.length){
-    // 		alert('Employee has been added..');
-    // 		window.location='lineup.html';
-    // 	}
-    // }
 
     function displayTruckingList(){
 
@@ -255,7 +225,7 @@
     		comment: input_comment.toUpperCase()
     	}
 
-    	firebase.database().ref('lineup/'+plant+'/'+input_date).set(commentData);
+    	// firebase.database().ref('lineup/'+plant+'/'+input_date).set(commentData);
 
 		for(var a = 0; a < input_machine1_name.length; a++){
 
@@ -269,7 +239,7 @@
 	    		}
 			}
     		
-    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/machine1').push(machine1Data);
+    		// firebase.database().ref('lineup/'+plant+'/'+input_date+'/machine1').push(machine1Data);
     	}
     	
 		for(var a = 0; a < input_machine3_name.length; a++){
@@ -284,7 +254,7 @@
 	    		}
 			}
     		
-    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/machine3').push(machine3Data);
+    		// firebase.database().ref('lineup/'+plant+'/'+input_date+'/machine3').push(machine3Data);
     	}
 
 		for(var a = 0; a < input_nonskid1_name.length; a++){
@@ -299,7 +269,7 @@
 	    		}
 			}
     		
-    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid1').push(nonskid1Data);
+    		// firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid1').push(nonskid1Data);
     	}
 
 		for(var a = 0; a < input_nonskid2_name.length; a++){
@@ -314,7 +284,7 @@
 	    		}	
 			}
     		
-    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid2').push(nonskid2Data);
+    		// firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid2').push(nonskid2Data);
     	}
 
 		for(var a = 0; a < input_nonskid3_name.length; a++){
@@ -329,7 +299,7 @@
 	    		}	
 			}
     		
-    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid3').push(nonskid3Data);
+    		// firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid3').push(nonskid3Data);
     	}
 
 		for(var a = 0; a < input_nonskid4_name.length; a++){
@@ -344,7 +314,7 @@
 	    		}	
 			}
     		
-    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid4').push(nonskid4Data);
+    		// firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid4').push(nonskid4Data);
     	}
 
 		for(var a = 0; a < input_kamador_name.length; a++){
@@ -359,7 +329,7 @@
 	    		}	
 			}
     
-    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/kamador').push(kamadorData);
+    		// firebase.database().ref('lineup/'+plant+'/'+input_date+'/kamador').push(kamadorData);
     	}
 
 		for(var a = 0; a < input_forklift_operator_name.length; a++){
@@ -374,7 +344,7 @@
 	    		}	
 			}
     		
-    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/forklift_operator').push(forkliftOperatorData);
+    		// firebase.database().ref('lineup/'+plant+'/'+input_date+'/forklift_operator').push(forkliftOperatorData);
     	}
 
 		for(var a = 0; a < input_mechanic_name.length; a++){
@@ -389,7 +359,7 @@
 	    		}	
 			}
 
-    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/mechanic').push(mechanicData);
+    		// firebase.database().ref('lineup/'+plant+'/'+input_date+'/mechanic').push(mechanicData);
     	}
 
 		for(var a = 0; a < input_tagapukpok_name.length; a++){
@@ -406,7 +376,7 @@
 	    		}
 			}
     		
-    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/tagapukpok').push(tagapukpokData);
+    		// firebase.database().ref('lineup/'+plant+'/'+input_date+'/tagapukpok').push(tagapukpokData);
     	}
 
 		for(var a = 0; a < input_checker_name.length; a++){
@@ -423,7 +393,7 @@
 	    		}	
 			}
     		
-    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/checker').push(checkerData);
+    		// firebase.database().ref('lineup/'+plant+'/'+input_date+'/checker').push(checkerData);
     	}
 
 		for(var a = 0; a < input_loader_name.length; a++){
@@ -438,7 +408,7 @@
 	    		}
 			}
     		
-    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/loader').push(loaderData);
+    		// firebase.database().ref('lineup/'+plant+'/'+input_date+'/loader').push(loaderData);
     	}
 
 		for(var a = 0; a < input_others_name.length; a++){
@@ -453,7 +423,7 @@
 	    		}
 			}
 
-    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/others').push(othersData);
+    		// firebase.database().ref('lineup/'+plant+'/'+input_date+'/others').push(othersData);
     	}
 
 		for(var a = 0; a < input_absent_name.length; a++){
@@ -470,7 +440,7 @@
 	    		}
 			}
     	
-    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/absent').push(absentData);
+    		// firebase.database().ref('lineup/'+plant+'/'+input_date+'/absent').push(absentData);
     		count++;
     	}
 
@@ -486,14 +456,14 @@
 
     		console.log(truckingData);
 
-    		firebase.database().ref('lineup/'+plant+'/'+input_date+'/trucking').push(truckingData);
+    		// firebase.database().ref('lineup/'+plant+'/'+input_date+'/trucking').push(truckingData);
     	}
 
-    	if(count == input_absent_name.length){
-    		alert("Line up recorded");
-    		window.location='lineup.html';
+    	// if(count == input_absent_name.length){
+    	// 	alert("Line up recorded");
+    	// 	window.location='lineup.html';
 
-    	}
+    	// }
     }
 
 </script>

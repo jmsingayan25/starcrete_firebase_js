@@ -150,7 +150,7 @@
             var passcurrentDate = new Date().toLocaleDateString('en');
         }
 
-        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-success' onclick='window.location.href=\"lineup_form.html\";' style='float: right;'><span class='fa fa-plus'></span> <strong>Line Up Form</strong></button><br> Result: <span id='id_record'></span></th>";
+        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-success' onclick='window.location.href=\"lineup_form.html\";' style='float: right;'><span class='fa fa-plus'></span> <strong>Line Up Form</strong></button><br> Result: <span id='id_record'></span> <br> <span class='button-link' style='float: right;'><button class='btn btn-xs btn-danger' onclick=\"newSetLineUp('" + passcurrentDate + "');\"><span class='fa fa-plus'></span> <strong>Add New set of Line Up</strong></button></span></th>";
 
         document.getElementById('link_machine1_update').innerHTML = "<a href='lineup_update.html?option=machine1&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_machine3_update').innerHTML = "<a href='lineup_update.html?option=machine3&date=" + passcurrentDate + "'>Update</a>";
@@ -371,7 +371,7 @@
             var currentDate = new Date().toLocaleDateString('en', option);
         }
 
-        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-success' onclick='window.location.href=\"lineup_form.html\";' style='float: right;'><span class='fa fa-plus'></span> <strong>Line Up Form</strong></button><br> Result: <span id='id_record'></span></th>";
+        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-success' onclick='window.location.href=\"lineup_form.html\";' style='float: right;'><span class='fa fa-plus'></span> <strong>Line Up Form</strong></button><br> Result: <span id='id_record'></span> <br> <span class='button-link' style='float: right;'><button class='btn btn-xs btn-danger' onclick=\"newSetLineUp('" + passcurrentDate + "');\"><span class='fa fa-plus'></span> <strong>Add New set of Line Up</strong></button></span></th>";
 
         document.getElementById('link_machine1_update').innerHTML = "<a href='lineup_update.html?option=machine1&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_machine3_update').innerHTML = "<a href='lineup_update.html?option=machine3&date=" + passcurrentDate + "'>Update</a>";
@@ -568,6 +568,12 @@
                 document.getElementById('row7_list').innerHTML = "";
             }
         });
+    }
+
+    function newSetLineUp(date){
+
+        window.location.href='lineup_form.html?date='+date;
+
     }
 
 </script>
@@ -945,6 +951,13 @@
                                     </table>
                                 </div>
                             </div>
+                        </section>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <section class="panel">
+                            <div class="panel-body"></div>
                         </section>
                     </div>
                 </div>
