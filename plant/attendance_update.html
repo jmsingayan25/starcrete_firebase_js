@@ -108,8 +108,15 @@
 
                     tableData(plant);
 
+                    if(plant == 'Bravo'){
+                        plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
+                    }else{
+                        plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
+                    }
+
+                    document.getElementById('id_plant_name').innerHTML = plant_name;
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
-                    // document.getElementById('id_hidden_plant').innerHTML = "<input type='hidden' id='hidden_plant' value='" + plant + "'>";
+
                 },(error) => {
                     console.log(error);
                 });
@@ -131,7 +138,7 @@
 
     		firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+option).once('value', function(officeSnapshot){
     			console.log(officeSnapshot.val());
-    			optionTable += "<thead><tr><th class='col-md-6'><label for='employee_name'>Name</label></th><th class='col-md-1'><label for='employee_timein'>Time In</label></th><th class='col-md-1'><label for='employee_timeout'>Time Out</label></th><th class='col-md-1'></th></tr></thead><tbody>";
+    			optionTable += "<thead><tr><th class='col-md-6 header_center'>Name</th><th class='col-md-1 header_center'>Time In</th><th class='col-md-1 header_center'>Time Out</th><th class='col-md-1'></th></tr></thead><tbody>";
 
     			officeSnapshot.forEach(function(officeChildSnapshot){
 
@@ -142,7 +149,7 @@
 
     			document.getElementById('id_table_view').innerHTML = optionTable;
     		});
-    	}else if(option == "agency" || option == "plant" || option == "motorpool" || option == "trucking"){
+    	}else if(option == "plant" || option == "motorpool" || option == "trucking"){
 
             $(".button_add").show();
 
@@ -150,7 +157,7 @@
 
             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/'+option).once('value', function(absentSnapshot){
 
-                optionTable += "<thead><tr><th class='col-md-3'><label for='employee_name'>Name</label></th><th class='col-md-6'><label for='employee_reason'>Reason</label></th><th class='col-md-1'></th></tr></thead><tbody>";
+                optionTable += "<thead><tr><th class='col-md-3 header_center'>Name</th><th class='col-md-6 header_center'>Reason</th><th class='col-md-1'></th></tr></thead><tbody>";
 
                 absentSnapshot.forEach(function(absentChildSnapshot){
 
@@ -171,15 +178,20 @@
             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+option+'/employee').once('value', function(employeeSnapshot){
                 firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+option+'/helper').once('value', function(helperSnapshot){
 
-                    optionTable += "<thead><tr><th class='col-md-3'><label for='employee_name'>Name</label></th</thead><tbody>";
+                    optionTable += "<thead><tr><th class='col-md-3 header_center'>Name</th</thead><tbody>";
 
                     employeeSnapshot.forEach(function(employeeChildSnapshot){
 
                         optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control input_type' value='" + employeeChildSnapshot.val().employee_name + "'></td></tr>";
 
+                        if(employeeChildSnapshot.val().employee_name == "N/A"){
+
+                            optionTable += "<tr><td><input type='text' name='update_employee_name[]' class='form-control input_type' value='" + employeeChildSnapshot.val().employee_name + "'></td></tr>";
+                        }
+
                     });
 
-                    optionTable += "</thead></tbody><br><br><thead><tr><th class='col-md-3'><label for='employee_name'>Helper Name</label></th></thead><tbody>";
+                    optionTable += "</thead></tbody><br><br><thead><tr><th class='col-md-3 header_center'>Helper Name</th></thead><tbody>";
 
                     helperSnapshot.forEach(function(helperChildSnapshot){
 
@@ -198,7 +210,7 @@
 
             firebase.database().ref('attendance/'+plant+'/'+currentDate+'/trucking').once('value', function(truckingSnapshot){
 
-                optionTable += "<tr><td><table class='table'><thead><tr class='header_line'><th class='col-md-2' style='text-align: center;'>TRUCK NO.</th><th class='col-md-2' style='text-align: center;'>DRIVER</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 1</th><th class='col-md-2' style='text-align: center;'>PAHINANTE 2</th><th class='col-md-3' style='text-align: center;'>COMMENT</th></tr></thead><tbody>";
+                optionTable += "<tr><td><table class='table'><thead><tr class='header_line'><th class='col-md-2 header_center'>TRUCK NO.</th><th class='col-md-2 header_center'>DRIVER</th><th class='col-md-2 header_center'>PAHINANTE 1</th><th class='col-md-2 header_center'>PAHINANTE 2</th><th class='col-md-3 header_center'>COMMENT</th></tr></thead><tbody>";
 
                 truckingSnapshot.forEach(function(truckingChildSnapshot){
                     optionTable += "<tr align='center'><input type='hidden' name='hidden_truck_no[]' value='" + truckingChildSnapshot.val().truck_no + "'><td>" + truckingChildSnapshot.val().truck_no + "</td><td><textarea name='update_driver[]' class='form-control input_type' rows='2'>" + truckingChildSnapshot.val().driver + "</textarea></td><td><textarea name='update_pahinante1[]' class='form-control input_type' rows='2'>" + truckingChildSnapshot.val().pahinante1 + "</textarea></td><td><textarea name='update_pahinante2[]' class='form-control input_type' rows='2'>" + truckingChildSnapshot.val().pahinante2 + "</textarea></td><td><textarea name='update_comment[]' class='form-control input_type' rows='2'>" +  truckingChildSnapshot.val().comment + "</textarea></td></tr>";
@@ -218,14 +230,14 @@
                     firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+option+'/nightshift').once('value', function(guardNightSnapshot){
                         console.log(guardSnapshot.val().agency_name);
                     
-                        optionTable += "<tr><td><table class='table'><thead><tr><th colspan='3'>Guard: <input type='text' id='update_agency_name' class='form-control input_type' value='" + guardSnapshot.val().agency_name + "'></th></tr><tr><th>DAY SHIFT</th><th></th><th></th></tr><tr></tr></thead><tbody>";
+                        optionTable += "<tr><td><table class='table'><thead><tr><th colspan='3'>Guard: <input type='text' id='update_agency_name' class='form-control input_type' value='" + guardSnapshot.val().agency_name + "'></th></tr><tr><th colspan='2' class='header_center'>DAY SHIFT</th></tr><tr><th colspan='1' class='header_center'>Name</th><th colspan='1' class='header_center'>Position</th></tr></thead><tbody>";
 
                         guardDaySnapshot.forEach(function(guardDayChildSnapshot){
 
                             optionTable += "<tr><td><input type='text' name='update_dayshift_guard[]' class='form-control input_type' value='" + guardDayChildSnapshot.val().guard_name + "'></td><td><input type='text' name='update_dayshift_position[]' class='form-control input_type' value='" + guardDayChildSnapshot.val().guard_position + "'></td></tr>";
                         });
 
-                        optionTable += "</tbody><thead><tr><th>NIGHT SHIFT</th><th></th><th></th></tr></thead><tbody>";
+                        optionTable += "</tbody><thead><tr><th colspan='2' class='header_center'>NIGHT SHIFT</th></tr><tr><th colspan='1' class='header_center'>Name</th><th colspan='1' class='header_center'>Position</th></tr></thead><tbody>";
 
                         guardNightSnapshot.forEach(function(guardNightChildSnapshot){
 
@@ -249,7 +261,7 @@
 
                 $(".button_add").show();
 
-                optionTable += "<tr><td><table class='table'><thead><tr><th class='col-md-8'>Name</th><th class='col-md-1'></th></tr></thead><tbody>";
+                optionTable += "<tr><td><table class='table'><thead><tr><th class='col-md-8 header_center'>Name</th><th class='col-md-1'></th></tr></thead><tbody>";
 
                 optionSnapshot.forEach(function(optionChildSnapshot){
 
@@ -265,6 +277,37 @@
         }else if(option == "forklift"){
 
             document.getElementById('id_option').innerHTML = option.toUpperCase();
+
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/'+option).once('value', function(optionSnapshot){
+
+                optionTable += "<tr><td><table class='table'><thead><tr><th class='col-md-2 header_center'>Forklift No.</th><th class='col-md-8 header_center'>Operator / Comment</th></tr></thead><tbody>";
+
+                optionSnapshot.forEach(function(optionChildSnapshot){
+
+                    optionTable += "<tr align='center'><input type='hidden' name='hidden_forklift_no[]' value='" + optionChildSnapshot.val().forklift_no + "'><td><strong>" + optionChildSnapshot.val().forklift_no + "</strong></td><td><input type='text' name='update_operator[]' value='" + optionChildSnapshot.val().operator + "' class='form-control input_type'></td></tr>";
+
+                });
+
+                optionTable += "</tbody></table></td></tr>";
+
+                document.getElementById('id_table_view').innerHTML = optionTable;
+
+            });
+        
+        }else if(option == "note"){
+
+            document.getElementById('id_option').innerHTML = option.toUpperCase();
+
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/comment').once('value', function(commentSnapshot){
+
+                commentSnapshot.forEach(function(commentChildSnapshot){
+
+                    optionTable += "<div class='col-md-12'><textarea name='comment' id='comment' class='form-control input_type' rows='5' style='text-transform: uppercase;'>" + commentChildSnapshot.val().comment_plant  + "</textarea></div>";
+
+                });
+
+                document.getElementById('id_table_view').innerHTML = optionTable;
+            });
         }
     }
 
@@ -544,6 +587,46 @@
                     window.location.href='attendance.html';
                 }
             }
+
+        }else if(option == "forklift"){
+
+            var input_forklift_no = $("input[type=hidden][name='hidden_forklift_no[]']").map(function(){return $(this).val();}).get();
+            var input_operator = $("input[name='update_operator[]']").map(function(){return $(this).val();}).get();
+
+            if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/forklift').remove()){
+
+                for(var a = 0; a < input_forklift_no.length; a++){
+
+                    var forkliftData = {
+                        forklift_no: input_forklift_no[a].toUpperCase(),
+                        operator: input_operator[a].toUpperCase() || "N/A"
+                    }
+
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/forklift').push(forkliftData);
+                    count++;
+                }
+
+                if(count == input_forklift_no.length){
+                    alert("Data updated successfully");
+                    window.location.href='attendance.html';
+                }
+            }
+        }else if(option == "note"){
+
+            var input_note = document.getElementById('comment').value;
+
+            var commentData = {
+                comment_plant: input_note.toUpperCase() || "N/A"
+            }
+
+            firebase.database().ref('attendance/'+plant+'/'+currentDate+'/comment').once('value', function(commentSnapshot){
+                commentSnapshot.forEach(function(commentChildSnapshot){
+                    if(firebase.database().ref('attendance/'+plant+'/'+currentDate+'/comment/'+commentChildSnapshot.key).update(commentData)){
+                        alert("Update succesfully");
+                        window.location.href='attendance.html?plant='+plant;
+                    }
+                });
+            });
         }
     }
 
@@ -554,6 +637,9 @@
 }
 .button_add{
     display: none;
+}
+.header_center{
+    text-align: center;
 }
 </style>
 </head>
@@ -568,7 +654,7 @@
             <!--logo start-->
 
             <!--logo end-->
-            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+            <span id="id_plant_name"></span>
             <div class="top-nav notification-row">                
                 <!-- notificatoin dropdown start-->
                 <ul class="nav pull-right top-menu">

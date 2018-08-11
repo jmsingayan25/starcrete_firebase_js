@@ -106,27 +106,26 @@
                     displayForkliftList();
                     displayTruckingList();
 
+                    if(plant == 'Bravo'){
+                        plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
+                    }else{
+                        plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
+                    }
+
+                    document.getElementById('id_plant_name').innerHTML = plant_name;
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
-                    // document.getElementById('id_hidden_plant').innerHTML = "<input type='hidden' id='hidden_plant' value='" + plant + "'>";
+
                 },(error) => {
                     console.log(error);
                 });
             } else {
                 window.location.href = '../login.html';
             }
-
-            
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
 
     });
-
-    function CurrentDate(){
-         var options = { weekday: "long", year: "numeric", month: "long", day: "numeric" };
-         var searchDate = new Date().toLocaleDateString('en', options);
-         document.getElementById('currentDate').innerHTML = searchDate;
-    }
 
     function displayForkliftList(){
 
@@ -178,8 +177,6 @@
         var input_employee_timein = $("input[name='employee_timein[]']").map(function(){return $(this).val() || "";}).get();
         var input_employee_timeout = $("input[name='employee_timeout[]']").map(function(){return $(this).val() || "";}).get();
 
-        var input_agency_name = $("input[name='agency_employee_name[]']").map(function(){return $(this).val() || "";}).get();
-        var input_agency_comment = $("input[name='agency_comment[]']").map(function(){return $(this).val() || "";}).get();
         var input_plant_name = $("input[name='plant_employee_name[]']").map(function(){return $(this).val() || "";}).get();
         var input_plant_comment = $("input[name='plant_comment[]']").map(function(){return $(this).val() || "";}).get();
         var input_motorpool_name = $("input[name='motorpool_employee_name[]']").map(function(){return $(this).val() || "";}).get();
@@ -236,8 +233,8 @@
             if(input_employee_name.length == 1 && input_employee_name[a] == ""){
                 var employeeData = {
                     employee_name: "N/A",
-                    employee_timein: "N/A",
-                    employee_timeout: "N/A"
+                    employee_timein: "",
+                    employee_timeout: ""
                 }
             }else{
                 var employeeData = {
@@ -249,23 +246,6 @@
             firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/office').push(employeeData);
         }
         /*END OFFICE EMPLOYEE*/
-
-        /*ABSENT AGENCY EMPLOYEE*/
-        for(a = 0; a < input_agency_name.length; a++){
-            if(input_agency_name.length == 1 && input_agency_name[a] == ""){
-                var employeeData = {
-                    employee_name: "N/A",
-                    employee_comment: "N/A"
-                }
-            }else{
-                var employeeData = {
-                    employee_name: input_agency_name[a].toUpperCase(),
-                    employee_comment: input_agency_comment[a].toUpperCase()
-                }
-            }
-            firebase.database().ref('attendance/'+plant+'/'+date_of_attendance+'/absent/agency').push(employeeData);
-        }
-        /*END ABSENT AGENCY EMPLOYEE*/
 
         /*ABSENT PLANT EMPLOYEE*/
         for(a = 0; a < input_plant_name.length; a++){
@@ -496,7 +476,7 @@
             <!--logo start-->
 
             <!--logo end-->
-            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+            <span id="id_plant_name"></span>
             <div class="top-nav notification-row">                
                 <!-- notificatoin dropdown start-->
                 <ul class="nav pull-right top-menu">
@@ -701,51 +681,12 @@
                                         </header>
                                         <div class="panel-body">
                                             <ul class="nav nav-tabs">
-                                                <li class="active"><a data-toggle="tab" href="#tabagency"><strong>AGENCY</strong></a></li>
-                                                <li><a data-toggle="tab" href="#tabplant"><strong>PLANT</strong></a></li>
+                                                <li class="active"><a data-toggle="tab" href="#tabplant"><strong>PLANT</strong></a></li>
                                                 <li><a data-toggle="tab" href="#tabmotor"><strong>MOTORPOOL</strong></a></li>
                                                 <li><a data-toggle="tab" href="#tabtrucking"><strong>TRUCKING</strong></a></li>
                                             </ul>
                                             <div class="tab-content">
-                                                <div id="tabagency" class="tab-pane fade in active">
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <section class="panel">
-                                                                <header class="panel-heading">
-                                                                    <div align="center"><strong>AGENCY</strong></div>
-                                                                </header>
-                                                                <div class="panel-body">
-                                                                    <div class="row">
-                                                                       <div class="col-md-12"> 
-                                                                            <table id="agency_table" align="center">
-                                                                                <tr>
-                                                                                    <td class="col-md-2">
-                                                                                        <label for="agency_employee_name">Name</label>
-                                                                                    </td>
-                                                                                    <td class="col-md-4">
-                                                                                        <label for="agency_comment">Comment</label>
-                                                                                    </td>
-                                                                                </tr>
-                                                                                <tr id="agency_employee_row1" style="text-align: center;">
-                                                                                    <td>
-                                                                                        <input type="text" name="agency_employee_name[]" class="form-control input_type" autofocus>
-                                                                                    </td>
-                                                                                    <td>
-                                                                                        <input type="text" name="agency_comment[]" class="form-control input_type" autofocus>
-                                                                                    </td>
-                                                                                    <td class="col-md-1">
-                                                                                        <button type="button" onclick="add_agency_employee();" class="btn btn-primary btn-md"><span class="fa fa-plus"></span></button>
-                                                                                    </td>
-                                                                                </tr>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </section>
-                                                        </div>
-                                                    </div>
-                                                </div> 
-                                                <div id="tabplant" class="tab-pane fade in">
+                                                <div id="tabplant" class="tab-pane fade in active">
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <section class="panel">

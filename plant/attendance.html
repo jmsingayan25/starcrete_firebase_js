@@ -101,19 +101,26 @@
                     if(plant == 'Head Office'){
                         window.location.href = '../headoffice/index.html';
                     }
-
+                    
                     tableData();
+                    // totalCountBadge();
+                    // goAway(plant);
+                    
+                    if(plant == 'Bravo'){
+                        plant_name = "<a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>";
+                    }else{
+                        plant_name = "<a href='index.html' class='logo'>Quality Star <span class='lite'>Concrete Products, Inc.</span></a>";
+                    }
 
+                    document.getElementById('id_plant_name').innerHTML = plant_name;
                     document.getElementById('username').innerHTML = snapshot.val().firstname; 
-                   
+
                 },(error) => {
                     console.log(error);
                 });
             } else {
                 window.location.href = '../login.html';
             }
-
-            
         });
 
         document.getElementById('logoutBtn').addEventListener('click', userSignOut, false);
@@ -124,8 +131,7 @@
 
     	var myTableOfficeEmployee = "";
     	var myTableNewEmployee = "";
-    	var myTableAbsentAgencyPlant = "";
-    	var myTableAbsentMotorpoolTrucking = "";
+    	var myTableAbsent = "";
     	var myTableNonskid = "";
     	var myTableTrucking = "";
     	var myTableForklift = "";
@@ -145,7 +151,6 @@
 
         document.getElementById('link_office_update').innerHTML = "<a href='attendance_update.html?option=office&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_new_employee_update').innerHTML = "<a href='attendance_update.html?option=new_employee&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_absent_agency_update').innerHTML = "<a href='attendance_update.html?option=agency&date=" + passcurrentDate + "'>Update Agency</a>";
         document.getElementById('link_absent_plant_update').innerHTML = "<a href='attendance_update.html?option=plant&date=" + passcurrentDate + "'>Update Plant</a>";
         document.getElementById('link_absent_motorpool_update').innerHTML = "<a href='attendance_update.html?option=motorpool&date=" + passcurrentDate + "'>Update Motorpool</a>";
         document.getElementById('link_absent_trucking_update').innerHTML = "<a href='attendance_update.html?option=trucking&date=" + passcurrentDate + "'>Update Trucking</a>";
@@ -186,51 +191,37 @@
     				});
     			});
 
-    			firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/agency').once('value', function(agencySnapshot){
-    				firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/plant').once('value', function(plantSnapshot){
+    			firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/plant').once('value', function(plantSnapshot){
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/motorpool').once('value', function(motorpoolSnapshot){
+                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/trucking').once('value', function(truckingSnapshot){
 
-    					myTableAbsentAgencyPlant += "<tr><td colspan='2'>";
+                            myTableAbsent += "<tr><td>";
 
-    					agencySnapshot.forEach(function(agencyChildSnapshot){
+                            plantSnapshot.forEach(function(plantChildSnapshot){
 
-    						myTableAbsentAgencyPlant += "<div class='row'><div class='col-md-12'>" + agencyChildSnapshot.val().employee_name + " - " + agencyChildSnapshot.val().employee_comment + "</div></div>";
-    					});
+                                myTableAbsent += "<div class='row'><div class='col-md-12'>" + plantChildSnapshot.val().employee_name + " - " + plantChildSnapshot.val().employee_comment + "</div></div>";
+                            });
 
-    					myTableAbsentAgencyPlant += "</td><td colspan='2'>";
+                             myTableAbsent += "</td><td>";
 
-    					plantSnapshot.forEach(function(plantChildSnapshot){
+                            motorpoolSnapshot.forEach(function(motorpoolChildSnapshot){
 
-    						myTableAbsentAgencyPlant += "<div class='row'><div class='col-md-12'>" + plantChildSnapshot.val().employee_name + " - " + plantChildSnapshot.val().employee_comment + "</div></div>";
-    					});
+                                myTableAbsent += "<div class='row'><div class='col-md-12'>" + motorpoolChildSnapshot.val().employee_name + " - " + motorpoolChildSnapshot.val().employee_comment + "</div></div>";
+                            });
 
-    					myTableAbsentAgencyPlant += "</td></tr>";
+                            myTableAbsent += "</td><td>";
 
-    					document.getElementById('row_agency_plant_list').innerHTML = myTableAbsentAgencyPlant;
-    				});
-    			});
+                            truckingSnapshot.forEach(function(truckingChildSnapshot){
 
-    			firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/motorpool').once('value', function(motorpoolSnapshot){
-    				firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/trucking').once('value', function(truckingSnapshot){
+                                myTableAbsent += "<div class='row'><div class='col-md-12'>" + truckingChildSnapshot.val().employee_name + " - " + truckingChildSnapshot.val().employee_comment + "</div></div>";
+                            });
 
-    					myTableAbsentMotorpoolTrucking += "<tr><td colspan='2'>";
+                            myTableAbsent += "</td></tr>";
 
-    					motorpoolSnapshot.forEach(function(motorpoolChildSnapshot){
-
-    						myTableAbsentMotorpoolTrucking += "<div class='row'><div class='col-md-12'>" + motorpoolChildSnapshot.val().employee_name + " - " + motorpoolChildSnapshot.val().employee_comment + "</div></div>";
-    					});
-
-    					myTableAbsentMotorpoolTrucking += "</td><td colspan='2'>";
-
-    					truckingSnapshot.forEach(function(truckingChildSnapshot){
-
-    						myTableAbsentMotorpoolTrucking += "<div class='row'><div class='col-md-12'>" + truckingChildSnapshot.val().employee_name + " - " + truckingChildSnapshot.val().employee_comment + "</div></div>";
-    					});
-
-    					myTableAbsentMotorpoolTrucking += "</td></tr>";
-
-    					document.getElementById('row_motorpool_trucking_list').innerHTML = myTableAbsentMotorpoolTrucking;
-    				});
-    			});
+                            document.getElementById('row_absent_list').innerHTML = myTableAbsent;
+                        });
+                    });
+                });
 
     			firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid1/employee').once('value', function(nonskid1Snapshot){
 	    			firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid2/employee').once('value', function(nonskid2Snapshot){
@@ -366,8 +357,7 @@
     			document.getElementById('id_record').innerHTML = "NO RECORD FOUND";
     			document.getElementById('row_office_list').innerHTML = "";
 				document.getElementById('row_new_employee_list').innerHTML = "";
-				document.getElementById('row_agency_plant_list').innerHTML = "";
-				document.getElementById('row_motorpool_trucking_list').innerHTML = "";
+				document.getElementById('row_absent_list').innerHTML = "";
 				document.getElementById('row_nonskid_list').innerHTML = "";
 				document.getElementById('row_trucking_list').innerHTML = "";
 				document.getElementById('row_forklift_list').innerHTML = "";
@@ -386,8 +376,7 @@
 
     	var myTableOfficeEmployee = "";
     	var myTableNewEmployee = "";
-    	var myTableAbsentAgencyPlant = "";
-    	var myTableAbsentMotorpoolTrucking = "";
+    	var myTableAbsent = "";
     	var myTableNonskid = "";
     	var myTableTrucking = "";
     	var myTableForklift = "";
@@ -410,7 +399,6 @@
 
         document.getElementById('link_office_update').innerHTML = "<a href='attendance_update.html?option=office&date=" + passcurrentDate + "'>Update</a>";
         document.getElementById('link_new_employee_update').innerHTML = "<a href='attendance_update.html?option=new_employee&date=" + passcurrentDate + "'>Update</a>";
-        document.getElementById('link_absent_agency_update').innerHTML = "<a href='attendance_update.html?option=agency&date=" + passcurrentDate + "'>Update Agency</a>";
         document.getElementById('link_absent_plant_update').innerHTML = "<a href='attendance_update.html?option=plant&date=" + passcurrentDate + "'>Update Plant</a>";
         document.getElementById('link_absent_motorpool_update').innerHTML = "<a href='attendance_update.html?option=motorpool&date=" + passcurrentDate + "'>Update Motorpool</a>";
         document.getElementById('link_absent_trucking_update').innerHTML = "<a href='attendance_update.html?option=trucking&date=" + passcurrentDate + "'>Update Trucking</a>";
@@ -451,51 +439,37 @@
     				});
     			});
 
-    			firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/agency').once('value', function(agencySnapshot){
-    				firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/plant').once('value', function(plantSnapshot){
+    			firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/plant').once('value', function(plantSnapshot){
+                    firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/motorpool').once('value', function(motorpoolSnapshot){
+                        firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/trucking').once('value', function(truckingSnapshot){
 
-    					myTableAbsentAgencyPlant += "<tr><td colspan='2'>";
+                            myTableAbsent += "<tr><td>";
 
-    					agencySnapshot.forEach(function(agencyChildSnapshot){
+                            plantSnapshot.forEach(function(plantChildSnapshot){
 
-    						myTableAbsentAgencyPlant += "<div class='row'><div class='col-md-12'>" + agencyChildSnapshot.val().employee_name + " - " + agencyChildSnapshot.val().employee_comment + "</div></div>";
-    					});
+                                myTableAbsent += "<div class='row'><div class='col-md-12'>" + plantChildSnapshot.val().employee_name + " - " + plantChildSnapshot.val().employee_comment + "</div></div>";
+                            });
 
-    					myTableAbsentAgencyPlant += "</td><td colspan='2'>";
+                             myTableAbsent += "</td><td>";
 
-    					plantSnapshot.forEach(function(plantChildSnapshot){
+                            motorpoolSnapshot.forEach(function(motorpoolChildSnapshot){
 
-    						myTableAbsentAgencyPlant += "<div class='row'><div class='col-md-12'>" + plantChildSnapshot.val().employee_name + " - " + plantChildSnapshot.val().employee_comment + "</div></div>";
-    					});
+                                myTableAbsent += "<div class='row'><div class='col-md-12'>" + motorpoolChildSnapshot.val().employee_name + " - " + motorpoolChildSnapshot.val().employee_comment + "</div></div>";
+                            });
 
-    					myTableAbsentAgencyPlant += "</td></tr>";
+                            myTableAbsent += "</td><td>";
 
-    					document.getElementById('row_agency_plant_list').innerHTML = myTableAbsentAgencyPlant;
-    				});
-    			});
+                            truckingSnapshot.forEach(function(truckingChildSnapshot){
 
-    			firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/motorpool').once('value', function(motorpoolSnapshot){
-    				firebase.database().ref('attendance/'+plant+'/'+currentDate+'/absent/trucking').once('value', function(truckingSnapshot){
+                                myTableAbsent += "<div class='row'><div class='col-md-12'>" + truckingChildSnapshot.val().employee_name + " - " + truckingChildSnapshot.val().employee_comment + "</div></div>";
+                            });
 
-    					myTableAbsentMotorpoolTrucking += "<tr><td colspan='2'>";
+                            myTableAbsent += "</td></tr>";
 
-    					motorpoolSnapshot.forEach(function(motorpoolChildSnapshot){
-
-    						myTableAbsentMotorpoolTrucking += "<div class='row'><div class='col-md-12'>" + motorpoolChildSnapshot.val().employee_name + " - " + motorpoolChildSnapshot.val().employee_comment + "</div></div>";
-    					});
-
-    					myTableAbsentMotorpoolTrucking += "</td><td colspan='2'>";
-
-    					truckingSnapshot.forEach(function(truckingChildSnapshot){
-
-    						myTableAbsentMotorpoolTrucking += "<div class='row'><div class='col-md-12'>" + truckingChildSnapshot.val().employee_name + " - " + truckingChildSnapshot.val().employee_comment + "</div></div>";
-    					});
-
-    					myTableAbsentMotorpoolTrucking += "</td></tr>";
-
-    					document.getElementById('row_motorpool_trucking_list').innerHTML = myTableAbsentMotorpoolTrucking;
-    				});
-    			});
+                            document.getElementById('row_absent_list').innerHTML = myTableAbsent;
+                        });
+                    });
+                });
 
     			firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid1/employee').once('value', function(nonskid1Snapshot){
 	    			firebase.database().ref('attendance/'+plant+'/'+currentDate+'/nonskid2/employee').once('value', function(nonskid2Snapshot){
@@ -631,8 +605,7 @@
     			document.getElementById('id_record').innerHTML = "NO RECORD FOUND";
     			document.getElementById('row_office_list').innerHTML = "";
 				document.getElementById('row_new_employee_list').innerHTML = "";
-				document.getElementById('row_agency_plant_list').innerHTML = "";
-				document.getElementById('row_motorpool_trucking_list').innerHTML = "";
+				document.getElementById('row_absent_list').innerHTML = "";
 				document.getElementById('row_nonskid_list').innerHTML = "";
 				document.getElementById('row_trucking_list').innerHTML = "";
 				document.getElementById('row_forklift_list').innerHTML = "";
@@ -669,7 +642,7 @@
             <!--logo start-->
 
             <!--logo end-->
-            <a href='index.html' class='logo'>Starcrete <span class='lite'>Manufacturing Corporation</span></a>
+            <span id="id_plant_name"></span>
             <div class="top-nav notification-row">                
                 <!-- notificatoin dropdown start-->
                 <ul class="nav pull-right top-menu">
@@ -877,27 +850,21 @@
                                         	<tr>
                                         		<td colspan="4">
                                         			<table class="table table-bordered">
-                                        				<thead class="header_line">
-                                        					<tr>
-                                        						<th colspan="2" style="text-align: center;">AGENCY</th>
-                                        						<th colspan="2" style="text-align: center;">PLANT</th>
-                                        					</tr>
-                                        				</thead>
-                                        				<tbody id="row_agency_plant_list"></tbody>
-                                        				<thead class="header_line">
-                                        					<tr>
-                                        						<th colspan="2" style="text-align: center;">MOTORPOOL</th>
-                                        						<th colspan="2" style="text-align: center;">TRUCKING</th>
-                                        					</tr>
-                                        				</thead>
-                                        				<tbody id="row_motorpool_trucking_list"></tbody>
-                                        			</table>
+                                                        <thead class="header_line">
+                                                            <tr>
+                                                                <th class="col-md-4" style="text-align: center;">PLANT</th>
+                                                                <th class="col-md-4" style="text-align: center;">MOTORPOOL</th>
+                                                                <th class="col-md-4" style="text-align: center;">TRUCKING</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="row_absent_list"></tbody>
+                                                    </table>
                                         		</td>
                                         	</tr>
                                         </tbody>
                                         <thead>
                                         	<tr class="header_line">
-                                        		<th colspan="1">
+                                        		<th class="col-md-3">
                                         			NON-SKID 1
                                         			<div class="btn-group pull-right button-link">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
@@ -908,7 +875,7 @@
                                                         </ul>
                                                     </div>
                                         		</th>
-                                        		<th colspan="1">
+                                        		<th class="col-md-3">
                                         			NON-SKID 2
                                         			<div class="btn-group pull-right button-link">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
@@ -919,7 +886,7 @@
                                                         </ul>
                                                     </div>
                                         		</th>
-                                        		<th colspan="1">
+                                        		<th class="col-md-3">
                                         			NON-SKID 3
                                         			<div class="btn-group pull-right button-link">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
@@ -930,7 +897,7 @@
                                                         </ul>
                                                     </div>
                                         		</th>
-                                        		<th colspan="1">
+                                        		<th class="col-md-3">
                                         			NON-SKID 4
                                         			<div class="btn-group pull-right button-link">
                                                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
