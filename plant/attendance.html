@@ -310,7 +310,7 @@
 
     			});
 
-    			firebase.database().ref('attendance/'+plant+'/'+currentDate+'/forklift').once('value', function(forkliftSnapshot){
+    			firebase.database().ref('attendance/'+plant+'/'+currentDate+'/forklift_operator').once('value', function(forkliftSnapshot){
     				firebase.database().ref('attendance/'+plant+'/'+currentDate+'/guard').once('value', function(guardSnapshot){
     					firebase.database().ref('attendance/'+plant+'/'+currentDate+'/guard/dayshift').once('value', function(guardDayshiftSnapshot){
 							firebase.database().ref('attendance/'+plant+'/'+currentDate+'/guard/nightshift').once('value', function(guardNightshiftSnapshot){
@@ -558,7 +558,7 @@
 
     			});
 
-    			firebase.database().ref('attendance/'+plant+'/'+currentDate+'/forklift').once('value', function(forkliftSnapshot){
+    			firebase.database().ref('attendance/'+plant+'/'+currentDate+'/forklift_operator').once('value', function(forkliftSnapshot){
     				firebase.database().ref('attendance/'+plant+'/'+currentDate+'/guard').once('value', function(guardSnapshot){
     					firebase.database().ref('attendance/'+plant+'/'+currentDate+'/guard/dayshift').once('value', function(guardDayshiftSnapshot){
 							firebase.database().ref('attendance/'+plant+'/'+currentDate+'/guard/nightshift').once('value', function(guardNightshiftSnapshot){
