@@ -140,20 +140,19 @@
         $rowno = $("#employee_table tr").length;
         $rowno = $rowno + 1;
 
-        if(option != "absent" && option != "tagapukpok" && option != "checker"){
+        if(option != "absent" && option != "tagapukpok" && option != "checker" && option != "new_absent" && option != "new_tagapukpok" && option != "new_checker"){
 
             $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-5'><input type='text' name='update_employee_name[]' class='form-control input_type' required></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
 
-        }else if(option == "absent"){
+        }else if(option == "absent" || option == "new_absent"){
 
             $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-5'><input type='text' name='update_employee_name[]' class='form-control input_type' required></td><td class='col-md-4'><textarea name='update_employee_reason[]' style='text-transform: uppercase;' rows='3' class='form-control'></textarea></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
 
-        }else if(option == "tagapukpok" || option == "checker"){
+        }else if(option == "tagapukpok" || option == "checker" || option == "new_tagapukpok" || option == "new_checker"){
 
             $("#employee_table tr:last").before("<tr id='employee_row" + $rowno + "'><td class='col-md-5'><input type='text' name='update_employee_name[]' class='form-control input_type' required></td><td class='col-md-5'><input type='text' name='update_employee_position[]' style='text-transform: uppercase;' class='form-control'></td><td class='col-md-1'><button type='button' class='btn btn-danger btn-md' onclick=remove_employee_row('employee_row" + $rowno + "')><strong>Remove</strong></button></td></tr>");
 
         }
-        
     }
 
 
@@ -191,7 +190,7 @@
             headline = "OTHERS";
         }else if(option == "absent" || option == "new_absent"){
             headline = "ABSENT";
-        }else if(option == "comment" || option == "new_absent"){
+        }else if(option == "comment" || option == "new_comment"){
             headline = "COMMENT";
         }else if(option == "trucking" || option == "new_trucking"){
             headline = "TRUCKING";

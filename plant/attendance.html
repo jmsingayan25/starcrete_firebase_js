@@ -141,11 +141,11 @@
 
 
     	var option = {year: "numeric", month: "long", day: "numeric"}
-        // var currentDate = new Date().toLocaleDateString('en', option);
-        // var passcurrentDate = new Date().toLocaleDateString('en');
+        var currentDate = new Date().toLocaleDateString('en', option);
+        var passcurrentDate = new Date().toLocaleDateString('en');
 
-        var currentDate = "August 9, 2018";
-        var passcurrentDate = "August 9, 2018";
+        // var currentDate = "August 9, 2018";
+        // var passcurrentDate = "August 9, 2018";
 
         document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-success' onclick='window.location.href=\"attendance_form.html\";' style='float: right;'><span class='fa fa-plus'></span> <strong>Attendance Form</strong></button> <br> Result: <span id='id_record'></span></th>";
 

@@ -131,7 +131,9 @@
 
             document.getElementById('date_selected').value = chosen_date;
             document.getElementById('date_selected').readOnly = true;
+            document.getElementById('header_form').innerHTML = "<h4><strong>PLANT NEW LINE UP</strong></h4>";
         }else{
+            document.getElementById('header_form').innerHTML = "<h4><strong>PLANT LINE UP</strong></h4>";
             console.log("no data"); 
         }
 
@@ -155,7 +157,7 @@
         firebase.database().ref('trucking_list/'+plant).once('value', function(truckingSnapshot){
             truckingSnapshot.forEach(function(truckingChildSnapshot){
 
-                truckingTbody += "<tr style='text-align: center;'><td><strong>" + truckingChildSnapshot.val().item + "</strong></td><input type='hidden' name='hidden_trucking[]' value='" + truckingChildSnapshot.val().item + "'><td><input type='text' name='driver[]' class='form-control'></td><td><input type='text' name='pahinante1[]' class='form-control'></td><td><input type='text' name='pahinante2[]' class='form-control'></td><td><textarea name='trucking_reason[]' rows='2' class='form-control'></textarea></td></tr>";
+                truckingTbody += "<tr style='text-align: center;'><td><strong>" + truckingChildSnapshot.val().item + "</strong></td><input type='hidden' name='hidden_trucking[]' value='" + truckingChildSnapshot.val().item + "'><td><input type='text' name='driver[]' class='form-control input_type'></td><td><input type='text' name='pahinante1[]' class='form-control input_type'></td><td><input type='text' name='pahinante2[]' class='form-control input_type'></td><td><textarea name='trucking_reason[]' rows='2' class='form-control input_type'></textarea></td></tr>";
             });
 
             document.getElementById('truckingList').innerHTML = truckingTbody;
@@ -220,507 +222,515 @@
     	var input_trucking_pahinante1 = $("input[name='pahinante1[]']").map(function(){return $(this).val();}).get();
     	var input_trucking_pahinante2 = $("input[name='pahinante2[]']").map(function(){return $(this).val();}).get();
     	var input_trucking_comment = $("textarea[name='trucking_reason[]']").map(function(){return $(this).val();}).get();
+        var input_comment = document.getElementById('comment').value || "N/A";
 
     	// console.log(input_trucking_no, input_trucking_driver, input_trucking_pahinante1, input_trucking_pahinante2, input_trucking_comment);
 
-    	var input_comment = document.getElementById('comment').value || "N/A";
+        if(date_newSet == ""){
+            console.log("ADD LINE UP");
 
-    	var commentData = {
-    		comment: input_comment.toUpperCase()
-    	}
+            var commentData = {
+                comment: input_comment.toUpperCase()
+            }
 
-    	// firebase.database().ref('lineup/'+plant+'/'+input_date).set(commentData);
-        firebase.database().ref('lineup/'+plant+'/'+input_date).once('value', function(lineSnapshot){
-            console.log(lineSnapshot.val() == "new");
+            firebase.database().ref('lineup/'+plant+'/'+input_date).set(commentData);
 
-            // if(lineSnapshot.val() == null){
-            //     console.log("ADD LINE UP");
+            var commentHoData = {
+                comment: "N/A"
+            }
 
-            //     for(var a = 0; a < input_machine1_name.length; a++){
+            firebase.database().ref('lineup/'+plant+'/'+input_date+'/comment_headoffice').set(commentHoData);
 
-            //         if(input_machine1_name.length == 1 && input_machine1_name[a] == ""){
-            //             var machine1Data = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var machine1Data = {
-            //                 employee_name: input_machine1_name[a].toUpperCase()
-            //             }
-            //         }
-                    
-            //         // firebase.database().ref('lineup/'+plant+'/'+input_date+'/machine1').push(machine1Data);
-            //     }
+            for(var a = 0; a < input_machine1_name.length; a++){
+
+                if(input_machine1_name.length == 1 && input_machine1_name[a] == ""){
+                    var machine1Data = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var machine1Data = {
+                        employee_name: input_machine1_name[a].toUpperCase()
+                    }
+                }
                 
-            //     for(var a = 0; a < input_machine3_name.length; a++){
-
-            //         if(input_machine3_name.length == 1 && input_machine3_name[a] == ""){
-            //             var machine3Data = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var machine3Data = {
-            //                 employee_name: input_machine3_name[a].toUpperCase()
-            //             }
-            //         }
-                    
-            //         // firebase.database().ref('lineup/'+plant+'/'+input_date+'/machine3').push(machine3Data);
-            //     }
-
-            //     for(var a = 0; a < input_nonskid1_name.length; a++){
-
-            //         if(input_nonskid1_name.length == 1 && input_nonskid1_name[a] == ""){
-            //             var nonskid1Data = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var nonskid1Data = {
-            //                 employee_name: input_nonskid1_name[a].toUpperCase()
-            //             }
-            //         }
-                    
-            //         // firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid1').push(nonskid1Data);
-            //     }
-
-            //     for(var a = 0; a < input_nonskid2_name.length; a++){
-
-            //         if(input_nonskid2_name.length == 1 && input_nonskid2_name[a] == ""){
-            //             var nonskid2Data = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var nonskid2Data = {
-            //                 employee_name: input_nonskid2_name[a].toUpperCase()
-            //             }   
-            //         }
-                    
-            //         // firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid2').push(nonskid2Data);
-            //     }
-
-            //     for(var a = 0; a < input_nonskid3_name.length; a++){
-
-            //         if(input_nonskid3_name.length == 1 && input_nonskid3_name[a] == ""){
-            //             var nonskid3Data = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var nonskid3Data = {
-            //                 employee_name: input_nonskid3_name[a].toUpperCase()
-            //             }   
-            //         }
-                    
-            //         // firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid3').push(nonskid3Data);
-            //     }
-
-            //     for(var a = 0; a < input_nonskid4_name.length; a++){
-
-            //         if(input_nonskid4_name.length == 1 && input_nonskid4_name[a] == ""){
-            //             var nonskid4Data = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var nonskid4Data = {
-            //                 employee_name: input_nonskid4_name[a].toUpperCase()
-            //             }   
-            //         }
-                    
-            //         // firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid4').push(nonskid4Data);
-            //     }
-
-            //     for(var a = 0; a < input_kamador_name.length; a++){
-
-            //         if(input_kamador_name.length == 1 && input_kamador_name[a] == ""){
-            //             var kamadorData = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var kamadorData = {
-            //                 employee_name: input_kamador_name[a].toUpperCase()
-            //             }   
-            //         }
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/machine1').push(machine1Data);
+            }
             
-            //         // firebase.database().ref('lineup/'+plant+'/'+input_date+'/kamador').push(kamadorData);
-            //     }
+            for(var a = 0; a < input_machine3_name.length; a++){
 
-            //     for(var a = 0; a < input_forklift_operator_name.length; a++){
-
-            //         if(input_forklift_operator_name.length == 1 && input_forklift_operator_name[a] == ""){
-            //             var forkliftOperatorData = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var forkliftOperatorData = {
-            //                 employee_name: input_forklift_operator_name[a].toUpperCase()
-            //             }   
-            //         }
-                    
-            //         // firebase.database().ref('lineup/'+plant+'/'+input_date+'/forklift_operator').push(forkliftOperatorData);
-            //     }
-
-            //     for(var a = 0; a < input_mechanic_name.length; a++){
-
-            //         if(input_mechanic_name.length == 1 && input_mechanic_name[a] == ""){
-            //             var mechanicData = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var mechanicData = {
-            //                 employee_name: input_mechanic_name[a].toUpperCase()
-            //             }   
-            //         }
-
-            //         // firebase.database().ref('lineup/'+plant+'/'+input_date+'/mechanic').push(mechanicData);
-            //     }
-
-            //     for(var a = 0; a < input_tagapukpok_name.length; a++){
-
-            //         if(input_tagapukpok_name.length == 1 && input_tagapukpok_name[a] == ""){
-            //             var tagapukpokData = {
-            //                 employee_name: "N/A",
-            //                 employee_position: "N/A"
-            //             }
-            //         }else{
-            //             var tagapukpokData = {
-            //                 employee_name: input_tagapukpok_name[a].toUpperCase(),
-            //                 employee_position: input_tagapukpok_position[a].toUpperCase()
-            //             }
-            //         }
-                    
-            //         // firebase.database().ref('lineup/'+plant+'/'+input_date+'/tagapukpok').push(tagapukpokData);
-            //     }
-
-            //     for(var a = 0; a < input_checker_name.length; a++){
-
-            //         if(input_checker_name.length == 1 && input_checker_name[a] == ""){
-            //             var checkerData = {
-            //                 employee_name: "N/A",
-            //                 employee_position: "N/A"
-            //             }
-            //         }else{
-            //             var checkerData = {
-            //                 employee_name: input_checker_name[a].toUpperCase(),
-            //                 employee_position: input_checker_position[a].toUpperCase()
-            //             }   
-            //         }
-                    
-            //         // firebase.database().ref('lineup/'+plant+'/'+input_date+'/checker').push(checkerData);
-            //     }
-
-            //     for(var a = 0; a < input_loader_name.length; a++){
-
-            //         if(input_loader_name.length == 1 && input_loader_name[a] == ""){
-            //             var loaderData = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var loaderData = {
-            //                 employee_name: input_loader_name[a].toUpperCase()
-            //             }
-            //         }
-                    
-            //         // firebase.database().ref('lineup/'+plant+'/'+input_date+'/loader').push(loaderData);
-            //     }
-
-            //     for(var a = 0; a < input_others_name.length; a++){
-
-            //         if(input_others_name.length == 1 && input_others_name[a] == ""){
-            //             var othersData = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var othersData = {
-            //                 employee_name: input_others_name[a].toUpperCase()
-            //             }
-            //         }
-
-            //         // firebase.database().ref('lineup/'+plant+'/'+input_date+'/others').push(othersData);
-            //     }
-
-            //     for(var a = 0; a < input_absent_name.length; a++){
-
-            //         if(input_absent_name.length == 1 && input_absent_name[a] == ""){
-            //             var absentData = {
-            //                 employee_name: "N/A",
-            //                 reason: "N/A"
-            //             }
-            //         }else{
-            //             var absentData = {
-            //                 employee_name: input_absent_name[a].toUpperCase(),
-            //                 reason: input_absent_reason[a].toUpperCase()
-            //             }
-            //         }
+                if(input_machine3_name.length == 1 && input_machine3_name[a] == ""){
+                    var machine3Data = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var machine3Data = {
+                        employee_name: input_machine3_name[a].toUpperCase()
+                    }
+                }
                 
-            //         // firebase.database().ref('lineup/'+plant+'/'+input_date+'/absent').push(absentData);
-            //         count++;
-            //     }
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/machine3').push(machine3Data);
+            }
 
-            //     for(var a = 0; a < input_trucking_no.length; a++){
+            for(var a = 0; a < input_nonskid1_name.length; a++){
 
-            //         var truckingData = {
-            //             truck_no: input_trucking_no[a].toUpperCase(),
-            //             driver: input_trucking_driver[a].toUpperCase() || "N/A",
-            //             pahinante1: input_trucking_pahinante1[a].toUpperCase() || "N/A",
-            //             pahinante2: input_trucking_pahinante2[a].toUpperCase() || "N/A",
-            //             comment: input_trucking_comment[a].toUpperCase() || "N/A"
-            //         }
-
-            //         // console.log(truckingData);
-
-            //         // firebase.database().ref('lineup/'+plant+'/'+input_date+'/trucking').push(truckingData);
-            //     }
-
-            //     // if(count == input_absent_name.length){
-            //     //  alert("Line up recorded");
-            //     //  window.location='lineup.html';
-
-            //     // }
-            // }else{
-            //     console.log("NEW SET OF LINE UP");
-
-            //     var commentData = {
-            //         comment: input_comment.toUpperCase()
-            //     }
-
-            //     firebase.database().ref('lineup/'+plant+'/'+input_date+'/new').set(commentData);
-
-            //     for(var a = 0; a < input_machine1_name.length; a++){
-
-            //         if(input_machine1_name.length == 1 && input_machine1_name[a] == ""){
-            //             var machine1Data = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var machine1Data = {
-            //                 employee_name: input_machine1_name[a].toUpperCase()
-            //             }
-            //         }
-                    
-            //         firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/machine1').push(machine1Data);
-            //     }
+                if(input_nonskid1_name.length == 1 && input_nonskid1_name[a] == ""){
+                    var nonskid1Data = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var nonskid1Data = {
+                        employee_name: input_nonskid1_name[a].toUpperCase()
+                    }
+                }
                 
-            //     for(var a = 0; a < input_machine3_name.length; a++){
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid1').push(nonskid1Data);
+            }
 
-            //         if(input_machine3_name.length == 1 && input_machine3_name[a] == ""){
-            //             var machine3Data = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var machine3Data = {
-            //                 employee_name: input_machine3_name[a].toUpperCase()
-            //             }
-            //         }
-                    
-            //         firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/machine3').push(machine3Data);
-            //     }
+            for(var a = 0; a < input_nonskid2_name.length; a++){
 
-            //     for(var a = 0; a < input_nonskid1_name.length; a++){
+                if(input_nonskid2_name.length == 1 && input_nonskid2_name[a] == ""){
+                    var nonskid2Data = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var nonskid2Data = {
+                        employee_name: input_nonskid2_name[a].toUpperCase()
+                    }   
+                }
+                
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid2').push(nonskid2Data);
+            }
 
-            //         if(input_nonskid1_name.length == 1 && input_nonskid1_name[a] == ""){
-            //             var nonskid1Data = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var nonskid1Data = {
-            //                 employee_name: input_nonskid1_name[a].toUpperCase()
-            //             }
-            //         }
-                    
-            //         firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/nonskid1').push(nonskid1Data);
-            //     }
+            for(var a = 0; a < input_nonskid3_name.length; a++){
 
-            //     for(var a = 0; a < input_nonskid2_name.length; a++){
+                if(input_nonskid3_name.length == 1 && input_nonskid3_name[a] == ""){
+                    var nonskid3Data = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var nonskid3Data = {
+                        employee_name: input_nonskid3_name[a].toUpperCase()
+                    }   
+                }
+                
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid3').push(nonskid3Data);
+            }
 
-            //         if(input_nonskid2_name.length == 1 && input_nonskid2_name[a] == ""){
-            //             var nonskid2Data = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var nonskid2Data = {
-            //                 employee_name: input_nonskid2_name[a].toUpperCase()
-            //             }   
-            //         }
-                    
-            //         firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/nonskid2').push(nonskid2Data);
-            //     }
+            for(var a = 0; a < input_nonskid4_name.length; a++){
 
-            //     for(var a = 0; a < input_nonskid3_name.length; a++){
+                if(input_nonskid4_name.length == 1 && input_nonskid4_name[a] == ""){
+                    var nonskid4Data = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var nonskid4Data = {
+                        employee_name: input_nonskid4_name[a].toUpperCase()
+                    }   
+                }
+                
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/nonskid4').push(nonskid4Data);
+            }
 
-            //         if(input_nonskid3_name.length == 1 && input_nonskid3_name[a] == ""){
-            //             var nonskid3Data = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var nonskid3Data = {
-            //                 employee_name: input_nonskid3_name[a].toUpperCase()
-            //             }   
-            //         }
-                    
-            //         firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/nonskid3').push(nonskid3Data);
-            //     }
+            for(var a = 0; a < input_kamador_name.length; a++){
 
-            //     for(var a = 0; a < input_nonskid4_name.length; a++){
+                if(input_kamador_name.length == 1 && input_kamador_name[a] == ""){
+                    var kamadorData = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var kamadorData = {
+                        employee_name: input_kamador_name[a].toUpperCase()
+                    }   
+                }
+        
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/kamador').push(kamadorData);
+            }
 
-            //         if(input_nonskid4_name.length == 1 && input_nonskid4_name[a] == ""){
-            //             var nonskid4Data = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var nonskid4Data = {
-            //                 employee_name: input_nonskid4_name[a].toUpperCase()
-            //             }   
-            //         }
-                    
-            //         firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/nonskid4').push(nonskid4Data);
-            //     }
+            for(var a = 0; a < input_forklift_operator_name.length; a++){
 
-            //     for(var a = 0; a < input_kamador_name.length; a++){
+                if(input_forklift_operator_name.length == 1 && input_forklift_operator_name[a] == ""){
+                    var forkliftOperatorData = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var forkliftOperatorData = {
+                        employee_name: input_forklift_operator_name[a].toUpperCase()
+                    }   
+                }
+                
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/forklift_operator').push(forkliftOperatorData);
+            }
 
-            //         if(input_kamador_name.length == 1 && input_kamador_name[a] == ""){
-            //             var kamadorData = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var kamadorData = {
-            //                 employee_name: input_kamador_name[a].toUpperCase()
-            //             }   
-            //         }
+            for(var a = 0; a < input_mechanic_name.length; a++){
+
+                if(input_mechanic_name.length == 1 && input_mechanic_name[a] == ""){
+                    var mechanicData = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var mechanicData = {
+                        employee_name: input_mechanic_name[a].toUpperCase()
+                    }   
+                }
+
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/mechanic').push(mechanicData);
+            }
+
+            for(var a = 0; a < input_tagapukpok_name.length; a++){
+
+                if(input_tagapukpok_name.length == 1 && input_tagapukpok_name[a] == ""){
+                    var tagapukpokData = {
+                        employee_name: "N/A",
+                        employee_position: "N/A"
+                    }
+                }else{
+                    var tagapukpokData = {
+                        employee_name: input_tagapukpok_name[a].toUpperCase(),
+                        employee_position: input_tagapukpok_position[a].toUpperCase()
+                    }
+                }
+                
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/tagapukpok').push(tagapukpokData);
+            }
+
+            for(var a = 0; a < input_checker_name.length; a++){
+
+                if(input_checker_name.length == 1 && input_checker_name[a] == ""){
+                    var checkerData = {
+                        employee_name: "N/A",
+                        employee_position: "N/A"
+                    }
+                }else{
+                    var checkerData = {
+                        employee_name: input_checker_name[a].toUpperCase(),
+                        employee_position: input_checker_position[a].toUpperCase()
+                    }   
+                }
+                
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/checker').push(checkerData);
+            }
+
+            for(var a = 0; a < input_loader_name.length; a++){
+
+                if(input_loader_name.length == 1 && input_loader_name[a] == ""){
+                    var loaderData = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var loaderData = {
+                        employee_name: input_loader_name[a].toUpperCase()
+                    }
+                }
+                
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/loader').push(loaderData);
+            }
+
+            for(var a = 0; a < input_others_name.length; a++){
+
+                if(input_others_name.length == 1 && input_others_name[a] == ""){
+                    var othersData = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var othersData = {
+                        employee_name: input_others_name[a].toUpperCase()
+                    }
+                }
+
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/others').push(othersData);
+            }
+
+            for(var a = 0; a < input_absent_name.length; a++){
+
+                if(input_absent_name.length == 1 && input_absent_name[a] == ""){
+                    var absentData = {
+                        employee_name: "N/A",
+                        reason: "N/A"
+                    }
+                }else{
+                    var absentData = {
+                        employee_name: input_absent_name[a].toUpperCase(),
+                        reason: input_absent_reason[a].toUpperCase()
+                    }
+                }
             
-            //         firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/kamador').push(kamadorData);
-            //     }
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/absent').push(absentData);
+                count++;
+            }
 
-            //     for(var a = 0; a < input_forklift_operator_name.length; a++){
+            for(var a = 0; a < input_trucking_no.length; a++){
 
-            //         if(input_forklift_operator_name.length == 1 && input_forklift_operator_name[a] == ""){
-            //             var forkliftOperatorData = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var forkliftOperatorData = {
-            //                 employee_name: input_forklift_operator_name[a].toUpperCase()
-            //             }   
-            //         }
-                    
-            //         firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/forklift_operator').push(forkliftOperatorData);
-            //     }
+                var truckingData = {
+                    truck_no: input_trucking_no[a].toUpperCase(),
+                    driver: input_trucking_driver[a].toUpperCase() || "N/A",
+                    pahinante1: input_trucking_pahinante1[a].toUpperCase() || "N/A",
+                    pahinante2: input_trucking_pahinante2[a].toUpperCase() || "N/A",
+                    comment: input_trucking_comment[a].toUpperCase() || "N/A"
+                }
 
-            //     for(var a = 0; a < input_mechanic_name.length; a++){
+                // console.log(truckingData);
 
-            //         if(input_mechanic_name.length == 1 && input_mechanic_name[a] == ""){
-            //             var mechanicData = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var mechanicData = {
-            //                 employee_name: input_mechanic_name[a].toUpperCase()
-            //             }   
-            //         }
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/trucking').push(truckingData);
+            }
 
-            //         firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/mechanic').push(mechanicData);
-            //     }
+            if(count == input_absent_name.length){
+                alert("Line up recorded");
+                window.location='lineup.html';
+            }
 
-            //     for(var a = 0; a < input_tagapukpok_name.length; a++){
+        }else if(date_newSet != ""){
+            console.log("NEW SET OF LINE UP");
 
-            //         if(input_tagapukpok_name.length == 1 && input_tagapukpok_name[a] == ""){
-            //             var tagapukpokData = {
-            //                 employee_name: "N/A",
-            //                 employee_position: "N/A"
-            //             }
-            //         }else{
-            //             var tagapukpokData = {
-            //                 employee_name: input_tagapukpok_name[a].toUpperCase(),
-            //                 employee_position: input_tagapukpok_position[a].toUpperCase()
-            //             }
-            //         }
-                    
-            //         firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/tagapukpok').push(tagapukpokData);
-            //     }
+            var commentData = {
+                comment: input_comment.toUpperCase()
+            }
 
-            //     for(var a = 0; a < input_checker_name.length; a++){
+            firebase.database().ref('lineup/'+plant+'/'+input_date+'/new').set(commentData);
 
-            //         if(input_checker_name.length == 1 && input_checker_name[a] == ""){
-            //             var checkerData = {
-            //                 employee_name: "N/A",
-            //                 employee_position: "N/A"
-            //             }
-            //         }else{
-            //             var checkerData = {
-            //                 employee_name: input_checker_name[a].toUpperCase(),
-            //                 employee_position: input_checker_position[a].toUpperCase()
-            //             }   
-            //         }
-                    
-            //         firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/checker').push(checkerData);
-            //     }
+            var commentHoData = {
+                comment: "N/A"
+            }
 
-            //     for(var a = 0; a < input_loader_name.length; a++){
+            firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/comment_headoffice').set(commentHoData);
 
-            //         if(input_loader_name.length == 1 && input_loader_name[a] == ""){
-            //             var loaderData = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var loaderData = {
-            //                 employee_name: input_loader_name[a].toUpperCase()
-            //             }
-            //         }
-                    
-            //         firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/loader').push(loaderData);
-            //     }
+            for(var a = 0; a < input_machine1_name.length; a++){
 
-            //     for(var a = 0; a < input_others_name.length; a++){
-
-            //         if(input_others_name.length == 1 && input_others_name[a] == ""){
-            //             var othersData = {
-            //                 employee_name: "N/A"
-            //             }
-            //         }else{
-            //             var othersData = {
-            //                 employee_name: input_others_name[a].toUpperCase()
-            //             }
-            //         }
-
-            //         firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/others').push(othersData);
-            //     }
-
-            //     for(var a = 0; a < input_absent_name.length; a++){
-
-            //         if(input_absent_name.length == 1 && input_absent_name[a] == ""){
-            //             var absentData = {
-            //                 employee_name: "N/A",
-            //                 reason: "N/A"
-            //             }
-            //         }else{
-            //             var absentData = {
-            //                 employee_name: input_absent_name[a].toUpperCase(),
-            //                 reason: input_absent_reason[a].toUpperCase()
-            //             }
-            //         }
+                if(input_machine1_name.length == 1 && input_machine1_name[a] == ""){
+                    var machine1Data = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var machine1Data = {
+                        employee_name: input_machine1_name[a].toUpperCase()
+                    }
+                }
                 
-            //         firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/absent').push(absentData);
-            //         count++;
-            //     }
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/machine1').push(machine1Data);
+            }
+            
+            for(var a = 0; a < input_machine3_name.length; a++){
 
-            //     for(var a = 0; a < input_trucking_no.length; a++){
+                if(input_machine3_name.length == 1 && input_machine3_name[a] == ""){
+                    var machine3Data = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var machine3Data = {
+                        employee_name: input_machine3_name[a].toUpperCase()
+                    }
+                }
+                
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/machine3').push(machine3Data);
+            }
 
-            //         var truckingData = {
-            //             truck_no: input_trucking_no[a].toUpperCase(),
-            //             driver: input_trucking_driver[a].toUpperCase() || "N/A",
-            //             pahinante1: input_trucking_pahinante1[a].toUpperCase() || "N/A",
-            //             pahinante2: input_trucking_pahinante2[a].toUpperCase() || "N/A",
-            //             comment: input_trucking_comment[a].toUpperCase() || "N/A"
-            //         }
+            for(var a = 0; a < input_nonskid1_name.length; a++){
 
-            //         // console.log(truckingData);
+                if(input_nonskid1_name.length == 1 && input_nonskid1_name[a] == ""){
+                    var nonskid1Data = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var nonskid1Data = {
+                        employee_name: input_nonskid1_name[a].toUpperCase()
+                    }
+                }
+                
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/nonskid1').push(nonskid1Data);
+            }
 
-            //         firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/trucking').push(truckingData);
-            //     }
+            for(var a = 0; a < input_nonskid2_name.length; a++){
 
-            //     if(count == input_absent_name.length){
-            //         alert("New set of Line up recorded");
-            //         window.location='lineup.html';
+                if(input_nonskid2_name.length == 1 && input_nonskid2_name[a] == ""){
+                    var nonskid2Data = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var nonskid2Data = {
+                        employee_name: input_nonskid2_name[a].toUpperCase()
+                    }   
+                }
+                
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/nonskid2').push(nonskid2Data);
+            }
 
-            //     }
-            // }
-        });
+            for(var a = 0; a < input_nonskid3_name.length; a++){
+
+                if(input_nonskid3_name.length == 1 && input_nonskid3_name[a] == ""){
+                    var nonskid3Data = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var nonskid3Data = {
+                        employee_name: input_nonskid3_name[a].toUpperCase()
+                    }   
+                }
+                
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/nonskid3').push(nonskid3Data);
+            }
+
+            for(var a = 0; a < input_nonskid4_name.length; a++){
+
+                if(input_nonskid4_name.length == 1 && input_nonskid4_name[a] == ""){
+                    var nonskid4Data = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var nonskid4Data = {
+                        employee_name: input_nonskid4_name[a].toUpperCase()
+                    }   
+                }
+                
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/nonskid4').push(nonskid4Data);
+            }
+
+            for(var a = 0; a < input_kamador_name.length; a++){
+
+                if(input_kamador_name.length == 1 && input_kamador_name[a] == ""){
+                    var kamadorData = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var kamadorData = {
+                        employee_name: input_kamador_name[a].toUpperCase()
+                    }   
+                }
+        
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/kamador').push(kamadorData);
+            }
+
+            for(var a = 0; a < input_forklift_operator_name.length; a++){
+
+                if(input_forklift_operator_name.length == 1 && input_forklift_operator_name[a] == ""){
+                    var forkliftOperatorData = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var forkliftOperatorData = {
+                        employee_name: input_forklift_operator_name[a].toUpperCase()
+                    }   
+                }
+                
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/forklift_operator').push(forkliftOperatorData);
+            }
+
+            for(var a = 0; a < input_mechanic_name.length; a++){
+
+                if(input_mechanic_name.length == 1 && input_mechanic_name[a] == ""){
+                    var mechanicData = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var mechanicData = {
+                        employee_name: input_mechanic_name[a].toUpperCase()
+                    }   
+                }
+
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/mechanic').push(mechanicData);
+            }
+
+            for(var a = 0; a < input_tagapukpok_name.length; a++){
+
+                if(input_tagapukpok_name.length == 1 && input_tagapukpok_name[a] == ""){
+                    var tagapukpokData = {
+                        employee_name: "N/A",
+                        employee_position: "N/A"
+                    }
+                }else{
+                    var tagapukpokData = {
+                        employee_name: input_tagapukpok_name[a].toUpperCase(),
+                        employee_position: input_tagapukpok_position[a].toUpperCase()
+                    }
+                }
+                
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/tagapukpok').push(tagapukpokData);
+            }
+
+            for(var a = 0; a < input_checker_name.length; a++){
+
+                if(input_checker_name.length == 1 && input_checker_name[a] == ""){
+                    var checkerData = {
+                        employee_name: "N/A",
+                        employee_position: "N/A"
+                    }
+                }else{
+                    var checkerData = {
+                        employee_name: input_checker_name[a].toUpperCase(),
+                        employee_position: input_checker_position[a].toUpperCase()
+                    }   
+                }
+                
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/checker').push(checkerData);
+            }
+
+            for(var a = 0; a < input_loader_name.length; a++){
+
+                if(input_loader_name.length == 1 && input_loader_name[a] == ""){
+                    var loaderData = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var loaderData = {
+                        employee_name: input_loader_name[a].toUpperCase()
+                    }
+                }
+                
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/loader').push(loaderData);
+            }
+
+            for(var a = 0; a < input_others_name.length; a++){
+
+                if(input_others_name.length == 1 && input_others_name[a] == ""){
+                    var othersData = {
+                        employee_name: "N/A"
+                    }
+                }else{
+                    var othersData = {
+                        employee_name: input_others_name[a].toUpperCase()
+                    }
+                }
+
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/others').push(othersData);
+            }
+
+            for(var a = 0; a < input_absent_name.length; a++){
+
+                if(input_absent_name.length == 1 && input_absent_name[a] == ""){
+                    var absentData = {
+                        employee_name: "N/A",
+                        reason: "N/A"
+                    }
+                }else{
+                    var absentData = {
+                        employee_name: input_absent_name[a].toUpperCase(),
+                        reason: input_absent_reason[a].toUpperCase()
+                    }
+                }
+            
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/absent').push(absentData);
+                count++;
+            }
+
+            for(var a = 0; a < input_trucking_no.length; a++){
+
+                var truckingData = {
+                    truck_no: input_trucking_no[a].toUpperCase(),
+                    driver: input_trucking_driver[a].toUpperCase() || "N/A",
+                    pahinante1: input_trucking_pahinante1[a].toUpperCase() || "N/A",
+                    pahinante2: input_trucking_pahinante2[a].toUpperCase() || "N/A",
+                    comment: input_trucking_comment[a].toUpperCase() || "N/A"
+                }
+
+                // console.log(truckingData);
+
+                firebase.database().ref('lineup/'+plant+'/'+input_date+'/new/trucking').push(truckingData);
+            }
+
+            if(count == input_absent_name.length){
+                alert("New set of Line up recorded");
+                window.location='lineup.html';
+
+            }
+        }
     }
 
 </script>
@@ -934,8 +944,8 @@
             	<section class="panel">
             		<header class="panel-heading">
                         <div class="row">
-                        	<div class="col-md-offset-5 col-md-2">
-                        		<h4><strong>PLANT LINE UP</strong></h4>
+                        	<div class="col-md-offset-4 col-md-4">
+                        		<span id="header_form"></span>
                         	</div>
                         </div>
                     </header>
