@@ -150,10 +150,11 @@
             var passcurrentDate = new Date().toLocaleDateString('en');
         }
 
-        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-success btn-md' onclick='tablePrint();' style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button> <br> Plant: " + plant + " <br> Result: <span id='id_record'></span></th>";
+        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-success btn-md' onclick=\"tablePrint('old');\" style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button> <br> Plant: " + plant + " <br> Result: <span id='id_record'></span></th>";
 
-        document.getElementById('id_date_new_set').innerHTML = "<th colspan='4'>Result: NEW SET OF LINE UP</th>";
+        document.getElementById('id_date_new_set').innerHTML = "<th colspan='4'>Result: NEW SET OF LINE UP <button class='btn btn-success btn-md' onclick=\"tablePrint('new');\" style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button></th>";
 
+        document.getElementById('link_comment_update').innerHTML = "<a href='lineup_update.html?plant=" + plant + "&option=comment_headoffice&date=" + passcurrentDate + "'>Update</a>";
         // document.getElementById('link_machine1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine1&date=" + passcurrentDate + "'>Update</a>";
         // document.getElementById('link_machine3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine3&date=" + passcurrentDate + "'>Update</a>";
         // document.getElementById('link_forklift_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=forklift_operator&date=" + passcurrentDate + "'>Update</a>";
@@ -312,11 +313,12 @@
                 });
 
                 firebase.database().ref('lineup/'+plant+'/'+currentDate).once('value', function(commentSnapshot){
+                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/comment_headoffice').once('value', function(commentHoSnapshot){
 
-                    myTableRow6 += "<tr><td colspan='4'><strong>COMMENT: </strong>" + commentSnapshot.val().comment + "</td></tr>";
+                        myTableRow6 += "<tr><td colspan='2'>" + commentSnapshot.val().comment + "</td><td colspan='2'>" + commentHoSnapshot.val().comment + "</td></tr>";
 
-                    document.getElementById('row6_list').innerHTML = myTableRow6;
-                    
+                        document.getElementById('row6_list').innerHTML = myTableRow6;
+                   }); 
                 });
 
                 firebase.database().ref('lineup/'+plant+'/'+currentDate+'/trucking').once('value', function(truckingSnapshot){
@@ -337,6 +339,9 @@
                     if(newlineupSnapshot.val() != null){
 
                         $(".new_set_table").show();
+                        $(".button-link").show();
+
+                        document.getElementById('link_new_comment_update').innerHTML = "<a href='lineup_update.html?plant=" + plant + "&option=new_comment_headoffice&date=" + passcurrentDate + "'>Update</a>";
 
                         firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/machine1').once('value', function(machine1Snapshot){
                             firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/machine3').once('value', function(machine3Snapshot){
@@ -473,11 +478,13 @@
                         });
 
                         firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new').once('value', function(commentSnapshot){
+                            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/comment_headoffice').once('value', function(commentHoSnapshot){
 
-                            myTableRow13 += "<tr><td colspan='4'>" + commentSnapshot.val().comment + "</td></tr>";
+                                myTableRow13 += "<tr><td colspan='2'>" + commentSnapshot.val().comment + "</td><td colspan='2'>" + commentHoSnapshot.val().comment + "</td></tr>";
 
-                            document.getElementById('row6_new_list').innerHTML = myTableRow13;
+                                document.getElementById('row6_new_list').innerHTML = myTableRow13;
                             
+                            });
                         });
 
                         firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/trucking').once('value', function(truckingSnapshot){
@@ -492,10 +499,20 @@
 
                             document.getElementById('row7_new_list').innerHTML = myTableRow14;
                         });
+                    }else{
+
+                        $(".new_set_table").hide();
+                        $(".button-link").hide();
                     }
+
+                    $(".se-pre-con").fadeOut("slow");
                 });
 
             }else{
+
+                $(".new_set_table").hide();
+                $(".button-link").hide();
+
                 document.getElementById('id_record').innerHTML = "NO RECORD FOUND";
                 document.getElementById('row1_list').innerHTML = "";
                 document.getElementById('row2_list').innerHTML = "";
@@ -511,6 +528,8 @@
                 document.getElementById('row5_new_list').innerHTML = "";
                 document.getElementById('row6_new_list').innerHTML = "";
                 document.getElementById('row7_new_list').innerHTML = "";
+
+                $(".se-pre-con").fadeOut("slow");
             }
         });
     }
@@ -518,6 +537,8 @@
     function submitForm(){
 
         event.preventDefault();
+
+        $(".se-pre-con").fadeIn("fast");
 
         var myTableRow1 = "";
         var myTableRow2 = "";
@@ -543,9 +564,11 @@
             var passcurrentDate = new Date().toLocaleDateString('en');
         }
 
-        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-success btn-md' onclick='tablePrint();' style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button> <br> Plant: " + plant + " <br> Result: <span id='id_record'></span></th>";
+        document.getElementById('id_date').innerHTML = "<th colspan='4'>Date: " + currentDate + " <button class='btn btn-success btn-md' onclick=\"tablePrint('old');\" style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button> <br> Plant: " + plant + " <br> Result: <span id='id_record'></span></th>";
 
-        document.getElementById('id_date_new_set').innerHTML = "<th colspan='4'>Result: NEW SET OF LINE UP</th>";
+        document.getElementById('id_date_new_set').innerHTML = "<th colspan='4'>Result: NEW SET OF LINE UP <button class='btn btn-success btn-md' onclick=\"tablePrint('new');\" style='float: right;'><span class='fa fa-print'></span> <strong>Print Preview</strong></button></th>";
+
+        document.getElementById('link_comment_update').innerHTML = "<a href='lineup_update.html?plant=" + plant + "&option=comment_headoffice&date=" + passcurrentDate + "'>Update</a>";
 
         // document.getElementById('link_machine1_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine1&date=" + passcurrentDate + "'>Update</a>";
         // document.getElementById('link_machine3_update').innerHTML = "<a href='attendance_update.html?plant=" + plant + "&option=machine3&date=" + passcurrentDate + "'>Update</a>";
@@ -705,10 +728,12 @@
                 });
 
                 firebase.database().ref('lineup/'+plant+'/'+currentDate).once('value', function(commentSnapshot){
+                    firebase.database().ref('lineup/'+plant+'/'+currentDate+'/comment_headoffice').once('value', function(commentHoSnapshot){
 
-                    myTableRow6 += "<tr><td colspan='4'><strong>COMMENT: </strong>" + commentSnapshot.val().comment + "</td></tr>";
+                        myTableRow6 += "<tr><td colspan='2'>" + commentSnapshot.val().comment + "</td><td colspan='2'>" + commentHoSnapshot.val().comment + "</td></tr>";
 
-                    document.getElementById('row6_list').innerHTML = myTableRow6;
+                        document.getElementById('row6_list').innerHTML = myTableRow6;
+                   }); 
                 });
 
                 firebase.database().ref('lineup/'+plant+'/'+currentDate+'/trucking').once('value', function(truckingSnapshot){
@@ -729,6 +754,9 @@
                     if(newlineupSnapshot.val() != null){
 
                         $(".new_set_table").show();
+                        $(".button-link").show();
+
+                        document.getElementById('link_new_comment_update').innerHTML = "<a href='lineup_update.html?plant=" + plant + "&option=new_comment_headoffice&date=" + passcurrentDate + "'>Update</a>";
 
                         firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/machine1').once('value', function(machine1Snapshot){
                             firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/machine3').once('value', function(machine3Snapshot){
@@ -865,11 +893,13 @@
                         });
 
                         firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new').once('value', function(commentSnapshot){
+                            firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/comment_headoffice').once('value', function(commentHoSnapshot){
 
-                            myTableRow13 += "<tr><td colspan='4'>" + commentSnapshot.val().comment + "</td></tr>";
+                                myTableRow13 += "<tr><td colspan='2'>" + commentSnapshot.val().comment + "</td><td colspan='2'>" + commentHoSnapshot.val().comment + "</td></tr>";
 
-                            document.getElementById('row6_new_list').innerHTML = myTableRow13;
+                                document.getElementById('row6_new_list').innerHTML = myTableRow13;
                             
+                            });
                         });
 
                         firebase.database().ref('lineup/'+plant+'/'+currentDate+'/new/trucking').once('value', function(truckingSnapshot){
@@ -884,10 +914,19 @@
 
                             document.getElementById('row7_new_list').innerHTML = myTableRow14;
                         });
+                    }else{
+                        $(".new_set_table").hide();
+                        $(".button-link").hide();
                     }
+
+                    $(".se-pre-con").fadeOut("slow");
                 });
 
             }else{
+
+                $(".new_set_table").hide();
+                $(".button-link").hide();
+
                 document.getElementById('id_record').innerHTML = "NO RECORD";
                 document.getElementById('row1_list').innerHTML = "";
                 document.getElementById('row2_list').innerHTML = "";
@@ -903,13 +942,13 @@
                 document.getElementById('row5_new_list').innerHTML = "";
                 document.getElementById('row6_new_list').innerHTML = "";
                 document.getElementById('row7_new_list').innerHTML = "";
-            }
 
-            $(".se-pre-con").fadeOut("slow");
+                $(".se-pre-con").fadeOut("slow");
+            }
         });
     }
 
-    function tablePrint(){
+    function tablePrint(table_set){
 
 
         if(document.getElementById('input_date').value != ""){
@@ -918,7 +957,7 @@
             var date = new Date().toLocaleDateString('en');
         }
 
-        window.open("lineup_print.html?plant="+plant+"&date="+date, "_blank");
+        window.open("lineup_print.html?plant="+plant+"&date="+date+"&option="+table_set, "_blank");
     }
     
 </script>
@@ -931,13 +970,13 @@
     color: white;
 }
 
-.new_set_table{
+.new_set_table, .button-link{
     display: none;
 }
 </style>
 </head>
 <body>
-    <!-- <div class="se-pre-con"></div> -->
+    <div class="se-pre-con"></div>
     <section id="container" class="">
         <header class="header dark-bg">
             <div class="toggle-nav">
@@ -989,7 +1028,7 @@
                             <span>Transaction Log</span>
                         </a>
                     </li>
-                    <li class="active">
+                    <li class="">
                         <a class="" href="client.html">
                             <i class="fa fa-address-book"></i>
                             <span>Clients</span>
@@ -1262,6 +1301,24 @@
                                             </tr>
                                         </thead>
                                         <tbody id="row7_list"></tbody>
+                                        <thead>
+                                            <tr class="header_line">
+                                                <th colspan="2">
+                                                    COMMENT FROM PLANT
+                                                </th>
+                                                <th colspan="2">
+                                                    COMMENT FROM HEAD OFFICE
+                                                    <div class="btn-group pull-right button-link">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_comment_update"></li>
+                                                        </ul>
+                                                    </div>
+                                                </th>
+                                            </tr>
+                                        </thead>
                                         <tbody id="row6_list"></tbody>
                                     </table>
                                 </div>
@@ -1353,8 +1410,19 @@
                                         <tbody id='row7_new_list'></tbody>
                                         <thead>
                                             <tr class="header_line">
-                                                <th colspan="4">
-                                                    COMMENT
+                                                <th colspan="2">
+                                                    COMMENT FROM PLANT
+                                                </th>
+                                                <th colspan="2">
+                                                    COMMENT FROM HEAD OFFICE
+                                                    <div class="btn-group pull-right button-link">
+                                                        <a class="btn dropdown-toggle" data-toggle="dropdown" href="#" style="color: white;">
+                                                            <span class="fa fa-cog" ></span> <span class="fa fa-chevron-down"></span>
+                                                        </a>
+                                                        <ul class="dropdown-menu">
+                                                            <li id="link_new_comment_update"></li>
+                                                        </ul>
+                                                    </div>
                                                 </th>
                                             </tr>
                                         </thead>
